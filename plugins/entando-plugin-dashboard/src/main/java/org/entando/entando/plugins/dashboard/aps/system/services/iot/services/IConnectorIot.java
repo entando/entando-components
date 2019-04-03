@@ -3,6 +3,7 @@ package org.entando.entando.plugins.dashboard.aps.system.services.iot.services;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
@@ -32,7 +33,7 @@ public interface IConnectorIot {
   void saveDeviceMeasurement(IDashboardDatasourceDto dashboardDatasourceDto,
       String measurementBody);
 
-  PagedMetadata<MeasurementPayload> getMeasurements(IDashboardDatasourceDto dashboardSitewhereDatasourceDto,
+  List<Map<String, Object>> getMeasurements(IDashboardDatasourceDto dashboardSitewhereDatasourceDto,
       Date startDate, Date endDate, RestListRequest restListRequest) throws RuntimeException;
 
   MeasurementConfig getMeasurementConfig(IDashboardDatasourceDto dto);

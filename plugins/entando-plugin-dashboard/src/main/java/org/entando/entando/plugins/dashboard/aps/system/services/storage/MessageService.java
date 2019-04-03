@@ -127,9 +127,9 @@ public class MessageService extends AbstractService implements IMessageService {
 	@Override
 	public List<MeasurementPayload> findMeasurementsByServerConfiguration(int dashboardId, String datasourceCode) {
 		Gson gson = new Gson();
-		List<BasicDBObject> measurementJson = this.messageRepository.findContentMeasurementByServerIdAndDashboardCode(dashboardId, datasourceCode);
+		List<IotMessage> measurementJson = this.messageRepository.findContentMeasurementByServerIdAndDashboardCode(dashboardId, datasourceCode);
 		List<MeasurementPayload> payloads = new ArrayList<>();
-		measurementJson.forEach(j -> payloads.add(gson.fromJson(j.toJson(), MeasurementPayload.class)));
+		measurementJson.forEach(j -> payloads.add(gson.fromJson(j.getContent().toJson(), MeasurementPayload.class)));
 		return payloads;
 	}
 

@@ -20,7 +20,7 @@ public class MessageBuilder {
 		dto.setServerId(message.getServerId());
 		MeasurementPayload payload = gson.fromJson(message.getContent().toJson(), MeasurementPayload.class);
 		//HashMap<String, Object> yourHashMap = new Gson().fromJson(yourJsonObject.toString(), HashMap.class);
-		HashMap<String, Object> map = gson.fromJson(gson.toJson(payload.getMeasurements()), HashMap.class);
+		HashMap<String, Object> map = gson.fromJson(gson.toJson(payload.getMeasurement()), HashMap.class);
 		payload.setMeasurement(map);
 		dto.setContent(payload);
 		return dto;

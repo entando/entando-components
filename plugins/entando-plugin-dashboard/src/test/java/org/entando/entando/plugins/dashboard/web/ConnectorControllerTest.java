@@ -76,8 +76,8 @@ public class ConnectorControllerTest extends AbstractControllerTest {
 
 		List<JsonObject> misur = new ArrayList<JsonObject>();
 		misur.add(obj);
-		m.setMeasurements(misur);
-		iotMessage.setContent(m);
+//		m.setMeasurements(misur);
+//		iotMessage.setContent(m);
 
 		List<IotMessage> lista = new ArrayList<IotMessage>();
 		lista.add(iotMessage);
@@ -92,7 +92,7 @@ public class ConnectorControllerTest extends AbstractControllerTest {
         dashboardDatasourceDto.setDatasourcesConfigDto(new DatasourcesConfigDto());
         when(dashboardConfigService.getDashboardDatasourceDto(Mockito.anyInt(), Mockito.anyString())).thenReturn(dashboardDatasourceDto);
         
-        when(connectorService.getDeviceMeasurements(dashboardDatasourceDto, null,null, requestList)).thenReturn(pagedMetadata);
+//        when(connectorService.getDeviceMeasurements(dashboardDatasourceDto, null,null, requestList)).thenReturn(pagedMetadata);
         
         String accessToken = "ddd";
         ResultActions result =mockMvc.perform(get("/plugins/dashboard/server/2/datasource/3/data")

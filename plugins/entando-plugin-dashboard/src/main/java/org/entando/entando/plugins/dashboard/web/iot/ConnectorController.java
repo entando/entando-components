@@ -2,6 +2,8 @@ package org.entando.entando.plugins.dashboard.web.iot;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DashboardDatasourceDto;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.exception.ApsSystemException;
 
 @RestController
@@ -87,8 +90,14 @@ public class ConnectorController {
     }
     
     try {
-      PagedMetadata<MeasurementPayload> pagedMetadata = this.connectorService
+      List<Map<String, Object>> payloads = this.connectorService
           .getDeviceMeasurements(dto, start, end, requestList);
+
+		SearcherDaoPaginatedResult<Map<String, Object>> pagedMeasurements = new SearcherDaoPaginatedResult(
+				payloads);
+		PagedMetadata<Map<String, Object>> pagedMetadata = new PagedMetadata(requestList,pagedMeasurements);
+		pagedMetadata.setBody(payloads);
+		
       return new ResponseEntity(new PagedRestResponse(pagedMetadata), HttpStatus.OK);
     } catch (Exception e) {
       e.printStackTrace();

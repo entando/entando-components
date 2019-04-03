@@ -128,7 +128,7 @@ public class ConnectorService extends AbstractConnectorService implements IConne
     }
 
   @Override
-  public PagedMetadata<MeasurementPayload> getDeviceMeasurements(IDashboardDatasourceDto dto, Date startDate, Date endDate, RestListRequest restListRequest) {
+  public List<Map<String, Object>> getDeviceMeasurements(IDashboardDatasourceDto dto, Date startDate, Date endDate, RestListRequest restListRequest) {
     logger.info("{} getDeviceMeasurement By Dashboard and datasource ids :{}, {}", this.getClass().getSimpleName(), dto.getDashboardId() ,dto.getDatasourceCode());
     return connectorFactory.getConnector(dto.getServerType()).getMeasurements(dto,startDate,endDate, restListRequest);
   }
