@@ -3,7 +3,9 @@ package org.entando.entando.plugins.dashboard.web.iot.mock;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfigManager;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
@@ -67,27 +69,32 @@ public class ConnectorController {
 			@RequestParam(value = "endDate", required = false) Instant endDate, RestListRequest requestList)
 			throws Exception {
 		try {
-			IotMessage iotMessage = new IotMessage();
-			MeasurementPayload m = new MeasurementPayload();
-			JsonObject obj = new JsonObject();
 
-			String jsonString = "{\"timestamp\":\"2019-03-22T15:03:26\",\"temperature\":\"20\"}";
+			List<Map<String, Object>> payloads = this.connectorService.getDeviceMeasurements(dto, start, end,
+					requestList);
 
-			JsonElement c = new com.google.gson.JsonParser().parse(jsonString);
-			obj.add("measure", c);
+			SearcherDaoPaginatedResult<Map<String, Object>> pagedMeasurements = new SearcherDaoPaginatedResult(
+					payloads);
+			PagedMetadata<Map<String, Object>> pagedMetadata = new PagedMetadata(requestList, pagedMeasurements);
+			pagedMetadata.setBody(payloads);
 
-			List<JsonObject> misur = new ArrayList<JsonObject>();
-//			misur.add(obj);
-//			m.setMeasurements(misur);
-//			iotMessage.setContent(m);
-//
-//			List<IotMessage> lista = new ArrayList<IotMessage>();
-//			lista.add(iotMessage);
-//
-//			PagedMetadata<IotMessage> pagedMetadata = new PagedMetadata<>(requestList, 1);
-//			pagedMetadata.setBody(lista);
-//
-//			return new ResponseEntity(new PagedRestResponse(pagedMetadata), HttpStatus.OK);
+			Map<String, Object> mappa1 = new HashMap<String, Object>();
+			mappa1.put("temperature", 2.3);
+			mappa1.put("timestamp", "2019-03-04 12:13:14");
+
+			Map<String, Object> mappa2 = new HashMap<String, Object>();
+			mappa2.put("temperature", 12.3);
+			mappa2.put("timestamp", "2019-03-04 13:13:14");
+
+			List<Map<String, Object>> lista = new ArrayList<Map<String, Object>>();
+			lista.add(mappa1);
+			lista.add(mappa2);
+
+			RestListRequest requestList = new RestListRequest();
+			PagedMetadata<Map<String, Object>> pagedMetadata = new PagedMetadata<>(requestList, 1);
+			pagedMetadata.setBody(lista);
+
+			return new ResponseEntity(new PagedRestResponse(pagedMetadata), HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
