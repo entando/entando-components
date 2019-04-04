@@ -30,14 +30,6 @@ public interface IMessageService {
 
 	Page<IotMessage> findByServerConfigurationAndDate(int serverId, String dashboardCode, Date start, Date end, Pageable pageable);
 	
-	List<IotMessage> findAllByServerConfigurationAndDateBetween(int serverId, String dashboardCode, Date start, Date end);
-
-	List<IotMessage> findAllByServerConfigurationAndDateAfter(int dashboardId, String datasourceCode, Date startDate);
-
-	List<IotMessage> findAllByServerConfigurationAndDateBefore(int dashboardId, String datasourceCode, Date endDate);
-
-	List<IotMessage> findAllByServerConfiguration(int dashboardId, String datasourceCode);
-	
 	List<MeasurementPayload> findMeasurementsByServerConfiguration(int dashboardId, String datasourceCode);
 	
 }

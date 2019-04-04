@@ -56,7 +56,6 @@ public class TestConnectorController extends AbstractControllerTest {
         .build();
   }
 
-
   @Test
   public void testSaveMeasurementOK() throws Exception {
     UserDetails user = new OAuth2TestUtils.UserBuilder("admin", "adminadmin").grantedToRoleAdmin()
@@ -202,8 +201,8 @@ public class TestConnectorController extends AbstractControllerTest {
     Instant endDate = Instant.now();
     Mockito.when(dashboardConfigService.existsById(dashboardId)).thenReturn(false);
     Mockito.when(dashboardConfigService.getDashboardDatasourceDto(dashboardId, datasourceCode)).thenReturn(mockDto);
-//    Mockito.when(connectorService.getDeviceMeasurements(mockDto, Date.from(startDate), Date.from(endDate),
-//            new RestListRequest())).thenReturn(measurement);
+    Mockito.when(connectorService.getDeviceMeasurements(mockDto, Date.from(startDate), Date.from(endDate),
+            new RestListRequest())).thenReturn(measurement);
     ResultActions result = mockMvc.perform(
         get(BASE_PATH + "server/" + dashboardId + "/datasource/" + datasourceCode + "/data")
             .param("startDate", startDate.toString())
@@ -234,9 +233,9 @@ public class TestConnectorController extends AbstractControllerTest {
     Instant endDate = Instant.now();
     Mockito.when(dashboardConfigService.existsById(dashboardId)).thenReturn(true);
     Mockito.when(dashboardConfigService.getDashboardDatasourceDto(dashboardId, datasourceCode)).thenReturn(mockDto);
-//    Mockito.when(connectorService
-//        .getDeviceMeasurements(mockDto, Date.from(startDate), Date.from(endDate),
-//            new RestListRequest())).thenReturn(pagedMetadata);
+    Mockito.when(connectorService
+        .getDeviceMeasurements(mockDto, Date.from(startDate), Date.from(endDate),
+            new RestListRequest())).thenReturn(pagedMetadata);
     ResultActions result = mockMvc.perform(
         get(BASE_PATH + "server/" + dashboardId + "/datasource/" + datasourceCode + "/data")
             .param("startDate", startDate.toString())
@@ -246,6 +245,5 @@ public class TestConnectorController extends AbstractControllerTest {
 
     result.andExpect(status().is4xxClientError());
   }
-
 
 }

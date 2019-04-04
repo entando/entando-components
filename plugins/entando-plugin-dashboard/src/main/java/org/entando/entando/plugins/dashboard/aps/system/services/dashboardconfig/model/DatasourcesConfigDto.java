@@ -17,8 +17,8 @@
 
 package org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.gson.JsonObject;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DatasourcesConfigDto {
 
@@ -32,18 +32,18 @@ public class DatasourcesConfigDto {
 
     private String status;
     
-    @JsonIgnore
-    private JsonObject metadata;
+    private Map<String, Object> metadata = new HashMap();
 
-    public JsonObject getMetadata() {
-        return metadata;
-    }
 
-    public void setMetadata(JsonObject metadata) {
-        this.metadata = metadata;
-    }
+    public Map<String, Object> getMetadata() {
+		return metadata;
+	}
 
-    public String getName() {
+	public void setMetadata(Map<String, Object> metadata) {
+		this.metadata = metadata;
+	}
+
+	public String getName() {
         return name;
     }
 

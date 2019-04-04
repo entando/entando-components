@@ -31,7 +31,7 @@ public interface MessageRepository extends MongoRepository<IotMessage, String> {
 
 	public List<IotMessage> findAllByServerIdAndDashboardCode(int dashboardId, String datasourceCode);
 
-	@Query(value = "{'serverId': ?0, 'dashboardCode': ?1}")
+	@Query(value = "{'serverId': ?0, 'dashboardCode': ?1}")// TODO, createdAt : { $or : [ {$gte : ?2},  {?2 : null}], $or : [{$lt : ?3 }, {?3 : null}] }}")
 	public List<IotMessage> findContentMeasurementByServerIdAndDashboardCode(int dashboardId, String datasourceCode);
 	
 }

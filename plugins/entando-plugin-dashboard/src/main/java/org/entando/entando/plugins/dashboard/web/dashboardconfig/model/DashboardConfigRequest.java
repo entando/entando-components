@@ -18,12 +18,12 @@
 package org.entando.entando.plugins.dashboard.web.dashboardconfig.model;
 
 
-import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.ServerType;
-import org.hibernate.validator.constraints.NotBlank;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.List;
+
+import org.hibernate.validator.constraints.NotBlank;
 
 public class DashboardConfigRequest {
 
