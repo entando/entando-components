@@ -66,6 +66,17 @@ const SortableItem = SortableElement(({item, fieldColumnData}) => (
           />
         </OverlayTrigger>
       </div>
+      <div className="DashboardTableColumns__th-editable-type-date">
+        <Field
+          component="input"
+          type="checkbox"
+          id={`${item.key}.type`}
+          name={`${item.key}.isDate`}
+        />
+        <label htmlFor={`${item.key}.type`}>
+          <FormattedMessage id="plugin.table.column.isDate" />
+        </label>
+      </div>
     </div>
   </th>
 ));

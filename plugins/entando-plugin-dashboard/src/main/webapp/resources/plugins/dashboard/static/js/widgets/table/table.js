@@ -39,7 +39,17 @@ org.entando.dashboard.Table = class {
             request.setRequestHeader("Authorization", "Bearer " + accessToken);
           }
         },
-        dataSrc: json => json.payload,
+        dataSrc: json => {
+          const dateColumns = columns.filter(f => f.isDate).map(m => m.data);
+          json.payload.map((m, index) => {
+            dateColumns.forEach(col => {
+              json.payload[index][col] = new Date(
+                json.payload[index][col]
+              ).toLocaleDateString();
+            });
+          });
+          return json.payload || [];
+        },
         error: xhr => {
           const str = `status: ${xhr.status} text: ${xhr.statusText} error: ${
             xhr.responseJSON.errors[0].message

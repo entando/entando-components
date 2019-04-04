@@ -12,7 +12,7 @@ import DashboardGaugeChartForm from "ui/widgets/charts/gauge-chart/components/Da
 const FORM_NAME = "form-dashboard-gauge-chart";
 const selector = formValueSelector(FORM_NAME);
 
-const mapStateToProps = state => {
+export const mapStateToProps = state => {
   return {
     datasource: selector(state, "datasource"),
     formSyncErrors: getFormSyncErrors(FORM_NAME)(state),
@@ -47,7 +47,7 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+export const mapDispatchToProps = (dispatch, ownProps) => ({
   onWillMount: () => {
     dispatch(fetchServerConfigList()).then(() => {
       dispatch(getWidgetConfigChart(FORM_NAME));

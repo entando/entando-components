@@ -206,8 +206,7 @@ describe("api/dashboardConfig", () => {
       getDatasourceData(2, "temperature");
       expect(makeRequest).toHaveBeenCalledWith(
         expect.objectContaining({
-          uri:
-            "/api/plugins/dashboard/dashboardConfigs/server/2/datasource/temperature/data",
+          uri: "/api/plugins/dashboard/server/2/datasource/temperature/data",
           method: METHODS.GET,
           useAuthentication: true
         }),

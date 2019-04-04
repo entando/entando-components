@@ -5,7 +5,7 @@ import SettingsChartPie from "../components/SettingsChartPie";
 
 import {getDatasourceColumns} from "state/main/selectors";
 
-const mapStateToProps = (state, ownProps) => {
+export const mapStateToProps = (state, ownProps) => {
   const selector = formValueSelector(ownProps.formName);
   return {
     datasourceSelected: selector(state, "datasource"),

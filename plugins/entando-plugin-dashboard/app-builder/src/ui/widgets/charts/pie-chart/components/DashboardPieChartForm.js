@@ -13,7 +13,7 @@ const FORM_NAME = "form-dashboard-pie-chart";
 const TYPE_CHART = "PIE_CHART";
 const CHART_PREVIEW = "Pie Chart";
 
-class DashboardPieChartFormBody extends Component {
+export class DashboardPieChartFormBody extends Component {
   componentWillMount() {
     this.props.onWillMount();
   }

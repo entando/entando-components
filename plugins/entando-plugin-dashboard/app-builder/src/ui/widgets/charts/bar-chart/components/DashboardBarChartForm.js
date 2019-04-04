@@ -13,7 +13,7 @@ const FORM_NAME = "form-dashboard-bar-chart";
 const TYPE_CHART = "BAR_CHART";
 const CHART_PREVIEW = "Bar Chart";
 
-class DashboardBarChartFormBody extends Component {
+export class DashboardBarChartFormBody extends Component {
   componentWillMount() {
     this.props.onWillMount();
   }

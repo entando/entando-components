@@ -62,6 +62,7 @@ export default {
     "plugin.table.column.tooltip.show": "Click to show this column",
     "plugin.table.column.tooltip.hidden": "Click to hidden this column",
     "plugin.table.column.customizable.label": "Customizable columns labels",
+    "plugin.table.column.isDate": "Is a date",
     "plugin.table.moreInformation":
       "Manage the coloumns order and edit the labels column names",
     "plugin.table.moreInformation.choose":

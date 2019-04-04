@@ -13,7 +13,7 @@ const FORM_NAME = "form-dashboard-gauge-chart";
 const TYPE_CHART = "GAUGE_CHART";
 const CHART_PREVIEW = "Gauge Chart";
 
-class DashboardGaugeChartFormBody extends Component {
+export class DashboardGaugeChartFormBody extends Component {
   componentWillMount() {
     this.props.onWillMount();
   }

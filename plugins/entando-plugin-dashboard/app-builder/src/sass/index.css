@@ -190,10 +190,10 @@
   .DashboardTableColumns__th-editable-label-container {
     border: 0 solid;
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     flex-direction: row;
-    justify-content: space-between;
-    height: 25px; }
+    justify-content: flex-wrap;
+    height: 27px; }
   .DashboardTableColumns__th-editable-label:hover {
     cursor: pointer; }
   .DashboardTableColumns__table-th {
@@ -201,18 +201,18 @@
   .DashboardTableColumns__th-editable-label-dnd {
     border: 0 solid green;
     min-width: 30px;
-    padding: 2px; }
+    padding-top: 4px; }
   .DashboardTableColumns__th-editable-label-dnd:after {
     font-family: FontAwesome;
     content: "\f142 \f142"; }
   .DashboardTableColumns__container-input {
     border: 1px solid #bbb;
-    width: 100%; }
+    width: 50%; }
   .DashboardTableColumns__container-input input {
     border: 0 solid green;
     width: 100%;
     padding: 0;
-    height: 23px; }
+    height: 25px; }
   .DashboardTableColumns__container-input--error {
     border: 1px solid #c00;
     width: 100%; }
@@ -223,8 +223,13 @@
     height: 23px; }
   .DashboardTableColumns__th-editable-label-visible {
     border: 0 solid red;
-    min-width: 30px;
-    padding: 2px; }
+    min-width: 30px; }
+  .DashboardTableColumns__th-editable-type-date {
+    border: 0 solid blue;
+    padding-top: 2px; }
+  .DashboardTableColumns__th-editable-type-date label {
+    vertical-align: middle;
+    padding-left: 2px; }
   .DashboardTableColumns__th-column-is-hidden {
     -webkit-appearance: none;
     -moz-appearance: none;
