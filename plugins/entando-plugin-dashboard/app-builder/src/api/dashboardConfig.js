@@ -72,7 +72,7 @@ export const getDatasourceColumns = (
     {
       uri: `/api/plugins/dashboard/dashboardConfigs/server/${serverId}/datasource/${datasourceId}/columns`,
       method: METHODS.GET,
-      mockResponse: DATASOURCES_DATA[datasourceId].payload.mappings,
+      mockResponse: DATASOURCES_DATA[datasourceId].payload,
       useAuthentication: true
     },
     page
@@ -94,7 +94,7 @@ export const getDatasourceData = (
 ) =>
   makeRequest(
     {
-      uri: `/api/plugins/dashboard/dashboardConfigs/server/${serverId}/datasource/${datasourceId}/data`,
+      uri: `/api/plugins/dashboard/server/${serverId}/datasource/${datasourceId}/data`,
       method: METHODS.GET,
       mockResponse: DATASOURCES_DATA[datasourceId].data,
       useAuthentication: true
