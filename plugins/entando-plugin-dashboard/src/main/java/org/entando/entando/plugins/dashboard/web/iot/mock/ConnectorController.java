@@ -2,16 +2,11 @@ package org.entando.entando.plugins.dashboard.web.iot.mock;
 
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfigManager;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DashboardDatasourceDto;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementObject;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementPayload;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IConnectorService;
 import org.entando.entando.plugins.dashboard.aps.system.services.storage.IotMessage;
 import org.entando.entando.web.common.model.PagedMetadata;
@@ -31,9 +26,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.exception.ApsSystemException;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 @RestController
 @RequestMapping(value = "/plugins/dashboard")
@@ -70,13 +64,10 @@ public class ConnectorController {
 			throws Exception {
 		try {
 
-			List<Map<String, Object>> payloads = this.connectorService.getDeviceMeasurements(dto, start, end,
-					requestList);
+			List<Map<String, Object>> payloads = new ArrayList<Map<String,Object>>();
 
 			SearcherDaoPaginatedResult<Map<String, Object>> pagedMeasurements = new SearcherDaoPaginatedResult(
 					payloads);
-			PagedMetadata<Map<String, Object>> pagedMetadata = new PagedMetadata(requestList, pagedMeasurements);
-			pagedMetadata.setBody(payloads);
 
 			Map<String, Object> mappa1 = new HashMap<String, Object>();
 			mappa1.put("temperature", 2.3);
@@ -90,7 +81,6 @@ public class ConnectorController {
 			lista.add(mappa1);
 			lista.add(mappa2);
 
-			RestListRequest requestList = new RestListRequest();
 			PagedMetadata<Map<String, Object>> pagedMetadata = new PagedMetadata<>(requestList, 1);
 			pagedMetadata.setBody(lista);
 
