@@ -13,7 +13,7 @@ const FORM_NAME = "form-dashboard-donut-chart";
 const TYPE_CHART = "DONUT_CHART";
 const CHART_PREVIEW = "Donut Chart";
 
-class DashboardDonutChartFormBody extends Component {
+export class DashboardDonutChartFormBody extends Component {
   componentWillMount() {
     this.props.onWillMount();
   }

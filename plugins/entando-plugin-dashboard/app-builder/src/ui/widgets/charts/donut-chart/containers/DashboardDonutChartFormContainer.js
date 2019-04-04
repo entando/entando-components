@@ -12,7 +12,7 @@ import DashboardDonutChartForm from "ui/widgets/charts/donut-chart/components/Da
 
 const FORM_NAME = "form-dashboard-donut-chart";
 
-const mapStateToProps = state => {
+export const mapStateToProps = state => {
   const selector = formValueSelector(FORM_NAME);
   const rotated = selector(state, "axis.rotated");
 
@@ -47,7 +47,7 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+export const mapDispatchToProps = (dispatch, ownProps) => ({
   onWillMount: () => {
     dispatch(fetchServerConfigList()).then(() => {
       dispatch(getWidgetConfigChart(FORM_NAME));

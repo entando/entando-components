@@ -1,7 +1,7 @@
 import {
   mapStateToProps,
   mapDispatchToProps
-} from "ui/widgets/charts/bar-chart/containers/DashboardBarChartFormContainer";
+} from "ui/widgets/charts/donut-chart/containers/DashboardDonutChartFormContainer";
 
 import {
   fetchServerConfigList,
@@ -9,7 +9,7 @@ import {
   gotoConfigurationPage
 } from "state/main/actions";
 
-import {CONFIG_BAR_CHART} from "mocks/dashboardConfigs";
+import {CONFIG_DONUT_CHART} from "mocks/dashboardConfigs";
 
 jest.mock("state/main/actions");
 
@@ -19,21 +19,19 @@ const ownProps = {
   onSubmit: jest.fn()
 };
 
-describe("DashboardBarChartFormContainer", () => {
+describe("DashboardDonutChartFormContainer", () => {
   let container;
 
   describe("mapStateToProps", () => {
-    it("maps properties state in DashboardBarChartForm", () => {
+    it("maps properties state in DashboardDonutChartForm", () => {
       container = mapStateToProps({});
       expect(container).toHaveProperty("chart");
       expect(container).toHaveProperty("datasource");
       expect(container).toHaveProperty("formSyncErrors");
       expect(container).toHaveProperty("axis");
       expect(container).toHaveProperty("axis.rotated");
-      expect(container).toHaveProperty("columns");
       expect(container).toHaveProperty("initialValues");
       expect(container).toHaveProperty("initialValues.axis");
-      expect(container).toHaveProperty("initialValues.axis.chart");
       expect(container).toHaveProperty("initialValues.axis.rotated");
       expect(container).toHaveProperty("initialValues.axis.x.type");
       expect(container).toHaveProperty("initialValues.axis.y2.show");
@@ -47,7 +45,7 @@ describe("DashboardBarChartFormContainer", () => {
       expect(container).toHaveProperty("initialValues.padding.left");
       expect(container).toHaveProperty("initialValues.legend");
       expect(container).toHaveProperty("initialValues.legend.position");
-      expect(container).toHaveProperty("initialValues.bar.width");
+      expect(container).toHaveProperty("initialValues.donut.width");
     });
   });
 
@@ -69,32 +67,14 @@ describe("DashboardBarChartFormContainer", () => {
       expect(fetchServerConfigList).toHaveBeenCalled();
       fetchServerConfigList().then(() => {
         expect(getWidgetConfigChart).toHaveBeenCalledWith(
-          "form-dashboard-bar-chart"
+          "form-dashboard-donut-chart"
         );
       });
       done();
     });
 
     it("should call onSubmit dispatch ownProps.onSubmit", () => {
-      container.onSubmit(CONFIG_BAR_CHART.config);
-      expect(ownProps.onSubmit).toHaveBeenCalled();
-    });
-
-    it("should call onSubmit dispatch ownProps.onSubmit with multi columns ", () => {
-      const CONFIG_CHART_MULTI_COLUMNS = {...CONFIG_BAR_CHART.config};
-      CONFIG_CHART_MULTI_COLUMNS.columns.x.push({
-        id: 2,
-        key: "timestamp1",
-        value: "timestamp1",
-        selected: true
-      });
-      CONFIG_CHART_MULTI_COLUMNS.columns.y.push({
-        id: 4,
-        key: "temperature1",
-        value: "temperature1",
-        selected: true
-      });
-      container.onSubmit(CONFIG_CHART_MULTI_COLUMNS);
+      container.onSubmit(CONFIG_DONUT_CHART.config);
       expect(ownProps.onSubmit).toHaveBeenCalled();
     });
 
