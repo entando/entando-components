@@ -71,11 +71,11 @@ public class ConnectorController {
 
 			Map<String, Object> mappa1 = new HashMap<String, Object>();
 			mappa1.put("temperature", 2.3);
-			mappa1.put("timestamp", "2019-03-04 12:13:14");
+			mappa1.put("timestamp", System.currentTimeMillis());
 
 			Map<String, Object> mappa2 = new HashMap<String, Object>();
 			mappa2.put("temperature", 12.3);
-			mappa2.put("timestamp", "2019-03-04 13:13:14");
+			mappa2.put("timestamp", System.currentTimeMillis()+10*60*1000);
 
 			List<Map<String, Object>> lista = new ArrayList<Map<String, Object>>();
 			lista.add(mappa1);
