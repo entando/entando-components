@@ -63,6 +63,7 @@ export default {
     "plugin.table.column.tooltip.hidden": "Click to hidden this column",
     "plugin.table.column.default.label": "Nomi Colonne Default",
     "plugin.table.column.customizable.label": "Nomi Colonne personalizzabili",
+    "plugin.table.column.isDate": "E' una data",
     "plugin.table.moreInformation":
       "Gestisci l'ordine delle colonne ed edita i nomi delle colonne. Tieni premuto e trascina per cambiare posizione delle colonne, e clicca una label per cambiarla.",
     "plugin.table.moreInformation.choose":

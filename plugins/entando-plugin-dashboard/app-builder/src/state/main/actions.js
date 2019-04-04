@@ -378,6 +378,7 @@ export const fetchDatasourceColumns = (formName, field, datasourceId) => (
     getDatasourceColumns(serverId, datasourceId).then(response => {
       response.json().then(json => {
         if (response.ok) {
+          console.log(json);
           const {mappings} = json.payload;
           const columns = mappings.reduce((acc, item) => {
             acc.push({
