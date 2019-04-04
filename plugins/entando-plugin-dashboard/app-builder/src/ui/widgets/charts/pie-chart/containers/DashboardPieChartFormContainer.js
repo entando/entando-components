@@ -12,7 +12,7 @@ import DashboardPieChartForm from "ui/widgets/charts/pie-chart/components/Dashbo
 
 const FORM_NAME = "form-dashboard-pie-chart";
 
-const mapStateToProps = state => {
+export const mapStateToProps = state => {
   const selector = formValueSelector(FORM_NAME);
 
   return {
@@ -47,7 +47,7 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+export const mapDispatchToProps = (dispatch, ownProps) => ({
   onWillMount: () => {
     dispatch(fetchServerConfigList()).then(() => {
       dispatch(getWidgetConfigChart(FORM_NAME));

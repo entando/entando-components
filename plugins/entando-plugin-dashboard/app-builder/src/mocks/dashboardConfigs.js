@@ -229,7 +229,7 @@ export const CONFIG_CHART = {
 export const CONFIG_BAR_CHART = {
   config: {
     axis: {
-      chart: "line",
+      chart: "bar",
       rotated: false,
       x: {
         type: "timeseries",
@@ -243,7 +243,142 @@ export const CONFIG_BAR_CHART = {
     size: {width: 300, height: 500},
     padding: {top: 50, right: 50, bottom: 50, left: 50},
     legend: {position: "bottom"},
-    title: {en: "Line chart"},
+    title: {en: "Bar chart"},
+    serverName: "2",
+    datasource: "temperature",
+    columns: {
+      x: [
+        {
+          id: 1,
+          key: "timestamp",
+          value: "timestamp",
+          selected: true
+        }
+      ],
+      y: [
+        {
+          id: 3,
+          key: "temperature",
+          value: "temperature",
+          selected: true
+        }
+      ]
+    },
+    data: {
+      json: [],
+      key: {
+        value: ["timestamp", "temperature"],
+        x: "timestamp"
+      },
+      xFormat: "%Y-%m-%d %H:%M:%S"
+    }
+  }
+};
+
+export const CONFIG_DONUT_CHART = {
+  config: {
+    axis: {
+      chart: "donut",
+      rotated: false,
+      x: {
+        type: "indexed"
+      }
+    },
+    donut: {width: 10},
+    size: {width: 300, height: 500},
+    padding: {top: 50, right: 50, bottom: 50, left: 50},
+    legend: {position: "bottom"},
+    title: {en: "Donut chart"},
+    serverName: "2",
+    datasource: "temperature",
+    columns: {
+      x: [
+        {
+          id: 1,
+          key: "timestamp",
+          value: "timestamp",
+          selected: true
+        }
+      ],
+      y: [
+        {
+          id: 3,
+          key: "temperature",
+          value: "temperature",
+          selected: true
+        }
+      ]
+    },
+    data: {
+      json: [],
+      key: {
+        value: ["timestamp", "temperature"],
+        x: "timestamp"
+      },
+      xFormat: "%Y-%m-%d %H:%M:%S"
+    }
+  }
+};
+
+export const CONFIG_GAUGE_CHART = {
+  config: {
+    axis: {
+      chart: "gauge",
+      rotated: false,
+      x: {
+        type: "indexed"
+      }
+    },
+    gauge: {min: 10, max: 100},
+    size: {width: 300, height: 500},
+    padding: {top: 50, right: 50, bottom: 50, left: 50},
+    legend: {position: "bottom"},
+    title: {en: "Gauge chart"},
+    serverName: "2",
+    datasource: "temperature",
+    columns: {
+      x: [
+        {
+          id: 1,
+          key: "timestamp",
+          value: "timestamp",
+          selected: true
+        }
+      ],
+      y: [
+        {
+          id: 3,
+          key: "temperature",
+          value: "temperature",
+          selected: true
+        }
+      ]
+    },
+    data: {
+      json: [],
+      key: {
+        value: ["timestamp", "temperature"],
+        x: "timestamp"
+      },
+      xFormat: "%Y-%m-%d %H:%M:%S"
+    }
+  }
+};
+
+export const CONFIG_PIE_CHART = {
+  config: {
+    axis: {
+      chart: "pie",
+      rotated: false,
+      x: {
+        type: "indexed"
+      }
+    },
+    pie: {expand: true},
+    size: {width: 300, height: 500},
+    padding: {top: 50, right: 50, bottom: 50, left: 50},
+    legend: {position: "bottom"},
+    title: {en: "Pie chart"},
     serverName: "2",
     datasource: "temperature",
     columns: {

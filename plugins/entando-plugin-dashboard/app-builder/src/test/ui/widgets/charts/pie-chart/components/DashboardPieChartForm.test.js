@@ -2,7 +2,7 @@ import React from "react";
 import "test/enzyme-init";
 import {shallow} from "enzyme";
 
-import {DashboardBarChartFormBody} from "ui/widgets/charts/bar-chart/components/DashboardBarChartForm";
+import {DashboardPieChartFormBody} from "ui/widgets/charts/pie-chart/components/DashboardPieChartForm";
 import Stepper from "ui/widgets/common/components/Stepper";
 
 const props = {
@@ -15,10 +15,10 @@ const props = {
   formSyncErrors: {}
 };
 
-describe("DashboardBarChartForm", () => {
+describe("DashboardPieChartForm", () => {
   let component;
   beforeEach(() => {
-    component = shallow(<DashboardBarChartFormBody {...props} />);
+    component = shallow(<DashboardPieChartFormBody {...props} />);
   });
 
   it("renders without crashing", () => {
