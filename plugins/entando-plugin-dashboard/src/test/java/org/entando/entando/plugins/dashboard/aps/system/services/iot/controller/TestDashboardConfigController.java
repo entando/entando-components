@@ -28,6 +28,9 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -371,4 +374,63 @@ public class TestDashboardConfigController extends AbstractControllerTest {
     result.andExpect(status().is4xxClientError());
   }
 
+  @Test
+  public void testGetAllDevices() throws Exception {
+    UserDetails user = new OAuth2TestUtils.UserBuilder("admin", "adminadmin").grantedToRoleAdmin().build();
+    String accessToken = mockOAuthInterceptor(user);
+    int dashboardId = 1;
+    String datasourceCode = "1";
+
+    DashboardDatasourceDto mockDto = new DashboardDatasourceDto();
+    mockDto.setDashboardConfigDto(new DashboardConfigDto());
+    mockDto.setDatasourcesConfigDto(null);
+
+    List<DatasourcesConfigDto> mockDatasources = new ArrayList<>();
+    DatasourcesConfigDto datasource = new DatasourcesConfigDto();
+    datasource.setDatasourceCode("1");
+    DatasourcesConfigDto datasource2= new DatasourcesConfigDto();
+    datasource.setDatasourceCode("2");
+    DatasourcesConfigDto datasource3 = new DatasourcesConfigDto();
+    datasource.setDatasourceCode("3");
+    mockDatasources.add(datasource);
+    mockDatasources.add(datasource2);
+    mockDatasources.add(datasource3);
+    
+    Mockito.when(dashboardConfigService.existsById(dashboardId)).thenReturn(true);
+    Mockito.when(connectorService.getAllDevices(Mockito.any())).thenReturn(mockDatasources);
+
+    ResultActions result = mockMvc.perform(
+        get(BASE_PATH + "server/" + dashboardId +"/getAllDevices")
+            .header("Authorization", "Bearer " + accessToken)
+    );
+
+    result.andExpect(status().is2xxSuccessful());
+    
+    JsonElement jsonPayload = new Gson().fromJson(result.andReturn().getResponse().getContentAsString(), JsonObject.class)
+        .get("payload");
+    List<DatasourcesConfigDto> datasources = IoTUtils.getObjectFromJson(jsonPayload,new TypeToken<List<DatasourcesConfigDto>>(){}.getType(),ArrayList.class);
+    assertEquals(datasources, mockDatasources);
+  }
+  @Test
+  public void testGetAllDevicesNullResponse() throws Exception {
+    UserDetails user = new OAuth2TestUtils.UserBuilder("admin", "adminadmin").grantedToRoleAdmin().build();
+    String accessToken = mockOAuthInterceptor(user);
+    int dashboardId = 1;
+    String datasourceCode = "1";
+
+    DashboardDatasourceDto mockDto = new DashboardDatasourceDto();
+    mockDto.setDashboardConfigDto(new DashboardConfigDto());
+    mockDto.setDatasourcesConfigDto(null);
+
+    Mockito.when(dashboardConfigService.existsById(dashboardId)).thenReturn(true);
+    Mockito.when(connectorService.getAllDevices(Mockito.any())).thenReturn(null);
+
+    ResultActions result = mockMvc.perform(
+        get(BASE_PATH + "server/" + dashboardId +"/getAllDevices")
+            .header("Authorization", "Bearer " + accessToken)
+    );
+
+    result.andExpect(status().is2xxSuccessful());
+  }
+  
 }

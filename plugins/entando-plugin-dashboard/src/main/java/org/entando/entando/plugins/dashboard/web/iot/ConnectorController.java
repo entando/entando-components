@@ -94,17 +94,6 @@ public class ConnectorController {
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
-	private DashboardDatasourceDto getAndCheckDashboardDatasourceDto(@PathVariable int serverId, @PathVariable String datasourceCode) {
-		if (!dashboardConfigService.existsById(serverId)) {
-			throw new ResourceNotFoundException(EntityValidator.ERRCODE_ENTITY_DOES_NOT_EXIST, "ServerId", String.valueOf(serverId));
-		}
-		DashboardDatasourceDto dto = dashboardConfigService.getDashboardDatasourceDto(serverId, datasourceCode);
-		if (dto.getDatasourcesConfigDto() == null) {
-			throw new ResourceNotFoundException(EntityValidator.ERRCODE_ENTITY_DOES_NOT_EXIST, "ServerId: " + String.valueOf(serverId) + " datasourceCode " , datasourceCode);
-		}
-		return dto;
-	}
-
 	@RequestMapping(value = "/setTemplate/server/{serverId}/datasource/{datasourceCode}", method = RequestMethod.POST)
 	public ResponseEntity<?> setMeasurementTemplate(@PathVariable int serverId,
 			@PathVariable String datasourceCode)
@@ -114,9 +103,15 @@ public class ConnectorController {
 
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
-	public static void main(String []args) {
-		System.out.println(new Date().toInstant());
-	}
-	
+
+  private DashboardDatasourceDto getAndCheckDashboardDatasourceDto(@PathVariable int serverId, @PathVariable String datasourceCode) {
+    if (!dashboardConfigService.existsById(serverId)) {
+      throw new ResourceNotFoundException(EntityValidator.ERRCODE_ENTITY_DOES_NOT_EXIST, "ServerId", String.valueOf(serverId));
+    }
+    DashboardDatasourceDto dto = dashboardConfigService.getDashboardDatasourceDto(serverId, datasourceCode);
+    if (dto.getDatasourcesConfigDto() == null) {
+      throw new ResourceNotFoundException(EntityValidator.ERRCODE_ENTITY_DOES_NOT_EXIST, "ServerId: " + String.valueOf(serverId) + " datasourceCode " , datasourceCode);
+    }
+    return dto;
+  }
 }

@@ -19,6 +19,7 @@ package org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfi
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class DatasourcesConfigDto {
 
@@ -83,4 +84,25 @@ public class DatasourcesConfigDto {
         this.datasourceCode = datasourceCode;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        DatasourcesConfigDto that = (DatasourcesConfigDto) o;
+        return Objects.equals(name, that.name) &&
+            Objects.equals(datasourceCode, that.datasourceCode) &&
+            Objects.equals(datasource, that.datasource) &&
+            Objects.equals(datasourceURI, that.datasourceURI) &&
+            Objects.equals(status, that.status) &&
+            Objects.equals(metadata, that.metadata);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, datasourceCode, datasource, datasourceURI, status, metadata);
+    }
 }

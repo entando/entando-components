@@ -139,4 +139,11 @@ public class IoTUtils {
 
 		return restTemplate.exchange(url, HttpMethod.GET, httpEntity, String.class);
 	}
+
+	public static boolean checkResponse(ResponseEntity<String> response) {
+		if(response.getStatusCode().is2xxSuccessful()) {
+			return true;
+		}
+		return false;
+	}
 }
