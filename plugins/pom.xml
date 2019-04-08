@@ -24,6 +24,7 @@
         <url>http://www.entando.com/</url>
     </organization>
     <modules>
+     	<module>entando-plugin-dashboard</module>
         <module>entando-plugin-jacms</module>
         <module>entando-plugin-jpfacetnav</module>
         <module>entando-plugin-jpmail</module>
