@@ -165,7 +165,8 @@ public class DashboardConfigController {
     if (bindingResult.hasErrors()) {
       throw new ValidationGenericException(bindingResult);
     }
-
+    
+    connectorService.setDevicesMetadata(dashboardConfigRequest);
     DashboardConfigDto dashboardConfig = this.getDashboardConfigService()
         .updateDashboardConfig(dashboardConfigRequest);
     return new ResponseEntity<>(new SimpleRestResponse(dashboardConfig), HttpStatus.OK);
