@@ -1,6 +1,7 @@
 package org.entando.entando.plugins.dashboard.aps.system.services.iot.utils;
 
 import java.lang.reflect.Type;
+import java.net.ConnectException;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
@@ -14,7 +15,9 @@ import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.Dashb
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
@@ -137,10 +140,15 @@ public class IoTUtils {
 
 		RestTemplate restTemplate = new RestTemplate();
 
-		return restTemplate.exchange(url, HttpMethod.GET, httpEntity, String.class);
+		try {
+		return restTemplate.exchange(url, HttpMethod.GET, httpEntity, String.class); 
+		}
+		catch (ResourceAccessException e){
+		  return new ResponseEntity(e, HttpStatus.REQUEST_TIMEOUT);
+    }
 	}
 
-	public static boolean checkResponse(ResponseEntity<String> response) {
+	public static boolean isValidResponse(ResponseEntity<String> response) {
 		if(response.getStatusCode().is2xxSuccessful()) {
 			return true;
 		}
