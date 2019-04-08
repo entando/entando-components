@@ -1,4 +1,5 @@
 var cropEditorEnabled = false;
+console.log(cropEditorEnabled);
 var attachmentUploadEnabled = false;
 
 var FileUploadManager = function (config) {
@@ -113,27 +114,7 @@ var FileUploadManager = function (config) {
     this.deleteFile = function (fileIndex) {
         this.files[fileIndex].uploadStatus = this.UPLOAD_STATUSES.CANCELED;
         this.files[fileIndex].domElements.$formGroup.hide();
-        if(this.files[fileIndex].domElements.$tabNavigationItem) {
-            this.files[fileIndex].domElements.$tabNavigationItem.removeClass('active');
-            if (this.files[fileIndex].domElements.$tabNavigationItem.next().length) {
-                this.files[fileIndex].domElements.$tabNavigationItem.next().addClass('active');
-            } else {
-                this.files[fileIndex].domElements.$tabNavigationItem.prev().addClass('active');
-            }
-            this.files[fileIndex].domElements.$tabNavigationItem.remove();
-
-
-            this.files[fileIndex].domElements.$tabPane.removeClass('active');
-            if (this.files[fileIndex].domElements.$tabPane.next().length) {
-                this.files[fileIndex].domElements.$tabPane.next().addClass('active');
-            } else {
-                this.files[fileIndex].domElements.$tabPane.prev().addClass('active');
-            }
-            this.files[fileIndex].domElements.$tabPane.remove();
-
-        }
-
-    };
+    }
 
 
     this.prepareFormGroupHiddenFields = function ($formGroup, file) {
@@ -301,7 +282,7 @@ var FileUploadManager = function (config) {
             '                    Select a file' +
             '                </label>' +
             '' +
-            '                <input type="file" name="fileUpload" id="fileUpload_' + id + '" class="input-file-button" multiple="true">' +
+            '                <input type="file" name="fileUpload" id="fileUpload_' + id + '" class="input-file-button" >' +
             '            </div>' +
             '        <input type="hidden" name="fileUploadId_' + id + '" maxlength="500" value="" id="fileUploadId_' + id + '" class="form-control fileUploadId">' +
             '        <input type="hidden" name="fileUploadName_' + id + '" maxlength="500" value="" id="fileUploadName_' + id + '" class="form-control fileUploadName">' +
@@ -385,7 +366,7 @@ jQuery(document).ready(function ($) {
 
     });
 
-    $('#save').on('change', '.input-file-button', function (e) {
+    $('#save').on('change', 'input', function (e) {
         if ('files' in e.target) {
             var files = [];
             for (var i = 0; i < e.target.files.length; i++) {
@@ -396,23 +377,23 @@ jQuery(document).ready(function ($) {
                 // Change file input for currently selected file
                 var $target = $(e.target);
 
-                // if ($target.attr('id') !== 'newFileUpload-multiple') {
-                //     $currentlyClickedFormGroup = $(e.target).closest('.form-group');
-                //     fileUploadManager.updateFile($currentlyClickedFormGroup.data('fileId'), files[0], $currentlyClickedFormGroup);
-                //     files.splice(0, 1);
-                // }
+                if ($target.attr('id') !== 'newFileUpload-multiple') {
+                    $currentlyClickedFormGroup = $(e.target).closest('.form-group');
+                    fileUploadManager.updateFile($currentlyClickedFormGroup.data('fileId'), files[0], $currentlyClickedFormGroup);
+                    console.log(files);
+                    files.splice(0, 1);
+                }
 
                 if (files.length > 0) {
+                    console.log(files.length);
                     console.log("INSERT");
-                    var offset = fileUploadManager.files.length;
                     fileUploadManager.insertFiles(fileUploadManager.prepareFiles(files));
 
                     if (cropEditorEnabled) {
-                        for (var i = 0; i < files.length; i++) {
-                            var fileInput = fileUploadManager.files[offset + i].fileInput;
-                            readAsDataUrl(offset + i, fileInput, function (fileIndex, imageData) {
+                        for (var i = 0; i < fileUploadManager.files.length; i++) {
+                            var fileInput = fileUploadManager.files[i].fileInput;
+                            readAsDataUrl(i, fileInput, function (fileIndex, imageData) {
                                 fileUploadManager.files[fileIndex].imageData = imageData;
-                                console.log("Will call addTab");
                                 var tabResult = addTab(fileIndex);
                                 fileUploadManager.files[fileIndex].domElements.$tabNavigationItem = tabResult.$tabNavigationItem;
                                 fileUploadManager.files[fileIndex].domElements.$tabPane = tabResult.$tabPane;
@@ -449,17 +430,13 @@ jQuery(document).ready(function ($) {
     $cropEditorModal.find('.nav-tabs').on('shown.bs.tab', '[data-toggle="tab"]', function () {
         var fileId = parseInt($(this).closest('.image-navigation-item').data('storeItemId'));
         var file = fileUploadManager.files[fileId];
-        if(!file.cropper.ready) {
-            setupCropper(fileId);
-        }
+        setupCropper(fileId);
     });
 
     $cropEditorModal.on('shown.bs.modal', function () {
         var fileId = parseInt($(this).find('.tab-pane.active').data('storeItemId'));
         var file = fileUploadManager.files[fileId];
-        if(!file.cropper.ready) {
-            setupCropper(fileId);
-        }
+        setupCropper(fileId);
     });
 
 
@@ -476,7 +453,6 @@ jQuery(document).ready(function ($) {
                     var imageData = "";
                     if (file) {
                         imageData = file.cropper.getCroppedCanvas().toDataURL(file.type);
-                        file.fileInput = dataURLtoFile(imageData, file.name);
                         file.cropper.replace(imageData);
                         file.imageData = imageData;
                         fileUploadManager.files[fileId] = file;
@@ -484,29 +460,28 @@ jQuery(document).ready(function ($) {
 
                     // DOMToastSuccess("Image cropped!");
                 } else {
-                    if (file.cropper.ready) {
-                        var imageData = file.cropper.getCroppedCanvas().toDataURL();
-                        var newFile = fileUploadManager.prepareFile(dataURLtoFile(imageData, name));
-                        newFile.name = newFile.uploadId.substr(0, 4) + "_" + file.name;
-                        newFile.description = newFile.uploadId.substr(0, 4) + "_" + file.description;
+                    var imageData = file.cropper.getCroppedCanvas().toDataURL(file.type);
+                    var newFile = fileUploadManager.prepareFile(dataURLtoFile(imageData, name));
+                    newFile.name = newFile.uploadId.substr(0, 4) + "_" + file.name;
+                    newFile.description = newFile.uploadId.substr(0, 4) + "_" + file.description;
 
-                        newFile.domElements.$formGroup = fileUploadManager.addFormGroupForNewFile();
+                    newFile.domElements.$formGroup = fileUploadManager.addFormGroupForNewFile();
 
-                        newFile.imageData = imageData;
+                    newFile.imageData = imageData;
 
 
-                        var newFileId = fileUploadManager.insertFile(newFile);
-                        var tabResult = addTab(newFileId);
-                        fileUploadManager.files[newFileId].domElements.$tabNavigationItem = tabResult.$tabNavigationItem;
-                        fileUploadManager.files[newFileId].domElements.$tabPane = tabResult.$tabPane;
-                    }
+                    var newFileId = fileUploadManager.insertFile(newFile);
+                    var tabResult = addTab(newFileId);
+                    fileUploadManager.files[newFileId].domElements.$tabNavigationItem = tabResult.$tabNavigationItem;
+                    fileUploadManager.files[newFileId].domElements.$tabPane = tabResult.$tabPane;
+
                 }
 
                 // DOMToastSuccess("Crop created!");
 
                 break;
             case 'remove':
-                fileUploadManager.deleteFile(fileId);
+                // deleteStoreItem(fileId);
                 break;
             case 'setDragMode':
                 file.cropper.setDragMode($btn.data('option'));
@@ -543,7 +518,6 @@ jQuery(document).ready(function ($) {
     // Utils
 
     var addTab = function (fileIndex) {
-        console.log("addTab");
         var file = fileUploadManager.files[fileIndex];
         var $imageNav = $('.image-navigation');
         var $tabContent = $('.bs-cropping-modal').find('.tab-content');
@@ -656,16 +630,14 @@ jQuery(document).ready(function ($) {
 
                 if (files.length > 0) {
                     if (files.length > 0) {
-                        var offset = fileUploadManager.files.length;
-
                         console.log(files.length);
                         console.log("INSERT");
                         fileUploadManager.insertFiles(fileUploadManager.prepareFiles(files));
 
                         if (cropEditorEnabled) {
-                            for (var i = 0; i < files.length; i++) {
-                                var fileInput = fileUploadManager.files[offset + i].fileInput;
-                                readAsDataUrl(offset + i, fileInput, function (fileIndex, imageData) {
+                            for (var i = 0; i < fileUploadManager.files.length; i++) {
+                                var fileInput = fileUploadManager.files[i].fileInput;
+                                readAsDataUrl(i, fileInput, function (fileIndex, imageData) {
                                     fileUploadManager.files[fileIndex].imageData = imageData;
                                     var tabResult = addTab(fileIndex);
                                     fileUploadManager.files[fileIndex].domElements.$tabNavigationItem = tabResult.$tabNavigationItem;
@@ -679,69 +651,6 @@ jQuery(document).ready(function ($) {
             }
         }
     });
-
-
-    // Parses `#aspect-ratio-values` element and retrieves toolbar values to setup aspect-ratio toolbar.
-    var DOMsetupAspectRatioToolbar = function () {
-        var defaultAspectRatios = $('#aspect-ratio-values').text().trim().split(";");
-        var $aspectRatioToolbar = $('.aspect-ratio-buttons');
-
-        var render = function (val) {
-            var aspectRatioValues = val.split(':');
-            var aspectRatio = aspectRatioValues[0] / aspectRatioValues[1];
-            var template =
-                '<label class="btn btn-primary" data-method="setAspectRatio" data-option="' + aspectRatio + '">\n' +
-                '<input type="radio" class="sr-only" name="aspectRatio" value="' + aspectRatio + '">\n' +
-                '<span class="docs-tooltip">' + val + '</span>\n' +
-                '</label>';
-
-            return template;
-        };
-
-        for (var i in defaultAspectRatios) {
-            if (defaultAspectRatios[i].length > 0) {
-                $aspectRatioToolbar.find('.btn-group').append(render(defaultAspectRatios[i]));
-            }
-        }
-    };
-
-    DOMsetupAspectRatioToolbar();
-
-
-    /**
-     * Handling single image edit form.
-     */
-
-    var singleImageEdit = $('#imageUrl');
-
-    // If this is single image edit form retrieve image, convert it to base64 string to add it to Store as storeItem.
-    if (singleImageEdit.length === 1) {
-        var imagePath = singleImageEdit.data('value');
-        toDataUrl(imagePath, function (imageData) {
-
-            var name = $('#descr_0').val();
-            var imageData = imageData;
-            var type = imageData.substring("data:".length, imageData.indexOf(";base64"));
-
-            var newFile = fileUploadManager.prepareFile(dataURLtoFile(imageData, name));
-            newFile.name = name;
-            newFile.domElements.$formGroup = $('#formGroup-0');
-            newFile.imageData = imageData;
-
-
-            var newFileId = fileUploadManager.insertFile(newFile);
-            var tabResult = addTab(newFileId);
-
-            // tabResult.$tabNavigationItem.removeClass('active');
-            // tabResult.$tabPane.removeClass('active');
-
-            fileUploadManager.files[newFileId].domElements.$tabNavigationItem = tabResult.$tabNavigationItem;
-            fileUploadManager.files[newFileId].domElements.$tabPane = tabResult.$tabPane;
-
-            // setupCropper(newFileId);
-
-        });
-    }
 
 
 });
