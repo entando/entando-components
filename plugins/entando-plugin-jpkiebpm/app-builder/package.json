@@ -4,9 +4,9 @@
   "repository": "https://github.com/entando/entando-plugin-jpkiebpm",
   "private": true,
   "dependencies": {
-    "@entando/apimanager": "^1.0.2",
+    "@entando/apimanager": "^3.0.2",
     "@entando/router": "^1.0.1",
-    "@entando/utils": "^1.0.1",
+    "@entando/utils": "^1.2.0",
     "autoprefixer": "7.1.6",
     "babel-core": "6.26.0",
     "babel-eslint": "7.2.3",
@@ -95,7 +95,7 @@
     "react": "^16.3.1",
     "redux": "^3.7.2",
     "redux-form": "^7.3.0",
-    "@entando/apimanager": "^1.0.1"
+    "@entando/apimanager": "^3.0.2"
   },
   "jest": {
     "collectCoverageFrom": [
