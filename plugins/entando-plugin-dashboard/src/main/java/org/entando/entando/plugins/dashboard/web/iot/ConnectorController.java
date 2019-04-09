@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.exception.ApiResourceNotAvailableException;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementPayload;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IConnectorService;
@@ -94,15 +95,15 @@ public class ConnectorController {
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
-	@RequestMapping(value = "/setTemplate/server/{serverId}/datasource/{datasourceCode}", method = RequestMethod.POST)
-	public ResponseEntity<?> setMeasurementTemplate(@PathVariable int serverId,
-			@PathVariable String datasourceCode)
-					throws ApsSystemException {
-		DashboardDatasourceDto dto = this.getAndCheckDashboardDatasourceDto(serverId, datasourceCode);
-		//    connectorService.setDeviceMeasurementSchema(dto);
+  @RequestMapping(value = "/setTemplate/server/{serverId}/datasource/{datasourceCode}", method = RequestMethod.POST)
+  public ResponseEntity<?> setMeasurementTemplate(@PathVariable int serverId,
+      @PathVariable String datasourceCode)
+      throws ApsSystemException {
+    DashboardDatasourceDto dto = this.getAndCheckDashboardDatasourceDto(serverId, datasourceCode);
+    //    connectorService.setDeviceMeasurementSchema(dto);
 
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
 
   private DashboardDatasourceDto getAndCheckDashboardDatasourceDto(@PathVariable int serverId, @PathVariable String datasourceCode) {
     if (!dashboardConfigService.existsById(serverId)) {
@@ -110,8 +111,14 @@ public class ConnectorController {
     }
     DashboardDatasourceDto dto = dashboardConfigService.getDashboardDatasourceDto(serverId, datasourceCode);
     if (dto.getDatasourcesConfigDto() == null) {
-      throw new ResourceNotFoundException(EntityValidator.ERRCODE_ENTITY_DOES_NOT_EXIST, "ServerId: " + String.valueOf(serverId) + " datasourceCode " , datasourceCode);
+      throw new ResourceNotFoundException(EntityValidator.ERRCODE_ENTITY_DOES_NOT_EXIST, "DatasourceCode " , datasourceCode);
     }
     return dto;
   }
+  
+  @RequestMapping(value = "/exception", method = RequestMethod.GET)
+  public ResponseEntity<?> getException() throws ApiResourceNotAvailableException {
+	  throw new ApiResourceNotAvailableException("408" ,"Sample Exception");
+  }
+  
 }

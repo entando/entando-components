@@ -26,10 +26,13 @@ import java.util.Map;
 import javax.validation.Valid;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.entando.entando.aps.system.exception.ResourceNotFoundException;
+import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.ServerType;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.exception.ApiResourceNotAvailableException;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementColumn;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
@@ -38,27 +41,35 @@ import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IC
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigRequest;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DatasourcesConfigRequest;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.validator.DashboardConfigValidator;
+import org.entando.entando.plugins.dashboard.web.iot.IoTExceptionHandler;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
+import org.entando.entando.web.common.model.ErrorRestResponse;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.PagedRestResponse;
+import org.entando.entando.web.common.model.RestError;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.agiletec.aps.system.exception.ApsSystemException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 @RestController
@@ -76,7 +87,7 @@ public class DashboardConfigController {
 
   @Autowired
   private IConnectorService connectorService;
-
+  
   protected IDashboardConfigService getDashboardConfigService() {
     return dashboardConfigService;
   }
@@ -104,16 +115,16 @@ public class DashboardConfigController {
   @RestAccessControl(permission = "superuser")
   @RequestMapping(value = "/servertypes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SimpleRestResponse<ServerType>> getDashboardTypes() {
-    ServerType sitewhere = new ServerType();
-    sitewhere.setCode("SITEWHERE");
-    sitewhere.setDescription("SITEWHERE");
-    ServerType kaa = new ServerType();
-    kaa.setCode("KAA");
-    kaa.setDescription("KAA");
-    List<ServerType> lista = new ArrayList<ServerType>();
-    lista.add(kaa);
-    lista.add(sitewhere);
-//    List<ServerType> lista = connectorService.getDashboardTypes();
+//    ServerType sitewhere = new ServerType();
+//    sitewhere.setCode("SITEWHERE");
+//    sitewhere.setDescription("SITEWHERE");
+//    ServerType kaa = new ServerType();
+//    kaa.setCode("KAA");
+//    kaa.setDescription("KAA");
+//    List<ServerType> lista = new ArrayList<ServerType>();
+//    lista.add(kaa);
+//    lista.add(sitewhere);
+    List<ServerType> lista = connectorService.getDashboardTypes();
     return new ResponseEntity<>(new SimpleRestResponse(lista), HttpStatus.OK);
   }
 
@@ -154,7 +165,7 @@ public class DashboardConfigController {
   public ResponseEntity<SimpleRestResponse<DashboardConfigDto>> updateDashboardConfig(
       @PathVariable String dashboardConfigId,
       @Valid @RequestBody DashboardConfigRequest dashboardConfigRequest,
-      BindingResult bindingResult) {
+      BindingResult bindingResult) throws ApsSystemException {
     // field validations
     if (bindingResult.hasErrors()) {
       throw new ValidationGenericException(bindingResult);
@@ -176,7 +187,7 @@ public class DashboardConfigController {
   @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SimpleRestResponse<DashboardConfigDto>> addDashboardConfig( 
       @RequestBody DashboardConfigRequest dashboardConfigRequest,
-      BindingResult bindingResult) {
+      BindingResult bindingResult) throws ApsSystemException {
     // field validations
     if (bindingResult.hasErrors()) {
       throw new ValidationGenericException(bindingResult);
@@ -294,16 +305,16 @@ public class DashboardConfigController {
   @RestAccessControl(permission = "superuser")
   @RequestMapping(value = "/server/{serverId}/getAllDevices", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SimpleRestResponse<MeasurementColumn>> getAllDevices(
-      @PathVariable int serverId) throws IOException {
+      @PathVariable int serverId) throws ApiResourceNotAvailableException {
     if (!dashboardConfigService.existsById(serverId)) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+    
     DashboardConfigDto dashboard = dashboardConfigService.getDashboardConfig(serverId);
     List<DatasourcesConfigDto> config = connectorService.getAllDevices(dashboard);
     return new ResponseEntity<>(new SimpleRestResponse(config), HttpStatus.OK);
   }
 
-  
-  
-  
+
+
 }

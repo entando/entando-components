@@ -139,11 +139,10 @@ public class IoTUtils {
 		HttpEntity httpEntity = new HttpEntity(headers);
 
 		RestTemplate restTemplate = new RestTemplate();
-
 		try {
 		return restTemplate.exchange(url, HttpMethod.GET, httpEntity, String.class); 
 		}
-		catch (ResourceAccessException e){
+		catch (ResourceAccessException | IllegalArgumentException e){
 		  return new ResponseEntity(e, HttpStatus.REQUEST_TIMEOUT);
     }
 	}

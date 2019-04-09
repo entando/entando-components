@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.ServerType;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.IDashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
@@ -39,7 +40,8 @@ public interface IConnectorIot {
 
 	MeasurementTemplate getDeviceMeasurementSchema(IDashboardDatasourceDto dto);
 
-	String getServerType();
+	ServerType getServerType();
 
-	DashboardConfigRequest setDevicesMetadata(DashboardConfigRequest dashboardConfigRequest);
+	DashboardConfigRequest setDevicesMetadata(DashboardConfigRequest dashboardConfigRequest)
+      throws ApsSystemException;
 }

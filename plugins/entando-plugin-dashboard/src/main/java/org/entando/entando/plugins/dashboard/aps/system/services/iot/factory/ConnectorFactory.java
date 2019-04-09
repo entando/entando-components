@@ -47,7 +47,7 @@ public class ConnectorFactory  implements ApplicationContextAware {
   public List<ServerType> getServerType() {
     Map<String, IConnectorIot> beans = applicationContext.getBeansOfType(IConnectorIot.class);
     List<ServerType> serverTypes = new ArrayList<>();
-    beans.values().forEach(conn -> serverTypes.add(new ServerType(conn.getServerType())));
+    beans.values().forEach(conn -> serverTypes.add(conn.getServerType()));
     return serverTypes;
   }
 }

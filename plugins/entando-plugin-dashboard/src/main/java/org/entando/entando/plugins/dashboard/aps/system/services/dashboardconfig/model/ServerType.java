@@ -14,9 +14,14 @@ public class ServerType {
 	public ServerType() {
 	}
 
-	public ServerType(String code) {
+  public ServerType(String code) {
 		this.code = code;
 	}
+
+  public ServerType(String code, String description) {
+    this.code = code;
+    this.description = description;
+  }
 
 	public String getCode() {
 		return code;

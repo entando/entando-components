@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
+import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
@@ -27,6 +28,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.validation.BindingResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -411,6 +413,7 @@ public class TestDashboardConfigController extends AbstractControllerTest {
     List<DatasourcesConfigDto> datasources = IoTUtils.getObjectFromJson(jsonPayload,new TypeToken<List<DatasourcesConfigDto>>(){}.getType(),ArrayList.class);
     assertEquals(datasources, mockDatasources);
   }
+
   @Test
   public void testGetAllDevicesNullResponse() throws Exception {
     UserDetails user = new OAuth2TestUtils.UserBuilder("admin", "adminadmin").grantedToRoleAdmin().build();
@@ -431,6 +434,28 @@ public class TestDashboardConfigController extends AbstractControllerTest {
     );
 
     result.andExpect(status().is2xxSuccessful());
+  }
+
+  @Test
+  public void testGetAllDevicesApiError() throws Exception {
+    UserDetails user = new OAuth2TestUtils.UserBuilder("admin", "adminadmin").grantedToRoleAdmin().build();
+    String accessToken = mockOAuthInterceptor(user);
+    int dashboardId = 1;
+    String datasourceCode = "1";
+
+    DashboardDatasourceDto mockDto = new DashboardDatasourceDto();
+    mockDto.setDashboardConfigDto(new DashboardConfigDto());
+    mockDto.setDatasourcesConfigDto(null);
+
+    Mockito.when(dashboardConfigService.existsById(dashboardId)).thenReturn(true);
+
+    ResultActions result = mockMvc.perform(
+        get(BASE_PATH + "server/" + dashboardId +"/getAllDevices")
+            .header("Authorization", "Bearer " + accessToken)
+    );
+
+    System.out.println(result.andReturn().getResponse().getStatus());
+    System.out.println(result.andReturn().getResponse().getContentAsString());
   }
   
 }
