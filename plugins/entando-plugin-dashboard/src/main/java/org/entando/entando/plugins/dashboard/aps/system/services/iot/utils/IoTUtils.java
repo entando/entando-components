@@ -160,16 +160,29 @@ public class IoTUtils {
 
   public static void throwApiResourceUnavailableEx(ResponseEntity<String> response,
       int dashboardId, String datasourceCode, Class aClass) {
-    final Logger logger = LoggerFactory.getLogger(aClass);
-    logger.error(IoTConstants.LOGGER_ERROR_CALLING_API,
-        Thread.currentThread().getStackTrace()[2].getMethodName(),
-        response.getStatusCode(),
-        dashboardId, datasourceCode);
-    throw new ApiResourceNotAvailableException(
-        String.valueOf(response.getStatusCodeValue()),
-        String.format(
-            IoTConstants.EX_CANT_COMMUNICATE_API, aClass.getSimpleName(),
-            dashboardId, datasourceCode));
+	  if(datasourceCode != null) {
+      final Logger logger = LoggerFactory.getLogger(aClass);
+      logger.error(IoTConstants.LOG_API_EX_DASHBOARD_DATASOURCE,
+          Thread.currentThread().getStackTrace()[2].getMethodName(),
+          response.getStatusCode(),
+          dashboardId, datasourceCode);
+      throw new ApiResourceNotAvailableException(
+          String.valueOf(response.getStatusCodeValue()),
+          String.format(
+              IoTConstants.API_EX_DASHBOARD_DATASOURCE, aClass.getSimpleName(),
+              dashboardId, datasourceCode));
+    } else {
+      final Logger logger = LoggerFactory.getLogger(aClass);
+      logger.error(IoTConstants.LOG_API_EX_DASHBOARD,
+          Thread.currentThread().getStackTrace()[2].getMethodName(),
+          response.getStatusCode(),
+          dashboardId);
+      throw new ApiResourceNotAvailableException(
+          String.valueOf(response.getStatusCodeValue()),
+          String.format(
+              IoTConstants.API_EX_DASHBOARD, aClass.getSimpleName(),
+              dashboardId));
+    }
   }
 
   public static void logEndMethod(String dashboard, String datasource, boolean result, Class aClass) {
@@ -204,5 +217,4 @@ public class IoTUtils {
     }
     return dto;
   }
-	
 }
