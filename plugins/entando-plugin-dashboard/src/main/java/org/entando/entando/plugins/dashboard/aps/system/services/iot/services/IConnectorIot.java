@@ -8,6 +8,7 @@ import java.util.Map;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.ServerType;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.exception.ApiResourceNotAvailableException;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.IDashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
@@ -25,8 +26,8 @@ public interface IConnectorIot {
 
 	boolean pingDevice(IDashboardDatasourceDto dashboardDatasourceDto) throws IOException;
 
-	List<DatasourcesConfigDto> getAllDevices(DashboardConfigDto dashboardConfigDto);
-
+	List<DatasourcesConfigDto> getAllDevices(DashboardConfigDto dashboardConfigDto) throws ApiResourceNotAvailableException;
+ 
 	void saveMeasurementTemplate(IDashboardDatasourceDto dashboardDatasource)
 			throws ApsSystemException;
 
@@ -38,7 +39,7 @@ public interface IConnectorIot {
 
 	MeasurementConfig getMeasurementConfig(IDashboardDatasourceDto dto);
 
-	MeasurementTemplate getDeviceMeasurementSchema(IDashboardDatasourceDto dto);
+	MeasurementTemplate getDeviceMeasurementSchema(IDashboardDatasourceDto dto) throws ApiResourceNotAvailableException;
 
 	ServerType getServerType();
 

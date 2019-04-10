@@ -9,6 +9,7 @@ import com.google.gson.JsonObject;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.TestUtils;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IConnectorService;
 import org.entando.entando.plugins.dashboard.aps.system.services.storage.IotMessageDto;
@@ -56,7 +57,7 @@ public class TestConnectorController extends AbstractControllerTest {
     MockitoAnnotations.initMocks(this);
     mockMvc = MockMvcBuilders.standaloneSetup(controller)
         .addInterceptors(entandoOauth2Interceptor)
-        .setHandlerExceptionResolvers(createHandlerExceptionResolver())
+        .setHandlerExceptionResolvers(TestUtils.createHandlerExceptionResolver())
         .build();
   }
 
@@ -133,6 +134,12 @@ public class TestConnectorController extends AbstractControllerTest {
             .content(measurement)
     );
     result.andExpect(status().is4xxClientError());
+
+    JsonObject response = new Gson()
+        .fromJson(result.andReturn().getResponse().getContentAsString(), JsonObject.class);
+
+    assertEquals(response.get("errors").getAsJsonArray().get(0).getAsJsonObject()
+        .get("message").getAsString(),"a Datasource with " + datasourceCode + " code could not be found");
   }
 
   @Test
@@ -226,6 +233,11 @@ public class TestConnectorController extends AbstractControllerTest {
     );
 
     result.andExpect(status().is4xxClientError());
+    JsonObject response = new Gson()
+        .fromJson(result.andReturn().getResponse().getContentAsString(), JsonObject.class);
+
+    assertEquals(response.get("errors").getAsJsonArray().get(0).getAsJsonObject()
+        .get("message").getAsString(),"a Server with " + dashboardId + " code could not be found");
   }
 
   @Test
@@ -259,6 +271,12 @@ public class TestConnectorController extends AbstractControllerTest {
     );
 
     result.andExpect(status().is4xxClientError());
+
+    JsonObject response = new Gson()
+        .fromJson(result.andReturn().getResponse().getContentAsString(), JsonObject.class);
+
+    assertEquals(response.get("errors").getAsJsonArray().get(0).getAsJsonObject()
+        .get("message").getAsString(),"a Datasource with " + datasourceCode + " code could not be found");
   }
 
 }

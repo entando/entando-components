@@ -10,6 +10,8 @@ import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.TestUtils;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.exception.ApiResourceNotAvailableException;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementMapping;
@@ -18,7 +20,9 @@ import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.Measu
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IConnectorService;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.DashboardConfigController;
+import org.entando.entando.plugins.dashboard.web.iot.IoTExceptionHandler;
 import org.entando.entando.web.AbstractControllerTest;
+import org.entando.entando.web.common.handlers.RestExceptionHandler;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,10 +30,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.method.annotation.ExceptionHandlerMethodResolver;
+import org.springframework.web.servlet.HandlerExceptionResolver;
+import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
+import org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,9 +66,10 @@ public class TestDashboardConfigController extends AbstractControllerTest {
     MockitoAnnotations.initMocks(this);
     mockMvc = MockMvcBuilders.standaloneSetup(controller)
         .addInterceptors(entandoOauth2Interceptor)
-        .setHandlerExceptionResolvers(createHandlerExceptionResolver())
+        .setHandlerExceptionResolvers(TestUtils.createHandlerExceptionResolver())
         .build();
   }
+
 
   @Test
   public void testPingServerOK() throws Exception {
@@ -87,13 +100,17 @@ public class TestDashboardConfigController extends AbstractControllerTest {
 
     Mockito.when(dashboardConfigService.existsById(dashboardId)).thenReturn(false);
 
+    
     ResultActions result = mockMvc.perform(
         get(BASE_PATH + "server/" +dashboardId+"/ping")
-            .param("serverId", "1")
             .header("Authorization", "Bearer " + accessToken)
     );
 
     result.andExpect(status().isNotFound());
+    JsonObject response = new Gson()
+        .fromJson(result.andReturn().getResponse().getContentAsString(), JsonObject.class).get("errors").getAsJsonArray().get(0).getAsJsonObject();
+    
+    assertEquals(response.get("message").getAsString(),"a server with " + dashboardId + " code could not be found");
   }
   
   @Test
@@ -164,6 +181,11 @@ public class TestDashboardConfigController extends AbstractControllerTest {
     );
 
     result.andExpect(status().is4xxClientError());
+    JsonObject response = new Gson()
+        .fromJson(result.andReturn().getResponse().getContentAsString(), JsonObject.class);
+
+    assertEquals(response.get("errors").getAsJsonArray().get(0).getAsJsonObject()
+        .get("message").getAsString(),"a Server with " + dashboardId + " code could not be found");
   }
 
   @Test
@@ -185,6 +207,11 @@ public class TestDashboardConfigController extends AbstractControllerTest {
     );
 
     result.andExpect(status().is4xxClientError());
+    JsonObject response = new Gson()
+        .fromJson(result.andReturn().getResponse().getContentAsString(), JsonObject.class);
+
+    assertEquals(response.get("errors").getAsJsonArray().get(0).getAsJsonObject()
+        .get("message").getAsString(),"a Datasource with " + datasourceCode + " code could not be found");
   }
 
   @Test
@@ -244,6 +271,37 @@ public class TestDashboardConfigController extends AbstractControllerTest {
     MeasurementTemplate payload = IoTUtils.getObjectFromJson(jsonPayload,new TypeToken<MeasurementTemplate>(){}.getType(),MeasurementTemplate.class);
     assertEquals(payload, measurementTemplate);
   }
+  
+  @Test
+  public void testGetMeasurementPreviewThrowsExc() throws Exception {
+    UserDetails user = new OAuth2TestUtils.UserBuilder("admin", "adminadmin").grantedToRoleAdmin().build();
+    String accessToken = mockOAuthInterceptor(user);
+    int dashboardId = 1;
+    String datasourceCode = "1";
+
+    DashboardDatasourceDto mockDto = new DashboardDatasourceDto();
+    mockDto.setDashboardConfigDto(new DashboardConfigDto());
+    mockDto.setDatasourcesConfigDto(new DatasourcesConfigDto());
+
+    MeasurementTemplate measurementTemplate = new MeasurementTemplate();
+    measurementTemplate.getFields().add(new MeasurementType("temp", "int"));
+    measurementTemplate.getFields().add(new MeasurementType("time", "long"));
+
+    Mockito.when(dashboardConfigService.existsById(dashboardId)).thenReturn(true);
+    Mockito.when(dashboardConfigService.getDashboardDatasourceDto(dashboardId,datasourceCode)).thenReturn(mockDto);
+    Mockito.when(connectorService.getDeviceMeasurementSchema(Mockito.any())).thenThrow(new ApiResourceNotAvailableException("408", "Sample Message"));
+
+    ResultActions result = mockMvc.perform(
+        get(BASE_PATH + "server/" + dashboardId +"/datasource/"+ datasourceCode +"/preview")
+            .header("Authorization", "Bearer " + accessToken)
+    );
+
+    JsonObject response = new Gson()
+        .fromJson(result.andReturn().getResponse().getContentAsString(), JsonObject.class);
+
+    assertEquals(response.get("errors").getAsJsonArray().get(0).getAsJsonObject()
+        .get("message").getAsString(),"Sample Message");
+  }
 
   @Test
   public void testGetMeasurementPreview404Server() throws Exception {
@@ -268,6 +326,12 @@ public class TestDashboardConfigController extends AbstractControllerTest {
     );
 
     result.andExpect(status().is4xxClientError());
+    JsonObject response = new Gson()
+        .fromJson(result.andReturn().getResponse().getContentAsString(), JsonObject.class);
+
+    assertEquals(response.get("errors").getAsJsonArray().get(0).getAsJsonObject()
+        .get("message").getAsString(),"a Server with " + dashboardId + " code could not be found");
+    
   }
 
   @Test
@@ -293,6 +357,11 @@ public class TestDashboardConfigController extends AbstractControllerTest {
     );
 
     result.andExpect(status().is4xxClientError());
+    JsonObject response = new Gson()
+        .fromJson(result.andReturn().getResponse().getContentAsString(), JsonObject.class);
+
+    assertEquals(response.get("errors").getAsJsonArray().get(0).getAsJsonObject()
+        .get("message").getAsString(),"a Datasource with " + datasourceCode + " code could not be found");
   }
 
   @Test
@@ -349,6 +418,11 @@ public class TestDashboardConfigController extends AbstractControllerTest {
     );
 
     result.andExpect(status().is4xxClientError());
+    JsonObject response = new Gson()
+        .fromJson(result.andReturn().getResponse().getContentAsString(), JsonObject.class);
+
+    assertEquals(response.get("errors").getAsJsonArray().get(0).getAsJsonObject()
+        .get("message").getAsString(),"a Server with " + dashboardId + " code could not be found");
   }
 
   @Test
@@ -374,6 +448,11 @@ public class TestDashboardConfigController extends AbstractControllerTest {
     );
 
     result.andExpect(status().is4xxClientError());
+    JsonObject response = new Gson()
+        .fromJson(result.andReturn().getResponse().getContentAsString(), JsonObject.class);
+
+    assertEquals(response.get("errors").getAsJsonArray().get(0).getAsJsonObject()
+        .get("message").getAsString(),"a Datasource with " + datasourceCode + " code could not be found");
   }
 
   @Test
@@ -415,7 +494,7 @@ public class TestDashboardConfigController extends AbstractControllerTest {
   }
 
   @Test
-  public void testGetAllDevicesNullResponse() throws Exception {
+  public void testGetAllDevicesThrowsExc() throws Exception {
     UserDetails user = new OAuth2TestUtils.UserBuilder("admin", "adminadmin").grantedToRoleAdmin().build();
     String accessToken = mockOAuthInterceptor(user);
     int dashboardId = 1;
@@ -426,36 +505,45 @@ public class TestDashboardConfigController extends AbstractControllerTest {
     mockDto.setDatasourcesConfigDto(null);
 
     Mockito.when(dashboardConfigService.existsById(dashboardId)).thenReturn(true);
-    Mockito.when(connectorService.getAllDevices(Mockito.any())).thenReturn(null);
+    Mockito.when(connectorService.getAllDevices(Mockito.any())).thenThrow(new ApiResourceNotAvailableException("408", "Sample Message"));
 
     ResultActions result = mockMvc.perform(
         get(BASE_PATH + "server/" + dashboardId +"/getAllDevices")
             .header("Authorization", "Bearer " + accessToken)
     );
 
-    result.andExpect(status().is2xxSuccessful());
+    JsonObject response = new Gson()
+        .fromJson(result.andReturn().getResponse().getContentAsString(), JsonObject.class);
+
+    assertEquals(response.get("errors").getAsJsonArray().get(0).getAsJsonObject()
+        .get("message").getAsString(),"Sample Message");
+  }
+  
+  //region exception handlers
+  protected List<HandlerExceptionResolver> createHandlerExceptionResolver() {
+    List<HandlerExceptionResolver> handlerExceptionResolvers = new ArrayList();
+    ExceptionHandlerExceptionResolver exceptionHandlerExceptionResolver = this.createExceptionResolver();
+    handlerExceptionResolvers.add(exceptionHandlerExceptionResolver);
+    return handlerExceptionResolvers;
   }
 
-  @Test
-  public void testGetAllDevicesApiError() throws Exception {
-    UserDetails user = new OAuth2TestUtils.UserBuilder("admin", "adminadmin").grantedToRoleAdmin().build();
-    String accessToken = mockOAuthInterceptor(user);
-    int dashboardId = 1;
-    String datasourceCode = "1";
-
-    DashboardDatasourceDto mockDto = new DashboardDatasourceDto();
-    mockDto.setDashboardConfigDto(new DashboardConfigDto());
-    mockDto.setDatasourcesConfigDto(null);
-
-    Mockito.when(dashboardConfigService.existsById(dashboardId)).thenReturn(true);
-
-    ResultActions result = mockMvc.perform(
-        get(BASE_PATH + "server/" + dashboardId +"/getAllDevices")
-            .header("Authorization", "Bearer " + accessToken)
-    );
-
-    System.out.println(result.andReturn().getResponse().getStatus());
-    System.out.println(result.andReturn().getResponse().getContentAsString());
+  protected ExceptionHandlerExceptionResolver createExceptionResolver() {
+    final ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+    messageSource.setBasename("rest/messages");
+    messageSource.setUseCodeAsDefaultMessage(true);
+    ExceptionHandlerExceptionResolver exceptionResolver = new ExceptionHandlerExceptionResolver() {
+      protected ServletInvocableHandlerMethod getExceptionHandlerMethod(HandlerMethod handlerMethod, Exception exception) {
+        Method method = (new ExceptionHandlerMethodResolver(IoTExceptionHandler.class)).resolveMethod(exception);
+        IoTExceptionHandler validationHandler = new IoTExceptionHandler();
+        validationHandler.setMessageSource(messageSource);
+        return new ServletInvocableHandlerMethod(validationHandler, method);
+      }
+    };
+    exceptionResolver.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+    exceptionResolver.afterPropertiesSet();
+    return exceptionResolver;
   }
+
+  //endregion
   
 }
