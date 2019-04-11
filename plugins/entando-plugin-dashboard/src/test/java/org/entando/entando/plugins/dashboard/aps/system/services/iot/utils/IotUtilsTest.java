@@ -1,11 +1,13 @@
 package org.entando.entando.plugins.dashboard.aps.system.services.iot.utils;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -57,6 +59,19 @@ public class IotUtilsTest {
 
     assertNotNull(res);
     System.out.println(res);
+  }
+  
+  
+  @Test
+  public void testGetMapFromJson() {
+	  JsonObject json = new JsonObject();
+	  json.addProperty("x", "y");
+	  json.addProperty("z", "w");
+	  
+	  Map<String, Object> x = IoTUtils.getMapFromJson(json);
+	  
+	  assertEquals(x.get("x"), "y");
+	  assertEquals(x.get("z"), "w");
   }
   
 }

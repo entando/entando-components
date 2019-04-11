@@ -1,8 +1,8 @@
 package org.entando.entando.plugins.dashboard.aps.system.services.storage;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementPayload;
 
@@ -20,7 +20,7 @@ public class MessageBuilder {
 		dto.setServerId(message.getServerId());
 		MeasurementPayload payload = gson.fromJson(message.getContent().toJson(), MeasurementPayload.class);
 		//HashMap<String, Object> yourHashMap = new Gson().fromJson(yourJsonObject.toString(), HashMap.class);
-		HashMap<String, Object> map = gson.fromJson(gson.toJson(payload.getMeasurement()), HashMap.class);
+		Map<String, Object> map = payload.getMeasurement();
 		payload.setMeasurement(map);
 		dto.setContent(payload);
 		return dto;

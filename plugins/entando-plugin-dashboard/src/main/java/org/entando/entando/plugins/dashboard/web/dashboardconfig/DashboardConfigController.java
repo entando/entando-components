@@ -25,6 +25,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
@@ -35,6 +36,7 @@ import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.Measu
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IConnectorService;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigRequest;
+import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DatasourcesConfigRequest;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.validator.DashboardConfigValidator;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
@@ -163,7 +165,8 @@ public class DashboardConfigController {
     if (bindingResult.hasErrors()) {
       throw new ValidationGenericException(bindingResult);
     }
-
+    
+    connectorService.setDevicesMetadata(dashboardConfigRequest);
     DashboardConfigDto dashboardConfig = this.getDashboardConfigService()
         .updateDashboardConfig(dashboardConfigRequest);
     return new ResponseEntity<>(new SimpleRestResponse(dashboardConfig), HttpStatus.OK);
@@ -183,6 +186,7 @@ public class DashboardConfigController {
     if (bindingResult.hasErrors()) {
       throw new ValidationConflictException(bindingResult);
     }
+    dashboardConfigRequest = connectorService.setDevicesMetadata(dashboardConfigRequest);
     DashboardConfigDto dto = this.getDashboardConfigService()
         .addDashboardConfig(dashboardConfigRequest);
     return new ResponseEntity<>(new SimpleRestResponse(dto), HttpStatus.OK);
@@ -286,4 +290,20 @@ public class DashboardConfigController {
     return new ResponseEntity<>(new SimpleRestResponse(config), HttpStatus.OK);
   }
 
+
+  @RestAccessControl(permission = "superuser")
+  @RequestMapping(value = "/server/{serverId}/getAllDevices", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<SimpleRestResponse<MeasurementColumn>> getAllDevices(
+      @PathVariable int serverId) throws IOException {
+    if (!dashboardConfigService.existsById(serverId)) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    DashboardConfigDto dashboard = dashboardConfigService.getDashboardConfig(serverId);
+    List<DatasourcesConfigDto> config = connectorService.getAllDevices(dashboard);
+    return new ResponseEntity<>(new SimpleRestResponse(config), HttpStatus.OK);
+  }
+
+  
+  
+  
 }

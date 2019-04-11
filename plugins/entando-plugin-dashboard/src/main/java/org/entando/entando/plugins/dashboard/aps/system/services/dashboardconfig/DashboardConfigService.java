@@ -222,6 +222,7 @@ public class DashboardConfigService implements IDashboardConfigService {
                 ds.setDatasourceCode(datasource.getDatasourceCode());
                 ds.setDatasourceURI(datasource.getDatasourceURI());
                 ds.setStatus(datasource.getStatus());
+                ds.setMetadata(datasource.getMetadata());
                 datasources.add(ds);
             }
         }

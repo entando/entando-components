@@ -102,29 +102,6 @@ public class MessageService extends AbstractService implements IMessageService {
 	}
 
 	@Override
-	public List<IotMessage> findAllByServerConfigurationAndDateBetween(int serverId, String dashboardCode, Date start,
-			Date end) {
-		return this.messageRepository.findAllByServerIdAndDashboardCodeAndCreatedAtBetween(serverId, dashboardCode, start, end);
-	}
-
-	@Override
-	public List<IotMessage> findAllByServerConfigurationAndDateAfter(int dashboardId, String datasourceCode,
-			Date startDate) {
-		return this.messageRepository.findAllByServerIdAndDashboardCodeAndCreatedAtAfter(dashboardId, datasourceCode, startDate);
-	}
-
-	@Override
-	public List<IotMessage> findAllByServerConfigurationAndDateBefore(int dashboardId, String datasourceCode,
-			Date endDate) {
-		return this.messageRepository.findAllByServerIdAndDashboardCodeAndCreatedAtBefore(dashboardId, datasourceCode, endDate);
-	}
-
-	@Override
-	public List<IotMessage> findAllByServerConfiguration(int dashboardId, String datasourceCode) {
-		return this.messageRepository.findAllByServerIdAndDashboardCode(dashboardId, datasourceCode);
-	}
-
-	@Override
 	public List<MeasurementPayload> findMeasurementsByServerConfiguration(int dashboardId, String datasourceCode) {
 		Gson gson = new Gson();
 		List<IotMessage> measurementJson = this.messageRepository.findContentMeasurementByServerIdAndDashboardCode(dashboardId, datasourceCode);
@@ -132,5 +109,4 @@ public class MessageService extends AbstractService implements IMessageService {
 		measurementJson.forEach(j -> payloads.add(gson.fromJson(j.getContent().toJson(), MeasurementPayload.class)));
 		return payloads;
 	}
-
 }

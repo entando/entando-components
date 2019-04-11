@@ -17,9 +17,14 @@
 
 package org.entando.entando.plugins.dashboard.web.dashboardconfig.model;
 
-import org.hibernate.validator.constraints.NotBlank;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotBlank;
+
+import com.google.gson.JsonObject;
 
 public class DatasourcesConfigRequest {
 
@@ -35,6 +40,8 @@ public class DatasourcesConfigRequest {
     private String datasourceCode;
     
 	private String status;
+	
+	private Map<String, Object> metadata = new HashMap();
 
     public String getDatasource() {
         return datasource;
@@ -67,4 +74,13 @@ public class DatasourcesConfigRequest {
   	public void setDatasourceCode(String datasourceCode) {
   		this.datasourceCode = datasourceCode;
   	}
+
+	public Map<String, Object> getMetadata() {
+		return metadata;
+	}
+
+	public void setMetadata(Map<String, Object> metadata) {
+		this.metadata = metadata;
+	}
+
 }

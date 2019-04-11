@@ -25,6 +25,7 @@ import com.google.gson.JsonObject;
 import org.apache.commons.lang.StringUtils;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.ServerType;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -380,7 +381,8 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
 				datasource.setDatasourceURI(res.getString("datasourceuri"));
 				datasource.setStatus(res.getString("status"));
 				datasource.setName(res.getString("name"));
-				datasource.setMetadata(new Gson().fromJson(res.getString("metadata"), JsonObject.class));
+				JsonObject metadata = new Gson().fromJson(res.getString("metadata"), JsonObject.class);
+				datasource.setMetadata(IoTUtils.getMapFromJson(metadata));
 				dashboardConfig.getDatasources().add(datasource);
 			}
 
