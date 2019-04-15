@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -51,10 +52,20 @@ public class TestConnectorController extends AbstractControllerTest {
   @Mock
   IConnectorService connectorService;
 
-
+  DashboardConfigDto dashboardConfigDto;
+  
+  int dashboardId = 0;
+  String datasourceCode = "datasourceCode";
+  
   @Before
   public void setUp() throws Exception {
     MockitoAnnotations.initMocks(this);
+    dashboardConfigDto = new DashboardConfigDto();
+    dashboardConfigDto.setId(dashboardId);
+    DatasourcesConfigDto datasourcesConfigDto = new DatasourcesConfigDto();
+    datasourcesConfigDto.setDatasourceCode(datasourceCode);
+    dashboardConfigDto.setDatasources(new ArrayList() {{add(datasourcesConfigDto);}});
+    
     mockMvc = MockMvcBuilders.standaloneSetup(controller)
         .addInterceptors(entandoOauth2Interceptor)
         .setHandlerExceptionResolvers(TestUtils.createHandlerExceptionResolver())
@@ -66,16 +77,11 @@ public class TestConnectorController extends AbstractControllerTest {
     UserDetails user = new OAuth2TestUtils.UserBuilder("admin", "adminadmin").grantedToRoleAdmin()
         .build();
     String accessToken = mockOAuthInterceptor(user);
-    int dashboardId = 1;
-    String datasourceCode = "1";
-    DashboardDatasourceDto mockDto = new DashboardDatasourceDto();
-    mockDto.setDashboardConfigDto(new DashboardConfigDto());
-    mockDto.setDatasourcesConfigDto(new DatasourcesConfigDto());
 
     String measurement = "{\"temperature\" : 2, \"timestamp\" : 123456789}";
 
-    Mockito.when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
-    Mockito.when(dashboardConfigService.getDashboardDatasourceDto(dashboardId, datasourceCode)).thenReturn(mockDto);
+    when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
+    when(dashboardConfigService.getDashboardConfig(dashboardId)).thenReturn(dashboardConfigDto);
     ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
     ResultActions result = mockMvc.perform(
         post(BASE_PATH + "server/" + dashboardId + "/datasource/" + datasourceCode)
@@ -83,7 +89,7 @@ public class TestConnectorController extends AbstractControllerTest {
             .content(measurement)
     );
     result.andExpect(status().isOk());
-    Mockito.verify(connectorService).saveDeviceMeasurement(Mockito.any(), captor.capture());
+    Mockito.verify(connectorService).saveDeviceMeasurement(Mockito.any(), Mockito.any(), captor.capture());
     assertEquals(captor.getValue(), measurement);
   }
 
@@ -100,8 +106,8 @@ public class TestConnectorController extends AbstractControllerTest {
 
     String measurement = "{\"temperature\" : 2, \"timestamp\" : 123456789}";
 
-    Mockito.when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(false);
-    Mockito.when(dashboardConfigService.getDashboardDatasourceDto(dashboardId, datasourceCode)).thenReturn(mockDto);
+    when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(false);
+    when(dashboardConfigService.getDashboardDatasourceDto(dashboardId, datasourceCode)).thenReturn(mockDto);
 
     ResultActions result = mockMvc.perform(
         post(BASE_PATH + "server/" + dashboardId + "/datasource/" + datasourceCode)
@@ -117,19 +123,15 @@ public class TestConnectorController extends AbstractControllerTest {
     UserDetails user = new OAuth2TestUtils.UserBuilder("admin", "adminadmin").grantedToRoleAdmin()
         .build();
     String accessToken = mockOAuthInterceptor(user);
-    int dashboardId = 1;
-    String datasourceCode = "1";
-    DashboardDatasourceDto mockDto = new DashboardDatasourceDto();
-    mockDto.setDashboardConfigDto(new DashboardConfigDto());
-    mockDto.setDatasourcesConfigDto(null);
 
     String measurement = "{\"temperature\" : 2, \"timestamp\" : 123456789}";
 
-    Mockito.when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
-    Mockito.when(dashboardConfigService.getDashboardDatasourceDto(dashboardId, datasourceCode)).thenReturn(mockDto);
+    when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
+    when(dashboardConfigService.getDashboardConfig(dashboardId)).thenReturn(dashboardConfigDto);
 
+    String fakeCode = "fakeCode";
     ResultActions result = mockMvc.perform(
-        post(BASE_PATH + "server/" + dashboardId + "/datasource/" + datasourceCode)
+        post(BASE_PATH + "server/" + dashboardId + "/datasource/" + fakeCode)
             .contentType(MediaType.TEXT_PLAIN)
             .content(measurement)
     );
@@ -139,7 +141,7 @@ public class TestConnectorController extends AbstractControllerTest {
         .fromJson(result.andReturn().getResponse().getContentAsString(), JsonObject.class);
 
     assertEquals(response.get("errors").getAsJsonArray().get(0).getAsJsonObject()
-        .get("message").getAsString(),"a Datasource with " + datasourceCode + " code could not be found");
+        .get("message").getAsString(),"a Datasource with " + fakeCode + " code could not be found");
   }
 
   @Test
@@ -147,8 +149,6 @@ public class TestConnectorController extends AbstractControllerTest {
     UserDetails user = new OAuth2TestUtils.UserBuilder("admin", "adminadmin").grantedToRoleAdmin()
         .build();
     String accessToken = mockOAuthInterceptor(user);
-    int dashboardId = 1;
-    String datasourceCode = "1";
     Long nMeasurements = 2L;
     DashboardDatasourceDto mockDto = new DashboardDatasourceDto();
     mockDto.setDashboardConfigDto(new DashboardConfigDto());
@@ -168,10 +168,9 @@ public class TestConnectorController extends AbstractControllerTest {
 
     Instant startDate = Instant.ofEpochMilli(1553814852743L);
     Instant endDate = Instant.now();
-    Mockito.when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
-    Mockito.when(dashboardConfigService.getDashboardDatasourceDto(dashboardId, datasourceCode)).thenReturn(mockDto);
-    Mockito.when(connectorService
-        .getDeviceMeasurements(Mockito.any(), Mockito.any(), Mockito.any(),
+    when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
+    when(dashboardConfigService.getDashboardConfig(dashboardId)).thenReturn(dashboardConfigDto);
+    when(connectorService.getDeviceMeasurements(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(),
             Mockito.any())).thenReturn(measurements);
     ResultActions result = mockMvc.perform(
         get(BASE_PATH + "server/" + dashboardId + "/datasource/" + datasourceCode + "/data")
@@ -221,8 +220,8 @@ public class TestConnectorController extends AbstractControllerTest {
 
     Instant startDate = Instant.ofEpochMilli(1553814852743L);
     Instant endDate = Instant.now();
-    Mockito.when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(false);
-    Mockito.when(dashboardConfigService.getDashboardDatasourceDto(dashboardId, datasourceCode)).thenReturn(mockDto);
+    when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(false);
+    when(dashboardConfigService.getDashboardDatasourceDto(dashboardId, datasourceCode)).thenReturn(mockDto);
 //    Mockito.when(connectorService.getDeviceMeasurements(mockDto, Date.from(startDate), Date.from(endDate),
 //            new RestListRequest())).thenReturn(measurement);
     ResultActions result = mockMvc.perform(
@@ -245,8 +244,6 @@ public class TestConnectorController extends AbstractControllerTest {
     UserDetails user = new OAuth2TestUtils.UserBuilder("admin", "adminadmin").grantedToRoleAdmin()
         .build();
     String accessToken = mockOAuthInterceptor(user);
-    int dashboardId = 1;
-    String datasourceCode = "1";
     DashboardDatasourceDto mockDto = new DashboardDatasourceDto();
     mockDto.setDashboardConfigDto(new DashboardConfigDto());
     mockDto.setDatasourcesConfigDto(null);
@@ -258,13 +255,14 @@ public class TestConnectorController extends AbstractControllerTest {
 
     Instant startDate = Instant.ofEpochMilli(1553814852743L);
     Instant endDate = Instant.now();
-    Mockito.when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
-    Mockito.when(dashboardConfigService.getDashboardDatasourceDto(dashboardId, datasourceCode)).thenReturn(mockDto);
+    when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
+    when(dashboardConfigService.getDashboardConfig(dashboardId)).thenReturn(dashboardConfigDto);
 //    Mockito.when(connectorService
 //        .getDeviceMeasurements(mockDto, Date.from(startDate), Date.from(endDate),
 //            new RestListRequest())).thenReturn(pagedMetadata);
+    String fakeDatasourceCode = "fakeDatasourceCode";
     ResultActions result = mockMvc.perform(
-        get(BASE_PATH + "server/" + dashboardId + "/datasource/" + datasourceCode + "/data")
+        get(BASE_PATH + "server/" + dashboardId + "/datasource/" + fakeDatasourceCode + "/data")
             .param("startDate", startDate.toString())
             .param("endDate", endDate.toString())
             .header("Authorization", "Bearer " + accessToken)
@@ -276,7 +274,7 @@ public class TestConnectorController extends AbstractControllerTest {
         .fromJson(result.andReturn().getResponse().getContentAsString(), JsonObject.class);
 
     assertEquals(response.get("errors").getAsJsonArray().get(0).getAsJsonObject()
-        .get("message").getAsString(),"a Datasource with " + datasourceCode + " code could not be found");
+        .get("message").getAsString(),"a Datasource with " + fakeDatasourceCode + " code could not be found");
   }
 
 }

@@ -2,10 +2,10 @@ package org.entando.entando.plugins.dashboard.aps.system.services.iot.services;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.ServerType;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.IDashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
@@ -23,7 +23,7 @@ public interface IConnectorService {
 
 	LinkedHashMap<String, String> getConnectorTypes() throws IOException;
 
-	boolean pingDevice(IDashboardDatasourceDto device) throws IOException;
+	boolean pingDevice(DashboardConfigDto device, String datasourceCode) throws IOException;
 
 	<T extends DashboardConfigDto> boolean pingServer(T dashboardConfigDto) throws IOException;
 
@@ -34,22 +34,26 @@ public interface IConnectorService {
 	 */
 	//    <T extends DashboardDatasourceDto> MeasurementConfig getDeviceMeasurementSchema(T dashboardDatasourceDto, String loggerId);
 
-	void setDeviceMeasurementSchema(IDashboardDatasourceDto dashboardDatasourceDto) throws ApsSystemException;
+	void setDeviceMeasurementSchema(DashboardConfigDto dto, String datasourceCode) throws ApsSystemException;
 
-	void saveDeviceMeasurement(IDashboardDatasourceDto dashboardDatasourceDto, String measure);
+	void saveDeviceMeasurement(DashboardConfigDto dashboardDatasourceDto,
+      String datasourceCode, String measure);
 
 	PagedMetadata<Map<String, Object>> getMeasurements(RestListRequest requestList);
 
-	List<Map<String, Object>> getDeviceMeasurements(IDashboardDatasourceDto dto, Date startDate, Date endDate, RestListRequest restListRequest);
+	List<Map<String, Object>> getDeviceMeasurements(DashboardConfigDto dto,
+      String datasourceCode, Date startDate, Date endDate,
+      RestListRequest restListRequest);
 
-	MeasurementConfig getMeasurementsConfig(IDashboardDatasourceDto dto);
+	MeasurementConfig getMeasurementsConfig(DashboardConfigDto dto, String datasourceCode);
 
-	MeasurementTemplate getDeviceMeasurementSchema(IDashboardDatasourceDto dto);
+	MeasurementTemplate getDeviceMeasurementSchema(DashboardConfigDto dto,
+      String datasourceCode);
 
 	List<ServerType> getDashboardTypes();
 
 	DashboardConfigRequest setDevicesMetadata(DashboardConfigRequest dashboardConfigRequest)
       throws ApsSystemException;
 
-  DashboardDatasourceDto refreshMetadata(DashboardDatasourceDto dto) throws ApsSystemException;
+  DashboardConfigDto refreshMetadata(DashboardConfigDto dto, String datasourceCode) throws ApsSystemException;
 }

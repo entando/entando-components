@@ -13,10 +13,9 @@ import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.ServerType;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.factory.ConnectorFactory;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DashboardDatasourceDto;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.IDashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigRequest;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
@@ -52,23 +51,23 @@ public class ConnectorService extends AbstractConnectorService implements IConne
     }
 
     @Override
-    public boolean pingDevice(IDashboardDatasourceDto device) throws IOException {
-        logger.info("{} pingDevice on {}", this.getClass().getSimpleName(), device.getDashboardUrl());
-        return connectorFactory.getConnector(device.getDashboardConfigDto().getType()).pingDevice(device);
+    public boolean pingDevice(DashboardConfigDto dto, String datasourceCode) throws IOException {
+      IoTUtils.logStartMethod(String.valueOf(dto.getId()),datasourceCode,this.getClass());
+        return connectorFactory.getConnector(dto.getType()).pingDevice(dto, datasourceCode);
     }
 
     @Override
-    public <T extends DashboardConfigDto> boolean pingServer(T dashboardConfigDto)
+    public <T extends DashboardConfigDto> boolean pingServer(T dto)
             throws IOException {
-        logger.info("{} ping to {}", this.getClass().getSimpleName(), dashboardConfigDto.getServerURI());
-        return super.isServerReacheable(dashboardConfigDto);
+      IoTUtils.logStartMethod(String.valueOf(dto.getId()), null ,this.getClass());
+        return super.isServerReacheable(dto);
     }
 
     @Override
     public List<DatasourcesConfigDto> getAllDevices(
-            DashboardConfigDto dashboardConfigDto) {
-        logger.info("{} getAllDevices to {}", this.getClass().getSimpleName(), dashboardConfigDto.getServerURI());
-        return connectorFactory.getConnector(dashboardConfigDto.getType()).getAllDevices(dashboardConfigDto);
+            DashboardConfigDto dto) {
+      IoTUtils.logStartMethod(String.valueOf(dto.getId()),null,this.getClass());
+        return connectorFactory.getConnector(dto.getType()).getAllDevices(dto);
     }
 
 
@@ -113,33 +112,40 @@ public class ConnectorService extends AbstractConnectorService implements IConne
 
     @Override
     public void setDeviceMeasurementSchema(
-            IDashboardDatasourceDto dashboardDatasourceDto) throws ApsSystemException {
-        logger.info("{} getSchema to {}", this.getClass().getSimpleName(), dashboardDatasourceDto.getDashboardConfigDto().getServerURI());
-        connectorFactory.getConnector(dashboardDatasourceDto.getDashboardConfigDto().getType()).saveMeasurementTemplate(dashboardDatasourceDto);
+            DashboardConfigDto dto, String datasourceCode) throws ApsSystemException {
+      IoTUtils.logStartMethod(String.valueOf(dto.getId()),datasourceCode,this.getClass());
+        connectorFactory.getConnector(dto.getType()).saveMeasurementTemplate(dto, datasourceCode);
         ;
     }
 
     @Override
     public void saveDeviceMeasurement(
-            IDashboardDatasourceDto dashboardDatasourceDto, String measurementBody){
-        logger.info("{} saveDeviceMeasurement to {}", this.getClass().getSimpleName(), dashboardDatasourceDto.getDashboardConfigDto().getServerURI());
-        connectorFactory.getConnector(dashboardDatasourceDto.getDashboardConfigDto().getType()).saveDeviceMeasurement(dashboardDatasourceDto, measurementBody);
+        DashboardConfigDto dto, String datasourceCode,
+        String measurementBody){
+      IoTUtils.logStartMethod(String.valueOf(dto.getId()),datasourceCode,this.getClass());
+        connectorFactory.getConnector(dto.getType()).saveDeviceMeasurement(dto, datasourceCode, measurementBody);
     }
 
   @Override
-  public List<Map<String, Object>> getDeviceMeasurements(IDashboardDatasourceDto dto, Date startDate, Date endDate, RestListRequest restListRequest) {
-    logger.info("{} getDeviceMeasurement By Dashboard and datasource ids :{}, {}", this.getClass().getSimpleName(), dto.getDashboardId() ,dto.getDatasourceCode());
-    return connectorFactory.getConnector(dto.getServerType()).getMeasurements(dto,startDate,endDate, restListRequest);
+  public List<Map<String, Object>> getDeviceMeasurements(DashboardConfigDto dto,
+      String datasourceCode, Date startDate, Date endDate,
+      RestListRequest restListRequest) {
+    IoTUtils.logStartMethod(String.valueOf(dto.getId()),datasourceCode,this.getClass());
+    return connectorFactory.getConnector(dto.getType()).getMeasurements(dto, datasourceCode, startDate, endDate, restListRequest);
   }
 
     @Override
-    public MeasurementConfig getMeasurementsConfig(IDashboardDatasourceDto dto) {
-        return connectorFactory.getConnector(dto.getServerType()).getMeasurementConfig(dto);
+    public MeasurementConfig getMeasurementsConfig(DashboardConfigDto dto,
+        String datasourceCode) {
+      IoTUtils.logStartMethod(String.valueOf(dto.getId()),datasourceCode,this.getClass());
+      return connectorFactory.getConnector(dto.getType()).getMeasurementConfig(dto, datasourceCode);
     }
 
     @Override
-    public MeasurementTemplate getDeviceMeasurementSchema(IDashboardDatasourceDto dto) {
-        return connectorFactory.getConnector(dto.getServerType()).getDeviceMeasurementSchema(dto);
+    public MeasurementTemplate getDeviceMeasurementSchema(DashboardConfigDto dto,
+        String datasourceCode) {
+      IoTUtils.logStartMethod(String.valueOf(dto.getId()),datasourceCode,this.getClass());
+        return connectorFactory.getConnector(dto.getType()).getDeviceMeasurementSchema(dto, datasourceCode);
     }
 
     @Override
@@ -154,7 +160,8 @@ public class ConnectorService extends AbstractConnectorService implements IConne
 	}
 
   @Override
-  public DashboardDatasourceDto refreshMetadata(DashboardDatasourceDto dto) throws ApsSystemException {
-    return connectorFactory.getConnector(dto.getServerType()).refreshMetadata(dto);
+  public DashboardConfigDto refreshMetadata(DashboardConfigDto dto,
+      String datasourceCode) throws ApsSystemException {
+    return connectorFactory.getConnector(dto.getType()).refreshMetadata(dto,datasourceCode);
   }
 }

@@ -18,21 +18,17 @@
 package org.entando.entando.plugins.dashboard.web.dashboardconfig;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
-import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.ServerType;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.exception.ApiResourceNotAvailableException;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementColumn;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
@@ -41,34 +37,26 @@ import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IC
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigBuilder;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigRequest;
-import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DatasourcesConfigRequest;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.validator.DashboardConfigValidator;
-import org.entando.entando.plugins.dashboard.web.iot.IoTExceptionHandler;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
-import org.entando.entando.web.common.model.ErrorRestResponse;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.PagedRestResponse;
-import org.entando.entando.web.common.model.RestError;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -201,7 +189,7 @@ public class DashboardConfigController {
     if (bindingResult.hasErrors()) {
       throw new ValidationConflictException(bindingResult);
     }
-    dashboardConfigRequest = connectorService.setDevicesMetadata(dashboardConfigRequest);
+    dashboardConfigRequest =connectorService.setDevicesMetadata(dashboardConfigRequest);
     DashboardConfigDto dto = this.getDashboardConfigService()
         .addDashboardConfig(dashboardConfigRequest);
     return new ResponseEntity<>(new SimpleRestResponse(dto), HttpStatus.OK);
@@ -239,10 +227,10 @@ public class DashboardConfigController {
   public ResponseEntity<SimpleRestResponse<Boolean>> pingDatasource(
       @PathVariable int serverId, @PathVariable String datasourceCode) throws IOException {
 
-    DashboardDatasourceDto dto = IoTUtils
-        .getAndCheckDashboardDatasourceDto(serverId, datasourceCode, dashboardConfigService);
+    DashboardConfigDto dto = IoTUtils
+        .checkServerAndDatasource(serverId, datasourceCode, dashboardConfigService);
 
-    boolean pingResult = connectorService.pingDevice(dto);
+    boolean pingResult = connectorService.pingDevice(dto, datasourceCode);
     return new ResponseEntity<>(new SimpleRestResponse<>(pingResult), HttpStatus.OK);
   }
 
@@ -251,10 +239,10 @@ public class DashboardConfigController {
   public ResponseEntity<SimpleRestResponse<MeasurementColumn>> getMeasurementPreview(
       @PathVariable int serverId, @PathVariable String datasourceCode) {
     
-    DashboardDatasourceDto dto = IoTUtils.getAndCheckDashboardDatasourceDto(serverId, datasourceCode, dashboardConfigService);
+    DashboardConfigDto dto = IoTUtils.checkServerAndDatasource(serverId, datasourceCode, dashboardConfigService);
     
       MeasurementTemplate template = connectorService
-          .getDeviceMeasurementSchema(dto);
+          .getDeviceMeasurementSchema(dto, datasourceCode);
     return new ResponseEntity<>(new SimpleRestResponse(template), HttpStatus.OK);
   }
 
@@ -263,9 +251,9 @@ public class DashboardConfigController {
   public ResponseEntity<SimpleRestResponse<MeasurementColumn>> getDatasourceColumns(
       @PathVariable int serverId, @PathVariable String datasourceCode) {
     
-    DashboardDatasourceDto dto = IoTUtils.getAndCheckDashboardDatasourceDto(serverId, datasourceCode, dashboardConfigService);
+    DashboardConfigDto dto = IoTUtils.checkServerAndDatasource(serverId, datasourceCode, dashboardConfigService);
     
-    MeasurementConfig config = connectorService.getMeasurementsConfig(dto);
+    MeasurementConfig config = connectorService.getMeasurementsConfig(dto, datasourceCode);
     return new ResponseEntity<>(new SimpleRestResponse(config), HttpStatus.OK);
   }
 
@@ -287,15 +275,15 @@ public class DashboardConfigController {
   @RequestMapping(value = "/server/{serverId}/datasource/{datasourceCode}/refreshMetadata", method = RequestMethod.POST)
   public ResponseEntity<?> refreshMetadata(@PathVariable int serverId,
       @PathVariable String datasourceCode) throws ApsSystemException {
-    DashboardDatasourceDto dto = IoTUtils.getAndCheckDashboardDatasourceDto(serverId, datasourceCode, dashboardConfigService);
-    dto = connectorService.refreshMetadata(dto);
+    DashboardConfigDto dto = IoTUtils.checkServerAndDatasource(serverId, datasourceCode, dashboardConfigService);
+    dto = connectorService.refreshMetadata(dto, datasourceCode);
     
     DashboardConfigDto dashboard = getDashboardConfigService().getDashboardConfig(serverId);
     
     DatasourcesConfigDto toRemove = dashboard.getDatasources().stream()
         .filter(d -> d.getDatasourceCode().equals(datasourceCode)).findFirst().get();
     dashboard.getDatasources().remove(toRemove);
-    dashboard.getDatasources().add(dto.getDatasourcesConfigDto());
+    dashboard.getDatasources().add(dto.getDatasources().stream().filter(d -> d.getDatasourceCode().equals(datasourceCode)).findFirst().get());
     
     DashboardConfigRequest request = DashboardConfigBuilder.fromDtoToRequest(dashboard);
     dashboardConfigService.updateDashboardConfig(request);

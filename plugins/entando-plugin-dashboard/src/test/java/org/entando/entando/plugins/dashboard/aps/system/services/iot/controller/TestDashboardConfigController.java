@@ -6,7 +6,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
-import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
@@ -22,7 +21,6 @@ import org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUt
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.DashboardConfigController;
 import org.entando.entando.plugins.dashboard.web.iot.IoTExceptionHandler;
 import org.entando.entando.web.AbstractControllerTest;
-import org.entando.entando.web.common.handlers.RestExceptionHandler;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +32,6 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.method.annotation.ExceptionHandlerMethodResolver;
 import org.springframework.web.servlet.HandlerExceptionResolver;
@@ -46,6 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -61,8 +59,18 @@ public class TestDashboardConfigController extends AbstractControllerTest {
   @Mock
   IConnectorService connectorService;
 
+  DashboardConfigDto dashboardConfigDto;
+  int dashboardId = 0;
+  String datasourceCode = "datasourceCode";
+  
   @Before
   public void setUp() throws Exception {
+    dashboardConfigDto = new DashboardConfigDto();
+    dashboardConfigDto.setId(dashboardId);
+    DatasourcesConfigDto datasourcesConfigDto = new DatasourcesConfigDto();
+    datasourcesConfigDto.setDatasourceCode(datasourceCode);
+    dashboardConfigDto.setDatasources(new ArrayList() {{add(datasourcesConfigDto);}});
+    
     MockitoAnnotations.initMocks(this);
     mockMvc = MockMvcBuilders.standaloneSetup(controller)
         .addInterceptors(entandoOauth2Interceptor)
@@ -77,8 +85,8 @@ public class TestDashboardConfigController extends AbstractControllerTest {
     String accessToken = mockOAuthInterceptor(user);
     int dashboardId = 1;
 
-    Mockito.when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
-    Mockito.when(connectorService.pingServer(Mockito.any())).thenReturn(true);
+    when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
+    when(connectorService.pingServer(Mockito.any())).thenReturn(true);
 
     ResultActions result = mockMvc.perform(
         get(BASE_PATH + "server/" +dashboardId+"/ping")
@@ -98,8 +106,8 @@ public class TestDashboardConfigController extends AbstractControllerTest {
     String accessToken = mockOAuthInterceptor(user);
     int dashboardId = 1;
 
-    Mockito.when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
-    Mockito.when(connectorService.pingServer(Mockito.any())).thenReturn(true);
+    when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
+    when(connectorService.pingServer(Mockito.any())).thenReturn(true);
     
     ResultActions result = mockMvc.perform(
         get(BASE_PATH + "server/" +dashboardId+"/ping")
@@ -119,7 +127,7 @@ public class TestDashboardConfigController extends AbstractControllerTest {
     String accessToken = mockOAuthInterceptor(user);
     int dashboardId = 1;
 
-    Mockito.when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(false);
+    when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(false);
 
     
     ResultActions result = mockMvc.perform(
@@ -140,8 +148,8 @@ public class TestDashboardConfigController extends AbstractControllerTest {
     String accessToken = mockOAuthInterceptor(user);
     int dashboardId = 1;
 
-    Mockito.when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
-    Mockito.when(connectorService.pingServer(Mockito.any())).thenReturn(false);
+    when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
+    when(connectorService.pingServer(Mockito.any())).thenReturn(false);
 
     ResultActions result = mockMvc.perform(
         get(BASE_PATH + "server/" +dashboardId+"/ping")
@@ -160,16 +168,10 @@ public class TestDashboardConfigController extends AbstractControllerTest {
   public void testPingDatasourceOK() throws Exception {
     UserDetails user = new OAuth2TestUtils.UserBuilder("admin", "adminadmin").grantedToRoleAdmin().build();
     String accessToken = mockOAuthInterceptor(user);
-    int dashboardId = 1;
-    String datasourceCode = "1";
 
-    DashboardDatasourceDto mockDto = new DashboardDatasourceDto();
-    mockDto.setDashboardConfigDto(new DashboardConfigDto());
-    mockDto.setDatasourcesConfigDto(new DatasourcesConfigDto());
-
-    Mockito.when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
-    Mockito.when(dashboardConfigService.getDashboardDatasourceDto(dashboardId,datasourceCode)).thenReturn(mockDto);
-    Mockito.when(connectorService.pingDevice(mockDto)).thenReturn(true);
+    when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
+    when(dashboardConfigService.getDashboardConfig(dashboardId)).thenReturn(dashboardConfigDto);
+    when(connectorService.pingDevice(dashboardConfigDto, datasourceCode)).thenReturn(true);
 
     ResultActions result = mockMvc.perform(
         get(BASE_PATH + "server/" + dashboardId +"/datasource/"+ datasourceCode +"/ping")
@@ -194,7 +196,7 @@ public class TestDashboardConfigController extends AbstractControllerTest {
     mockDto.setDashboardConfigDto(new DashboardConfigDto());
     mockDto.setDatasourcesConfigDto(new DatasourcesConfigDto());
 
-    Mockito.when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(false);
+    when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(false);
 
     ResultActions result = mockMvc.perform(
         get(BASE_PATH + "server/" + dashboardId +"/datasource/"+ datasourceCode +"/ping")
@@ -216,11 +218,8 @@ public class TestDashboardConfigController extends AbstractControllerTest {
     int dashboardId = 1;
     String datasourceCode = "1";
 
-    DashboardDatasourceDto mockDto = new DashboardDatasourceDto();
-    mockDto.setDashboardConfigDto(new DashboardConfigDto());
-
-    Mockito.when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
-    Mockito.when(dashboardConfigService.getDashboardDatasourceDto(dashboardId,datasourceCode)).thenReturn(mockDto);
+    when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
+    when(dashboardConfigService.getDashboardConfig(dashboardId)).thenReturn(dashboardConfigDto);
 
     ResultActions result = mockMvc.perform(
         get(BASE_PATH + "server/" + dashboardId +"/datasource/"+ datasourceCode +"/ping")
@@ -239,16 +238,14 @@ public class TestDashboardConfigController extends AbstractControllerTest {
   public void testPingDatasourceFalse() throws Exception {
     UserDetails user = new OAuth2TestUtils.UserBuilder("admin", "adminadmin").grantedToRoleAdmin().build();
     String accessToken = mockOAuthInterceptor(user);
-    int dashboardId = 1;
-    String datasourceCode = "1";
 
     DashboardDatasourceDto mockDto = new DashboardDatasourceDto();
     mockDto.setDashboardConfigDto(new DashboardConfigDto());
     mockDto.setDatasourcesConfigDto(new DatasourcesConfigDto());
 
-    Mockito.when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
-    Mockito.when(dashboardConfigService.getDashboardDatasourceDto(dashboardId,datasourceCode)).thenReturn(mockDto);
-    Mockito.when(connectorService.pingDevice(Mockito.any())).thenReturn(false);
+    when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
+    when(dashboardConfigService.getDashboardConfig(dashboardId)).thenReturn(dashboardConfigDto);
+    when(connectorService.pingDevice(Mockito.any(), Mockito.any())).thenReturn(false);
 
     ResultActions result = mockMvc.perform(
         get(BASE_PATH + "server/" + dashboardId +"/datasource/"+ datasourceCode +"/ping")
@@ -266,20 +263,14 @@ public class TestDashboardConfigController extends AbstractControllerTest {
   public void testGetMeasurementPreview() throws Exception {
     UserDetails user = new OAuth2TestUtils.UserBuilder("admin", "adminadmin").grantedToRoleAdmin().build();
     String accessToken = mockOAuthInterceptor(user);
-    int dashboardId = 1;
-    String datasourceCode = "1";
-
-    DashboardDatasourceDto mockDto = new DashboardDatasourceDto();
-    mockDto.setDashboardConfigDto(new DashboardConfigDto());
-    mockDto.setDatasourcesConfigDto(new DatasourcesConfigDto());
 
     MeasurementTemplate measurementTemplate = new MeasurementTemplate();
     measurementTemplate.getFields().add(new MeasurementType("temp", "int"));
     measurementTemplate.getFields().add(new MeasurementType("time", "long"));
 
-    Mockito.when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
-    Mockito.when(dashboardConfigService.getDashboardDatasourceDto(dashboardId,datasourceCode)).thenReturn(mockDto);
-    Mockito.when(connectorService.getDeviceMeasurementSchema(Mockito.any())).thenReturn(measurementTemplate);
+    when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
+    when(dashboardConfigService.getDashboardConfig(dashboardId)).thenReturn(dashboardConfigDto);
+    when(connectorService.getDeviceMeasurementSchema(Mockito.any(), Mockito.any())).thenReturn(measurementTemplate);
 
     ResultActions result = mockMvc.perform(
         get(BASE_PATH + "server/" + dashboardId +"/datasource/"+ datasourceCode +"/preview")
@@ -297,8 +288,6 @@ public class TestDashboardConfigController extends AbstractControllerTest {
   public void testGetMeasurementPreviewThrowsExc() throws Exception {
     UserDetails user = new OAuth2TestUtils.UserBuilder("admin", "adminadmin").grantedToRoleAdmin().build();
     String accessToken = mockOAuthInterceptor(user);
-    int dashboardId = 1;
-    String datasourceCode = "1";
 
     DashboardDatasourceDto mockDto = new DashboardDatasourceDto();
     mockDto.setDashboardConfigDto(new DashboardConfigDto());
@@ -308,9 +297,9 @@ public class TestDashboardConfigController extends AbstractControllerTest {
     measurementTemplate.getFields().add(new MeasurementType("temp", "int"));
     measurementTemplate.getFields().add(new MeasurementType("time", "long"));
 
-    Mockito.when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
-    Mockito.when(dashboardConfigService.getDashboardDatasourceDto(dashboardId,datasourceCode)).thenReturn(mockDto);
-    Mockito.when(connectorService.getDeviceMeasurementSchema(Mockito.any())).thenThrow(new ApiResourceNotAvailableException("408", "Sample Message"));
+    when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
+    when(dashboardConfigService.getDashboardConfig(dashboardId)).thenReturn(dashboardConfigDto);
+    when(connectorService.getDeviceMeasurementSchema(Mockito.any(), Mockito.any())).thenThrow(new ApiResourceNotAvailableException("408", "Sample Message"));
 
     ResultActions result = mockMvc.perform(
         get(BASE_PATH + "server/" + dashboardId +"/datasource/"+ datasourceCode +"/preview")
@@ -328,18 +317,12 @@ public class TestDashboardConfigController extends AbstractControllerTest {
   public void testGetMeasurementPreview404Server() throws Exception {
     UserDetails user = new OAuth2TestUtils.UserBuilder("admin", "adminadmin").grantedToRoleAdmin().build();
     String accessToken = mockOAuthInterceptor(user);
-    int dashboardId = 1;
-    String datasourceCode = "1";
-
-    DashboardDatasourceDto mockDto = new DashboardDatasourceDto();
-    mockDto.setDashboardConfigDto(new DashboardConfigDto());
-    mockDto.setDatasourcesConfigDto(new DatasourcesConfigDto());
 
     MeasurementTemplate measurementTemplate = new MeasurementTemplate();
 
-    Mockito.when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(false);
-    Mockito.when(dashboardConfigService.getDashboardDatasourceDto(dashboardId,datasourceCode)).thenReturn(mockDto);
-    Mockito.when(connectorService.getDeviceMeasurementSchema(Mockito.any())).thenReturn(measurementTemplate);
+    when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(false);
+    when(dashboardConfigService.getDashboardConfig(dashboardId)).thenReturn(dashboardConfigDto);
+    when(connectorService.getDeviceMeasurementSchema(Mockito.any(), Mockito.any())).thenReturn(measurementTemplate);
 
     ResultActions result = mockMvc.perform(
         get(BASE_PATH + "server/" + dashboardId +"/datasource/"+ datasourceCode +"/preview")
@@ -359,21 +342,16 @@ public class TestDashboardConfigController extends AbstractControllerTest {
   public void testGetMeasurementPreview404Device() throws Exception {
     UserDetails user = new OAuth2TestUtils.UserBuilder("admin", "adminadmin").grantedToRoleAdmin().build();
     String accessToken = mockOAuthInterceptor(user);
-    int dashboardId = 1;
-    String datasourceCode = "1";
-
-    DashboardDatasourceDto mockDto = new DashboardDatasourceDto();
-    mockDto.setDashboardConfigDto(new DashboardConfigDto());
-    mockDto.setDatasourcesConfigDto(null);
 
     MeasurementTemplate measurementTemplate = new MeasurementTemplate();
 
-    Mockito.when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
-    Mockito.when(dashboardConfigService.getDashboardDatasourceDto(dashboardId,datasourceCode)).thenReturn(mockDto);
-    Mockito.when(connectorService.getDeviceMeasurementSchema(Mockito.any())).thenReturn(measurementTemplate);
+    when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
+    when(dashboardConfigService.getDashboardConfig(dashboardId)).thenReturn(dashboardConfigDto);
+    when(connectorService.getDeviceMeasurementSchema(Mockito.any(), Mockito.any())).thenReturn(measurementTemplate);
 
+    String fakeDatasourceCode = "fakeDatasourceCode";
     ResultActions result = mockMvc.perform(
-        get(BASE_PATH + "server/" + dashboardId +"/datasource/"+ datasourceCode +"/preview")
+        get(BASE_PATH + "server/" + dashboardId +"/datasource/"+ fakeDatasourceCode +"/preview")
             .header("Authorization", "Bearer " + accessToken)
     );
 
@@ -382,27 +360,21 @@ public class TestDashboardConfigController extends AbstractControllerTest {
         .fromJson(result.andReturn().getResponse().getContentAsString(), JsonObject.class);
 
     assertEquals(response.get("errors").getAsJsonArray().get(0).getAsJsonObject()
-        .get("message").getAsString(),"a Datasource with " + datasourceCode + " code could not be found");
+        .get("message").getAsString(),"a Datasource with " + fakeDatasourceCode + " code could not be found");
   }
 
   @Test
   public void testGetMeasurementColumns() throws Exception {
     UserDetails user = new OAuth2TestUtils.UserBuilder("admin", "adminadmin").grantedToRoleAdmin().build();
     String accessToken = mockOAuthInterceptor(user);
-    int dashboardId = 1;
-    String datasourceCode = "1";
-
-    DashboardDatasourceDto mockDto = new DashboardDatasourceDto();
-    mockDto.setDashboardConfigDto(new DashboardConfigDto());
-    mockDto.setDatasourcesConfigDto(new DatasourcesConfigDto());
 
     MeasurementConfig measurementConfig = new MeasurementConfig();
     measurementConfig.getMappings().add(new MeasurementMapping("temp", "temp"));
     measurementConfig.getMappings().add(new MeasurementMapping("time", "time"));
 
-    Mockito.when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
-    Mockito.when(dashboardConfigService.getDashboardDatasourceDto(dashboardId,datasourceCode)).thenReturn(mockDto);
-    Mockito.when(connectorService.getMeasurementsConfig(Mockito.any())).thenReturn(measurementConfig);
+    when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
+    when(dashboardConfigService.getDashboardConfig(dashboardId)).thenReturn(dashboardConfigDto);
+    when(connectorService.getMeasurementsConfig(Mockito.any(), Mockito.any())).thenReturn(measurementConfig);
 
     ResultActions result = mockMvc.perform(
         get(BASE_PATH + "server/" + dashboardId +"/datasource/"+ datasourceCode +"/columns")
@@ -420,18 +392,12 @@ public class TestDashboardConfigController extends AbstractControllerTest {
   public void testGetMeasurementColumns404Server() throws Exception {
     UserDetails user = new OAuth2TestUtils.UserBuilder("admin", "adminadmin").grantedToRoleAdmin().build();
     String accessToken = mockOAuthInterceptor(user);
-    int dashboardId = 1;
-    String datasourceCode = "1";
-
-    DashboardDatasourceDto mockDto = new DashboardDatasourceDto();
-    mockDto.setDashboardConfigDto(new DashboardConfigDto());
-    mockDto.setDatasourcesConfigDto(new DatasourcesConfigDto());
 
     MeasurementConfig measurementConfig = new MeasurementConfig();
 
-    Mockito.when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(false);
-    Mockito.when(dashboardConfigService.getDashboardDatasourceDto(dashboardId,datasourceCode)).thenReturn(mockDto);
-    Mockito.when(connectorService.getMeasurementsConfig(Mockito.any())).thenReturn(measurementConfig);
+    when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(false);
+    when(dashboardConfigService.getDashboardConfig(dashboardId)).thenReturn(dashboardConfigDto);
+    when(connectorService.getMeasurementsConfig(Mockito.any(), Mockito.any())).thenReturn(measurementConfig);
 
     ResultActions result = mockMvc.perform(
         get(BASE_PATH + "server/" + dashboardId +"/datasource/"+ datasourceCode +"/columns")
@@ -450,21 +416,16 @@ public class TestDashboardConfigController extends AbstractControllerTest {
   public void testGetMeasurementColumns404Device() throws Exception {
     UserDetails user = new OAuth2TestUtils.UserBuilder("admin", "adminadmin").grantedToRoleAdmin().build();
     String accessToken = mockOAuthInterceptor(user);
-    int dashboardId = 1;
-    String datasourceCode = "1";
-
-    DashboardDatasourceDto mockDto = new DashboardDatasourceDto();
-    mockDto.setDashboardConfigDto(new DashboardConfigDto());
-    mockDto.setDatasourcesConfigDto(null);
 
     MeasurementConfig measurementConfig = new MeasurementConfig();
 
-    Mockito.when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
-    Mockito.when(dashboardConfigService.getDashboardDatasourceDto(dashboardId,datasourceCode)).thenReturn(mockDto);
-    Mockito.when(connectorService.getMeasurementsConfig(Mockito.any())).thenReturn(measurementConfig);
+    when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
+    when(dashboardConfigService.getDashboardConfig(dashboardId)).thenReturn(dashboardConfigDto);
+    when(connectorService.getMeasurementsConfig(Mockito.any(), Mockito.any())).thenReturn(measurementConfig);
 
+    String fakeDatasourceCode = "fakeDatasourceCode";
     ResultActions result = mockMvc.perform(
-        get(BASE_PATH + "server/" + dashboardId +"/datasource/"+ datasourceCode +"/columns")
+        get(BASE_PATH + "server/" + dashboardId +"/datasource/"+ fakeDatasourceCode +"/columns")
             .header("Authorization", "Bearer " + accessToken)
     );
 
@@ -473,19 +434,13 @@ public class TestDashboardConfigController extends AbstractControllerTest {
         .fromJson(result.andReturn().getResponse().getContentAsString(), JsonObject.class);
 
     assertEquals(response.get("errors").getAsJsonArray().get(0).getAsJsonObject()
-        .get("message").getAsString(),"a Datasource with " + datasourceCode + " code could not be found");
+        .get("message").getAsString(),"a Datasource with " + fakeDatasourceCode + " code could not be found");
   }
 
   @Test
   public void testGetAllDevices() throws Exception {
     UserDetails user = new OAuth2TestUtils.UserBuilder("admin", "adminadmin").grantedToRoleAdmin().build();
     String accessToken = mockOAuthInterceptor(user);
-    int dashboardId = 1;
-    String datasourceCode = "1";
-
-    DashboardDatasourceDto mockDto = new DashboardDatasourceDto();
-    mockDto.setDashboardConfigDto(new DashboardConfigDto());
-    mockDto.setDatasourcesConfigDto(null);
 
     List<DatasourcesConfigDto> mockDatasources = new ArrayList<>();
     DatasourcesConfigDto datasource = new DatasourcesConfigDto();
@@ -498,8 +453,8 @@ public class TestDashboardConfigController extends AbstractControllerTest {
     mockDatasources.add(datasource2);
     mockDatasources.add(datasource3);
     
-    Mockito.when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
-    Mockito.when(connectorService.getAllDevices(Mockito.any())).thenReturn(mockDatasources);
+    when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
+    when(connectorService.getAllDevices(Mockito.any())).thenReturn(mockDatasources);
 
     ResultActions result = mockMvc.perform(
         get(BASE_PATH + "server/" + dashboardId +"/getAllDevices")
@@ -518,15 +473,9 @@ public class TestDashboardConfigController extends AbstractControllerTest {
   public void testGetAllDevicesThrowsExc() throws Exception {
     UserDetails user = new OAuth2TestUtils.UserBuilder("admin", "adminadmin").grantedToRoleAdmin().build();
     String accessToken = mockOAuthInterceptor(user);
-    int dashboardId = 1;
-    String datasourceCode = "1";
 
-    DashboardDatasourceDto mockDto = new DashboardDatasourceDto();
-    mockDto.setDashboardConfigDto(new DashboardConfigDto());
-    mockDto.setDatasourcesConfigDto(null);
-
-    Mockito.when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
-    Mockito.when(connectorService.getAllDevices(Mockito.any())).thenThrow(new ApiResourceNotAvailableException("408", "Sample Message"));
+    when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
+    when(connectorService.getAllDevices(Mockito.any())).thenThrow(new ApiResourceNotAvailableException("408", "Sample Message"));
 
     ResultActions result = mockMvc.perform(
         get(BASE_PATH + "server/" + dashboardId +"/getAllDevices")

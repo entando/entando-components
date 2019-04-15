@@ -10,6 +10,8 @@ import com.google.gson.reflect.TypeToken;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.UrlValidator;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfig;
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfigService;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.exception.ApiResourceNotAvailableException;
@@ -212,15 +214,14 @@ public class IoTUtils {
         dashboard, datasource);
   }
 
-  public static DashboardDatasourceDto getAndCheckDashboardDatasourceDto(int serverId, String datasourceCode, IDashboardConfigService dashboardConfigService) {
+  public static DashboardConfigDto checkServerAndDatasource(int serverId, String datasourceCode, IDashboardConfigService dashboardConfigService) {
     if (!dashboardConfigService.existsByIdAndIsActive(serverId)) {
       throw new ResourceNotFoundException(EntityValidator.ERRCODE_ENTITY_DOES_NOT_EXIST, "Server", String.valueOf(serverId));
     }
-    DashboardDatasourceDto dto = dashboardConfigService.getDashboardDatasourceDto(serverId, datasourceCode);
-    
-    if (dto.getDatasourcesConfigDto() == null) {
+    DashboardConfigDto dashboardConfig = dashboardConfigService.getDashboardConfig(serverId);
+    if (dashboardConfig.getDatasources().stream().filter(d -> d.getDatasourceCode().equals(datasourceCode)).count() <= 0) {
       throw new ResourceNotFoundException(EntityValidator.ERRCODE_ENTITY_DOES_NOT_EXIST, "Datasource" , datasourceCode);
     }
-    return dto;
+    return dashboardConfig;
   }
 }

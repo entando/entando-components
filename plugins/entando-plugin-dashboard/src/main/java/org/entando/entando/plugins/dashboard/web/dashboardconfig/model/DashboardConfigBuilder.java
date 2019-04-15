@@ -12,20 +12,36 @@ public class DashboardConfigBuilder {
 
   public static DashboardConfigRequest fromDtoToRequest(DashboardConfigDto dto) {
     DashboardConfigRequest request = new DashboardConfigRequest();
-    List<DatasourcesConfigRequest> datasourcesRequest = new ArrayList<>();
-    List<DatasourcesConfigDto> datasourcesConfigDto = dto.getDatasources();
     BeanUtils.copyProperties(dto, request);
-    request.setDatasources(new ArrayList<>());
+    List<DatasourcesConfigRequest> dataReq = new ArrayList<>();
     for (DatasourcesConfigDto configDto: dto.getDatasources()) {
-      request.getDatasources().add(fromDtoToRequest(configDto));
+      dataReq.add(fromDtoToRequest(configDto));
     }
+    request.setDatasources(dataReq);
     return request;
   }
   
-  public static DatasourcesConfigRequest fromDtoToRequest(DatasourcesConfigDto dto) {
+  private static DatasourcesConfigRequest fromDtoToRequest(DatasourcesConfigDto dto) {
     DatasourcesConfigRequest request = new DatasourcesConfigRequest();
     BeanUtils.copyProperties(dto,request);
     return request;
-  } 
-  
+  }
+
+  public static DashboardConfigDto fromRequestToDto(DashboardConfigRequest req) {
+    DashboardConfigDto dto = new DashboardConfigDto();
+    BeanUtils.copyProperties(req, dto);
+    List<DatasourcesConfigDto> dataDto = new ArrayList<>();
+    for (DatasourcesConfigRequest configReq: req.getDatasources()) {
+      dataDto.add(fromRequestToDto(configReq));
+    }
+    dto.setDatasources(dataDto);
+    return dto;
+  }
+
+  private static DatasourcesConfigDto fromRequestToDto(DatasourcesConfigRequest req) {
+    DatasourcesConfigDto dto = new DatasourcesConfigDto();
+    BeanUtils.copyProperties(req,dto);
+    return dto;
+  }
+
 }

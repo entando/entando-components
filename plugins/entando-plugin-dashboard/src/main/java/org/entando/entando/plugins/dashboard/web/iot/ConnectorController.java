@@ -5,18 +5,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.exception.ApiResourceNotAvailableException;
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementPayload;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IConnectorService;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils;
-import org.entando.entando.plugins.dashboard.aps.system.services.storage.IotMessageDto;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
-import org.entando.entando.web.entity.validator.EntityValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
@@ -56,8 +53,8 @@ public class ConnectorController {
       @PathVariable String datasourceCode,
       @RequestBody String measure) {
 
-    DashboardDatasourceDto dto = IoTUtils.getAndCheckDashboardDatasourceDto(serverId, datasourceCode, dashboardConfigService);
-    connectorService.saveDeviceMeasurement(dto, measure);
+    DashboardConfigDto dto = IoTUtils.checkServerAndDatasource(serverId, datasourceCode, dashboardConfigService);
+    connectorService.saveDeviceMeasurement(dto, datasourceCode, measure);
     return new ResponseEntity(HttpStatus.OK);
   }
   
@@ -68,7 +65,7 @@ public class ConnectorController {
 			@RequestParam(value = "startDate", required = false) Instant startDate,
 			@RequestParam(value = "endDate", required = false) Instant endDate,
 			RestListRequest requestList) {
-    DashboardDatasourceDto dto = IoTUtils.getAndCheckDashboardDatasourceDto(serverId, datasourceCode, dashboardConfigService);
+    DashboardConfigDto dto = IoTUtils.checkServerAndDatasource(serverId, datasourceCode, dashboardConfigService);
 		Date start = null;
 		Date end = null;
 		if(startDate != null) {
@@ -80,7 +77,7 @@ public class ConnectorController {
 
 		try {
 			List<Map<String, Object>> payloads = this.connectorService
-					.getDeviceMeasurements(dto, start, end, requestList);
+					.getDeviceMeasurements(dto, datasourceCode, start, end, requestList);
 
 			SearcherDaoPaginatedResult<Map<String, Object>> pagedMeasurements = new SearcherDaoPaginatedResult(
 					payloads);
@@ -99,8 +96,8 @@ public class ConnectorController {
   public ResponseEntity<?> setMeasurementTemplate(@PathVariable int serverId,
       @PathVariable String datasourceCode)
       throws ApsSystemException {
-    DashboardDatasourceDto dto = IoTUtils.getAndCheckDashboardDatasourceDto(serverId, datasourceCode, dashboardConfigService);
-    //    connectorService.setDeviceMeasurementSchema(dto);
+    DashboardConfigDto dto = IoTUtils.checkServerAndDatasource(serverId, datasourceCode, dashboardConfigService);
+//        connectorService.setDeviceMeasurementSchema(dto);
 
     return new ResponseEntity<>(HttpStatus.OK);
   }

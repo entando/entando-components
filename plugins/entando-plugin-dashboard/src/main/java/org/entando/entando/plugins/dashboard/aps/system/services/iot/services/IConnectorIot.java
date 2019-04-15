@@ -9,8 +9,6 @@ import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.ServerType;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.exception.ApiResourceNotAvailableException;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DashboardDatasourceDto;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.IDashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigRequest;
@@ -20,32 +18,35 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 
 public interface IConnectorIot {
 
-	/**
-	 * Returns true is the implementation of this processor fits the provided widget code
-	 */
-	boolean supports(String connectorType);
+  /**
+   * Returns true is the implementation of this processor fits the provided widget code
+   */
+  boolean supports(String connectorType);
 
-	boolean pingDevice(IDashboardDatasourceDto dashboardDatasourceDto) throws IOException;
+  boolean pingDevice(DashboardConfigDto dashboardDatasourceDto, String datasourceCode) throws IOException;
 
-	List<DatasourcesConfigDto> getAllDevices(DashboardConfigDto dashboardConfigDto) throws ApiResourceNotAvailableException;
- 
-	void saveMeasurementTemplate(IDashboardDatasourceDto dashboardDatasource)
-			throws ApsSystemException;
+  List<DatasourcesConfigDto> getAllDevices(DashboardConfigDto dashboardConfigDto) throws ApiResourceNotAvailableException;
 
-	void saveDeviceMeasurement(IDashboardDatasourceDto dashboardDatasourceDto,
-			String measurementBody);
-
-	List<Map<String, Object>> getMeasurements(IDashboardDatasourceDto dashboardSitewhereDatasourceDto,
-			Date startDate, Date endDate, RestListRequest restListRequest) throws RuntimeException;
-
-	MeasurementConfig getMeasurementConfig(IDashboardDatasourceDto dto);
-
-	MeasurementTemplate getDeviceMeasurementSchema(IDashboardDatasourceDto dto) throws ApiResourceNotAvailableException;
-
-	ServerType getServerType();
-
-	DashboardConfigRequest setDevicesMetadata(DashboardConfigRequest dashboardConfigRequest)
+  void saveMeasurementTemplate(DashboardConfigDto dashboardDatasource,
+      String datasourceCode)
       throws ApsSystemException;
 
-  DashboardDatasourceDto refreshMetadata(DashboardDatasourceDto dto) throws ApsSystemException;
+  void saveDeviceMeasurement(DashboardConfigDto dashboardDatasourceDto,
+      String datasourceCode, String measurementBody);
+
+  List<Map<String, Object>> getMeasurements(DashboardConfigDto dashboardSitewhereDatasourceDto,
+      String datasourceCode, Date startDate, Date endDate,
+      RestListRequest restListRequest) throws RuntimeException;
+
+  MeasurementConfig getMeasurementConfig(DashboardConfigDto dto, String datasourceCode);
+
+  MeasurementTemplate getDeviceMeasurementSchema(DashboardConfigDto dto,
+      String datasourceCode) throws ApiResourceNotAvailableException;
+
+  ServerType getServerType();
+
+  DashboardConfigRequest setDevicesMetadata(DashboardConfigRequest dashboardConfigRequest)
+      throws ApsSystemException;
+
+  DashboardConfigDto refreshMetadata(DashboardConfigDto dto, String datasourceCode) throws ApsSystemException;
 }
