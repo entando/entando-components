@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementPayload;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IConnectorService;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils;
