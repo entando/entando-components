@@ -10,7 +10,6 @@ import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.TestUtils;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IConnectorService;
 import org.entando.entando.plugins.dashboard.aps.system.services.storage.IotMessageDto;
 import org.entando.entando.plugins.dashboard.web.iot.ConnectorController;
@@ -98,16 +97,11 @@ public class TestConnectorController extends AbstractControllerTest {
     UserDetails user = new OAuth2TestUtils.UserBuilder("admin", "adminadmin").grantedToRoleAdmin()
         .build();
     String accessToken = mockOAuthInterceptor(user);
-    int dashboardId = 1;
-    String datasourceCode = "1";
-    DashboardDatasourceDto mockDto = new DashboardDatasourceDto();
-    mockDto.setDashboardConfigDto(new DashboardConfigDto());
-    mockDto.setDatasourcesConfigDto(new DatasourcesConfigDto());
 
     String measurement = "{\"temperature\" : 2, \"timestamp\" : 123456789}";
 
     when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(false);
-    when(dashboardConfigService.getDashboardDatasourceDto(dashboardId, datasourceCode)).thenReturn(mockDto);
+    when(dashboardConfigService.getDashboardConfig(dashboardId)).thenReturn(dashboardConfigDto);
 
     ResultActions result = mockMvc.perform(
         post(BASE_PATH + "server/" + dashboardId + "/datasource/" + datasourceCode)
@@ -150,10 +144,6 @@ public class TestConnectorController extends AbstractControllerTest {
         .build();
     String accessToken = mockOAuthInterceptor(user);
     Long nMeasurements = 2L;
-    DashboardDatasourceDto mockDto = new DashboardDatasourceDto();
-    mockDto.setDashboardConfigDto(new DashboardConfigDto());
-    mockDto.setDatasourcesConfigDto(new DatasourcesConfigDto());
-
 
     List<Map<String,Object>> measurements = new ArrayList<>();
     measurements.add(new HashMap<String, Object>(){{
@@ -209,10 +199,6 @@ public class TestConnectorController extends AbstractControllerTest {
     String accessToken = mockOAuthInterceptor(user);
     int dashboardId = 1;
     String datasourceCode = "1";
-    DashboardDatasourceDto mockDto = new DashboardDatasourceDto();
-    mockDto.setDashboardConfigDto(new DashboardConfigDto());
-    mockDto.setDatasourcesConfigDto(new DatasourcesConfigDto());
-
 
     List<IotMessageDto> measurementObjects = new ArrayList<>();
     PagedMetadata<IotMessageDto> pagedMetadata = new PagedMetadata<>();
@@ -221,7 +207,7 @@ public class TestConnectorController extends AbstractControllerTest {
     Instant startDate = Instant.ofEpochMilli(1553814852743L);
     Instant endDate = Instant.now();
     when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(false);
-    when(dashboardConfigService.getDashboardDatasourceDto(dashboardId, datasourceCode)).thenReturn(mockDto);
+    when(dashboardConfigService.getDashboardConfig(dashboardId)).thenReturn(dashboardConfigDto);
 //    Mockito.when(connectorService.getDeviceMeasurements(mockDto, Date.from(startDate), Date.from(endDate),
 //            new RestListRequest())).thenReturn(measurement);
     ResultActions result = mockMvc.perform(
@@ -244,10 +230,6 @@ public class TestConnectorController extends AbstractControllerTest {
     UserDetails user = new OAuth2TestUtils.UserBuilder("admin", "adminadmin").grantedToRoleAdmin()
         .build();
     String accessToken = mockOAuthInterceptor(user);
-    DashboardDatasourceDto mockDto = new DashboardDatasourceDto();
-    mockDto.setDashboardConfigDto(new DashboardConfigDto());
-    mockDto.setDatasourcesConfigDto(null);
-
 
     List<IotMessageDto> measurementObjects = new ArrayList<>();
     PagedMetadata<IotMessageDto> pagedMetadata = new PagedMetadata<>();

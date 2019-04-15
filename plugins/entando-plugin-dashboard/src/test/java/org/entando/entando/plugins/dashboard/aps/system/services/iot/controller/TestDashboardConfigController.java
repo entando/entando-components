@@ -11,7 +11,6 @@ import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.TestUtils;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.exception.ApiResourceNotAvailableException;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementMapping;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
@@ -192,10 +191,6 @@ public class TestDashboardConfigController extends AbstractControllerTest {
     int dashboardId = 1;
     String datasourceCode = "1";
 
-    DashboardDatasourceDto mockDto = new DashboardDatasourceDto();
-    mockDto.setDashboardConfigDto(new DashboardConfigDto());
-    mockDto.setDatasourcesConfigDto(new DatasourcesConfigDto());
-
     when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(false);
 
     ResultActions result = mockMvc.perform(
@@ -238,10 +233,6 @@ public class TestDashboardConfigController extends AbstractControllerTest {
   public void testPingDatasourceFalse() throws Exception {
     UserDetails user = new OAuth2TestUtils.UserBuilder("admin", "adminadmin").grantedToRoleAdmin().build();
     String accessToken = mockOAuthInterceptor(user);
-
-    DashboardDatasourceDto mockDto = new DashboardDatasourceDto();
-    mockDto.setDashboardConfigDto(new DashboardConfigDto());
-    mockDto.setDatasourcesConfigDto(new DatasourcesConfigDto());
 
     when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
     when(dashboardConfigService.getDashboardConfig(dashboardId)).thenReturn(dashboardConfigDto);
@@ -288,10 +279,6 @@ public class TestDashboardConfigController extends AbstractControllerTest {
   public void testGetMeasurementPreviewThrowsExc() throws Exception {
     UserDetails user = new OAuth2TestUtils.UserBuilder("admin", "adminadmin").grantedToRoleAdmin().build();
     String accessToken = mockOAuthInterceptor(user);
-
-    DashboardDatasourceDto mockDto = new DashboardDatasourceDto();
-    mockDto.setDashboardConfigDto(new DashboardConfigDto());
-    mockDto.setDatasourcesConfigDto(new DatasourcesConfigDto());
 
     MeasurementTemplate measurementTemplate = new MeasurementTemplate();
     measurementTemplate.getFields().add(new MeasurementType("temp", "int"));

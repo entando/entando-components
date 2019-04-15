@@ -8,14 +8,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.validator.UrlValidator;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
-import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfig;
-import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfigService;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.exception.ApiResourceNotAvailableException;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DashboardDatasourceDto;
 import org.entando.entando.web.entity.validator.EntityValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +24,6 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import java.lang.reflect.Type;
-import java.net.MalformedURLException;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
@@ -118,11 +113,6 @@ public class IoTUtils {
 	public static JsonElement getNestedFieldFromJson(String jsonObject, String fieldNames) {
 		JsonObject json = getObjectFromJson(jsonObject,new TypeToken<JsonObject>(){}.getType(),JsonObject.class);
 		return getNestedFieldFromJson(json,fieldNames);
-	}
-
-	public static <T extends DashboardDatasourceDto> T getDashboardDataSourceConnecDto(
-			DashboardDatasourceDto dashboardDatasourceDto, Class<T> clazz) {
-		return clazz.cast(dashboardDatasourceDto);
 	}
 
 	public static <T> String formatQueryUrl(Map<String, T> params) {

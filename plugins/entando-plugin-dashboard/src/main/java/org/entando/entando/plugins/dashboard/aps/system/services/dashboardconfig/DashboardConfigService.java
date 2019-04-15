@@ -16,18 +16,16 @@
 
 package org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.PostConstruct;
+import com.agiletec.aps.system.common.FieldSearchFilter;
+import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
+import com.agiletec.aps.system.exception.ApsSystemException;
 
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.DtoBuilder;
 import org.entando.entando.aps.system.services.IDtoBuilder;
-import  org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigRequest;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DatasourcesConfigRequest;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.validator.DashboardConfigValidator;
@@ -40,9 +38,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BeanPropertyBindingResult;
 
-import com.agiletec.aps.system.common.FieldSearchFilter;
-import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.PostConstruct;
 
 public class DashboardConfigService implements IDashboardConfigService {
 
@@ -186,22 +184,6 @@ public class DashboardConfigService implements IDashboardConfigService {
     @Override
     public boolean existsById(int id) {
         return this.getDashboardConfigManager().existsById(id);
-    }
-
-    @Override
-    public DashboardDatasourceDto getDashboardDatasourceDto(
-        int dashboardId, String datasourceCode) {
-
-        DashboardConfigDto dashboardDto = this.getDashboardConfig(dashboardId);
-        DashboardDatasourceDto dto = new DashboardDatasourceDto();
-        dto.setDashboardConfigDto(dashboardDto);
-        for (DatasourcesConfigDto datasource : dashboardDto.getDatasources()) {
-            if (datasource.getDatasourceCode().equals(datasourceCode)) {
-                dto.setDatasourcesConfigDto(datasource);
-                return dto;
-            }
-        }
-        return dto;
     }
 
   @Override
