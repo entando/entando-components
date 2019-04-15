@@ -23,9 +23,7 @@ THE SOFTWARE.
  */
 package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper;
 
-import freemarker.template.*;
 import org.apache.struts2.util.ServletContextAware;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
@@ -46,7 +44,6 @@ import java.util.Arrays;
 import java.util.function.Function;
 import javax.servlet.ServletContext;
 import org.springframework.stereotype.Service;
-import org.apache.struts2.util.ServletContextAware;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverride;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.DefaultValueOverride;
