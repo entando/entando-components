@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.net.MalformedURLException;
+import javax.net.ssl.HttpsURLConnection;
 import javax.ws.rs.Produces;
 
 @ControllerAdvice(basePackageClasses = {DashboardConfigController.class, ConnectorController.class})
@@ -61,8 +63,14 @@ public class IoTExceptionHandler  extends  RestExceptionHandler{
     RestError error = new RestError("500", ex.getMessage());
     return new ErrorRestResponse(error);
   }
-
   
-  
-  
+  @ExceptionHandler(value = MalformedURLException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @Produces("application/json")
+  @ResponseBody
+  public ErrorRestResponse processMalformedUrlException(MalformedURLException ex) {
+    logger.debug("Handling {} error", ex.getClass().getSimpleName());
+    RestError error = new RestError("400", String.join("Malformed Url", ex.getMessage()));
+    return new ErrorRestResponse(error);
+  }
 }

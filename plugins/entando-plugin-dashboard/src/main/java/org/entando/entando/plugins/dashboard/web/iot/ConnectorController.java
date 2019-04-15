@@ -51,16 +51,16 @@ public class ConnectorController {
 		this.connectorService = connectorService;
 	}
 
-	@RequestMapping(value = "/server/{serverId}/datasource/{datasourceCode}", method = RequestMethod.POST)
-	public ResponseEntity<?> saveMeasurement(@PathVariable int serverId,
-			@PathVariable String datasourceCode,
-			@RequestBody String measure) {
+  @RequestMapping(value = "/server/{serverId}/datasource/{datasourceCode}", method = RequestMethod.POST)
+  public ResponseEntity<?> saveMeasurement(@PathVariable int serverId,
+      @PathVariable String datasourceCode,
+      @RequestBody String measure) {
 
     DashboardDatasourceDto dto = IoTUtils.getAndCheckDashboardDatasourceDto(serverId, datasourceCode, dashboardConfigService);
-		connectorService.saveDeviceMeasurement(dto, measure);
-		return new ResponseEntity(HttpStatus.OK);
-	}
-
+    connectorService.saveDeviceMeasurement(dto, measure);
+    return new ResponseEntity(HttpStatus.OK);
+  }
+  
 	@RequestMapping(value = "/server/{serverId}/datasource/{datasourceCode}/data", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<PagedRestResponse<MeasurementPayload>> getMeasurement(
 			@PathVariable int serverId,
@@ -68,7 +68,6 @@ public class ConnectorController {
 			@RequestParam(value = "startDate", required = false) Instant startDate,
 			@RequestParam(value = "endDate", required = false) Instant endDate,
 			RestListRequest requestList) {
-
     DashboardDatasourceDto dto = IoTUtils.getAndCheckDashboardDatasourceDto(serverId, datasourceCode, dashboardConfigService);
 		Date start = null;
 		Date end = null;

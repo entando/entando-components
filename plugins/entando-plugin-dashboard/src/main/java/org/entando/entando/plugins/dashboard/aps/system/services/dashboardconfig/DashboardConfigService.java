@@ -204,8 +204,13 @@ public class DashboardConfigService implements IDashboardConfigService {
         return dto;
     }
 
+  @Override
+  public boolean existsByIdAndIsActive(int id) {
+    return this.getDashboardConfigManager().existsByIdAndActive(id, 1);
+  }
 
-    private DashboardConfig createDashboardConfig(DashboardConfigRequest dashboardConfigRequest) {
+
+  private DashboardConfig createDashboardConfig(DashboardConfigRequest dashboardConfigRequest) {
         DashboardConfig dashboardConfig = new DashboardConfig();
         BeanUtils.copyProperties(dashboardConfigRequest, dashboardConfig);
         List<DatasourcesConfigDto> datasources = convertDatasourceRequestToDto(dashboardConfigRequest);

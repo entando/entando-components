@@ -27,21 +27,23 @@ import org.entando.entando.web.common.model.RestListRequest;
 
 public interface IDashboardConfigService {
 
-    String BEAN_NAME = "dashboardDashboardConfigService";
+  String BEAN_NAME = "dashboardDashboardConfigService";
 
-    PagedMetadata<DashboardConfigDto> getDashboardConfigs(RestListRequest requestList);
+  PagedMetadata<DashboardConfigDto> getDashboardConfigs(RestListRequest requestList);
 
-    DashboardConfigDto updateDashboardConfig(DashboardConfigRequest dashboardConfigRequest);
+  DashboardConfigDto updateDashboardConfig(DashboardConfigRequest dashboardConfigRequest);
 
-    DashboardConfigDto addDashboardConfig(DashboardConfigRequest dashboardConfigRequest);
+  DashboardConfigDto addDashboardConfig(DashboardConfigRequest dashboardConfigRequest);
 
-    void removeDashboardConfig(int id);
+  void removeDashboardConfig(int id);
 
-    DashboardConfigDto getDashboardConfig(int id);
+  DashboardConfigDto getDashboardConfig(int id);
 
-    boolean existsById(int id);
+  boolean existsById(int id);
 
-    DashboardDatasourceDto getDashboardDatasourceDto(
-        int dashboardId, String datasourceCode);
+  DashboardDatasourceDto getDashboardDatasourceDto(
+      int dashboardId, String datasourceCode);
+
+  boolean existsByIdAndIsActive(int id);
 }
 

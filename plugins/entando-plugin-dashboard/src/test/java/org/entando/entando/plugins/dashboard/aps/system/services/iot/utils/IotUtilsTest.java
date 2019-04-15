@@ -1,22 +1,22 @@
 package org.entando.entando.plugins.dashboard.aps.system.services.iot.utils;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Map;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.springframework.util.ResourceUtils;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class IotUtilsTest {
 
@@ -64,14 +64,13 @@ public class IotUtilsTest {
   
   @Test
   public void testGetMapFromJson() {
-	  JsonObject json = new JsonObject();
-	  json.addProperty("x", "y");
-	  json.addProperty("z", "w");
-	  
-	  Map<String, Object> x = IoTUtils.getMapFromJson(json);
-	  
-	  assertEquals(x.get("x"), "y");
-	  assertEquals(x.get("z"), "w");
+    JsonObject json = new JsonObject();
+    json.addProperty("x", "y");
+    json.addProperty("z", "w");
+
+    Map<String, Object> x = IoTUtils.getMapFromJson(json);
+
+    assertEquals(x.get("x"), "y");
+    assertEquals(x.get("z"), "w");
   }
-  
 }

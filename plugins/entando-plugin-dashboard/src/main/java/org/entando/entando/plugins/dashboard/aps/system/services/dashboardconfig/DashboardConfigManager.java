@@ -166,6 +166,15 @@ public class DashboardConfigManager extends AbstractService implements IDashboar
     return this.getDashboardConfigDAO().countDashboardConfigs(filters) > 0;
   }
 
+  @Override
+  public boolean existsByIdAndActive(int id, int active) {
+    FieldSearchFilter[] filters = new FieldSearchFilter[0];
+    FieldSearchFilter filterId = new FieldSearchFilter(("id"), (Integer)id, false);
+    FieldSearchFilter filterActive = new FieldSearchFilter(("active"), (Integer)active, false);
+    filters = IoTUtils.addFilter(filters,filterId);
+    filters = IoTUtils.addFilter(filters,filterActive);
+    return this.getDashboardConfigDAO().countDashboardConfigs(filters) > 0;
+  }
 
   protected IKeyGeneratorManager getKeyGeneratorManager() {
     return _keyGeneratorManager;

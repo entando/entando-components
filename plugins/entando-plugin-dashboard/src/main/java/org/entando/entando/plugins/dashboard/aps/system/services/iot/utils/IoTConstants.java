@@ -20,4 +20,5 @@ public class IoTConstants {
   public static final String LOG_API_EX_DASHBOARD = "{} obtained {} calling dashboard id {}";
   public static final String UNABLE_TO_PARSE_DASHBOARD = "unable to parse dashboard";
   public static final String UNABLE_TO_PARSE_DATASOURCE = "unable to parse datasource";
+  public static final String EX_INACTIVE_SERVER = "Server %s is not active";
 }

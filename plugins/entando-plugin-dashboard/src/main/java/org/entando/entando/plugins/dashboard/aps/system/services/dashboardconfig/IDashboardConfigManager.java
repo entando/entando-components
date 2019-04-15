@@ -28,21 +28,23 @@ import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig
 
 public interface IDashboardConfigManager {
 
-    DashboardConfig getDashboardConfig(int id) throws ApsSystemException;
+  DashboardConfig getDashboardConfig(int id) throws ApsSystemException;
 
-    List<Integer> getDashboardConfigs() throws ApsSystemException;
+  List<Integer> getDashboardConfigs() throws ApsSystemException;
 
-    List<Integer> searchDashboardConfigs(FieldSearchFilter filters[]) throws ApsSystemException;
+  List<Integer> searchDashboardConfigs(FieldSearchFilter filters[]) throws ApsSystemException;
 
-    void addDashboardConfig(DashboardConfig dashboardConfig) throws ApsSystemException;
+  void addDashboardConfig(DashboardConfig dashboardConfig) throws ApsSystemException;
 
-    void updateDashboardConfig(DashboardConfig dashboardConfig) throws ApsSystemException;
+  void updateDashboardConfig(DashboardConfig dashboardConfig) throws ApsSystemException;
 
-    void deleteDashboardConfig(int id) throws ApsSystemException;
+  void deleteDashboardConfig(int id) throws ApsSystemException;
 
-    SearcherDaoPaginatedResult<DashboardConfig> getDashboardConfigs(List<FieldSearchFilter> fieldSearchFilters) throws ApsSystemException;
+  SearcherDaoPaginatedResult<DashboardConfig> getDashboardConfigs(List<FieldSearchFilter> fieldSearchFilters) throws ApsSystemException;
 
-    DatasourcesConfigDto getDatasourceByDatasourcecodeAndDashboard(int dashboardId, String datasourceCode);
+  DatasourcesConfigDto getDatasourceByDatasourcecodeAndDashboard(int dashboardId, String datasourceCode);
 
-    boolean existsById(int id);
+  boolean existsById(int id);
+
+  boolean existsByIdAndActive(int id, int active);
 }
