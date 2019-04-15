@@ -29,10 +29,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
-import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.Model;
-import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.Section;
-import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.DatePickerField;
-import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.InputField;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -64,6 +61,7 @@ import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper
 @Service
 public class DataUXBuilder<T extends InputField> implements ServletContextAware {
     private static String DEFAULT_FORM_ACTION = "/ExtStr2/do/bpm/FrontEnd/DataTypeForm/save";
+    private static String DATE_FORMAT_PATTERN = "yyyy-MM-dd hh:mm";
 
     private static final Logger logger = LoggerFactory.getLogger(DataUXBuilder.class);
     
@@ -103,7 +101,7 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         this.valueMapping.put("TextArea", "$data.%s.text");
         this.valueMapping.put("IntegerBox", "$data.%s.number");
         this.valueMapping.put("DecimalBox", "$data.%s.number");
-        this.valueMapping.put("DatePicker", "$data.%s.text");
+        this.valueMapping.put("DatePicker", "$data.%s.getFormattedDate(\"" + DATE_FORMAT_PATTERN + "\")");
         this.valueMapping.put("Slider", "$data.%s.number");
         this.valueMapping.put("RadioGroup", "$data.%s.text");
         this.valueMapping.put("ListBox", "$data.%s.text");
@@ -127,13 +125,13 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
     }
 
     public String createDataUx(KieProcessFormQueryResult kpfr, int widgetInfoId, String containerId, String processId, String title) throws Exception {
-        return this.createDataUx( kpfr, widgetInfoId, containerId, processId, title, DEFAULT_FORM_ACTION,"");
+        return this.createDataUx(kpfr, widgetInfoId, containerId, processId, title, DEFAULT_FORM_ACTION, "");
     }
-    
+
     public String createDataUx(KieProcessFormQueryResult kpfr, int widgetInfoId, String containerId, String processId, String title, String formAction, String urlParameters) throws Exception {
         logger.info("CreateDataUx in DataUXBuilde for containerId {} with processId {} and title {} -> kpfr: {}", containerId, processId, title, kpfr);
         Template template = cfg.getTemplate(MAIN_FTL_TEMPLATE);
-        Map<String, KieFormOverride> formOverridesMap = getFormOverridesMap(widgetInfoId);        
+        Map<String, KieFormOverride> formOverridesMap = getFormOverridesMap(widgetInfoId);
         Map<String, Section> sections = this.getSections(kpfr, formOverridesMap);
         Map<String, Object> root = new HashMap<>();
         Model model = new Model();
@@ -161,18 +159,21 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         }
         return formOverridesMap;
     }
-    
+
     private Map<String, Section> getSections(KieProcessFormQueryResult kpfr, Map<String, KieFormOverride> formOverridesMap) throws Exception {
 
-        Map<String, Section> sections = new HashMap<String, Section>();
-        List<T> fields = new ArrayList<T>();
+        Map<String, Section> sections = new HashMap<>();
+        List<T> fields = new ArrayList<>();
+        String sectionName;
 
-        kpfr.getFields().forEach(field
-                -> {
+        for (KieProcessFormField field : kpfr.getFields()) {
             logger.debug("getSections field.getName() {}", field.getName());
+            field.getProperties().forEach(p -> {
+                logger.debug("   field property {} {}", p.getName(), p.getValue());
+
+            });
 
             Section tempSection = new Section();
-            String sectionName = null;
             if (field.getName().contains("_")) {
                 sectionName = KieApiUtil.getFormNameFromField(field);
                 logger.debug("field.getName().contains(\"_\") sectionName = {}", sectionName);
@@ -207,8 +208,8 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
                 logger.debug("--> add section with name {}", sectionName);
             }
 
-        }
-        );
+        }       
+
         List<KieProcessFormQueryResult> subForms = kpfr.getNestedForms();
         if (null != subForms && !subForms.isEmpty()) {
             kpfr.getNestedForms().forEach(form -> {
@@ -229,11 +230,10 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         logger.debug("Field getName        -> {}", field.getName());
         logger.debug("Field getPosition    -> {}", field.getPosition());
         logger.debug("Field getType        -> {}", field.getType());
-        logger.debug("Field getProperties -> ");
+        logger.debug("Field getProperties  -> ");
         field.getProperties().forEach(p
-                -> logger.debug("  Property name:{} value: {}", p.getName(), p.getValue()));
+                -> logger.debug("  Property name: {} value: {}", p.getName(), p.getValue()));
         logger.debug("------------------------------------");
-
         T inputField;
         switch (field.getType()) {
             case "TextBox":
@@ -276,6 +276,10 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
                 logger.debug("{} recognized as CheckBox, inputField set to CheckBox", field.getName());
                 inputField = (T) new InputField();
                 break;
+            case "MultipleSubForm":
+                logger.debug("{} recognized as MultipleSubForm, inputField set to MultipleSubForm", field.getName());
+                inputField = (T) new MultipleSubFormField();
+                break;
             default:
                 logger.debug("{} inputField not recognized, inputField set to default InputField", field.getName());
                 inputField = (T) new InputField();
@@ -285,23 +289,24 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         String fieldName = field.getName();
         String fieldTypeHMTL = this.typeMapping.get(field.getType());
         String fieldTypePAM = field.getType();
+
         String fieldValueExpr = this.valueMapping.get(field.getType());
-        String fieldValue = (null != fieldValueExpr) ? String.format(fieldValueExpr, field.getName()) : "";
-        fieldValue=fieldValue.replaceAll(" ", "_");
-                
-                
+
+        String fieldValue = (null != fieldValueExpr) ? String.format(fieldValueExpr, fieldName) : "";
+        //fieldValue is the Velocity String
+        fieldValue = fieldValue.replaceAll(" ", "_");
+
         logger.debug("Field getValue        -> {}", fieldValue);
         logger.debug("------------------------------------");
 
         boolean required = Boolean.parseBoolean(field.getProperty("fieldRequired").getValue());
 
         boolean readOnly = false;
-                
-                if (null!=field.getProperty("readOnly")){
-                    readOnly =  Boolean.parseBoolean(field.getProperty("readOnly").getValue());
-                }
-                
-                
+
+        if (null != field.getProperty("readOnly")) {
+            readOnly = Boolean.parseBoolean(field.getProperty("readOnly").getValue());
+        }
+
         String placeHolder = field.getProperty("placeHolder").getValue();
         inputField.setId(field.getId());
         inputField.setName(fieldName);
@@ -310,7 +315,7 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         inputField.setTypePAM(fieldTypePAM);
         inputField.setTypeHTML(fieldTypeHMTL);
         inputField.setReadOnly(readOnly);
-        
+
         if (inputField instanceof DatePickerField) {
             logger.debug("inputField instanceof DatePickerField, adding custom properties");
 
@@ -399,9 +404,9 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
             textField.setPlaceHolder(placeHolder);
         }
 
-        if(formOverride != null) {
+        if (formOverride != null) {
             String defaultValueOverride = getOverrideProperty(formOverride, DefaultValueOverride.class, d -> d.getDefaultValue());
-            if(defaultValueOverride != null) {
+            if (defaultValueOverride != null) {
                 inputField.setValue(defaultValueOverride);
             }
             String placeHolderOverride = getOverrideProperty(formOverride, PlaceHolderOverride.class, p -> p.getPlaceHolder());
@@ -409,10 +414,10 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
                 inputField.setLabel(placeHolderOverride);
             }
         }
-        
+
         return inputField;
     }
-    
+
     private <T extends IBpmOverride> String getOverrideProperty(KieFormOverride formOverride, Class<T> type, Function<T, String> getOverrideProperty) {
         if (formOverride != null && formOverride.getOverrides() != null) {
             List<IBpmOverride> overrides = formOverride.getOverrides().getList();
@@ -426,7 +431,7 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         }
         return null;
     }
-    
+
     public ServletContext getServletContext() {
         return servletContext;
     }
@@ -435,7 +440,7 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
     public void setServletContext(ServletContext servletContext) {
         this.servletContext = servletContext;
     }
-    
+
     public IKieFormOverrideManager getFormOverrideManager() {
         return formOverrideManager;
     }

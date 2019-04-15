@@ -1,26 +1,26 @@
 /*
-* The MIT License
-*
-* Copyright 2017 Entando Inc..
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy
-* of this software and associated documentation files (the "Software"), to deal
-* in the Software without restriction, including without limitation the rights
-* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-* copies of the Software, and to permit persons to whom the Software is
-* furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in
-* all copies or substantial portions of the Software.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-* THE SOFTWARE.
-*/
+ * The MIT License
+ *
+ * Copyright 2019 Entando Inc..
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper;
 
 import org.apache.commons.lang.StringUtils;
@@ -38,12 +38,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author Entando
- */
 public class BpmToFormHelper {
 
-    private static final Logger _logger = LoggerFactory.getLogger(BpmToFormHelper.class);
+    private static final Logger logger = LoggerFactory.getLogger(BpmToFormHelper.class);
 
     /**
      * Return the desired field value from the given KIE form field object
@@ -55,16 +52,19 @@ public class BpmToFormHelper {
      */
     public static String getField(final KieProcessFormField field, final String paramName) throws Throwable {
         String section = null;
-
+        logger.debug("getField {} paramName {}", field.getName(), paramName);
         if (null == field) {
             return section;
         }
         for (KieProcessProperty prop : field.getProperties()) {
+            logger.debug("prop.getName() {}", prop.getName());
             if (prop.getName().equals(paramName)) {
+                logger.debug("return prop.getValue() {}", prop.getValue());
                 return prop.getValue();
             }
         }
-        return section;
+        logger.debug("return section {}", section);
+        return null;
     }
 
     /**
@@ -130,7 +130,7 @@ public class BpmToFormHelper {
                 continue;
             }
             fields.add(field);
-            _logger.info("inserting value in parameters map '{}'", val);
+            logger.debug("inserting value in parameters map '{}'", val);
         }
         return fields;
     }
@@ -165,7 +165,7 @@ public class BpmToFormHelper {
                 return holder;
             }
         }
-        
+
         return null;
     }
 
@@ -242,7 +242,7 @@ public class BpmToFormHelper {
                     kieField.getProperties().add(ovr.toKieProperty());
                 }
             } else {
-                _logger.error("override field '{}' does not match with the corresponding field in the form", name);
+                logger.error("override field '{}' does not match with the corresponding field in the form", name);
             }
         }
     }
@@ -270,8 +270,9 @@ public class BpmToFormHelper {
     /**
      * Generate the name of the field expected to be found in the JSON of the
      * form
-     *
+     * <p>
      * FIXME use the path to generate name and nesting level
+     *
      * @param name
      * @param id
      * @return
@@ -296,6 +297,9 @@ public class BpmToFormHelper {
      * @note the visit is destructive of the data field
      */
     private static void fetchHumanTaskFormData(final KieProcessFormQueryResult form, final JSONObject data, Map<String, Object> result) throws Throwable {
+
+        logger.debug("fetchHumanTaskFormData");
+
         if (null == form
                 || null == data) {
             return;
@@ -311,59 +315,97 @@ public class BpmToFormHelper {
             return;
         }
         KieDataHolder dataModeler = BpmToFormHelper.getFormDataModelerEntry(form);
-        
+
         // If dataModeler null... only have scalar values...
         if (dataModeler != null) {
-	        Object obj = JsonHelper.findKey(data, dataModeler.getValue());
 
-            if (null == obj || !(obj instanceof JSONObject)) {
+            logger.debug("------------------------------------------------------");
+            logger.debug("dataModeler.getName() {}", dataModeler.getName());
+            logger.debug("dataModeler.getId() {}", dataModeler.getId());
+            logger.debug("dataModeler.getOutId() {}", dataModeler.getOutId());
+            logger.debug("dataModeler.getInputId() {}", dataModeler.getInputId());
+            logger.debug("dataModeler.getType() {}", dataModeler.getType());
+            logger.debug(" dataModeler.getValue()  {}", dataModeler.getValue());
+            logger.debug("------------------------------------------------------");
+
+            Object obj = JsonHelper.findKey(data, dataModeler.getValue());
+
+            if (!(obj instanceof JSONObject)) {
                 obj = JsonHelper.findKey(data, dataModeler.getOutId());
+                logger.debug("obj {}", obj);
             }
 
             //Brutal hack. PAM API changed and removed the top level references and appended taskInput to the name of the
             //container. Replace once a proper transform layer is in place
-            if (null == obj || !(obj instanceof JSONObject)) {
-                obj = JsonHelper.findKey(data, "taskInput"+dataModeler.getName());
+            if (!(obj instanceof JSONObject)) {
+                logger.debug("findKey(data, taskInput{}", dataModeler.getName());
+                obj = JsonHelper.findKey(data, "taskInput" + dataModeler.getName());
+                logger.debug("obj {}", obj);
+
+            }
+            if (!(obj instanceof JSONObject)) {
+                logger.debug("findKey(data, {}", dataModeler.getName());
+                obj = JsonHelper.findKey(data, dataModeler.getName());
+                logger.debug("obj {}", obj);
+            }
+            if (!(obj instanceof JSONObject)) {
+                logger.debug("findKey(data, {}", dataModeler.getName().toLowerCase());
+                obj = JsonHelper.findKey(data, dataModeler.getName().substring(0, 1).toLowerCase() + dataModeler.getName().substring(1));
+                logger.debug("obj {}", obj);
             }
 
+            if (!(obj instanceof JSONObject)) {
 
-	        if (null == obj || !(obj instanceof JSONObject)) {
-	            throw new RuntimeException("Unexpected data for key " + dataModeler.getValue());
-	        }
-	        JSONObject section = (JSONObject) obj;
-	        String sectionName = dataModeler.getId();
-	        List<String> sectionFields = new ArrayList<>();
-	        // collect field
-	        for (KieProcessFormField field : form.getFields()) {
-	            String jsonName = FormToBpmHelper.generateFieldNameForInput(field, sectionName);
-	            Object value = null;
-	            try {
-	                value = section.get(jsonName);
-	            } catch (org.json.JSONException ex) {
-	            }
-	            if (JSONObject.NULL == value) {
-	                result.put(field.getName(), null);
-	            } else {
-	                result.put(field.getName(), value);
-	            }
-	        }
-	        // collect JSON data. Some field might not exist in the form definition!
-	        for (String name : JSONObject.getNames(section)) {
-	            final String key = generateFieldNameForOutput(name, sectionName);
-	            final Object value = section.get(name);
-	
-	            // skip json objects
-	            if (value instanceof JSONObject) {
-	                continue;
-	            }
-	            if (JSONObject.NULL == value) {
-	                result.put(key, null);
-	            } else {
-	                result.put(key, value);
-	            }
-	        }
-	        // to avoid name collisions we delete the section just inspected
-	        JsonHelper.replaceKey(data, dataModeler.getValue(), "  ");
+                logger.warn("Unexpected data for key {} ", dataModeler.getValue());
+                //throw new RuntimeException("Unexpected data for key " + dataModeler.getValue());
+
+            }
+            JSONObject section = (JSONObject) obj;
+            String sectionName = dataModeler.getId();
+            List<String> sectionFields = new ArrayList<>();
+            // collect field
+            for (KieProcessFormField field : form.getFields()) {
+                String jsonName = FormToBpmHelper.generateFieldNameForInput(field, sectionName);
+                logger.debug("jsonName: {}", jsonName);
+                Object value = null;
+                if (section.has(jsonName)) {
+                    value = section.get(jsonName);
+                }
+                if (JSONObject.NULL == value) {
+                    logger.debug("JSONObject NULL field.getName: {} value {}", field.getName(), null);
+                    result.put(field.getName(), null);
+
+
+                } else {
+                    logger.debug("field.getName: {} value {}", field.getName(), value);
+
+                    result.put(field.getName(), value);
+                }
+            }
+            // collect JSON data. Some field might not exist in the form definition!
+            for (String name : JSONObject.getNames(section)) {
+                final String key = generateFieldNameForOutput(name, sectionName);
+                final Object value = section.get(name);
+                logger.debug("name key: {}", key);
+
+                // skip json objects
+                if (value instanceof JSONObject) {
+                    logger.debug("continue");
+                    continue;
+                }
+                if (JSONObject.NULL == value) {
+                    logger.debug("key: {} value {}", key, null);
+
+                    result.put(key, null);
+                } else {
+                    logger.debug("key: {} value {}", key, value);
+
+                    result.put(key, value);
+                }
+            }
+            // to avoid name collisions we delete the section just inspected
+            JsonHelper.replaceKey(data, dataModeler.getValue(), "  ");
+
         }
     }
 

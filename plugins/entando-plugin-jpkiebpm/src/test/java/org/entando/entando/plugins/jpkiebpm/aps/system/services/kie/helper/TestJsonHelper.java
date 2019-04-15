@@ -23,10 +23,6 @@
  */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
 import junit.framework.TestCase;
 import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.TestFormToBpmHelper.TASK_DATA_JSON;
 import org.json.JSONObject;

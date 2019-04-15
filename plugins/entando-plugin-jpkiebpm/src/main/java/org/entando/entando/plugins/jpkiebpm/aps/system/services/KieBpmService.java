@@ -68,6 +68,9 @@ import org.entando.entando.plugins.jpkiebpm.web.model.DatatableWidgetConfigReque
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.*;
+import java.util.logging.Level;
+
 
 public class KieBpmService implements IKieBpmService {
     private static String FORM_ACTION = "/ExtStr2/do/bpm/FrontEnd/DataTypeTaskForm/save";
@@ -122,10 +125,10 @@ public class KieBpmService implements IKieBpmService {
 
     @Autowired
     private IDtoBuilder<BpmWidgetInfo, DatatableWidgetConfigDto> dtoBuilder;
-    
+
     @Autowired
     private DataUXBuilder uXBuilder;
-    
+
     public IBpmWidgetInfoManager getBpmWidgetInfoManager() {
         return bpmWidgetInfoManager;
     }
@@ -395,7 +398,7 @@ public class KieBpmService implements IKieBpmService {
 
         int position = 1;
         List<Map<String, String>> fieldsToAdd = new ArrayList<>();
-        for (Iterator<Map.Entry<String, String>> iter = fields.entrySet().iterator(); iter.hasNext();) {
+        for (Iterator<Map.Entry<String, String>> iter = fields.entrySet().iterator(); iter.hasNext(); ) {
             Map.Entry<String, String> obj = iter.next();
             final String name = obj.getValue();
             Map<String, String> prop = new HashMap<>();
@@ -508,7 +511,8 @@ public class KieBpmService implements IKieBpmService {
             entityType.addAttribute(text);
         }
         if (field.getType().equalsIgnoreCase("IntegerBox") || field.getType().equalsIgnoreCase("InputTextInteger")
-                || field.getType().equalsIgnoreCase("InputTextFloat") || field.getType().equalsIgnoreCase("FloatBox")) {
+                || field.getType().equalsIgnoreCase("InputTextFloat") || field.getType().equalsIgnoreCase("FloatBox")
+                || field.getType().equalsIgnoreCase("DecimalBox")) {
             NumberAttribute number = (NumberAttribute) this.getAttributePrototype("Number");
             number.setName(field.getName());
             number.setDefaultLangCode(this.getLangCode());

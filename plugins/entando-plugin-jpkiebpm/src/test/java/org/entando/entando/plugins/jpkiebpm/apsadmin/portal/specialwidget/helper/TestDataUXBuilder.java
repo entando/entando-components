@@ -77,8 +77,6 @@ public class TestDataUXBuilder extends TestCase {
         KieProcessFormQueryResult kpfqr = KieVersionTransformer.pamSevenFormToPamSix(pamResult);
         String htmlForm = dataUXBuilder.createDataUx(kpfqr, 0, CONTAINER_ID, PROCESS_ID, TITLE);
 
-        System.out.println(htmlForm);
-
         //Title Check
         assertTrue(htmlForm.contains("<h3 class=\"control-label editLabel\" id=\"JPKIE_TITLE_Title\">$i18n.getLabel(\"JPKIE_TITLE_Title\")</h3>\n"));
 
@@ -97,14 +95,16 @@ public class TestDataUXBuilder extends TestCase {
         assertTrue(htmlForm.contains("<input type=\"number\" id=\"field_0897\" name=\"$data.performance.type:performance\" labelkey=\"JPKIE_performance\" class=\"form-control ui-widget\" aria-required=\"true\" placeholder=\"Performance\" value=\"$data.performance.number\">"));
 
         //DatePicker Checks
-        assertTrue(htmlForm.contains("<input type=\"text\" id=\"field_8289\" name=\"$data.birthDate.type:birthDate\" labelkey=\"JPKIE_birthDate\" class=\"form-control date-picker\" aria-required=\"true\" placeholder=\"BirthDate\" value=\"$data.birthDate.text\">"));
+
+        assertTrue(htmlForm.contains("<input type=\"text\" id=\"field_8289\" name=\"$data.birthDate.type:birthDate\" labelkey=\"JPKIE_birthDate\" class=\"form-control date-picker\" aria-required=\"true\" placeholder=\"BirthDate\" value=\"$data.birthDate.getFormattedDate(\"yyyy-MM-dd_hh:mm\")\">"));
         assertTrue(htmlForm.contains("$(\"#datepicker_field_8289\").datetimepicker"));
         assertTrue(htmlForm.contains("format: 'YYYY-MM-DD hh:mm'"));
         assertTrue(htmlForm.contains("showTodayButton: true"));
         assertTrue(htmlForm.contains("allowInputToggle: true"));
 
         //CheckBox Checks
-        assertTrue(htmlForm.contains("<input type=\"checkbox\" id=\"field_4192\" name=\"$data.checkBox1.type:checkBox1\" labelkey=\"JPKIE_checkBox1\" class=\"ui-widget \" aria-required=\"true\" value=\"true\">"));
+
+        assertTrue(htmlForm.contains("<input type=\"checkbox\" id=\"field_4192\" name=\"$data.checkBox1.type:checkBox1\" labelkey=\"JPKIE_checkBox1\" class=\"ui-widget \" aria-required=\"true\" value=\"true\" >"));
 
         //ListBox Checks
         assertTrue(htmlForm.contains("<select id=\"field_3229\" name=\"$data.listBox1.type:listBox1\" class=\"form-control\" >"));

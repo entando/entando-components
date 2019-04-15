@@ -40,6 +40,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.KieApiMa
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskDoc;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KiaApiTaskState;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KieApiClaimTask;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
@@ -330,7 +331,6 @@ public class ApiTaskInterface extends KieApiManager {
 
                     }
 
-
                     executorService.invokeAll(tasksCallables);
                     executorService.shutdown();
                     return taskList;
@@ -396,7 +396,6 @@ public class ApiTaskInterface extends KieApiManager {
         KieProcessFormQueryResult processForm = this.getKieFormManager().getTaskForm(bpmConfig, containerId, Long.valueOf(taskIdString));
 
         JSONObject taskData = this.getKieFormManager().getTaskFormData(bpmConfig, containerId, Long.valueOf(taskIdString), null);
-
         JSONObject inputData = taskData.getJSONObject("task-input-data");
 
         mergeTaskData(inputData, processForm);
@@ -420,12 +419,16 @@ public class ApiTaskInterface extends KieApiManager {
     }
 
     public KieApiForm getTaskData(Properties properties) throws Throwable {
+        logger.info("getTaskData");
         String containerId = properties.getProperty("containerId");
         String taskIdString = properties.getProperty("taskId");
         String langCode = properties.getProperty(SystemConstants.API_LANG_CODE_PARAMETER);
-        KieApiForm form = null;
-
         String configId = properties.getProperty("configId");
+        KieApiForm form = null;
+        logger.debug("containerId: {}",containerId);
+        logger.debug("taskIdString: {}", taskIdString);
+        logger.debug("configId: {}", configId);
+
         int widgetInfoId = Integer.parseInt(configId);
         final BpmWidgetInfo bpmWidgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(widgetInfoId);
         final String information = bpmWidgetInfo.getInformationDraft();
@@ -437,22 +440,30 @@ public class ApiTaskInterface extends KieApiManager {
         KieProcessFormQueryResult processForm = this.getKieFormManager().getTaskForm(bpmConfig, containerId, Long.valueOf(taskIdString));
 
         JSONObject taskData = this.getKieFormManager().getTaskFormData(bpmConfig, containerId, Long.valueOf(taskIdString), null);
-
         JSONObject inputData = taskData.getJSONObject("task-input-data");
 
         mergeTaskData(inputData, processForm);
 
         // In order to avoid duplications of input fields remove all the form fields  
         // and nestedForms of the processForm to return only the Task Data readonly fields
-        processForm.getFields().clear();
-        processForm.getNestedForms().clear();
+        // processForm.getFields().clear();
+        // processForm.getNestedForms().clear();
 
         if (null == processForm) {
             String msg = String.format("No form found with containerId %s and taskId %s does not exist", containerId, taskIdString);
-            throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, msg, Response.Status.CONFLICT);
+          throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, msg, Response.Status.CONFLICT);
+      //       logger.info("null == processForm {}",msg);
+        }
+        else {
+            if (null!=processForm.getFields()) {
+                processForm.getFields().clear();
+            }
+            if (null != processForm.getNestedForms()) {
+                processForm.getNestedForms().clear();
+            }
         }
         String processId = processForm.getHolders().get(0).getValue();
-        try {
+         try {
             this.setLabels(processForm, langCode);
             form = KieApiUtil.createForm(processForm, this.getI18nManager(), langCode, this.getFormOverridesMap(widgetInfoId));
             form.setTaskId(taskIdString);
@@ -460,18 +471,13 @@ public class ApiTaskInterface extends KieApiManager {
             form.setProcessId(processId);
             form.setConfigId(bpmConfig.getId());
         } catch (Exception e) {
-            logger.error("Failed to create kie form ", e);
+            logger.error("Failed to create kie form {}", e);
         }
-
         KieApiFields fields = new KieApiFields();
         KieApiFieldset fieldset = new KieApiFieldset();
-
         fieldset.setField(appendTaskDataFields(inputData));
-
         fields.addFieldset(fieldset);
-
         form.addFields(fields);
-
         return form;
     }
 
@@ -665,12 +671,20 @@ public class ApiTaskInterface extends KieApiManager {
 
     public void mergeTaskData(JSONObject taskData, KieProcessFormQueryResult form) {
 
-        logger.debug("Task data " + taskData.toString());
+        logger.info("mergeTaskData data {} " + taskData.toString());
 
         KieDataHolder holder = form.getHolders().get(0);
+        logger.debug("holder NAME {}", holder.getName());
+        logger.debug("holder getId {}", holder.getId());
+        logger.debug("holder getInputId {}", holder.getInputId());
+        logger.debug("holder getOutId {}", holder.getOutId());
+
         String holderValue = holder.getValue();
         String formName = form.getHolders().get(0).getId();
         String holderType = holder.getType();
+        
+        logger.debug("holderValue {}", holderValue);
+        logger.debug("holderType {}", holderType);
 
         logger.debug("holderType {}, formName {}", holderValue, formName);
 
@@ -686,8 +700,12 @@ public class ApiTaskInterface extends KieApiManager {
         }
         JSONObject formChild = null;
         for (String child : children) {
-            if (child.equals(holderValue) || child.equals("taskInput" + holderTypeName) || child.equals(formName)) {
+            logger.debug("child {}", child);
+
+            if (child.equals("changeTskIn") ||child.equals(holder.getInputId()) || child.equals(holder.getOutId()) || child.equals(holderValue) || child.equals("taskInput" + holderTypeName) || child.equals(formName)) {
                 formChild = taskData.getJSONObject(child);
+                logger.debug("form child found {}", formChild.toString());
+                logger.debug("break");
                 break;
             }
         }

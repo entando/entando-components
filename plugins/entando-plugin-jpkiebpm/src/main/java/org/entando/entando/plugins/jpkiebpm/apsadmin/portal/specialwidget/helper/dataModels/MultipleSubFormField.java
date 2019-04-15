@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 Entando Inc..
+ * Copyright 2019 Entando Inc..
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,42 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
-
-@XmlRootElement(name = "kie-containers")
-@XmlAccessorType(XmlAccessType.FIELD)
-public class KieProcessProperty {
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    @XmlAttribute
-    private String name;
-    @XmlAttribute
-    private String value;
-
-    @Override
-    public String toString() {
-        return "KieProcessProperty [name=" + name + ", value=" + value + "]";
-    }
+package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels;
 
 
+public class MultipleSubFormField extends InputField {
+    
 }
