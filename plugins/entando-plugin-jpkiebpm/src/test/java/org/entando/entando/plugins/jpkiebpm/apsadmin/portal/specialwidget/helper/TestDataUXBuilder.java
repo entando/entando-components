@@ -103,8 +103,11 @@ public class TestDataUXBuilder extends TestCase {
         assertTrue(htmlForm.contains("allowInputToggle: true"));
 
         //CheckBox Checks
-
         assertTrue(htmlForm.contains("<input type=\"checkbox\" id=\"field_4192\" name=\"$data.checkBox1.type:checkBox1\" labelkey=\"JPKIE_checkBox1\" class=\"ui-widget \" aria-required=\"true\" value=\"true\" >"));
+        assertTrue(htmlForm.contains("<input type=\"hidden\" id=\"field_4192_hiddenval\"  value=\"$data.checkBox1.getValue()\">"));
+        assertTrue(htmlForm.contains("var hiddenVal = $(field_4192_hiddenval).val();"));
+        assertTrue(htmlForm.contains("$(field_4192).prop('checked', true);"));
+        assertTrue(htmlForm.contains("$(field_4192).prop('checked', false);"));
 
         //ListBox Checks
         assertTrue(htmlForm.contains("<select id=\"field_3229\" name=\"$data.listBox1.type:listBox1\" class=\"form-control\" >"));

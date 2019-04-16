@@ -2,8 +2,7 @@
 <div class="col-md-12">
 
     <div class="ui-dform-div form-group">
-<h1>VALUE: ${field.value}</h1>
-        <input type="${field.typeHTML}" id="${field.id}" name="$data.${field.name}.type:${field.name}" labelkey="JPKIE_${field.name}" class="ui-widget " aria-required="true" value="true"  <#include "/FieldDisabled.ftl" >>
+        <input type="${field.typeHTML}" id="${field.id}" name="$data.${field.name}.type:${field.name}" labelkey="JPKIE_${field.name}" class="ui-widget " aria-required="true" value="true" <#include "/FieldDisabled.ftl" >>
         <label id="JPKIE_${field.name}" for="jpkieformparam_${field.name}" class="editLabel">
             <#include "/FieldLabel.ftl"></label>
         <input type="hidden" id="${field.id}_hiddenval"  value="${field.value}">
