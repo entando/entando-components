@@ -93,7 +93,7 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
 
         this.valueMapping.put("InputText", "$data.%s.text");
         this.valueMapping.put("InputTextInteger", "$data.%s.number");
-        this.valueMapping.put("CheckBox", "$data.%s.boolean");
+        this.valueMapping.put("CheckBox", "$data.%s.getValue()");
         this.valueMapping.put("TextBox", "$data.%s.text");
         this.valueMapping.put("TextArea", "$data.%s.text");
         this.valueMapping.put("IntegerBox", "$data.%s.number");

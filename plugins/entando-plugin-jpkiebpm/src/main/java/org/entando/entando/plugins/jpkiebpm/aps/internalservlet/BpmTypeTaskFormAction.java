@@ -796,19 +796,22 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
 
             inputData.keySet().forEach(f -> {
 
-                String fieldNameMapped = null;
+                String fieldNameMapped;
                 KieDataHolder dataHolder = null;
                 if (inputData.get(f) instanceof org.json.JSONObject) {
                     for (KieDataHolder fh : form.getHolders()) {
-                        if (fh.getValue().equals(f)) {
-                            dataHolder = fh;
-                            logger.debug("      dataHolder found {} ", f);
-                            logger.debug("      dataHolder.getId() {} ", dataHolder.getId());
-                            logger.debug("      dataHolder.getName() {} ", dataHolder.getName());
-                            logger.debug("      dataHolder.getValue() {} ", dataHolder.getValue());
-                            logger.debug("      dataHolder.getType() {} ", dataHolder.getType());
-                            logger.debug("      dataHolder.getOutId() {} ", dataHolder.getOutId());
-                            break;
+                        if (null!=fh.getValue()){
+                            logger.info("      dataHolder fh.getValue() {} ", fh.getValue());
+                            if (fh.getValue().equals(f)) {
+                                dataHolder = fh;
+                                logger.debug("      dataHolder found {} ", f);
+                                logger.debug("      dataHolder.getId() {} ", dataHolder.getId());
+                                logger.debug("      dataHolder.getName() {} ", dataHolder.getName());
+                                logger.debug("      dataHolder.getValue() {} ", dataHolder.getValue());
+                                logger.debug("      dataHolder.getType() {} ", dataHolder.getType());
+                                logger.debug("      dataHolder.getOutId() {} ", dataHolder.getOutId());
+                                break;
+                            }
                         }
                     }
 
