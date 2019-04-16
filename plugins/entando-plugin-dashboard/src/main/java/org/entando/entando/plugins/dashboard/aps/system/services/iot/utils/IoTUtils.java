@@ -1,17 +1,21 @@
 package org.entando.entando.plugins.dashboard.aps.system.services.iot.utils;
 
-import java.lang.reflect.Type;
-import java.net.ConnectException;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
+import com.agiletec.aps.system.common.FieldSearchFilter;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang3.StringUtils;
+import org.entando.entando.aps.system.exception.ResourceNotFoundException;
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.exception.ApiResourceNotAvailableException;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DashboardDatasourceDto;
+import org.entando.entando.web.entity.validator.EntityValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -20,15 +24,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
-import com.agiletec.aps.system.common.FieldSearchFilter;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class IoTUtils {
-
 
 	public static FieldSearchFilter[] addFilter(FieldSearchFilter[] filters, FieldSearchFilter filterToAdd) {
 		int len = filters.length;
@@ -139,11 +143,10 @@ public class IoTUtils {
 		HttpEntity httpEntity = new HttpEntity(headers);
 
 		RestTemplate restTemplate = new RestTemplate();
-
 		try {
 		return restTemplate.exchange(url, HttpMethod.GET, httpEntity, String.class); 
 		}
-		catch (ResourceAccessException e){
+		catch (ResourceAccessException | IllegalArgumentException e){
 		  return new ResponseEntity(e, HttpStatus.REQUEST_TIMEOUT);
     }
 	}
@@ -154,4 +157,64 @@ public class IoTUtils {
 		}
 		return false;
 	}
+
+  public static void throwApiResourceUnavailableEx(ResponseEntity<String> response,
+      int dashboardId, String datasourceCode, Class aClass) {
+	  if(datasourceCode != null) {
+      final Logger logger = LoggerFactory.getLogger(aClass);
+      logger.error(IoTConstants.LOG_API_EX_DASHBOARD_DATASOURCE,
+          Thread.currentThread().getStackTrace()[2].getMethodName(),
+          response.getStatusCode(),
+          dashboardId, datasourceCode);
+      throw new ApiResourceNotAvailableException(
+          String.valueOf(response.getStatusCodeValue()),
+          String.format(
+              IoTConstants.API_EX_DASHBOARD_DATASOURCE, aClass.getSimpleName(),
+              dashboardId, datasourceCode));
+    } else {
+      final Logger logger = LoggerFactory.getLogger(aClass);
+      logger.error(IoTConstants.LOG_API_EX_DASHBOARD,
+          Thread.currentThread().getStackTrace()[2].getMethodName(),
+          response.getStatusCode(),
+          dashboardId);
+      throw new ApiResourceNotAvailableException(
+          String.valueOf(response.getStatusCodeValue()),
+          String.format(
+              IoTConstants.API_EX_DASHBOARD, aClass.getSimpleName(),
+              dashboardId));
+    }
+  }
+
+  public static void logEndMethod(String dashboard, String datasource, boolean result, Class aClass) {
+    final Logger logger = LoggerFactory.getLogger(aClass);
+    String message = "{} method {} dashboard: {} datasource: {} result {}";
+    if(datasource == null) {
+      message = "{} method {} dashboard: {} result {}";
+    }
+    logger.info(message, aClass.getClass().getSimpleName(),
+        Thread.currentThread().getStackTrace()[2].getMethodName(),
+        dashboard, datasource, result);
+  }
+
+  public static void logStartMethod(String dashboard, String datasource, Class aClass) {
+    final Logger logger = LoggerFactory.getLogger(aClass);
+    String message = "{} method {} dashboard: {} datasource: {}";
+    if(datasource == null) {
+      message = "{} method {} dashboard: {}";
+    }
+    logger.info(message, aClass.getClass().getSimpleName(),
+        Thread.currentThread().getStackTrace()[2].getMethodName(),
+        dashboard, datasource);
+  }
+
+  public static DashboardDatasourceDto getAndCheckDashboardDatasourceDto(int serverId, String datasourceCode, IDashboardConfigService dashboardConfigService) {
+    if (!dashboardConfigService.existsById(serverId)) {
+      throw new ResourceNotFoundException(EntityValidator.ERRCODE_ENTITY_DOES_NOT_EXIST, "Server", String.valueOf(serverId));
+    }
+    DashboardDatasourceDto dto = dashboardConfigService.getDashboardDatasourceDto(serverId, datasourceCode);
+    if (dto.getDatasourcesConfigDto() == null) {
+      throw new ResourceNotFoundException(EntityValidator.ERRCODE_ENTITY_DOES_NOT_EXIST, "Datasource" , datasourceCode);
+    }
+    return dto;
+  }
 }

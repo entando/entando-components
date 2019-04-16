@@ -151,7 +151,8 @@ public class ConnectorService extends AbstractConnectorService implements IConne
     }
 
 	@Override
-	public DashboardConfigRequest setDevicesMetadata(DashboardConfigRequest dashboardConfigRequest) {
+	public DashboardConfigRequest setDevicesMetadata(DashboardConfigRequest dashboardConfigRequest)
+      throws ApsSystemException {
 		return connectorFactory.getConnector(dashboardConfigRequest.getType()).setDevicesMetadata(dashboardConfigRequest);
 	}
 }

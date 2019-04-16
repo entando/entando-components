@@ -54,5 +54,6 @@ public interface IConnectorService {
 
 	List<ServerType> getDashboardTypes();
 
-	DashboardConfigRequest setDevicesMetadata(DashboardConfigRequest dashboardConfigRequest);
+	DashboardConfigRequest setDevicesMetadata(DashboardConfigRequest dashboardConfigRequest)
+      throws ApsSystemException;
 }

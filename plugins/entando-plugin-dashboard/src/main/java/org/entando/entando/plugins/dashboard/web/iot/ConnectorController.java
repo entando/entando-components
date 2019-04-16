@@ -7,9 +7,11 @@ import java.util.Map;
 
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.exception.ApiResourceNotAvailableException;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementPayload;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IConnectorService;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils;
 import org.entando.entando.plugins.dashboard.aps.system.services.storage.IotMessageDto;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.PagedRestResponse;
@@ -54,7 +56,7 @@ public class ConnectorController {
 			@PathVariable String datasourceCode,
 			@RequestBody String measure) {
 
-		DashboardDatasourceDto dto = this.getAndCheckDashboardDatasourceDto(serverId, datasourceCode);
+    DashboardDatasourceDto dto = IoTUtils.getAndCheckDashboardDatasourceDto(serverId, datasourceCode, dashboardConfigService);
 		connectorService.saveDeviceMeasurement(dto, measure);
 		return new ResponseEntity(HttpStatus.OK);
 	}
@@ -65,9 +67,9 @@ public class ConnectorController {
 			@PathVariable String datasourceCode,
 			@RequestParam(value = "startDate", required = false) Instant startDate,
 			@RequestParam(value = "endDate", required = false) Instant endDate,
-			RestListRequest requestList) throws Exception {
+			RestListRequest requestList) {
 
-		DashboardDatasourceDto dto = this.getAndCheckDashboardDatasourceDto(serverId, datasourceCode);
+    DashboardDatasourceDto dto = IoTUtils.getAndCheckDashboardDatasourceDto(serverId, datasourceCode, dashboardConfigService);
 		Date start = null;
 		Date end = null;
 		if(startDate != null) {
@@ -94,24 +96,15 @@ public class ConnectorController {
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
-	@RequestMapping(value = "/setTemplate/server/{serverId}/datasource/{datasourceCode}", method = RequestMethod.POST)
-	public ResponseEntity<?> setMeasurementTemplate(@PathVariable int serverId,
-			@PathVariable String datasourceCode)
-					throws ApsSystemException {
-		DashboardDatasourceDto dto = this.getAndCheckDashboardDatasourceDto(serverId, datasourceCode);
-		//    connectorService.setDeviceMeasurementSchema(dto);
+  @RequestMapping(value = "/setTemplate/server/{serverId}/datasource/{datasourceCode}", method = RequestMethod.POST)
+  public ResponseEntity<?> setMeasurementTemplate(@PathVariable int serverId,
+      @PathVariable String datasourceCode)
+      throws ApsSystemException {
+    DashboardDatasourceDto dto = IoTUtils.getAndCheckDashboardDatasourceDto(serverId, datasourceCode, dashboardConfigService);
+    //    connectorService.setDeviceMeasurementSchema(dto);
 
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
-
-  private DashboardDatasourceDto getAndCheckDashboardDatasourceDto(@PathVariable int serverId, @PathVariable String datasourceCode) {
-    if (!dashboardConfigService.existsById(serverId)) {
-      throw new ResourceNotFoundException(EntityValidator.ERRCODE_ENTITY_DOES_NOT_EXIST, "ServerId", String.valueOf(serverId));
-    }
-    DashboardDatasourceDto dto = dashboardConfigService.getDashboardDatasourceDto(serverId, datasourceCode);
-    if (dto.getDatasourcesConfigDto() == null) {
-      throw new ResourceNotFoundException(EntityValidator.ERRCODE_ENTITY_DOES_NOT_EXIST, "ServerId: " + String.valueOf(serverId) + " datasourceCode " , datasourceCode);
-    }
-    return dto;
+    return new ResponseEntity<>(HttpStatus.OK);
   }
+
+  
 }
