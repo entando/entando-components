@@ -30,6 +30,7 @@ import java.util.zip.ZipFile;
 
 import org.entando.entando.aps.system.init.DatabaseManager;
 import org.entando.entando.aps.system.init.InitializerManager;
+import org.entando.entando.aps.system.init.model.ComponentInstallationReport;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJob;
 import org.entando.entando.aps.system.services.RequestListProcessor;
@@ -64,9 +65,9 @@ public class DigitalExchangeInstallExecutor extends DigitalExchangeAbstractJobEx
 
     @Autowired
     public DigitalExchangeInstallExecutor(DigitalExchangesClient client, DigitalExchangesService digitalExchangesService,
-                                          ComponentStorageManager storageManager,
-                                          DatabaseManager databaseManager, InitializerManager initializerManager,
-                                          CommandExecutor commandExecutor) {
+            ComponentStorageManager storageManager,
+            DatabaseManager databaseManager, InitializerManager initializerManager,
+            CommandExecutor commandExecutor) {
         super(client, storageManager, databaseManager, initializerManager, commandExecutor);
         this.digitalExchangesService = digitalExchangesService;
 
@@ -95,7 +96,13 @@ public class DigitalExchangeInstallExecutor extends DigitalExchangeAbstractJobEx
         job.setProgress(++currentStep / steps);
         updater.accept(job);
 
-        component.getInstallationCommands().forEach(commandExecutor::execute);
+        try {
+            component.getInstallationCommands().forEach(commandExecutor::execute);
+        } catch (Throwable t) {
+            setPostProcessStatus(component, SystemInstallationReport.Status.INCOMPLETE);
+            throw t;
+        }
+        setPostProcessStatus(component, SystemInstallationReport.Status.OK);
         job.setProgress(++currentStep / steps);
         updater.accept(job);
 
@@ -175,7 +182,7 @@ public class DigitalExchangeInstallExecutor extends DigitalExchangeAbstractJobEx
 
     private void verifyDownloadedContentSignature(Path tempZipPath, DigitalExchangeJob job) throws IOException {
         DigitalExchange digitalExchange = digitalExchangesService.findById(job.getDigitalExchangeId());
-        try(InputStream in = Files.newInputStream(tempZipPath, StandardOpenOption.READ)) {
+        try (InputStream in = Files.newInputStream(tempZipPath, StandardOpenOption.READ)) {
             boolean signatureMatches = SignatureUtil.verifySignature(
                     in, SignatureUtil.publicKeyFromPEM(digitalExchange.getPublicKey()),
                     new String(job.getComponentSignature()));
@@ -306,5 +313,14 @@ public class DigitalExchangeInstallExecutor extends DigitalExchangeAbstractJobEx
             logger.error("Error during component installation", ex);
             throw new JobExecutionException("Unable to install component", ex);
         }
+    }
+
+    private void setPostProcessStatus(ComponentDescriptor component, SystemInstallationReport.Status status) {
+        SystemInstallationReport systemInstallationReport = initializerManager.getCurrentReport();
+        ComponentInstallationReport componentReport = systemInstallationReport.getComponentReport(component.getCode(), false);
+        if (componentReport != null) {
+            componentReport.setPostProcessStatus(status);
+        }
+        initializerManager.saveReport(systemInstallationReport);
     }
 }

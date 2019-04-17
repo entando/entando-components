@@ -46,6 +46,8 @@ import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import org.entando.entando.aps.system.init.model.ComponentInstallationReport;
+import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import static org.entando.entando.aps.system.services.digitalexchange.DigitalExchangeTestUtils.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doNothing;
@@ -92,6 +94,12 @@ public class DigitalExchangeJobExecutorTest {
 
     @Spy
     private CommandExecutor commandExecutor;
+
+    @Mock
+    private SystemInstallationReport installationReport;
+
+    @Mock
+    private ComponentInstallationReport componentInstallationReport;
 
     @InjectMocks
     @Spy
@@ -147,6 +155,10 @@ public class DigitalExchangeJobExecutorTest {
         when(applicationContext.getBean("pageModelController")).thenReturn(pageModelController);
 
         doNothing().when(installer).reloadSystem();
+
+        when(initializerManager.getCurrentReport()).thenReturn(installationReport);
+        when(installationReport.getComponentReport(any(), eq(false))).thenReturn(componentInstallationReport);
+        when(componentInstallationReport.getStatus()).thenReturn(SystemInstallationReport.Status.OK);
     }
 
     private PagedRestResponse<DigitalExchangeComponent> getComponentInfoResponse() {
@@ -182,7 +194,7 @@ public class DigitalExchangeJobExecutorTest {
 
         verify(databaseManager, times(1)).initComponentDatabases(any(), any(), anyBoolean());
         verify(databaseManager, times(1)).initComponentDefaultResources(any(), any(), anyBoolean());
-        verify(initializerManager, times(1)).saveReport(any());
+        verify(initializerManager, times(2)).saveReport(any());
 
         verify(labelController, times(1)).addLabelGroup(any());
     }
