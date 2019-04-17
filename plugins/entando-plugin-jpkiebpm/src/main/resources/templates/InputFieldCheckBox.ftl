@@ -8,6 +8,7 @@
         <input type="hidden" id="${field.id}_hiddenval"  value="${field.value}">
 
     </div>
+
     <script type="text/javascript">
         $( document ).ready(function() {
             var hiddenVal = $(${field.id}_hiddenval).val();
@@ -16,6 +17,7 @@
             } else {
                 $(${field.id}).prop('checked', false);
             }
+            $(${field.id}_hiddenval).remove();
         });
     </script>
 </div>

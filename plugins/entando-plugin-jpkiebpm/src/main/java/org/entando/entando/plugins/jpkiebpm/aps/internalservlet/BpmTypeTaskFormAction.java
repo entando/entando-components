@@ -44,6 +44,7 @@ import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.apsadmin.system.entity.AbstractApsEntityAction;
+
 import java.io.StringWriter;
 import java.math.BigDecimal;
 
@@ -61,17 +62,18 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KiePro
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.NullFormField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import javax.servlet.http.HttpServletRequest;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
+
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.context.Context;
 import org.entando.entando.aps.system.services.dataobjectmodel.DataObjectModel;
-import org.entando.entando.aps.system.services.dataobjectmodel.IDataObjectModelManager;
 import org.entando.entando.aps.system.services.dataobjectrenderer.DataObjectWrapper;
 import org.entando.entando.aps.system.services.dataobjectrenderer.SystemInfoWrapper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
@@ -123,9 +125,6 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
     private String kieSourceId;
     private KieBpmConfig config;
 
- //   @Autowired
- //   private IDataObjectModelManager dataObjectModelManager;
-
     private Map<String, Object> valuesMap;
 
     private Long taskId;
@@ -154,7 +153,6 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
     }
 
     public String render(DataObject dataobject, String contentModel, String langCode, RequestContext reqCtx) {
-        dataobject.getAttributeList().forEach(f -> logger.info("render {} value {} type {}", f.getName(), f.getValue(), f.getType()));
         String renderedEntity;
         try {
             Context velocityContext = new VelocityContext();
@@ -167,8 +165,7 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
             velocityContext.put("info", systemInfoWrapper);
             StringWriter stringWriter = new StringWriter();
             boolean isEvaluated = Velocity.evaluate(velocityContext, stringWriter, "render", contentModel);
-            //contentWrapper.entrySet().forEach(a -> logger.info("contentWrapper {} " , a.toString()));
-            if (!isEvaluated){
+            if (!isEvaluated) {
                 throw new ApsSystemException("Error rendering DataObject");
             }
             stringWriter.flush();
@@ -286,12 +283,7 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
             Map<String, String> toBpmStrings = toBpm.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> Optional.ofNullable((String) e.getValue()).orElse("")));
 
             final String result = this.getFormManager().completeHumanFormTask(config, containerId, processId, Long.valueOf(taskId), toBpmStrings);
-            logger.info("Result {} ", result);
-            logger.info("TASK ID RESULT: {}", result);
-
-            //   List<String> args = new ArrayList<>();
-            //   args.add(procId);
-            //   args.add(processId.substring(processId.lastIndexOf(".") + 1));
+            logger.debug("Result {} ", result);
             this.setDataObjectOnSession(null);
             this.addActionMessage(this.getText("message.success"));
         } catch (Throwable t) {
@@ -583,7 +575,6 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
     }
 
     private void addAttributesToEntityType(IApsEntity entityType, KieProcessFormQueryResult form) {
-        logger.debug("AddAttributesToEntityType");
         if (null != form && null != form.getFields()) {
             if (form.getFields().size() > 0) {
                 try {
@@ -607,12 +598,11 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
                 }
             }
             for (KieProcessFormField field : form.getFields()) {
-                logger.debug("addAttributeToEntityType {}", field.getName());
                 this.addAttributeToEntityType(entityType, field);
             }
             if (null != form.getNestedForms()) {
                 for (KieProcessFormQueryResult subForm : form.getNestedForms()) {
-                    logger.debug("addAttributeToEntityType getNestedForms");
+                    logger.debug("addAttributeToEntityType for nested forms");
                     this.addAttributesToEntityType(entityType, subForm);
                 }
             }
@@ -620,15 +610,11 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
     }
 
     private void addAttributeToEntityType(IApsEntity entityType, KieProcessFormField field) {
-        logger.debug("addAttributeToEntityType");
+        logger.debug("addAttributeToEntityType for field {}", field.getName());
         String velocityNameField = field.getName().replaceAll(" ", REPLACE_SPACE_STRING);
         field.setName(velocityNameField);
         String fieldRequired = KieApiUtil.getFieldProperty(field, "fieldRequired");
         boolean req = (fieldRequired != null && fieldRequired.equalsIgnoreCase("true"));
-        logger.debug("field name {}", field.getName().toString());
-        logger.debug("----> velocityNameField {}", velocityNameField);
-        logger.debug("----> valuesMap get velocityNameField {}", valuesMap.get(velocityNameField));
-
         if (field.getType().equalsIgnoreCase("TextBox")
                 || (field.getType().equalsIgnoreCase("TextArea"))
                 || (field.getType().equalsIgnoreCase("InputText"))
@@ -646,11 +632,9 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
                 || field.getType().equalsIgnoreCase("DecimalBox")) {
             NumberAttribute number = (NumberAttribute) this.getAttributePrototype("Number");
             number.setName(velocityNameField);
-
             number.setName(field.getName());
             number.setDefaultLangCode(this.getCurrentLang().getCode());
             number.setRequired(req);
-
             Object val = valuesMap.get(field.getName());
 
             if (null != val) {
@@ -696,19 +680,14 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
             dateAttribute.setDefaultLangCode(this.getCurrentLang().getCode());
             dateAttribute.setRequired(req);
             String dateValueString = (String) valuesMap.get(field.getName());
-            if (null != dateValueString) {
-                if (!(dateValueString.equals("null"))) {
-                    Date dateVal = null;
-                    try {
-                        dateVal = new SimpleDateFormat(DATE_FORMAT_PATTERN).parse(dateValueString);
-                    } catch (ParseException e) {
-                        logger.error("DATEPICKER ERROR: {}", e);
-                    }
-                    dateAttribute.setDate(dateVal);
-
-                    logger.debug("DATEPICKER VALUE date.getDate: " + dateAttribute);
-
+            if (null != dateValueString && !(dateValueString.equals("null"))) {
+                Date dateVal = null;
+                try {
+                    dateVal = new SimpleDateFormat(DATE_FORMAT_PATTERN).parse(dateValueString);
+                } catch (ParseException e) {
+                    logger.error("DatePicker ParseException: {}", e);
                 }
+                dateAttribute.setDate(dateVal);
             }
             entityType.addAttribute(dateAttribute);
         }
@@ -778,30 +757,18 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
         Map<String, AttributeInterface> attributeTypes = entityManager.getEntityAttributePrototypes();
         return attributeTypes.get(typeCode);
     }
-/*
-    public IDataObjectModelManager getDataObjectModelManager() {
-        return dataObjectModelManager;
-    }
 
-    public void setDataObjectModelManager(IDataObjectModelManager _dataObjectModelManager) {
-        this.dataObjectModelManager = _dataObjectModelManager;
-    }
-*/
     private Map<String, Object> getValuesMap(JSONObject inputData, String parentKey, String oldParentKey, final KieProcessFormQueryResult form) {
-
         logger.debug("getValuesMap parentKey {} oldParentKey {}", parentKey, oldParentKey);
-
         Map<String, Object> map = new HashMap<>();
         try {
-
             inputData.keySet().forEach(f -> {
-
                 String fieldNameMapped;
                 KieDataHolder dataHolder = null;
                 if (inputData.get(f) instanceof org.json.JSONObject) {
                     for (KieDataHolder fh : form.getHolders()) {
-                        if (null!=fh.getValue()){
-                            logger.info("      dataHolder fh.getValue() {} ", fh.getValue());
+                        if (null != fh.getValue()) {
+                            logger.debug("dataHolder value  {} ", fh.getValue());
                             if (fh.getValue().equals(f)) {
                                 dataHolder = fh;
                                 logger.debug("      dataHolder found {} ", f);
@@ -817,17 +784,10 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
 
                     if (null != dataHolder) {
                         String[] splitHolderName = dataHolder.getValue().split("\\.");
-
                         String holderName;
-                        //holderName = splitHolderName[splitHolderName.length - 1];
-                        logger.info("      splitHolderName.length {}", splitHolderName.length);
                         holderName = dataHolder.getName();
-
-                        logger.debug(" USE  holderName {}", holderName);
                         if (dataHolder.getType().equals("BASE")) {
-
                             fieldNameMapped = searchFieldInTheForm(holderName + f + "_" + f, form);
-
                             if (splitHolderName.length > 0) {
                                 if (null != fieldNameMapped) {
                                     map.put(fieldNameMapped, String.valueOf(inputData.get(f)));
@@ -835,11 +795,7 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
                                     map.put(holderName + f, String.valueOf(inputData.get(f)));
                                 }
                             } else {
-                                logger.debug("      holderName {}", holderName);
-                                holderName = splitHolderName[splitHolderName.length - 1];
-
                                 map.put(dataHolder.getName() + f, String.valueOf(inputData.get(f)));
-                                logger.debug(" -> f, value {}", holderName + f, String.valueOf(inputData.get(f)));
                             }
 
                         } else {
@@ -850,13 +806,11 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
 
 
                         if (jsonObject.has("java.util.Date")) {
-                            logger.debug("      put date {} value {}", oldParentKey + f, jsonObject.get("java.util.Date"));
                             DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_PATTERN);
                             String strDate = dateFormat.format(jsonObject.get("java.util.Date"));
-                            logger.debug("Converted String: " + strDate);
+                            logger.debug("java.util.Date found in jsonObject - Converted String is : {}", strDate);
                             map.put(oldParentKey + "_" + f, strDate);
                         } else {
-                            logger.debug("   dataHolder NULL map.putAll {}", jsonObject);
                             map.putAll(getValuesMap((JSONObject) inputData.get(f), f, parentKey, form));
                         }
                     }
@@ -873,36 +827,26 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
                             if (fieldNameMappedParent == null) {
                                 logger.debug("fieldNameMappedParent == null ");
                                 fieldNameMapped = searchFieldInTheForm(parentKeyName + "_" + f, form);
-                                logger.debug("fieldNameMapped {} ", fieldNameMapped);
                             } else {
                                 logger.debug("fieldNameMappedParent != null ");
                                 fieldNameMapped = fieldNameMappedParent;
-                                logger.debug("fieldNameMapped {} ", fieldNameMapped);
-
                             }
                         } else {
                             logger.debug("(parentKeyName.equalsIgnoreCase(oldParentKey))) ");
                             fieldNameMapped = searchFieldInTheForm(parentKeyName + "_" + f, form);
-                            logger.debug("fieldNameMapped {} ", fieldNameMapped);
-
                         }
 
                         logger.debug("fieldNameMapped {}", fieldNameMapped);
 
                         if (null != fieldNameMapped) {
-                            logger.debug("fieldNameMapped {} {}", fieldNameMapped, String.valueOf(inputData.get(f)));
                             map.put(fieldNameMapped, String.valueOf(inputData.get(f)));
-                            //map.put(fieldNameMapped, String.valueOf(inputData.get(fieldNameMapped)));
                         } else {
                             if (parentKeyName.startsWith("taskInput")) {
                                 String lowerFirstChar = Character.toLowerCase(parentKeyName.charAt(9)) + parentKeyName.substring(10);
-                                logger.debug("taskInput parentKey replace {} with {}", parentKeyName, lowerFirstChar);
                                 map.put(lowerFirstChar + "_" + f, String.valueOf(inputData.get(f)));
-                                logger.info(" -> parentKeyName.startsWith(\"taskInput\")  {}_{} value {}", lowerFirstChar, f, String.valueOf(inputData.get(f)));
                             } else {
                                 if (inputData.has(parentKeyName + "_" + f)) {
                                     map.put(parentKeyName + "_" + f, inputData.get(parentKeyName + "_" + f));
-                                    logger.debug(" -> {}_{} value {}", parentKeyName, f, String.valueOf(inputData.get(f)));
                                 } else {
                                     map.put(parentKeyName + "_" + f, null);
                                 }
@@ -910,34 +854,32 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
                         }
 
                     } else {
-                        logger.debug(" -> {} value {}", f, inputData.get(f));
                         map.put(f, inputData.get(f));
                     }
                 }
 
             });
         } catch (Exception ex) {
-            logger.error("getValuesMap error : {}", ex);
+            logger.error("GetValuesMap error : {}", ex);
         }
 
         Map<String, Object> newMap = new HashMap<>();
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             newMap.put(entry.getKey().replaceAll(" ", REPLACE_SPACE_STRING), entry.getValue());
         }
-        logger.debug("-> Return map {}", newMap);
         return newMap;
 
     }
 
     private String searchFieldInTheForm(String fieldName, KieProcessFormQueryResult form) {
-        logger.debug(" search input fieldName() {}", fieldName);
+        logger.debug("Search input for fieldName() {}", fieldName);
 
-        String fieldNameMapped = null;
+        String fieldNameMapped;
         for (KieProcessFormField field : form.getFields()) {
             //TODO FIX THIS using the correct form property instead of ignorecase
             if (field.getName().equalsIgnoreCase(fieldName)) {
                 fieldNameMapped = field.getName();
-                logger.debug(" --> 1 fieldNameMappedFound {}", fieldNameMapped);
+                logger.debug("fieldNameMappedFound {}", fieldNameMapped);
                 return fieldNameMapped;
             }
         }

@@ -234,13 +234,13 @@ public class FormToBpmHelper {
         if (null == mainDataHolder
                 || null == mainDataHolder.getId()
                 || null == mainDataHolder.getValue()) {
-            logger.warn("cannot find main mainDataHolder OR invalid mainDataHolder detected, aborting");
+            logger.warn("cannot find main mainDataHolder OR invalid mainDataHolder detected");
         } else {
             // prepare application object
             buildInternalSection(mainDataHolder.getId(), jmap);
             // prepare main data holder section
             ajson.put(mainDataHolder.getValue(),
-                    jmap.get(mainDataHolder.getId()));
+            jmap.get(mainDataHolder.getId()));
             // finally prepare the overall JSON
             outJSON.put(mainDataHolder.getId(), ajson);
         }
@@ -437,7 +437,6 @@ public class FormToBpmHelper {
     }
 
     static JSONObject generateJsonPayload(final KieProcessFormQueryResult formStructure, final JSONObject taskInputDataJson, final Map<String, Object> inputFields) throws Throwable {
-        logger.info("*               generateJsonPayload              *");
         logFormStructure(formStructure);
         JSONObject taskJsonResult = new JSONObject();
         if (generateJsonCheckInputNull(formStructure, taskInputDataJson, inputFields)) {
@@ -448,15 +447,15 @@ public class FormToBpmHelper {
             logger.debug("*   mainDataHolder == null  or equal task        *");
             taskJsonResult = taskInputDataJson;
         } else {
-            logger.debug("*               mainDataHolder NOT null              *");
-            logger.info("mainDataHolder id: {}", mainDataHolder.getId());
-            logger.info("mainDataHolder.getValue : {}", mainDataHolder.getValue());
-            logger.info("mainDataHolder name: {}", mainDataHolder.getName());
-            logger.info("mainDataHolder out id: {}", mainDataHolder.getOutId());
-            logger.info("mainDataHolder type: {}", mainDataHolder.getType());
-            logger.info("mainDataHolder : {}", mainDataHolder);
+            logger.debug("mainDataHolder NOT null");
+            logger.debug("mainDataHolder id: {}", mainDataHolder.getId());
+            logger.debug("mainDataHolder.getValue : {}", mainDataHolder.getValue());
+            logger.debug("mainDataHolder name: {}", mainDataHolder.getName());
+            logger.debug("mainDataHolder out id: {}", mainDataHolder.getOutId());
+            logger.debug("mainDataHolder type: {}", mainDataHolder.getType());
+            logger.debug("mainDataHolder : {}", mainDataHolder);
             FindKeyInJsonResult keyInJsonRes = findKeyInJson(mainDataHolder, taskInputDataJson);
-            logger.info("OBJECT: " + keyInJsonRes.getJsonResult());
+            logger.debug("Object found : {}", keyInJsonRes.getJsonResult());
             Object obj = keyInJsonRes.getJsonResult();
             if (!(obj instanceof JSONObject)) {
                 taskJsonResult = taskInputDataJson;
@@ -521,28 +520,22 @@ public class FormToBpmHelper {
 
 
         if (null != dataModelerEntry) {
-
             logger.debug(" dataModelerEntry.getName() {}", dataModelerEntry.getName());
             logger.debug(" dataModelerEntry.getInputId() {}", dataModelerEntry.getInputId());
             logger.debug(" dataModelerEntry.getType() {}", dataModelerEntry.getType());
             logger.debug(" dataModelerEntry.getValue() {}", dataModelerEntry.getValue());
 
-
             for (KieProcessFormField field : formStructure.getFields()) {
                 boolean isReadOnly = false;
-
                 logger.debug("field : " + field.getProperty("fieldClass").toString());
-
 
                 if (null != field.getProperty("readOnly")) {
                     isReadOnly = Boolean.parseBoolean(field.getProperty("readOnly").getValue());
                 }
                 String name = field.getName();
                 if (!isReadOnly) {
-                    logger.debug("FIELD !isReadOnly REPLACE");
+                    logger.debug("FIELD !isReadOnly -> replace value");
                     String[] splitName = name.split("_");
-
-                    logger.info("splitName.length : " + splitName.length);
 
                     if (splitName.length > 1) {
                         logger.debug("splitName.length > 1 : {}", splitName.length);
@@ -562,8 +555,6 @@ public class FormToBpmHelper {
                             }
                         }
                     }
-                } else {
-                    logger.debug("NOT splitName.length > 1 ");
                 }
             }
         } else {

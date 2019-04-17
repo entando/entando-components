@@ -134,8 +134,7 @@ public class JsonHelper {
 
     public static JSONObject replaceObject(JSONObject obj, String key, Object newValue) throws Exception {
 
-        logger.debug("replaceObject: {} with: {}", key, newValue.toString());
-
+        logger.debug("replace JSONObject {} with {}", key, newValue.toString());
 
         if (obj.has(key)) {
             obj.remove(key);
@@ -148,7 +147,7 @@ public class JsonHelper {
                 logger.debug("replaceObject iteratorKey: {} ", iteratorKey);
                 if ((obj.optJSONArray(iteratorKey) == null) && (obj.optJSONObject(iteratorKey) == null)) {
                     if (iteratorKey.equals(key)) {
-                        logger.info("key {} found replace with new value {} ", iteratorKey, newValue);
+                        logger.debug("key {} found replace with new value {} ", iteratorKey, newValue);
                         obj.remove(iteratorKey);
                         obj.put(iteratorKey, newValue);
                         return obj;
