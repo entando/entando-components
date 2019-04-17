@@ -1,8 +1,6 @@
 package org.entando.entando.plugins.dashboard.aps.system.services.iot.services;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
@@ -10,12 +8,8 @@ import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.IDashboardDatasourceDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementObject;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementPayload;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
-import org.entando.entando.plugins.dashboard.aps.system.services.storage.IotMessageDto;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigRequest;
-import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DatasourcesConfigRequest;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 
@@ -56,4 +50,6 @@ public interface IConnectorService {
 
 	DashboardConfigRequest setDevicesMetadata(DashboardConfigRequest dashboardConfigRequest)
       throws ApsSystemException;
+
+  DashboardDatasourceDto refreshMetadata(DashboardDatasourceDto dto) throws ApsSystemException;
 }

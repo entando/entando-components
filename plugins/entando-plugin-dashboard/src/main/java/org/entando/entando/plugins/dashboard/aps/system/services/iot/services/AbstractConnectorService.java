@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.UnknownHostException;
@@ -20,7 +21,11 @@ public abstract class AbstractConnectorService implements IConnectorService{
     boolean result = false;
     DashboardConfigDto serverObj = DashboardConfigDto.class.cast(server);
     logger.info("{} pings method to {}",this.getClass().getSimpleName(), server.getServerURI());
-    URL urlObj = new URL(serverObj.getServerURI());
+    URL urlObj;
+    try { urlObj = new URL(serverObj.getServerURI());}
+    catch (MalformedURLException e) {
+      throw new MalformedURLException(e.getMessage());
+    }
     HttpURLConnection con = (HttpURLConnection) urlObj.openConnection();
     con.setRequestMethod("GET");
     if(server.getTimeConnection() > IoTConstants.MINIMUM_TIMEOUT_CONNECTION) {

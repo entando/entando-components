@@ -74,7 +74,7 @@ public class TestConnectorController extends AbstractControllerTest {
 
     String measurement = "{\"temperature\" : 2, \"timestamp\" : 123456789}";
 
-    Mockito.when(dashboardConfigService.existsById(dashboardId)).thenReturn(true);
+    Mockito.when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
     Mockito.when(dashboardConfigService.getDashboardDatasourceDto(dashboardId, datasourceCode)).thenReturn(mockDto);
     ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
     ResultActions result = mockMvc.perform(
@@ -100,7 +100,7 @@ public class TestConnectorController extends AbstractControllerTest {
 
     String measurement = "{\"temperature\" : 2, \"timestamp\" : 123456789}";
 
-    Mockito.when(dashboardConfigService.existsById(dashboardId)).thenReturn(false);
+    Mockito.when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(false);
     Mockito.when(dashboardConfigService.getDashboardDatasourceDto(dashboardId, datasourceCode)).thenReturn(mockDto);
 
     ResultActions result = mockMvc.perform(
@@ -125,7 +125,7 @@ public class TestConnectorController extends AbstractControllerTest {
 
     String measurement = "{\"temperature\" : 2, \"timestamp\" : 123456789}";
 
-    Mockito.when(dashboardConfigService.existsById(dashboardId)).thenReturn(true);
+    Mockito.when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
     Mockito.when(dashboardConfigService.getDashboardDatasourceDto(dashboardId, datasourceCode)).thenReturn(mockDto);
 
     ResultActions result = mockMvc.perform(
@@ -168,7 +168,7 @@ public class TestConnectorController extends AbstractControllerTest {
 
     Instant startDate = Instant.ofEpochMilli(1553814852743L);
     Instant endDate = Instant.now();
-    Mockito.when(dashboardConfigService.existsById(dashboardId)).thenReturn(true);
+    Mockito.when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
     Mockito.when(dashboardConfigService.getDashboardDatasourceDto(dashboardId, datasourceCode)).thenReturn(mockDto);
     Mockito.when(connectorService
         .getDeviceMeasurements(Mockito.any(), Mockito.any(), Mockito.any(),
@@ -221,7 +221,7 @@ public class TestConnectorController extends AbstractControllerTest {
 
     Instant startDate = Instant.ofEpochMilli(1553814852743L);
     Instant endDate = Instant.now();
-    Mockito.when(dashboardConfigService.existsById(dashboardId)).thenReturn(false);
+    Mockito.when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(false);
     Mockito.when(dashboardConfigService.getDashboardDatasourceDto(dashboardId, datasourceCode)).thenReturn(mockDto);
 //    Mockito.when(connectorService.getDeviceMeasurements(mockDto, Date.from(startDate), Date.from(endDate),
 //            new RestListRequest())).thenReturn(measurement);
@@ -258,7 +258,7 @@ public class TestConnectorController extends AbstractControllerTest {
 
     Instant startDate = Instant.ofEpochMilli(1553814852743L);
     Instant endDate = Instant.now();
-    Mockito.when(dashboardConfigService.existsById(dashboardId)).thenReturn(true);
+    Mockito.when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
     Mockito.when(dashboardConfigService.getDashboardDatasourceDto(dashboardId, datasourceCode)).thenReturn(mockDto);
 //    Mockito.when(connectorService
 //        .getDeviceMeasurements(mockDto, Date.from(startDate), Date.from(endDate),

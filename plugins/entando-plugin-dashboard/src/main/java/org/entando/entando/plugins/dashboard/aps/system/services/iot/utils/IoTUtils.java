@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.validator.UrlValidator;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
@@ -25,6 +26,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import java.lang.reflect.Type;
+import java.net.MalformedURLException;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
@@ -34,7 +36,7 @@ import java.util.Map.Entry;
 
 public class IoTUtils {
 
-	public static FieldSearchFilter[] addFilter(FieldSearchFilter[] filters, FieldSearchFilter filterToAdd) {
+  public static FieldSearchFilter[] addFilter(FieldSearchFilter[] filters, FieldSearchFilter filterToAdd) {
 		int len = filters.length;
 		FieldSearchFilter[] newFilters = new FieldSearchFilter[len + 1];
 		for(int i=0; i < len; i++){
@@ -149,6 +151,9 @@ public class IoTUtils {
 		catch (ResourceAccessException | IllegalArgumentException e){
 		  return new ResponseEntity(e, HttpStatus.REQUEST_TIMEOUT);
     }
+//    catch (MalformedURLException e) {
+//		  throw new MalformedURLException(e.getMessage());
+//    }
 	}
 
 	public static boolean isValidResponse(ResponseEntity<String> response) {
@@ -208,10 +213,11 @@ public class IoTUtils {
   }
 
   public static DashboardDatasourceDto getAndCheckDashboardDatasourceDto(int serverId, String datasourceCode, IDashboardConfigService dashboardConfigService) {
-    if (!dashboardConfigService.existsById(serverId)) {
+    if (!dashboardConfigService.existsByIdAndIsActive(serverId)) {
       throw new ResourceNotFoundException(EntityValidator.ERRCODE_ENTITY_DOES_NOT_EXIST, "Server", String.valueOf(serverId));
     }
     DashboardDatasourceDto dto = dashboardConfigService.getDashboardDatasourceDto(serverId, datasourceCode);
+    
     if (dto.getDatasourcesConfigDto() == null) {
       throw new ResourceNotFoundException(EntityValidator.ERRCODE_ENTITY_DOES_NOT_EXIST, "Datasource" , datasourceCode);
     }
