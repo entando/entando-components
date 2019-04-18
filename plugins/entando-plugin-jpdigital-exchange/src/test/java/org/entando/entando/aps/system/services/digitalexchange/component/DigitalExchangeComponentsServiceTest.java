@@ -74,6 +74,8 @@ public class DigitalExchangeComponentsServiceTest {
 
         DigitalExchangesClient mockedClient = clientMocker.build();
 
+        when(componentInstallationReport.getStatus()).thenReturn(SystemInstallationReport.Status.OK);
+        
         when(initializerManager.getCurrentReport()).thenReturn(installationReport);
         when(installationReport.getComponentReport(INSTALLED_COMPONENT, false))
                 .thenReturn(componentInstallationReport);
