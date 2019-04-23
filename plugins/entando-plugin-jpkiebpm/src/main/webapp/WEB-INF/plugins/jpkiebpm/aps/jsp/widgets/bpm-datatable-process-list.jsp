@@ -25,11 +25,15 @@
       media="screen"/>
 
 <script>
-
-
     $(document).ready(function () {
 
-        var loadDataTable = function (url, idTable, extraConfig) {
+        function  loadDataTable(idTable) {
+            var configId =${configId};
+            var context = "<wp:info key="systemParam" paramName="applicationBaseURL" />legacyapi/rs/<wp:info key="currentLang"/>/jpkiebpm/";
+            var url = context + "processInstanceList.json?configId="+configId;
+            var extraConfig = {
+                onClickRow: function (ev, rowData) {}
+            };
 
             $.get(url, function (data) {
 
@@ -45,21 +49,8 @@
 
             });
         }
-
-        console.log('processlist');
-        var configId = "${id}";
-
-        var context = "<wp:info key="systemParam" paramName="applicationBaseURL" />legacyapi/rs/<wp:info key="currentLang"/>/jpkiebpm/";
-        var url = context + "processInstanceList.json?configId=${id}";
-        var extraConfig = {
-            //buttons: extraBtns,
-            onClickRow: function (ev, rowData) {
-
-            }
-        };
-        loadDataTable(url, '#data-table-process-list',extraConfig);
-
+        loadDataTable('#data-table-process-list');
     });
 </script>
 
-<table id="data-table-process-list" class="display nowrap" cellspacing="0" width="100%"></table>process
+<table id="data-table-process-list" class="display nowrap" cellspacing="0" width="100%"></table>
