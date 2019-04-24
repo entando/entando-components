@@ -39,24 +39,16 @@ public class BpmProcessDatatableWidgetAction extends BpmDatatableWidgetAction {
     protected void loadFieldIntoDatatableFromBpm(String containerId, String processId) throws ApsSystemException {
         KieBpmConfig config = getFormManager().getKieServerConfigurations().get(this.getKnowledgeSourcePath());
         List<KieProcess> processes = getFormManager().getProcessDefinitionsList(config);
-
-
-
         if (!processes.isEmpty()) {
-
             //Horrible hack. To be replaced by an actual call.
             List<String> fields = new ArrayList<>();
-
-            logger.info("***************************** \n"+processes.get(0).toString()+"\n*****************************");
 
             StringTokenizer tokenizer = new StringTokenizer(processes.get(0).toString(), ",");
             Byte position = 1;
             while (tokenizer.hasMoreTokens()) {
                 final String name = tokenizer.nextToken().trim();
                 fields.add(name);
-
             }
-
             super.loadDataIntoFieldDatatable(fields);
         }
 

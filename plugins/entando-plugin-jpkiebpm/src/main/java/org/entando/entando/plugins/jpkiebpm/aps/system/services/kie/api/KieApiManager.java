@@ -193,9 +193,6 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
 
     @Override
     public JAXBProcessInstanceList processInstancesDataTable(Properties properties) throws Throwable {
-
-        logger.debug("processInstancesDataTable");
-
         final String configId = properties.getProperty("configId");
         final BpmWidgetInfo bpmWidgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(Integer.parseInt(configId));
         final String information = bpmWidgetInfo.getInformationDraft();
