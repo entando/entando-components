@@ -92,11 +92,9 @@ org.entando.form.DynamicForm = function (jKIE) {
             obj.html.datepicker = el.datepicker;
             obj.html.class = "";
         } else if (el.type === 'checkbox') {
-            obj.class = "checkbox";
             obj.html.class = "";
 
         } else if (el.type === 'checkboxes') {
-            obj.class = "checkbox";
             obj.html.class = "";
             obj.html.options = el.options;
 

@@ -84,7 +84,7 @@ public class TestPamQueryFormResult extends TestCase {
 
             KieProcessFormQueryResult result2 = KieVersionTransformer.pamSevenFormToPamSix(pamSeven2);
 
-            String formData = FormToBpmHelper.generateHumanTaskFormJson(result2, new JSONObject(), new HashMap<>());
+            JSONObject formData = FormToBpmHelper.generateHumanTaskFormJson(result2, new JSONObject(), new HashMap<>());
             System.out.println(formData);
 //            List<KieProcessFormQueryResult> forms2 =  result2.getNestedForms();
 //

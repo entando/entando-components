@@ -30,10 +30,10 @@ import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.BooleanAttribute;
-import com.agiletec.aps.system.common.entity.model.attribute.DateAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.MonoListAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.NumberAttribute;
+import com.agiletec.aps.system.common.entity.model.attribute.TimestampAttribute;
 import com.agiletec.aps.system.common.renderer.EntityWrapper;
 import com.agiletec.aps.system.common.util.EntityAttributeIterator;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -43,12 +43,11 @@ import com.agiletec.aps.system.services.i18n.II18nManager;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
-import static com.agiletec.apsadmin.system.BaseAction.FAILURE;
 import com.agiletec.apsadmin.system.entity.AbstractApsEntityAction;
-import static com.opensymphony.xwork2.Action.INPUT;
-import static com.opensymphony.xwork2.Action.SUCCESS;
+
 import java.io.StringWriter;
 import java.math.BigDecimal;
+
 import org.apache.struts2.ServletActionContext;
 import org.entando.entando.aps.system.services.dataobject.IDataObjectManager;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
@@ -63,14 +62,18 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KiePro
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.NullFormField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import javax.servlet.http.HttpServletRequest;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
+
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.context.Context;
 import org.entando.entando.aps.system.services.dataobjectmodel.DataObjectModel;
-import org.entando.entando.aps.system.services.dataobjectmodel.IDataObjectModelManager;
 import org.entando.entando.aps.system.services.dataobjectrenderer.DataObjectWrapper;
 import org.entando.entando.aps.system.services.dataobjectrenderer.SystemInfoWrapper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
@@ -90,13 +93,14 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
 
     private static String FORM_ACTION = "/ExtStr2/do/bpm/FrontEnd/DataTypeTaskForm/save";
     /*
-    If the task form field name have spaces in the name it's necessary to replace 
-    these spaces with the REPLACE_SPACE_STRING below because the velocity parser  
+    If the task form field name have spaces in the name it's necessary to replace
+    these spaces with the REPLACE_SPACE_STRING below because the velocity parser
     don't allow to have spaces in the varibles identifiers.
-    In the REPLACE_SPACE_STRING variable is not possible to use 
+    In the REPLACE_SPACE_STRING variable is not possible to use
     the underscore symbol  ( _ )  because is used in the section field generation.
      */
     private static String REPLACE_SPACE_STRING = "-SP-";
+    private static String DATE_FORMAT_PATTERN = "yyyy-MM-dd hh:mm";
     private static final Logger logger = LoggerFactory.getLogger(BpmTypeTaskFormAction.class);
     private BeanFactory beanFactory = null;
 
@@ -111,10 +115,17 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
     private IDataObjectDispenser dataObjectDispenser;
     private IBpmWidgetInfoManager bpmWidgetInfoManager;
     private KieProcessFormQueryResult kpfr;
-    @Autowired
-    private IDataObjectModelManager dataObjectModelManager;
 
-    private Map<String, String> valuesMap;
+    //Widget init params
+    private String widgetInfoId;
+    private BpmWidgetInfo widgetInfo;
+    private ApsProperties configOnline;
+    private String processId;
+    private String containerId;
+    private String kieSourceId;
+    private KieBpmConfig config;
+
+    private Map<String, Object> valuesMap;
 
     private Long taskId;
     private String configId;
@@ -142,7 +153,7 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
     }
 
     public String render(DataObject dataobject, String contentModel, String langCode, RequestContext reqCtx) {
-        String renderedEntity = null;
+        String renderedEntity;
         try {
             Context velocityContext = new VelocityContext();
             DataObjectWrapper contentWrapper = (DataObjectWrapper) this.getEntityWrapper(dataobject);
@@ -176,16 +187,7 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
             logger.debug("createNew taskID {}", taskId);
             kpfr = null;
             setDataObjectOnSession(null);
-            //TODO Duplicated code, Refactor this if possible
-            String widgetInfoId = this.extractWidgetConfig(KieBpmSystemConstants.WIDGET_PARAM_INFO_ID);
-            BpmWidgetInfo widgetInfo = this.getBpmWidgetInfoManager().getBpmWidgetInfo(Integer.valueOf(widgetInfoId));
-            ApsProperties configOnline = widgetInfo.getConfigOnline();
-
-            String processId = configOnline.getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_PROCESS_ID);
-            String containerId = configOnline.getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_CONTAINER_ID);
-            String kieSourceId = configOnline.getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID);
-
-            KieBpmConfig config = formManager.getKieServerConfigurations().get(kieSourceId);
+            setWidgetInitParameters();
             kpfr = this.getFormManager().getTaskForm(config, containerId, taskId);
 
             if (null != taskId) {
@@ -193,7 +195,7 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
                 logger.debug("taskData {}", taskData);
                 JSONObject inputData = taskData.getJSONObject("task-input-data");
                 logger.debug("inputData {}", inputData);
-                valuesMap = this.getValuesMap(inputData, null, kpfr);
+                valuesMap = this.getValuesMap(inputData, null, null, kpfr);
             }
 
             generateForm();
@@ -219,6 +221,22 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
         return SUCCESS;
     }
 
+
+    private void setWidgetInitParameters() {
+        try {
+            widgetInfoId = this.extractWidgetConfig(KieBpmSystemConstants.WIDGET_PARAM_INFO_ID);
+            widgetInfo = this.getBpmWidgetInfoManager().getBpmWidgetInfo(Integer.valueOf(widgetInfoId));
+            configOnline = widgetInfo.getConfigOnline();
+            processId = configOnline.getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_PROCESS_ID);
+            containerId = configOnline.getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_CONTAINER_ID);
+            kieSourceId = configOnline.getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID);
+
+            config = formManager.getKieServerConfigurations().get(kieSourceId);
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "save");
+        }
+    }
+
     @Override
     public String save() {
         try {
@@ -226,14 +244,9 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
             if (dataObject == null) {
                 return "expiredMessage";
             }
-            String widgetInfoId = this.extractWidgetConfig(KieBpmSystemConstants.WIDGET_PARAM_INFO_ID);
-            BpmWidgetInfo widgetInfo = this.getBpmWidgetInfoManager().getBpmWidgetInfo(Integer.valueOf(widgetInfoId));
-            ApsProperties configOnline = widgetInfo.getConfigOnline();
-            String processId = configOnline.getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_PROCESS_ID);
-            String containerId = configOnline.getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_CONTAINER_ID);
-            String kieSourceId = configOnline.getProperty(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID);
 
-            KieBpmConfig config = formManager.getKieServerConfigurations().get(kieSourceId);
+            setWidgetInitParameters();
+            //KieProcessFormQueryResult kieForm = this.getFormManager().getProcessForm(config, containerId, processId);
             logger.debug("formManager() {}", formManager);
             logger.debug("containerId {}", containerId);
             logger.debug("config {}", config);
@@ -267,10 +280,10 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
                 return INPUT;
             }
 
-            Map< String, String> toBpmStrings = toBpm.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> (String) e.getValue()));
+            Map<String, String> toBpmStrings = toBpm.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> Optional.ofNullable((String) e.getValue()).orElse("")));
+
             final String result = this.getFormManager().completeHumanFormTask(config, containerId, processId, Long.valueOf(taskId), toBpmStrings);
-            logger.info("Result {} ", result);
-            logger.info("TASK ID RESULT: {}", result);
+            logger.debug("Result {} ", result);
             this.setDataObjectOnSession(null);
             this.addActionMessage(this.getText("message.success"));
         } catch (Throwable t) {
@@ -287,7 +300,7 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
             if (ff.getValue() != null) {
                 value = ff.getValue().toString();
             }
-            logger.debug("******* field '{}' value {}", key, value);
+            logger.debug("validateForm field '{}' value {}", key, value);
             Object obj = FormToBpmHelper.validateField(kieForm, key, value);
             if (null != obj) {
                 if (obj instanceof NullFormField) {
@@ -562,7 +575,6 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
     }
 
     private void addAttributesToEntityType(IApsEntity entityType, KieProcessFormQueryResult form) {
-        logger.info("AddAttributesToEntityType");
         if (null != form && null != form.getFields()) {
             if (form.getFields().size() > 0) {
                 try {
@@ -586,12 +598,11 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
                 }
             }
             for (KieProcessFormField field : form.getFields()) {
-                logger.debug("addAttributeToEntityType {}", field.getName());
                 this.addAttributeToEntityType(entityType, field);
             }
             if (null != form.getNestedForms()) {
                 for (KieProcessFormQueryResult subForm : form.getNestedForms()) {
-                    logger.debug("addAttributeToEntityType getNestedForms");
+                    logger.debug("addAttributeToEntityType for nested forms");
                     this.addAttributesToEntityType(entityType, subForm);
                 }
             }
@@ -599,14 +610,11 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
     }
 
     private void addAttributeToEntityType(IApsEntity entityType, KieProcessFormField field) {
-        logger.info("addAttributeToEntityType");
+        logger.debug("addAttributeToEntityType for field {}", field.getName());
         String velocityNameField = field.getName().replaceAll(" ", REPLACE_SPACE_STRING);
-
         field.setName(velocityNameField);
         String fieldRequired = KieApiUtil.getFieldProperty(field, "fieldRequired");
         boolean req = (fieldRequired != null && fieldRequired.equalsIgnoreCase("true"));
-        logger.debug("--- field name {} value map name {} value {}", field.getName().toString(), velocityNameField, valuesMap.get(velocityNameField));
-
         if (field.getType().equalsIgnoreCase("TextBox")
                 || (field.getType().equalsIgnoreCase("TextArea"))
                 || (field.getType().equalsIgnoreCase("InputText"))
@@ -616,18 +624,38 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
             text.setName(field.getName());
             text.setDefaultLangCode(this.getCurrentLang().getCode());
             text.setRequired(req);
-            text.setText(valuesMap.get(field.getName()));
+            text.setText((String) valuesMap.get(field.getName()));
             entityType.addAttribute(text);
         }
         if (field.getType().equalsIgnoreCase("IntegerBox") || field.getType().equalsIgnoreCase("InputTextInteger")
-                || field.getType().equalsIgnoreCase("InputTextFloat") || field.getType().equalsIgnoreCase("FloatBox")) {
+                || field.getType().equalsIgnoreCase("InputTextFloat") || field.getType().equalsIgnoreCase("FloatBox")
+                || field.getType().equalsIgnoreCase("DecimalBox")) {
             NumberAttribute number = (NumberAttribute) this.getAttributePrototype("Number");
             number.setName(velocityNameField);
-
             number.setName(field.getName());
             number.setDefaultLangCode(this.getCurrentLang().getCode());
             number.setRequired(req);
-            number.setValue(BigDecimal.valueOf(Long.valueOf(valuesMap.get(field.getName()))));
+            Object val = valuesMap.get(field.getName());
+
+            if (null != val) {
+                logger.debug("VAL CLASS: {}", val.getClass());
+                String valString = val.toString();
+
+                if (field.getType().equalsIgnoreCase("DecimalBox")) {
+                    Double doubleValue = Double.valueOf(valString);
+                    //Check if the value have decimals or not, If it have decimal get Double.valueOf to show decimals in the textbox 
+                    // else get BigDecimal.valueOf to not show the ".0" decimal values
+                    if (doubleValue % 1.0 > 0) {
+                        number.setValue(BigDecimal.valueOf(Double.valueOf(valString)));
+                    } else {
+                        number.setValue(BigDecimal.valueOf(Long.valueOf(valString)));
+                    }
+                } else {
+                    number.setValue(BigDecimal.valueOf(Long.valueOf(valString)));
+                }
+
+            }
+
             entityType.addAttribute(number);
         }
 
@@ -636,19 +664,32 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
             bool.setName(field.getName());
             bool.setDefaultLangCode(this.getCurrentLang().getCode());
             bool.setRequired(req);
-            bool.setBooleanValue(Boolean.valueOf(valuesMap.get(field.getName())));
+            Object val = valuesMap.get(field.getName());
+
+            if (val instanceof Boolean) {
+                bool.setBooleanValue((Boolean) val);
+            } else {
+                String valString = (String) val;
+                bool.setBooleanValue((Boolean.valueOf(valString)));
+            }
             entityType.addAttribute(bool);
         }
         if (field.getType().equalsIgnoreCase("DatePicker")) {
-            DateAttribute date = (DateAttribute) this.getAttributePrototype("Date");
-            date.setName(field.getName());
-            date.setDefaultLangCode(this.getCurrentLang().getCode());
-            date.setRequired(req);
-
-            //TODO Add values here for velocity mapping           
-            logger.debug("DatePicker valuesMap.get(field.getName()) {} ", valuesMap.get(velocityNameField));
-
-            entityType.addAttribute(date);
+            TimestampAttribute dateAttribute = (TimestampAttribute) this.getAttributePrototype("Timestamp");
+            dateAttribute.setName(field.getName());
+            dateAttribute.setDefaultLangCode(this.getCurrentLang().getCode());
+            dateAttribute.setRequired(req);
+            String dateValueString = (String) valuesMap.get(field.getName());
+            if (null != dateValueString && !(dateValueString.equals("null"))) {
+                Date dateVal = null;
+                try {
+                    dateVal = new SimpleDateFormat(DATE_FORMAT_PATTERN).parse(dateValueString);
+                } catch (ParseException e) {
+                    logger.error("DatePicker ParseException: {}", e);
+                }
+                dateAttribute.setDate(dateVal);
+            }
+            entityType.addAttribute(dateAttribute);
         }
         if (field.getType().equalsIgnoreCase("MultipleSelector")) {
 
@@ -717,110 +758,142 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
         return attributeTypes.get(typeCode);
     }
 
-    public IDataObjectModelManager getDataObjectModelManager() {
-        return dataObjectModelManager;
-    }
-
-    public void setDataObjectModelManager(IDataObjectModelManager _dataObjectModelManager) {
-        this.dataObjectModelManager = _dataObjectModelManager;
-    }
-
-    /**
-     *
-     * @param inputData
-     * @param parentKey
-     * @param form
-     * @return The map with name/values of the Values retrieved from the task
-     */
-    private Map<String, String> getValuesMap(JSONObject inputData, String parentKey, KieProcessFormQueryResult form) {
-        logger.info("getValuesMap {} ", parentKey);
-        Map<String, String> map = new HashMap<>();
+    private Map<String, Object> getValuesMap(JSONObject inputData, String parentKey, String oldParentKey, final KieProcessFormQueryResult form) {
+        logger.debug("getValuesMap parentKey {} oldParentKey {}", parentKey, oldParentKey);
+        Map<String, Object> map = new HashMap<>();
         try {
             inputData.keySet().forEach(f -> {
+                String fieldNameMapped;
                 KieDataHolder dataHolder = null;
-                // Check if the object is an instance of json the get the dataholders
                 if (inputData.get(f) instanceof org.json.JSONObject) {
-                    logger.debug("  inputData.get(f) {} ", inputData.get(f));
                     for (KieDataHolder fh : form.getHolders()) {
-                        //TODO check if the second check below about the taskInput+f is still necessary
-                        if (fh.getValue().equals(f)) /* ||(fh.getValue().equals("taskInput"+f))) {*/ {
-                            dataHolder = fh;
-                            logger.debug("      dataHolder found");
-                            logger.debug("      dataHolder.getName() {} ", dataHolder.getName());
-                            logger.debug("      dataHolder.getValue() {} ", dataHolder.getValue());
-                            logger.debug("      dataHolder.getType() {} ", dataHolder.getType());
-                            break;
+                        if (null != fh.getValue()) {
+                            logger.debug("dataHolder value  {} ", fh.getValue());
+                            if (fh.getValue().equals(f)) {
+                                dataHolder = fh;
+                                logger.debug("      dataHolder found {} ", f);
+                                logger.debug("      dataHolder.getId() {} ", dataHolder.getId());
+                                logger.debug("      dataHolder.getName() {} ", dataHolder.getName());
+                                logger.debug("      dataHolder.getValue() {} ", dataHolder.getValue());
+                                logger.debug("      dataHolder.getType() {} ", dataHolder.getType());
+                                logger.debug("      dataHolder.getOutId() {} ", dataHolder.getOutId());
+                                break;
+                            }
                         }
-                    };
-                    /*
-                    If the dataholder is not null check if the type is equal to BASE,
-                    In this case split the name to get the field name and add the value to the result map
-                    If the type is not BASE or dataholder is null call getValuesMap to do a recursion                     
-                    passing the json object as inputData and the dataHolder.getName() as parentKey
-                    */
-                    if (null != dataHolder) {
-                        if (dataHolder.getType().equals("BASE")) {
-                            String[] splitHolderName = dataHolder.getValue().split("\\.");
-                            String holderName = "";
+                    }
 
+                    if (null != dataHolder) {
+                        String[] splitHolderName = dataHolder.getValue().split("\\.");
+                        String holderName;
+                        holderName = dataHolder.getName();
+                        if (dataHolder.getType().equals("BASE")) {
+                            fieldNameMapped = searchFieldInTheForm(holderName + f + "_" + f, form);
                             if (splitHolderName.length > 0) {
-                                holderName = splitHolderName[splitHolderName.length - 1];
-                                String holderNamelowerFirstChar = Character.toLowerCase(holderName.charAt(0)) + holderName.substring(1);
-                                logger.debug("      splitHolderName.length {}", splitHolderName.length);
-                                logger.debug("      holderName {}", holderName);
-                                map.put(holderNamelowerFirstChar + f, String.valueOf(inputData.get(f)));
-                                logger.debug(" -> f, value {}", holderName + f, String.valueOf(inputData.get(f)));
+                                if (null != fieldNameMapped) {
+                                    map.put(fieldNameMapped, String.valueOf(inputData.get(f)));
+                                } else {
+                                    map.put(holderName + f, String.valueOf(inputData.get(f)));
+                                }
                             } else {
-                                logger.debug("      splitHolderName.length {}", splitHolderName.length);
                                 map.put(dataHolder.getName() + f, String.valueOf(inputData.get(f)));
-                                logger.debug(" -> f, value {}", dataHolder.getName() + f, String.valueOf(inputData.get(f)));
                             }
 
                         } else {
-                            map.putAll(getValuesMap((JSONObject) inputData.get(f), dataHolder.getName(), form));
+                            map.putAll(getValuesMap((JSONObject) inputData.get(f), holderName, parentKey, form));
                         }
                     } else {
-                        logger.debug("   dataHolder NULL map.putAll {}", inputData.get(f));
-                        map.putAll(getValuesMap((JSONObject) inputData.get(f), f, form));
+                        JSONObject jsonObject = (JSONObject) inputData.get(f);
+
+
+                        if (jsonObject.has("java.util.Date")) {
+                            DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_PATTERN);
+                            String strDate = dateFormat.format(jsonObject.get("java.util.Date"));
+                            logger.debug("java.util.Date found in jsonObject - Converted String is : {}", strDate);
+                            map.put(oldParentKey + "_" + f, strDate);
+                        } else {
+                            map.putAll(getValuesMap((JSONObject) inputData.get(f), f, parentKey, form));
+                        }
                     }
                 } else {
-                    /*
-                    If parentKey is not null (is a recursion) and we heve to check
-                    if the parentKey starts with the string "taskInput".
-                    After that we can put the correct map value to our
-                    resulting map object
-                     */
                     if (null != parentKey) {
-                        if (parentKey.startsWith("taskInput")) {
-                            String lowerFirstChar = Character.toLowerCase(parentKey.charAt(9)) + parentKey.substring(10);
-                            logger.debug("taskInput parentKey replace {} with {}", parentKey, lowerFirstChar);
-                            map.put(lowerFirstChar + "_" + f, String.valueOf(inputData.get(f)));
-                            logger.debug(" -> {}_{} value {}", lowerFirstChar, f, String.valueOf(inputData.get(f)));
+                        String[] splitParentKey = parentKey.split("\\.");
+                        String parentKeyName = "";
+                        parentKeyName = splitParentKey[splitParentKey.length - 1];
+
+                        if (!(parentKeyName.equalsIgnoreCase(oldParentKey))) {
+
+                            String fieldNameMappedParent = searchFieldInTheForm(oldParentKey + "_" + f, form);
+
+                            if (fieldNameMappedParent == null) {
+                                logger.debug("fieldNameMappedParent == null ");
+                                fieldNameMapped = searchFieldInTheForm(parentKeyName + "_" + f, form);
+                            } else {
+                                logger.debug("fieldNameMappedParent != null ");
+                                fieldNameMapped = fieldNameMappedParent;
+                            }
                         } else {
-                            map.put(parentKey + "_" + f, String.valueOf(inputData.get(f)));
-                            logger.debug(" -> {}_{} value {}", parentKey, f, String.valueOf(inputData.get(f)));
+                            logger.debug("(parentKeyName.equalsIgnoreCase(oldParentKey))) ");
+                            fieldNameMapped = searchFieldInTheForm(parentKeyName + "_" + f, form);
                         }
+
+                        logger.debug("fieldNameMapped {}", fieldNameMapped);
+
+                        if (null != fieldNameMapped) {
+                            map.put(fieldNameMapped, String.valueOf(inputData.get(f)));
+                        } else {
+                            if (parentKeyName.startsWith("taskInput")) {
+                                String lowerFirstChar = Character.toLowerCase(parentKeyName.charAt(9)) + parentKeyName.substring(10);
+                                map.put(lowerFirstChar + "_" + f, String.valueOf(inputData.get(f)));
+                            } else {
+                                if (inputData.has(parentKeyName + "_" + f)) {
+                                    map.put(parentKeyName + "_" + f, inputData.get(parentKeyName + "_" + f));
+                                } else {
+                                    map.put(parentKeyName + "_" + f, null);
+                                }
+                            }
+                        }
+
                     } else {
-                        logger.debug(" -> {} value {}", f, String.valueOf(inputData.get(f)));
-                        map.put(f, String.valueOf(inputData.get(f)));
+                        map.put(f, inputData.get(f));
                     }
                 }
 
             });
         } catch (Exception ex) {
-            logger.error(ex.getMessage());
+            logger.error("GetValuesMap error : {}", ex);
         }
-        /*
-        Before returning the output map we have to replace the spaces in the key 
-        to respect the standard variables names of the velocity parser
-         */
-        Map<String, String> newMap = new HashMap<String, String>();
-        for (Map.Entry<String, String> entry : map.entrySet()) {
-            newMap.put(entry.getKey().replaceAll(" ", this.REPLACE_SPACE_STRING), (String) entry.getValue());
+
+        Map<String, Object> newMap = new HashMap<>();
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            newMap.put(entry.getKey().replaceAll(" ", REPLACE_SPACE_STRING), entry.getValue());
         }
-        logger.debug("-> Return map {}", newMap);
         return newMap;
 
+    }
+
+    private String searchFieldInTheForm(String fieldName, KieProcessFormQueryResult form) {
+        logger.debug("Search input for fieldName() {}", fieldName);
+
+        String fieldNameMapped;
+        for (KieProcessFormField field : form.getFields()) {
+            //TODO FIX THIS using the correct form property instead of ignorecase
+            if (field.getName().equalsIgnoreCase(fieldName)) {
+                fieldNameMapped = field.getName();
+                logger.debug("fieldNameMappedFound {}", fieldNameMapped);
+                return fieldNameMapped;
+            }
+        }
+
+        if (null != form.getNestedForms()) {
+            for (KieProcessFormQueryResult subForm : form.getNestedForms()) {
+                fieldNameMapped = this.searchFieldInTheForm(fieldName, subForm);
+                if (null != fieldNameMapped) {
+                    return fieldNameMapped;
+                }
+
+            }
+        }
+        return null;
     }
 
     public Long getTaskId() {

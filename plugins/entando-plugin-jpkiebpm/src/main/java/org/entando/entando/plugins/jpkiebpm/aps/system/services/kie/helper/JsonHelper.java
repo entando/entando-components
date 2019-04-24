@@ -23,14 +23,15 @@
 */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper;
 
+import java.util.Iterator;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-/**
- *
- * @author entando
- */
 public class JsonHelper {
+
+    private static final Logger logger = LoggerFactory.getLogger(JsonHelper.class);
 
     /**
      * Search recursively the given key in the JSON
@@ -131,4 +132,38 @@ public class JsonHelper {
         return res;
     }
 
+    public static JSONObject replaceObject(JSONObject obj, String key, Object newValue) throws Exception {
+
+        logger.debug("replace JSONObject {} with {}", key, newValue.toString());
+
+        if (obj.has(key)) {
+            obj.remove(key);
+            obj.put(key, newValue);
+        } else {
+            Iterator iterator = obj.keys();
+            String iteratorKey;
+            while (iterator.hasNext()) {
+                iteratorKey = (String) iterator.next();
+                logger.debug("replaceObject iteratorKey: {} ", iteratorKey);
+                if ((obj.optJSONArray(iteratorKey) == null) && (obj.optJSONObject(iteratorKey) == null)) {
+                    if (iteratorKey.equals(key)) {
+                        logger.debug("key {} found replace with new value {} ", iteratorKey, newValue);
+                        obj.remove(iteratorKey);
+                        obj.put(iteratorKey, newValue);
+                        return obj;
+                    }
+                }
+                if (obj.optJSONObject(iteratorKey) != null) {
+                    replaceObject(obj.getJSONObject(iteratorKey), key, newValue);
+                }
+                if (obj.optJSONArray(iteratorKey) != null) {
+                    JSONArray jArray = obj.getJSONArray(iteratorKey);
+                    for (int i = 0; i < jArray.length(); i++) {
+                        replaceObject(jArray.getJSONObject(i), key, newValue);
+                    }
+                }
+            }
+        }
+        return obj;
+    }
 }

@@ -1,0 +1,1 @@
+<#if field.readOnly == true> disabled="disabled" </#if>
