@@ -619,7 +619,8 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
                 || (field.getType().equalsIgnoreCase("TextArea"))
                 || (field.getType().equalsIgnoreCase("InputText"))
                 || (field.getType().equalsIgnoreCase("ListBox"))
-                || (field.getType().equalsIgnoreCase("RadioGroup"))) {
+                || (field.getType().equalsIgnoreCase("RadioGroup"))
+                || (field.getType().equalsIgnoreCase("MultipleSubForm"))) {
             MonoTextAttribute text = (MonoTextAttribute) this.getAttributePrototype("Monotext");
             text.setName(field.getName());
             text.setDefaultLangCode(this.getCurrentLang().getCode());
@@ -868,7 +869,6 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
             newMap.put(entry.getKey().replaceAll(" ", REPLACE_SPACE_STRING), entry.getValue());
         }
         return newMap;
-
     }
 
     private String searchFieldInTheForm(String fieldName, KieProcessFormQueryResult form) {

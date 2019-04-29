@@ -31,8 +31,13 @@ public class InputField {
     private String typePAM;
     private String typeHTML;
     private String value;
+    private String code;
+    private String binding;
+    private String standaloneClassName;
+    private String serializedFieldClassName;
     private boolean required;
     private boolean readOnly;
+    private boolean validateOnChange;
 
     public String getId() {
         return id;
@@ -98,4 +103,47 @@ public class InputField {
         this.readOnly = readOnly;
     }
 
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getBinding() {
+        return binding;
+    }
+
+    public void setBinding(String binding) {
+        this.binding = binding;
+    }
+
+    public String getStandaloneClassName() {
+        return standaloneClassName;
+    }
+
+    public void setStandaloneClassName(String standaloneClassName) {
+        this.standaloneClassName = standaloneClassName;
+    }
+
+    public String getSerializedFieldClassName() {
+        return serializedFieldClassName;
+    }
+
+    public void setSerializedFieldClassName(String serializedFieldClassName) {
+        this.serializedFieldClassName = serializedFieldClassName;
+    }
+
+    public boolean isRequired() {
+        return required;
+    }
+
+    public boolean isValidateOnChange() {
+        return validateOnChange;
+    }
+
+    public void setValidateOnChange(boolean validateOnChange) {
+        this.validateOnChange = validateOnChange;
+    }
 }

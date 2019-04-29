@@ -13,7 +13,6 @@ public class PamProcessQueryFormResult {
     @XmlElement(name="array")
     List<PamArray> arrays;
 
-
     public List<PamArray> getArrays() {
         return arrays;
     }

@@ -29,20 +29,21 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KiePro
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateExceptionHandler;
+
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.function.Function;
 import javax.servlet.ServletContext;
+
 import org.springframework.stereotype.Service;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverride;
@@ -61,7 +62,7 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
     private static String DATE_FORMAT_PATTERN = "yyyy-MM-dd hh:mm";
 
     private static final Logger logger = LoggerFactory.getLogger(DataUXBuilder.class);
-    
+
     private IKieFormOverrideManager formOverrideManager;
     private Map<String, String> typeMapping = new HashMap<>();
     private Map<String, String> valueMapping = new HashMap<>();
@@ -89,6 +90,7 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         this.typeMapping.put("RadioGroup", "radio");
         this.typeMapping.put("MultipleInput", "number");
         this.typeMapping.put("MultipleSelector", "text");
+        this.typeMapping.put("MultipleSubForm", "text");
         this.typeMapping.put("Document", "text");
 
         this.valueMapping.put("InputText", "$data.%s.text");
@@ -105,6 +107,7 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         this.valueMapping.put("MultipleSelector", "$data.%s.text");
         this.valueMapping.put("MultipleInput", "$data.%s.text");
         this.valueMapping.put("Document", "$data.%s.text");
+        this.valueMapping.put("MultipleSubForm", "$data.%s.text");
 
         cfg.setDefaultEncoding("UTF-8");
 
@@ -205,7 +208,7 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
                 logger.debug("--> add section with name {}", sectionName);
             }
 
-        }       
+        }
 
         List<KieProcessFormQueryResult> subForms = kpfr.getNestedForms();
         if (null != subForms && !subForms.isEmpty()) {
@@ -222,19 +225,19 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
     }
 
     private T addField(KieProcessFormField field, KieFormOverride formOverride) throws Exception {
-        logger.debug("------------------------------------");
-        logger.debug("Field getId          -> {}", field.getId());
-        logger.debug("Field getName        -> {}", field.getName());
-        logger.debug("Field getPosition    -> {}", field.getPosition());
-        logger.debug("Field getType        -> {}", field.getType());
-        logger.debug("Field getProperties  -> ");
+        logger.info("------------------------------------");
+        logger.info("Field getId          -> {}", field.getId());
+        logger.info("Field getName        -> {}", field.getName());
+        logger.info("Field getPosition    -> {}", field.getPosition());
+        logger.info("Field getType        -> {}", field.getType());
+        logger.info("Field getProperties  -> ");
         field.getProperties().forEach(p
-                -> logger.debug("  Property name: {} value: {}", p.getName(), p.getValue()));
-        logger.debug("------------------------------------");
+                -> logger.info("  Property name: {} value: {}", p.getName(), p.getValue()));
+        logger.info("------------------------------------");
         T inputField;
         switch (field.getType()) {
             case "TextBox":
-                logger.debug("{} recognized as TextBox, inputField set to TextField",field.getName());
+                logger.debug("{} recognized as TextBox, inputField set to TextField", field.getName());
                 inputField = (T) new TextField();
                 break;
             case "TextArea":
@@ -281,7 +284,6 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
                 logger.debug("{} inputField not recognized, inputField set to default InputField", field.getName());
                 inputField = (T) new InputField();
         }
-        logger.info("adding default properties to inputField");
 
         String fieldName = field.getName();
         String fieldTypeHMTL = this.typeMapping.get(field.getType());
@@ -387,14 +389,34 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
                 opt.setValue(f);
                 selectOption.add(opt);
             }
-
             multipleSelector.setOptions(selectOption);
             multipleSelector.setMaxDropdownElements(maxDropdownElements);
             multipleSelector.setMaxElementsOnTitle(maxElementsOnTitle);
             multipleSelector.setAllowClearSelection(allowClearSelection);
             multipleSelector.setAllowFilter(allowFilter);
         }
+        if (inputField instanceof MultipleSubFormField) {
+            logger.debug("inputField instanceof MultipleSubFormField, adding custom properties");
+            MultipleSubFormField multipleSubFormField = (MultipleSubFormField) inputField;
 
+
+            JSONArray columnsLabels = new JSONArray();
+
+            JSONObject props = new JSONObject(field.getProperty("columnsMeta").getValue());
+
+            Iterator<String> keys = props.keys();
+            while (keys.hasNext()) {
+                JSONObject columnLabel = new JSONObject();
+                String key = keys.next();
+                Object value = props.get(key);
+                logger.info("*************** value {}",value);
+                columnLabel.put("title", value);
+                columnsLabels.put(columnLabel);
+                logger.info("*************** columnsLabels {}",columnsLabels);
+            }
+
+            multipleSubFormField.setColumns(columnsLabels.toString());
+        }
         if (inputField instanceof TextField) {
             logger.debug("inputField instanceof TextField, adding custom properties");
             TextField textField = (TextField) inputField;

@@ -1,3 +1,26 @@
+/*
+ * The MIT License
+ *
+ * Copyright 2019 Entando Inc..
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.pamSeven;
 
 import java.util.List;
@@ -69,7 +92,17 @@ public class PamFields {
     
     @XmlElement(required = false)
     private boolean  allowClearSelection;
-    
+
+    //MultipleSubForms Fields
+    @XmlElement(required = false)
+    private List<PamColumnMetas> columnMetas;
+
+    @XmlElement(required = false)
+    private String creationForm;
+
+    @XmlElement(required = false)
+    private String editionForm;
+
     //Common List Box Fields (Html Select) and RadioGroup Fields 
 
     @XmlElement(required = false)
@@ -273,4 +306,31 @@ public class PamFields {
         this.inline = inline;
     }
 
+    public boolean isShowTime() {
+        return showTime;
+    }
+
+    public List<PamColumnMetas> getColumnMetas() {
+        return columnMetas;
+    }
+
+    public void setColumnMetas(List<PamColumnMetas> columnMetas) {
+        this.columnMetas = columnMetas;
+    }
+
+    public String getCreationForm() {
+        return creationForm;
+    }
+
+    public void setCreationForm(String creationForm) {
+        this.creationForm = creationForm;
+    }
+
+    public String getEditionForm() {
+        return editionForm;
+    }
+
+    public void setEditionForm(String editionForm) {
+        this.editionForm = editionForm;
+    }
 }

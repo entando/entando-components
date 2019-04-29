@@ -23,7 +23,32 @@
  */
 package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels;
 
-
 public class MultipleSubFormField extends InputField {
-    
+    private String creationForm;
+    private String editionForm;
+    private String columns;
+
+    public String getCreationForm() {
+        return creationForm;
+    }
+
+    public void setCreationForm(String creationForm) {
+        this.creationForm = creationForm;
+    }
+
+    public String getEditionForm() {
+        return editionForm;
+    }
+
+    public void setEditionForm(String editionForm) {
+        this.editionForm = editionForm;
+    }
+
+    public String getColumns() {
+        return columns;
+    }
+
+    public void setColumns(String columns) {
+        this.columns = columns;
+    }
 }

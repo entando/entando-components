@@ -1,3 +1,4 @@
+
 /*
  * The MIT License
  *
@@ -21,27 +22,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.pamSeven;
+package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import java.util.List;
+public class MultipleSubformColumnMetas {
 
-@XmlRootElement(name = "layoutColumn")
-@XmlAccessorType(XmlAccessType.FIELD)
-public class PamLayoutColumn {
+    private String property;
+    private String label;
 
-
-    @XmlElement(name = "layoutComponents")
-    public List<PamLayoutComponent> layoutComponents;
-
-    public List<PamLayoutComponent> getLayoutComponents() {
-        return layoutComponents;
+    public String getProperty() {
+        return property;
     }
 
-    public void setLayoutComponents(List<PamLayoutComponent> layoutComponents) {
-        this.layoutComponents = layoutComponents;
+    public void setProperty(String property) {
+        this.property = property;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 }
+
