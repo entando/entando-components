@@ -32,6 +32,7 @@ import com.agiletec.aps.util.ApsProperties;
 import org.apache.commons.lang.StringUtils;
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
 import org.entando.entando.aps.system.services.api.model.*;
+import org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.api.model.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.*;
@@ -114,7 +115,7 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
                     String msg = String.format("Kie server configuration '%s' not found", sourceId);
                     throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, msg, Response.Status.CONFLICT);
                 }
-                
+
                 KieProcessFormQueryResult processForm = this.getKieFormManager().getProcessForm(bpmConfig, containerId, processId);
                 if (null == processForm) {
                     String msg = String.format("No form found with containerId %s and processId %s does not exist", containerId, processId);
@@ -191,16 +192,16 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
     }
 
     @Override
-    public JAXBProcessInstanceList processInstancesDataTable(KieBpmConfig bpmConfig, Properties properties) throws Throwable {
+    public JAXBProcessInstanceList processInstancesDataTable(Properties properties) throws Throwable {
         final String configId = properties.getProperty("configId");
+        final BpmWidgetInfo bpmWidgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(Integer.parseInt(configId));
+        final String information = bpmWidgetInfo.getInformationDraft();
+        final ApsProperties config = new ApsProperties();
         try {
 
             if (null != configId) {
                 try {
-                    final BpmWidgetInfo bpmWidgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(Integer.parseInt(configId));
-                    final String information = bpmWidgetInfo.getInformationDraft();
                     if (StringUtils.isNotEmpty(information)) {
-                        final ApsProperties config = new ApsProperties();
                         try {
                             config.loadFromXml(information);
                         } catch (IOException e) {
@@ -208,6 +209,11 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
                         }
                         final JAXBProcessInstanceList processList = new JAXBProcessInstanceList();
                         this.setElementDatatableFieldDefinition(config, processList);
+
+                        config.loadFromXml(information);
+                        String knowledgetSource = (String) config.get(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID);
+                        KieBpmConfig bpmConfig = this.getKieFormManager().getKieServerConfigurations().get(knowledgetSource);
+
                         this.setElementList(bpmConfig, config, processList);
                         processList.setContainerId(config.getProperty("containerId"));
                         processList.setProcessId(config.getProperty("processId"));
@@ -215,7 +221,6 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
                     }
                 } catch (ApsSystemException e) {
                     logger.error("Error {}", e);
-
                 }
             }
             return null;
