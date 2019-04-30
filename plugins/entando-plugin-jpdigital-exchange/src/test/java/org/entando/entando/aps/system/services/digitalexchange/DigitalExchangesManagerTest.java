@@ -24,6 +24,7 @@ import org.springframework.security.oauth2.client.token.grant.client.ClientCrede
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -50,6 +51,7 @@ public class DigitalExchangesManagerTest {
     @Mock
     private DigitalExchangeOAuth2RestTemplateFactory restTemplateFactory;
 
+    @InjectMocks
     private DigitalExchangesManagerImpl manager;
 
     @Before
@@ -118,7 +120,7 @@ public class DigitalExchangesManagerTest {
     public void shouldAddDigitalExchange() {
 
         DigitalExchange digitalExchange = manager.create(getNewDE());
-
+        
         assertThat(digitalExchange)
                 .isNotNull()
                 .extracting(DigitalExchange::getId, DigitalExchange::getName)
@@ -134,7 +136,7 @@ public class DigitalExchangesManagerTest {
         digitalExchange.setActive(false);
 
         digitalExchange = manager.create(digitalExchange);
-
+        
         assertThat(digitalExchange).isNotNull();
         assertTrue(manager.findById(digitalExchange.getId()).isPresent());
         assertThat(manager.getRestTemplate(digitalExchange.getId())).isNull();
@@ -205,6 +207,7 @@ public class DigitalExchangesManagerTest {
                         + "    <secret>" + ENCRYPTOR.encrypt(SECRET) + "</secret>"
                         + "    <timeout>5000</timeout>"
                         + "    <active>true</active>"
+                        + "    <publicKey>" + getTestPublicKey() + "</publicKey>"
                         + "  </digitalExchange>"
                         + "</digitalExchanges>");
     }

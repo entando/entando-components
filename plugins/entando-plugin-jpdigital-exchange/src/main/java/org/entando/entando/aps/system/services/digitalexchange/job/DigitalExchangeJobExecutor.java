@@ -11,13 +11,12 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-
 package org.entando.entando.aps.system.services.digitalexchange.job;
 
 import java.util.function.Consumer;
 import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJob;
 
-public interface DigitalExchangeJobExecutor {
+public interface DigitalExchangeJobExecutor<T> {
 
-    void execute(DigitalExchangeJob job, Consumer<DigitalExchangeJob> consumer) throws JobExecutionException;
+    void execute(DigitalExchangeJob job, Consumer<DigitalExchangeJob> consumer, T additionalParam);
 }

@@ -48,5 +48,5 @@ public interface IKieApiManager {
 
     public List<KieProcessInstance> processList(KieBpmConfig bpmConfig, Properties properties) throws Throwable;
 
-    public JAXBProcessInstanceList processInstancesDataTable(KieBpmConfig bpmConfig, Properties properties) throws Throwable;
+    public JAXBProcessInstanceList processInstancesDataTable(Properties properties) throws Throwable;
 }

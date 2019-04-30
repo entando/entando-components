@@ -28,11 +28,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
-/**
- *
- * @author Entando
- */
-@XmlRootElement(name="kie-containers")
+@XmlRootElement(name = "kie-containers")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class KieProcessProperty {
 
@@ -56,5 +52,11 @@ public class KieProcessProperty {
     private String name;
     @XmlAttribute
     private String value;
+
+    @Override
+    public String toString() {
+        return "KieProcessProperty [name=" + name + ", value=" + value + "]";
+    }
+
 
 }

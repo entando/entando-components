@@ -344,7 +344,7 @@ public class MortgageDemoTest extends ApsPluginBaseTestCase implements KieTestPa
             Map<String, Object> formInput = new HashMap<String, Object>();
             formInput.put("downPayment", 50001);
 
-            String payload = FormToBpmHelper.generateHumanTaskFormJson(form, task_data, formInput);
+            JSONObject payload = FormToBpmHelper.generateHumanTaskFormJson(form, task_data, formInput);
             System.out.println("PAYLOAD: " + payload);
 
         } finally {

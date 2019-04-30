@@ -1,28 +1,27 @@
 package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper;
 
 import junit.framework.TestCase;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.*;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.pamSeven.PamProcessQueryFormResult;
 import org.entando.entando.plugins.jprestapi.aps.core.helper.JAXBHelper;
 
 import java.nio.file.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverride;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.DefaultValueOverride;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.PlaceHolderOverride;
-import static org.mockito.Mockito.mock;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class TestDataUXBuilder extends TestCase {
 
-    private final static transient Logger logger = Logger.getLogger(TestDataUXBuilder.class);
+    private final static transient Logger logger = LoggerFactory.getLogger(TestDataUXBuilder.class);
 
     private static final String CONTAINER_ID = "CONTAINER_ID";
     private static final String PROCESS_ID = "PROCESS_ID";
@@ -78,8 +77,6 @@ public class TestDataUXBuilder extends TestCase {
         KieProcessFormQueryResult kpfqr = KieVersionTransformer.pamSevenFormToPamSix(pamResult);
         String htmlForm = dataUXBuilder.createDataUx(kpfqr, 0, CONTAINER_ID, PROCESS_ID, TITLE);
 
-        System.out.println(htmlForm);
-
         //Title Check
         assertTrue(htmlForm.contains("<h3 class=\"control-label editLabel\" id=\"JPKIE_TITLE_Title\">$i18n.getLabel(\"JPKIE_TITLE_Title\")</h3>\n"));
 
@@ -98,14 +95,19 @@ public class TestDataUXBuilder extends TestCase {
         assertTrue(htmlForm.contains("<input type=\"number\" id=\"field_0897\" name=\"$data.performance.type:performance\" labelkey=\"JPKIE_performance\" class=\"form-control ui-widget\" aria-required=\"true\" placeholder=\"Performance\" value=\"$data.performance.number\">"));
 
         //DatePicker Checks
-        assertTrue(htmlForm.contains("<input type=\"text\" id=\"field_8289\" name=\"$data.birthDate.type:birthDate\" labelkey=\"JPKIE_birthDate\" class=\"form-control date-picker\" aria-required=\"true\" placeholder=\"BirthDate\" value=\"$data.birthDate.text\">"));
+
+        assertTrue(htmlForm.contains("<input type=\"text\" id=\"field_8289\" name=\"$data.birthDate.type:birthDate\" labelkey=\"JPKIE_birthDate\" class=\"form-control date-picker\" aria-required=\"true\" placeholder=\"BirthDate\" value=\"$data.birthDate.getFormattedDate(\"yyyy-MM-dd_hh:mm\")\">"));
         assertTrue(htmlForm.contains("$(\"#datepicker_field_8289\").datetimepicker"));
         assertTrue(htmlForm.contains("format: 'YYYY-MM-DD hh:mm'"));
         assertTrue(htmlForm.contains("showTodayButton: true"));
         assertTrue(htmlForm.contains("allowInputToggle: true"));
 
         //CheckBox Checks
-        assertTrue(htmlForm.contains("<input type=\"checkbox\" id=\"field_4192\" name=\"$data.checkBox1.type:checkBox1\" labelkey=\"JPKIE_checkBox1\" class=\"ui-widget \" aria-required=\"true\" value=\"true\">"));
+        assertTrue(htmlForm.contains("<input type=\"checkbox\" id=\"field_4192\" name=\"$data.checkBox1.type:checkBox1\" labelkey=\"JPKIE_checkBox1\" class=\"ui-widget \" aria-required=\"true\" value=\"true\" >"));
+        assertTrue(htmlForm.contains("<input type=\"hidden\" id=\"field_4192_hiddenval\"  value=\"$data.checkBox1.getValue()\">"));
+        assertTrue(htmlForm.contains("var hiddenVal = $(field_4192_hiddenval).val();"));
+        assertTrue(htmlForm.contains("$(field_4192).prop('checked', true);"));
+        assertTrue(htmlForm.contains("$(field_4192).prop('checked', false);"));
 
         //ListBox Checks
         assertTrue(htmlForm.contains("<select id=\"field_3229\" name=\"$data.listBox1.type:listBox1\" class=\"form-control\" >"));

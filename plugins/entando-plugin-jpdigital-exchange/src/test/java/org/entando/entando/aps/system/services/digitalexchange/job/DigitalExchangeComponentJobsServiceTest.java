@@ -54,7 +54,7 @@ public class DigitalExchangeComponentJobsServiceTest {
         when(jobService.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
         String errorMsg = "error_msg";
-        doThrow(new JobExecutionException(errorMsg)).when(digitalExchangeInstallExecutor).execute(any(), any());
+        doThrow(new JobExecutionException(errorMsg)).when(digitalExchangeInstallExecutor).execute(any(), any(), any());
 
         DigitalExchangeJob job = service.install(DE_1_ID, "test", "admin");
         assertThat(job).isNotNull();

@@ -1,32 +1,33 @@
 /*
-* The MIT License
-*
-* Copyright 2017 Entando Inc..
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy
-* of this software and associated documentation files (the "Software"), to deal
-* in the Software without restriction, including without limitation the rights
-* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-* copies of the Software, and to permit persons to whom the Software is
-* furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in
-* all copies or substantial portions of the Software.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-* THE SOFTWARE.
-*/
+ * The MIT License
+ *
+ * Copyright 2017 Entando Inc..
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+
 import junit.framework.TestCase;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieVersionTransformer;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
@@ -35,14 +36,16 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.pamSev
 import org.entando.entando.plugins.jprestapi.aps.core.helper.JAXBHelper;
 import org.json.JSONObject;
 
+import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.TestBpmToFormHelper.TASK_DATA_JSON;
+import static org.junit.Assert.assertNotEquals;
+
 /**
- *
  * @author Entando
  */
 public class TestFormToBpmHelper extends TestCase {
 
-    private static String CONTAINER_ID ="container-id";
-    private static String PROCESS_ID ="process-id";
+    private static String CONTAINER_ID = "container-id";
+    private static String PROCESS_ID = "process-id";
 
     public void testValidationInteger() throws Throwable {
         KieProcessFormQueryResult kpfq = (KieProcessFormQueryResult) JAXBHelper
@@ -54,7 +57,7 @@ public class TestFormToBpmHelper extends TestCase {
         Object result = FormToBpmHelper.validateField(kpfq, "property_price", property_price);
         assertNotNull(result);
         assertTrue(result instanceof Integer);
-        assertEquals((Integer)400000,
+        assertEquals((Integer) 400000,
                 result);
     }
 
@@ -126,7 +129,7 @@ public class TestFormToBpmHelper extends TestCase {
                 .unmarshall(KIE_PROCESS_FORM_XML, KieProcessFormQueryResult.class, true, false);
 
         assertNotNull(kpfq);
-        final  String applicant_legal_age = "400000a";
+        final String applicant_legal_age = "400000a";
 
         Object result = FormToBpmHelper.validateField(kpfq, "applicant_legal_age", applicant_legal_age);
         assertNull(result);
@@ -151,9 +154,9 @@ public class TestFormToBpmHelper extends TestCase {
         KieProcessFormQueryResult form2 = KieVersionTransformer.pamSevenFormToPamSix(pamResult2);
 
         Map<String, Object> input1 = createValiDPayloadForTestWithBooleanValues1();
-        String formJson = FormToBpmHelper.generateFormJson(form1, input1, CONTAINER_ID,PROCESS_ID);
+        String formJson = FormToBpmHelper.generateFormJson(form1, input1, CONTAINER_ID, PROCESS_ID);
         assertNotNull(formJson);
-        JSONObject jsonObject=  new JSONObject(formJson);
+        JSONObject jsonObject = new JSONObject(formJson);
         assertTrue(formJson.contains("\"checkBox1\":true"));
         assertTrue(formJson.contains("\"checkBox2\":false"));
         assertTrue(jsonObject.has("checkBox1"));
@@ -165,9 +168,9 @@ public class TestFormToBpmHelper extends TestCase {
 
 
         Map<String, Object> input2 = createValiDPayloadForTestWithBooleanValues2();
-        formJson = FormToBpmHelper.generateFormJson(form2, input2, CONTAINER_ID,PROCESS_ID);
+        formJson = FormToBpmHelper.generateFormJson(form2, input2, CONTAINER_ID, PROCESS_ID);
         assertNotNull(formJson);
-        jsonObject=  new JSONObject(formJson);
+        jsonObject = new JSONObject(formJson);
         JSONObject nestedForm = jsonObject.getJSONObject("application")
                 .getJSONObject("com.myspace.test_app.Application")
                 .getJSONObject("nestedForm");
@@ -181,9 +184,9 @@ public class TestFormToBpmHelper extends TestCase {
                 nestedForm.get("checkBox2"));
 
         Map<String, Object> input3 = createValiDPayloadForTestWithBooleanValues3();
-        formJson = FormToBpmHelper.generateFormJson(form1, input3, CONTAINER_ID,PROCESS_ID);
+        formJson = FormToBpmHelper.generateFormJson(form1, input3, CONTAINER_ID, PROCESS_ID);
         assertNotNull(formJson);
-        jsonObject=  new JSONObject(formJson);
+        jsonObject = new JSONObject(formJson);
         assertTrue(formJson.contains("\"checkBox1\":true"));
         assertTrue(formJson.contains("\"checkBox2\":false"));
         assertTrue(jsonObject.has("checkBox1"));
@@ -194,9 +197,9 @@ public class TestFormToBpmHelper extends TestCase {
                 jsonObject.get("checkBox2"));
 
         Map<String, Object> input4 = createValiDPayloadForTestWithBooleanValues4();
-        formJson = FormToBpmHelper.generateFormJson(form2, input4, CONTAINER_ID,PROCESS_ID);
+        formJson = FormToBpmHelper.generateFormJson(form2, input4, CONTAINER_ID, PROCESS_ID);
         assertNotNull(formJson);
-        jsonObject=  new JSONObject(formJson);
+        jsonObject = new JSONObject(formJson);
         nestedForm = jsonObject.getJSONObject("application")
                 .getJSONObject("com.myspace.test_app.Application")
                 .getJSONObject("nestedForm");
@@ -211,98 +214,155 @@ public class TestFormToBpmHelper extends TestCase {
 
     }
 
-    public void testModelForm2Json() throws Throwable {
-        JSONObject json = new JSONObject();
+    public void testGenerateJsonPayload() throws Throwable {
         KieProcessFormQueryResult form = (KieProcessFormQueryResult) JAXBHelper
                 .unmarshall(TASK_FORM_DEF_XML, KieProcessFormQueryResult.class, true, false);
-        JSONObject data = new JSONObject(TASK_DATA_JSON);
+        JSONObject task_data = new JSONObject(TASK_DATA_JSON);
         Map<String, Object> input = createValiDPayloadForTest();
+        JSONObject json = FormToBpmHelper.generateJsonPayload(form, task_data, input);
 
-        FormToBpmHelper.modelForm2Json(form, input, json);
-        assertTrue(json.has("downPayment"));
+        System.out.println(json.toString(4));
+
+
+        assertTrue(json.has("taskOutputApplication"));
+        JSONObject taskOutputApplication = json.getJSONObject("taskOutputApplication");
+
+        assertTrue(taskOutputApplication.has("com.redhat.bpms.examples.mortgage.Application"));
+
+        JSONObject application = taskOutputApplication.getJSONObject("com.redhat.bpms.examples.mortgage.Application");
+
+
+        assertTrue(application.has("downPayment"));
         assertEquals(40001,
-                json.get("downPayment"));
-        assertTrue(json.has("amortization"));
+                application.get("downPayment"));
+        assertTrue(application.has("amortization"));
         assertEquals(19,
-                json.get("amortization"));
+                application.get("amortization"));
         // verify 'property' child
-        assertTrue(json.has("property"));
-        JSONObject ver = json.getJSONObject("property");
-        assertTrue(ver instanceof JSONObject);
-        assertTrue(ver.has("address"));
+        assertTrue(application.has("property"));
+
+
+        JSONObject property = application.getJSONObject("property");
+        assertTrue(property instanceof JSONObject);
+
+        assertTrue(property.has("com.redhat.bpms.examples.mortgage.Property"));
+        property = property.getJSONObject("com.redhat.bpms.examples.mortgage.Property");
+
+        assertTrue(property.has("address"));
         assertEquals("San Jose ave #2677",
-                ver.get("address"));
-        assertTrue(ver.has("price"));
+                property.get("address"));
+        assertTrue(property.has("price"));
         assertEquals(888888,
-                ver.get("price"));
+                property.get("price"));
         // verify 'applicant' child
-        assertTrue(json.has("applicant"));
-        ver = json.getJSONObject("applicant");
-        assertTrue(ver instanceof JSONObject);
-        assertTrue(ver.has("income"));
+
+        assertTrue(application.has("applicant"));
+        JSONObject applicant = application.getJSONObject("applicant");
+
+        assertTrue(applicant.has("com.redhat.bpms.examples.mortgage.Applicant"));
+        applicant = applicant.getJSONObject("com.redhat.bpms.examples.mortgage.Applicant");
+
+        assertTrue(applicant instanceof JSONObject);
+        assertTrue(applicant.has("income"));
         assertEquals(65432,
-                ver.get("income"));
-        assertTrue(ver.has("name"));
+                applicant.get("income"));
+        assertTrue(applicant.has("name"));
         assertEquals("Matteo",
-                ver.get("name"));
-        assertTrue(ver.has("ssn"));
+                applicant.get("name"));
+        assertTrue(applicant.has("ssn"));
         assertEquals(1234567890,
-                ver.get("ssn"));
+                applicant.get("ssn"));
     }
 
-    public void testModelForm2JsonWithTaskData() throws Throwable {
+    public void testGenerateJsonPayloadWithExtraData() throws Throwable {
 
         JSONObject task_data = new JSONObject(TASK_DATA_JSON);
         KieProcessFormQueryResult form = (KieProcessFormQueryResult) JAXBHelper
                 .unmarshall(TASK_FORM_DEF_XML, KieProcessFormQueryResult.class, true, false);
         Map<String, Object> input = createValiDPayloadForTestWithExtraData();
 
-        JSONObject json = new JSONObject();
-        FormToBpmHelper.modelForm2Json(form, task_data, input, json);
-        assertTrue(json.has("downPayment"));
+
+        System.out.println(task_data.toString(4));
+
+        System.out.println("--------------------------------------------------------");
+
+        JSONObject json = FormToBpmHelper.generateJsonPayload(form, task_data, input);
+        System.out.println(json.toString(4));
+
+
+        assertTrue(json.has("taskOutputApplication"));
+        JSONObject taskOutputApplication = json.getJSONObject("taskOutputApplication");
+
+        assertTrue(taskOutputApplication.has("com.redhat.bpms.examples.mortgage.Application"));
+
+        JSONObject application = taskOutputApplication.getJSONObject("com.redhat.bpms.examples.mortgage.Application");
+
+        assertTrue(application.has("downPayment"));
         assertEquals(43210,
-                json.get("downPayment"));
-        assertTrue(json.has("amortization"));
+                application.get("downPayment"));
+        assertTrue(application.has("amortization"));
         assertEquals(10,
-                json.get("amortization"));
-        assertTrue(json.has("mortgageAmount"));
+                application.get("amortization"));
+        assertTrue(application.has("mortgageAmount"));
         assertEquals(200000,
-                json.get("mortgageAmount"));
-        assertTrue(json.has("validationErrors"));
+                application.get("mortgageAmount"));
+        assertTrue(application.has("validationErrors"));
         assertEquals(JSONObject.NULL,
-                json.get("validationErrors"));
-        assertTrue(json.has("apr"));
-        assertEquals(11,
-                json.get("apr"));
-        assertTrue(json.has("appraisal"));
-        assertEquals(2677,
-                json.get("appraisal"));
-        // verify 'property' child
-        assertTrue(json.has("property"));
-        JSONObject ver = json.getJSONObject("property");
-        assertTrue(ver instanceof JSONObject);
-        assertTrue(ver.has("address"));
+                application.get("validationErrors"));
+        assertTrue(application.has("property"));
+
+        JSONObject property = application.getJSONObject("property");
+        assertTrue(property instanceof JSONObject);
+
+        assertTrue(property.has("com.redhat.bpms.examples.mortgage.Property"));
+        property = property.getJSONObject("com.redhat.bpms.examples.mortgage.Property");
+        assertTrue(property instanceof JSONObject);
+        assertTrue(property.has("address"));
         assertEquals("San Jose ave",
-                ver.get("address"));
-        assertTrue(ver.has("price"));
+                property.get("address"));
+        assertTrue(property.has("price"));
         assertEquals(245678,
-                ver.get("price"));
+                property.get("price"));
+
+
         // verify 'applicant' child
-        assertTrue(json.has("applicant"));
-        ver = json.getJSONObject("applicant");
-        assertTrue(ver instanceof JSONObject);
-        assertTrue(ver.has("income"));
+        assertTrue(application.has("applicant"));
+        JSONObject applicant = application.getJSONObject("applicant");
+
+        assertTrue(applicant.has("com.redhat.bpms.examples.mortgage.Applicant"));
+        applicant = applicant.getJSONObject("com.redhat.bpms.examples.mortgage.Applicant");
+
+        assertTrue(applicant instanceof JSONObject);
+
+        assertTrue(applicant.has("income"));
         assertEquals(71234,
-                ver.get("income"));
-        assertTrue(ver.has("name"));
+                applicant.get("income"));
+        assertTrue(applicant.has("name"));
         assertEquals("Matteo",
-                ver.get("name"));
-        assertTrue(ver.has("ssn"));
+                applicant.get("name"));
+        assertTrue(applicant.has("ssn"));
         assertEquals(1234567890,
-                ver.get("ssn"));
-        assertTrue(ver.has("creditScore"));
-        assertEquals(381,
-                ver.get("creditScore"));
+                applicant.get("ssn"));
+
+
+        //THESE FIELDS ARE NOT PRESENT IN THE xml FORM and also they are not editable FIELDS, SHOULDN'T BE OVERRIDEN
+
+        /*form.getFields().forEach(f ->
+                System.out.println(f.getName() + "-" + f.getProperties().toString())
+        );*/
+
+
+        assertTrue(applicant.has("creditScore"));
+        assertTrue(application.has("apr"));
+        assertTrue(application.has("appraisal"));
+
+        assertNotEquals(11,
+                application.get("apr"));
+        assertNotEquals(2677,
+                application.get("appraisal"));
+
+        assertNotEquals(381,
+                applicant.get("creditScore"));
 
     }
 
@@ -314,17 +374,16 @@ public class TestFormToBpmHelper extends TestCase {
                 .unmarshall(TASK_FORM_DEF_XML, KieProcessFormQueryResult.class, true, false);
         Map<String, Object> input = createValiDPayloadForTestWithExtraData();
 
-
-        String payload = FormToBpmHelper.generateHumanTaskFormJson(form, task_data, input);
+        JSONObject payload = FormToBpmHelper.generateHumanTaskFormJson(form, task_data, input);
         assertNotNull(payload);
-        JSONObject json = new JSONObject(payload);
-        assertTrue(json.has("taskOutputApplication"));
-        json = json.getJSONObject("taskOutputApplication");
-        assertTrue(json.has("com.redhat.bpms.examples.mortgage.Application"));
+        //JSONObject json = new JSONObject(payload);
+        assertTrue(payload.has("taskOutputApplication"));
+        payload = payload.getJSONObject("taskOutputApplication");
+        assertTrue(payload.has("com.redhat.bpms.examples.mortgage.Application"));
     }
 
     private Map<String, Object> createValiDPayloadForTest() {
-         Map<String, Object> input = new HashMap<String, Object>();
+        Map<String, Object> input = new HashMap<String, Object>();
 
         input.put("applicant_name", "Matteo");
         input.put("applicant_ssn", 1234567890);
@@ -338,7 +397,7 @@ public class TestFormToBpmHelper extends TestCase {
     }
 
     private Map<String, Object> createValiDPayloadForTestWithExtraData() {
-         Map<String, Object> input = new HashMap<String, Object>();
+        Map<String, Object> input = new HashMap<String, Object>();
 
         input.put("applicant_name", "Matteo");
         input.put("applicant_ssn", 1234567890);
@@ -347,6 +406,7 @@ public class TestFormToBpmHelper extends TestCase {
         input.put("property_price", 245678);
         input.put("application_downPayment", 43210);
         input.put("application_amortization", 10);
+
         // generate extra data
         input.put("application_appraisal", 2677);
         input.put("application_mortgageAmount", 200000);
@@ -376,6 +436,7 @@ public class TestFormToBpmHelper extends TestCase {
         input.put("checkBox1", true);
         return input;
     }
+
     private Map<String, Object> createValiDPayloadForTestWithBooleanValues4() {
         Map<String, Object> input = new HashMap<String, Object>();
         input.put("nestedForm_checkBox1", true);

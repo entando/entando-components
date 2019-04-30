@@ -403,12 +403,12 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     @Override
     public String getProcInstDiagramImage(KieBpmConfig config, String containerId) throws ApsSystemException {
         return getProcInstDiagramImage(config,
-                 containerId, 
-                 null);
+                containerId,
+                null);
     }
 
     @Override
-    public String getProcInstDiagramImage(KieBpmConfig config, String containerId,  String pInstanceId) throws ApsSystemException {
+    public String getProcInstDiagramImage(KieBpmConfig config, String containerId, String pInstanceId) throws ApsSystemException {
         String result = null;
         if (!config.getActive() || StringUtils.isBlank(containerId)) {
             return result;
@@ -416,10 +416,10 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         try {
             String ver = this.hostNameVersionMap.get(config.getId());
             logger.info("server version {} ", ver);
-            boolean versionSix = false ;
-                    if  ((ver != null) && ver.startsWith("6")) {
-                        versionSix=true;
-                    }
+            boolean versionSix = false;
+            if ((ver != null) && ver.startsWith("6")) {
+                versionSix = true;
+            }
             logger.debug("Is server Version Six {} ", versionSix);
 
             // process endpoint first
@@ -436,7 +436,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             }
 
             Endpoint ep = KieEndpointDictionary.create().get(endPoint);
-          
             if (versionSix) {
                 ep.resolveParams(containerId, pInstanceId);
             } else {
@@ -734,7 +733,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
      */
     @Override
     public String completeHumanFormTask(KieBpmConfig config, String containerId, String processId, final long taskId,
-            final Map<String, String> input) throws ApsSystemException {
+                                        final Map<String, String> input) throws ApsSystemException {
         String result = null;
         try {
             // get human task definition
@@ -756,7 +755,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
             for (Map.Entry entry : map.entrySet()) {
                 fixedKeys.put(StringUtils.uncapitalize((String) entry.getKey()), entry.getValue());
             }
-            completeHumanFormTask(config, containerId, taskId, form, taskData, fixedKeys);
+            result = completeHumanFormTask(config, containerId, taskId, form, taskData, fixedKeys);
 
         } catch (Throwable t) {
             logger.error("Failed to complete kie task ", t);
@@ -774,7 +773,9 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
 
         try {
             // generate the payload
-            String payload = FormToBpmHelper.generateHumanTaskFormJson(form, task, input);
+            String payload = FormToBpmHelper.generateHumanTaskFormJson(form, task, input).toString();
+            logger.debug("generate payload: {} ", new JSONObject(payload).toString(4));
+
             // generate client from the current configuration
             KieClient client = KieApiUtil.getClientFromConfig(config);
             // process endpoint first
@@ -921,7 +922,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         }
         KieProcessFormQueryResult form = getTaskForm(config, containerId, Long.parseLong(taskId));
         JSONObject task = getTaskFormData(config, containerId, Long.parseLong(taskId), null);
-        String payload = FormToBpmHelper.generateHumanTaskFormJson(form, task, input); //FSIDemoHelper.getPayloadForCompleteEnrichDocument(input);
+        String payload = FormToBpmHelper.generateHumanTaskFormJson(form, task, input).toString(); //FSIDemoHelper.getPayloadForCompleteEnrichDocument(input);
         try {
             // process endpoint first
             Endpoint ep = KieEndpointDictionary.create().get(API_PUT_HUMAN_TASK_STATE)
@@ -1232,8 +1233,6 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
 
     @Override
     public JSONObject getTaskDetails(KieBpmConfig config, String taskId) throws ApsSystemException {
-        
-        
         logger.info("---------------------------------------------");
 
         logger.info("getTaskDetails (config: {}", config.toString());
@@ -1411,7 +1410,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     }
 
     @Override
-    public Set<String> getProcessVariables(KieBpmConfig config, String containerId, String processId) throws ApsSystemException{
+    public Set<String> getProcessVariables(KieBpmConfig config, String containerId, String processId) throws ApsSystemException {
 
 
         HashMap headersMap = new HashMap();
@@ -1429,7 +1428,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
                 logger.debug("received empty case definitions message: ");
             }
 
-            JSONObject variables =  json.getJSONObject("variables");
+            JSONObject variables = json.getJSONObject("variables");
 
             return variables.keySet();
         } catch (Throwable t) {
@@ -1439,7 +1438,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     }
 
     @Override
-    public Map<String, String> getProcessVariableInstances(KieBpmConfig config, String processInstanceIdd) throws ApsSystemException{
+    public Map<String, String> getProcessVariableInstances(KieBpmConfig config, String processInstanceIdd) throws ApsSystemException {
 
 
         HashMap headersMap = new HashMap();
@@ -1458,12 +1457,12 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
                 logger.debug("received empty case definitions message: ");
             }
 
-            JSONArray variables =  json.getJSONArray("variable-instance");
+            JSONArray variables = json.getJSONArray("variable-instance");
 
-            for(Object var : variables.toList()){
+            for (Object var : variables.toList()) {
 
-                Map jsonVar =  (Map)var;
-                processVars.put(jsonVar.get("name")+"", jsonVar.get("value")+"");
+                Map jsonVar = (Map) var;
+                processVars.put(jsonVar.get("name") + "", jsonVar.get("value") + "");
             }
 
             return processVars;
@@ -1474,7 +1473,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     }
 
     @Override
-    public String claimTask(KieBpmConfig config, String containerId, String taskId, String username) throws ApsSystemException{
+    public String claimTask(KieBpmConfig config, String containerId, String taskId, String username) throws ApsSystemException {
 
         HashMap headersMap = new HashMap();
         Map<String, String> processVars = new HashMap<>();

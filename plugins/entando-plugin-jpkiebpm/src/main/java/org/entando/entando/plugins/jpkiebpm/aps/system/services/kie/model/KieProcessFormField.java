@@ -27,96 +27,95 @@ import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author Entando
- */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class KieProcessFormField {
 
-	public String getId() {
-		return id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public Integer getPosition() {
-		return position;
-	}
+    public Integer getPosition() {
+        return position;
+    }
 
-	public void setPosition(Integer position) {
-		this.position = position;
-	}
+    public void setPosition(Integer position) {
+        this.position = position;
+    }
 
-	public String getType() {
-		return type;
-	}
+    public String getType() {
+        return type;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    public void setType(String type) {
+        this.type = type;
+    }
 
-	public KieProcessProperty getProperty(String name) {
-		if (null == this.properties) {
-			return null;
-		}
-		for (int i = 0; i < properties.size(); i++) {
-			KieProcessProperty property = properties.get(i);
-			if (property.getName().equalsIgnoreCase(name)) {
-				return property;
-			}
-		}
-		return null;
-	}
+    public KieProcessProperty getProperty(String name) {
+        if (null == this.properties) {
+            return null;
+        }
+        for (int i = 0; i < properties.size(); i++) {
+            KieProcessProperty property = properties.get(i);
+            if (property.getName().equalsIgnoreCase(name)) {
+                return property;
+            }
+        }
+        return null;
+    }
 
-	public void addProperty(String name, Object value) {
+    public void addProperty(String name, Object value) {
 
-		if(this.properties == null) {
-			this.properties = new ArrayList<>();
-		}
+        if (this.properties == null) {
+            this.properties = new ArrayList<>();
+        }
 
-		KieProcessProperty prop = new KieProcessProperty();
-		prop.setName(name);
-		prop.setValue(value.toString());
+        KieProcessProperty prop = new KieProcessProperty();
+        prop.setName(name);
+        prop.setValue(value.toString());
 
-		this.properties.add(prop);
-	}
+        this.properties.add(prop);
+    }
 
-	public List<KieProcessProperty> getProperties() {
-		return properties;
-	}
+    public List<KieProcessProperty> getProperties() {
+        return properties;
+    }
 
-	public void setProperties(List<KieProcessProperty> properties) {
-		this.properties = properties;
-	}
+    public void setProperties(List<KieProcessProperty> properties) {
+        this.properties = properties;
+    }
 
-	@XmlAttribute
-	private String id;
-	@XmlAttribute
-	private String name;
-	@XmlAttribute
-	private Integer position;
-	@XmlAttribute
-	private String type;
-	@XmlElement(name = "property")
-	private List<KieProcessProperty> properties;
-	
-	@Override
-	public String toString() {
-		return "KieProcessFormField [id=" + id + ", name=" + name + ", position=" + position + ", type=" + type
-				+ ", properties=" + properties + "]";
-	}
-	
-	
+    @XmlAttribute
+    private String id;
+    @XmlAttribute
+    private String name;
+    @XmlAttribute
+    private Integer position;
+    @XmlAttribute
+    private String type;
+    @XmlElement(name = "property")
+    private List<KieProcessProperty> properties;
+
+    @Override
+    public String toString() {
+        String propString = "";
+        for (KieProcessProperty p : properties) {
+            propString = propString + " " + p.toString();
+        }
+        return "KieProcessFormField [id=" + id + ", name=" + name + ", position=" + position + ", type=" + type + ", properties=" + propString + "]";
+    }
+
+
 }
