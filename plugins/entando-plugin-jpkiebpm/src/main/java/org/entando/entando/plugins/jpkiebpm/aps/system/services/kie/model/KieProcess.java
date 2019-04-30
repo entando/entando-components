@@ -97,8 +97,23 @@ public class KieProcess {
     
     private String kieSourceId;
 
+
     @Override
     public String toString() {
-        return "parent-instance-id,start-date,process-id,process-name,process-version,package,container-id";
+        return "parent-instance-id," +
+                "start-date," +
+                "process-id," +
+                "process-name," +
+                "process-version," +
+                "package," +
+                "container-id," +
+                "initiator," +
+                "process-instance-state," +
+                "process-instance-desc," +
+                "correlation-key," +
+                "sla-compliance," +
+                "sla-due-date," +
+                "active-user-tasks," +
+                "process-instance-variables";
     }
 }
