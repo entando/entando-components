@@ -71,6 +71,8 @@ public class AllTests {
 
     private static void addControllersTests(TestSuite suite) {
 
+        suite.addTest(new JUnit4TestAdapter(DigitalExchangeInstallResourceIntegrationTest.class));
+
         suite.addTest(new JUnit4TestAdapter(DigitalExchangesControllerIntegrationTest.class));
         suite.addTest(new JUnit4TestAdapter(DigitalExchangesControllerTest.class));
 
@@ -79,8 +81,6 @@ public class AllTests {
 
         suite.addTest(new JUnit4TestAdapter(DigitalExchangeCategoriesControllerIntegrationTest.class));
         suite.addTest(new JUnit4TestAdapter(DigitalExchangeCategoriesControllerTest.class));
-
-        suite.addTest(new JUnit4TestAdapter(DigitalExchangeInstallResourceIntegrationTest.class));
 
         suite.addTest(new JUnit4TestAdapter(DigitalExchangePageModelControllerIntegrationTest.class));
         suite.addTest(new JUnit4TestAdapter(DigitalExchangePageModelControllerTest.class));
