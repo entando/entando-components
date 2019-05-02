@@ -18,14 +18,16 @@ import java.util.List;
 import org.entando.entando.aps.system.DigitalExchangeConstants;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangeOAuth2RestTemplateFactory;
 import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExchange;
-import org.entando.entando.aps.system.services.digitalexchange.signature.SignatureUtil;
+import org.entando.entando.aps.util.crypto.DefaultTextEncryptor;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsResourceDetails;
 import org.junit.Before;
+import org.junit.runner.RunWith;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.mockito.Mockito.when;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,7 +36,14 @@ import static junit.framework.TestCase.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.entando.entando.aps.system.services.digitalexchange.DigitalExchangeTestUtils.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class DigitalExchangesManagerTest {
+
+    private static final String KEY = "test-key";
+    private static final String SECRET = "client-secret";
+    private static final DefaultTextEncryptor ENCRYPTOR = new DefaultTextEncryptor(KEY);
+    private static final DigitalExchangeConfigXmlConverter XML_CONVERTER
+            = new DigitalExchangeConfigXmlConverter(ENCRYPTOR);
 
     @Mock
     private ConfigInterface configManager;
@@ -50,6 +59,7 @@ public class DigitalExchangesManagerTest {
         MockitoAnnotations.initMocks(this);
         mockRestTemplateFactory();
         mockValidDigitalExchangesConfig();
+        manager = new DigitalExchangesManagerImpl(configManager, restTemplateFactory, XML_CONVERTER);
         manager.refresh();
     }
 
@@ -66,7 +76,7 @@ public class DigitalExchangesManagerTest {
                 .extracting(DigitalExchange::getId, DigitalExchange::getName, DigitalExchange::getUrl,
                         DigitalExchange::getClientKey, DigitalExchange::getClientSecret,
                         DigitalExchange::isActive, DigitalExchange::getTimeout)
-                .containsExactly(DE_1_ID, DE_1_NAME, DE_URL, "client-id", "client-secret", true, 5000);
+                .containsExactly(DE_1_ID, DE_1_NAME, DE_URL, "client-id", SECRET, true, 5000);
 
         assertThat(manager.getRestTemplate(DE_1_ID)).isNotNull();
     }
@@ -194,7 +204,7 @@ public class DigitalExchangesManagerTest {
                         + "    <name>" + DE_1_NAME + "</name>"
                         + "    <url>" + DE_URL + "</url>"
                         + "    <key>client-id</key>"
-                        + "    <secret>client-secret</secret>"
+                        + "    <secret>" + ENCRYPTOR.encrypt(SECRET) + "</secret>"
                         + "    <timeout>5000</timeout>"
                         + "    <active>true</active>"
                         + "    <publicKey>" + getTestPublicKey() + "</publicKey>"

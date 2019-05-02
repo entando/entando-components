@@ -183,7 +183,7 @@ public class KieConfigService implements IKieConfigService {
         Map<String, String> results = new HashMap<>();
         try {
 
-            HashMap<String, KieBpmConfig> serverConfigurations = this.getKieFormManager().getKieServerConfigurations();
+            Map<String, KieBpmConfig> serverConfigurations = this.getKieFormManager().getKieServerConfigurations();
             for (KieBpmConfig config : serverConfigurations.values()) {
 
                 try {

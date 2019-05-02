@@ -28,6 +28,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.entando.entando.aps.system.services.digitalexchange.DigitalExchangesService;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangeOAuth2RestTemplateFactory;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangesMocker;
+import org.entando.entando.aps.util.crypto.DefaultTextEncryptor;
+import org.entando.entando.web.common.IgnoreJacksonWriteOnlyAccess;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -48,6 +50,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.entando.entando.aps.system.services.digitalexchange.DigitalExchangeTestUtils.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @ActiveProfiles("DEconfigTest")
 public class DigitalExchangesControllerIntegrationTest extends AbstractControllerIntegrationTest {
@@ -72,6 +75,12 @@ public class DigitalExchangesControllerIntegrationTest extends AbstractControlle
                     })
                     .initMocks();
         }
+
+        @Bean
+        @Primary
+        public DefaultTextEncryptor getDefaultTextEncryptor() {
+            return new DefaultTextEncryptor("test-key");
+        }
     }
 
     @Test
@@ -79,30 +88,43 @@ public class DigitalExchangesControllerIntegrationTest extends AbstractControlle
 
         ResultActions result = createAuthRequest(get(BASE_URL)).execute();
 
-        result.andExpect(status().isOk())
+        result.andDo(print()).andExpect(status().isOk())
                 .andExpect(jsonPath("$.metaData").isEmpty())
                 .andExpect(jsonPath("$.errors").isEmpty())
                 .andExpect(jsonPath("$.payload", hasSize(2)))
                 .andExpect(jsonPath("$.payload[0].id", is(DE_1_ID)))
-                .andExpect(jsonPath("$.payload[0].name", is(DE_1_NAME)));
+                .andExpect(jsonPath("$.payload[0].name", is(DE_1_NAME)))
+                .andExpect(jsonPath("$.payload[0].key", is("client-key")))
+                .andExpect(jsonPath("$.payload[0].secret").doesNotExist());
+
+        // Verify that the secret has been correctly decrypted even if it is not serialized
+        assertThat(digitalExchangeService.getDigitalExchanges().get(0).getClientSecret())
+                .isEqualTo("client-secret");
     }
 
     @Test
     public void testCRUDDigitalExchange() throws Exception {
 
         String generatedId = null;
+        String clientSecret = "my-secret";
+
+        ObjectMapper ignoreWriteOnlyMapper = new ObjectMapper();
+        ignoreWriteOnlyMapper.setAnnotationIntrospector(new IgnoreJacksonWriteOnlyAccess());
 
         try {
             // Create
             DigitalExchange digitalExchange = getNewDE();
+            digitalExchange.setClientSecret(clientSecret);
 
-            ResultActions result = createAuthRequest(post(BASE_URL))
-                    .setContent(digitalExchange).execute();
+            ResultActions result = createAuthRequest(post(BASE_URL)
+                    .content(ignoreWriteOnlyMapper.writeValueAsString(digitalExchange)))
+                    .execute();
 
             result.andExpect(status().isOk())
                     .andExpect(jsonPath("$.metaData").isEmpty())
                     .andExpect(jsonPath("$.errors").isEmpty())
-                    .andExpect(jsonPath("$.payload.name", is(digitalExchange.getName())));
+                    .andExpect(jsonPath("$.payload.name", is(digitalExchange.getName())))
+                    .andExpect(jsonPath("$.payload.secret").doesNotExist());
 
             String jsonResponse = result.andReturn().getResponse().getContentAsString();
 
@@ -113,6 +135,10 @@ public class DigitalExchangesControllerIntegrationTest extends AbstractControlle
             generatedId = response.getPayload().getId();
             assertThat(generatedId).isNotNull().hasSize(20);
             digitalExchange.setId(generatedId);
+
+            // Verify that the secret has been correctly decrypted even if it is not serialized
+            assertThat(digitalExchangeService.findById(generatedId).getClientSecret())
+                    .isEqualTo(clientSecret);
 
             // Read
             result = createAuthRequest(get(BASE_URL + "/{id}", generatedId)).execute();
@@ -125,14 +151,16 @@ public class DigitalExchangesControllerIntegrationTest extends AbstractControlle
             // Update
             String url = "http://www.entando.com/";
             digitalExchange.setUrl(url);
-            result = createAuthRequest(put(BASE_URL + "/{id}", generatedId))
-                    .setContent(digitalExchange).execute();
+            result = createAuthRequest(put(BASE_URL + "/{id}", generatedId)
+                    .content(ignoreWriteOnlyMapper.writeValueAsString(digitalExchange)))
+                    .execute();
 
             result.andExpect(status().isOk())
                     .andExpect(jsonPath("$.metaData").isEmpty())
                     .andExpect(jsonPath("$.errors").isEmpty())
                     .andExpect(jsonPath("$.payload.id", is(generatedId)))
-                    .andExpect(jsonPath("$.payload.url", is(url)));
+                    .andExpect(jsonPath("$.payload.url", is(url)))
+                    .andExpect(jsonPath("$.payload.secret").doesNotExist());
 
             // Delete
             result = createAuthRequest(delete(BASE_URL + "/{id}", generatedId)).execute();

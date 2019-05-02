@@ -65,9 +65,22 @@ public class DigitalExchange {
     @XmlElement(name = "key")
     private String clientKey;
 
-    @JsonProperty("secret")
+    @JsonProperty(value = "secret", access = JsonProperty.Access.WRITE_ONLY)
     @XmlElement(name = "secret")
     private String clientSecret;
+    
+    public DigitalExchange() {
+    }
+
+    public DigitalExchange(DigitalExchange other) {
+        this.id = other.id;
+        this.name = other.name;
+        this.url = other.url;
+        this.timeout = other.timeout;
+        this.active = other.active;
+        this.clientKey = other.clientKey;
+        this.clientSecret = other.clientSecret;
+    }
 
     @JsonProperty("publicKey")
     @XmlElement(name = "publicKey")
