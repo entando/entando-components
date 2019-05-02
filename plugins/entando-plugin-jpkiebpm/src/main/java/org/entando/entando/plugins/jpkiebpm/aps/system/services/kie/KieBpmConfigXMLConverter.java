@@ -60,7 +60,7 @@ public class KieBpmConfigXMLConverter {
                 String password = config.getPassword();
                 try {
                     password = textEncryptor.decrypt(config.getPassword());
-                } catch (CryptoException ex) {
+                } catch (Throwable ex) {
                     logger.warn("Unable to decrypt BPM password " + password);
                 }
                 config.setPassword(password);
