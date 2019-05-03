@@ -19,6 +19,7 @@ app-builder/coverage
 app-builder/dist
 app-builder/build
 app-builder/pluginBuild
+app-builder/src/index-app.js
 
 # misc
 app-builder/.DS_Store

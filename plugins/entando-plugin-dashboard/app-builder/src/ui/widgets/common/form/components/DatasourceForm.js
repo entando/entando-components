@@ -14,7 +14,7 @@ const DatasourceForm = ({
   disabled
 }) => {
   const selectOptionsDatasource = datasources.map(m => ({
-    value: m.id,
+    value: m.datasourceCode,
     text: m.datasource
   }));
 

@@ -7,7 +7,7 @@ import {reducer as formReducer} from "redux-form";
 import thunk from "redux-thunk";
 import rootReducer from "state/main/reducer";
 
-import {config, api} from "@entando/apimanager";
+import {config, api, setApi} from "@entando/apimanager";
 
 import {name} from "../package.json";
 
@@ -53,7 +53,7 @@ setCurrentLocale(enLocale);
 
 const currentUser = combineReducers({
   username: () => "admin",
-  token: () => "6225c3d136db49c5b5af31bd0960a5a3"
+  token: () => "23ee9aa496cbadca67b0a77a4eb00c01"
 });
 
 const wrappedReducer = combineReducers({
@@ -78,6 +78,11 @@ const store = createStore(
 );
 config(store);
 
+store.dispatch(setApi({
+  domain: '//localhost:8080/entando-iot',
+  useMocks: false,
+}));
+
 // exporting for tests
 export default ReactDOM.render(
   <Provider store={store}>
@@ -101,6 +106,6 @@ export default ReactDOM.render(
       </Grid>
     </IntlProvider>
   </Provider>,
-  document.getElementById("root")
+  document.getElementById("entando-dashboard")
 );
 registerServiceWorker();
