@@ -38,6 +38,9 @@ public class PamLayoutComponentProperty {
     @XmlElement(name = "form_id")
     String formId;
 
+    @XmlElement(name = "HTML_CODE")
+    String htmlCode;
+
 
     public String getFieldId() {
         return fieldId;
@@ -53,5 +56,13 @@ public class PamLayoutComponentProperty {
 
     public void setFormId(String formId) {
         this.formId = formId;
+    }
+
+    public String getHtmlCode() {
+        return htmlCode;
+    }
+
+    public void setHtmlCode(String htmlCode) {
+        this.htmlCode = htmlCode;
     }
 }

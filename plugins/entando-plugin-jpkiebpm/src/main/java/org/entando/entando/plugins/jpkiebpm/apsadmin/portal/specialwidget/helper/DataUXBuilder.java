@@ -23,6 +23,7 @@ THE SOFTWARE.
  */
 package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.util.ServletContextAware;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
@@ -167,10 +168,8 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         String sectionName;
 
         for (KieProcessFormField field : kpfr.getFields()) {
-            logger.debug("getSections field.getName() {}", field.getName());
             field.getProperties().forEach(p -> {
                 logger.debug("   field property {} {}", p.getName(), p.getValue());
-
             });
 
             Section tempSection = new Section();
@@ -225,15 +224,18 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
     }
 
     private T addField(KieProcessFormField field, KieFormOverride formOverride) throws Exception {
-        logger.info("------------------------------------");
-        logger.info("Field getId          -> {}", field.getId());
-        logger.info("Field getName        -> {}", field.getName());
-        logger.info("Field getPosition    -> {}", field.getPosition());
-        logger.info("Field getType        -> {}", field.getType());
-        logger.info("Field getProperties  -> ");
+
+
+        logger.debug("------------------------------------");
+
+        logger.debug("Field getId          -> {}", field.getId());
+        logger.debug("Field getName        -> {}", field.getName());
+        logger.debug("Field getPosition    -> {}", field.getPosition());
+        logger.debug("Field getType        -> {}", field.getType());
+        logger.debug("Field getProperties  -> ");
         field.getProperties().forEach(p
-                -> logger.info("  Property name: {} value: {}", p.getName(), p.getValue()));
-        logger.info("------------------------------------");
+                -> logger.debug("  Property name: {} value: {}", p.getName(), p.getValue()));
+        logger.debug("------------------------------------");
         T inputField;
         switch (field.getType()) {
             case "TextBox":
@@ -290,6 +292,20 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         String fieldTypePAM = field.getType();
 
         String fieldValueExpr = this.valueMapping.get(field.getType());
+        String fieldSpan = field.getProperty("span").getValue();
+        Integer fieldSpanInt;
+
+
+        if (StringUtils.isBlank(fieldSpan)){
+            fieldSpan = "12";
+            fieldSpanInt=12;
+        }
+        else{
+            fieldSpanInt = Integer.parseInt(fieldSpan);
+        }
+
+
+
 
         String fieldValue = (null != fieldValueExpr) ? String.format(fieldValueExpr, fieldName) : "";
         //fieldValue is the Velocity String
@@ -306,14 +322,38 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
             readOnly = Boolean.parseBoolean(field.getProperty("readOnly").getValue());
         }
 
+        boolean openRow=false;
+        boolean closeRow=false;
+
+
+        if (fieldSpanInt==12) {
+            openRow = true;
+            closeRow = true;
+        }
+        else {
+            if (null != field.getProperty("openRow")) {
+                openRow = Boolean.parseBoolean(field.getProperty("openRow").getValue());
+            }
+
+            if (null != field.getProperty("closeRow")) {
+                closeRow = Boolean.parseBoolean(field.getProperty("closeRow").getValue());
+            }
+        }
         String placeHolder = field.getProperty("placeHolder").getValue();
+
         inputField.setId(field.getId());
         inputField.setName(fieldName);
         inputField.setValue(fieldValue);
         inputField.setRequired(required);
         inputField.setTypePAM(fieldTypePAM);
         inputField.setTypeHTML(fieldTypeHMTL);
+        inputField.setSpan(fieldSpan);
         inputField.setReadOnly(readOnly);
+
+
+        inputField.setOpenRow(openRow);
+        inputField.setCloseRow(closeRow);
+
 
         if (inputField instanceof DatePickerField) {
             logger.debug("inputField instanceof DatePickerField, adding custom properties");
@@ -409,10 +449,9 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
                 JSONObject columnLabel = new JSONObject();
                 String key = keys.next();
                 Object value = props.get(key);
-                logger.info("*************** value {}",value);
+                logger.debug(" multipleSubFormField columnsMeta value {}",value);
                 columnLabel.put("title", value);
                 columnsLabels.put(columnLabel);
-                logger.info("*************** columnsLabels {}",columnsLabels);
             }
 
             multipleSubFormField.setColumns(columnsLabels.toString());

@@ -27,10 +27,14 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.List;
 
 @XmlRootElement(name = "layoutComponents")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class PamLayoutComponent {
+
+    @XmlElement(name = "dragTypeName")
+    public String dragTypeName;
 
     @XmlElement(name = "properties")
     public PamLayoutComponentProperty properties;
@@ -42,4 +46,14 @@ public class PamLayoutComponent {
     public void setProperties(PamLayoutComponentProperty properties) {
         this.properties = properties;
     }
+
+
+    public String getDragTypeName() {
+        return dragTypeName;
+    }
+
+    public void setDragTypeName(String dragTypeName) {
+        this.dragTypeName = dragTypeName;
+    }
+
 }

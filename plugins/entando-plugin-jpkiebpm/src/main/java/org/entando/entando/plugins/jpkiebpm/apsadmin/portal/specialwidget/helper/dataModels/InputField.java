@@ -35,9 +35,12 @@ public class InputField {
     private String binding;
     private String standaloneClassName;
     private String serializedFieldClassName;
+    private String span;
     private boolean required;
     private boolean readOnly;
     private boolean validateOnChange;
+    private boolean openRow;
+    private boolean closeRow;
 
     public String getId() {
         return id;
@@ -145,5 +148,29 @@ public class InputField {
 
     public void setValidateOnChange(boolean validateOnChange) {
         this.validateOnChange = validateOnChange;
+    }
+
+    public String getSpan() {
+        return span;
+    }
+
+    public void setSpan(String span) {
+        this.span = span;
+    }
+
+    public boolean isOpenRow() {
+        return openRow;
+    }
+
+    public void setOpenRow(boolean openRow) {
+        this.openRow = openRow;
+    }
+
+    public boolean isCloseRow() {
+        return closeRow;
+    }
+
+    public void setCloseRow(boolean closeRow) {
+        this.closeRow = closeRow;
     }
 }

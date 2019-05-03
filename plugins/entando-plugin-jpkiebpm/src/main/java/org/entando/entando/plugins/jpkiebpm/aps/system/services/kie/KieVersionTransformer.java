@@ -83,7 +83,6 @@ public class KieVersionTransformer {
         for (PamArray array : pamProcessQueryFormResult.getArrays()) {
             if (array.getModel().getProcessId() != null) {
                 queryResult = pamSevenFormToPamSix(array, formModelTypes);
-
                 //This call processes the child forms of the parent in order based on the form id references. The output
                 //here is an ordered list of the child forms in the order they should appear when rendered
                 buildFormOrder(array, fieldIdOrder, fieldToForms);
@@ -100,22 +99,25 @@ public class KieVersionTransformer {
         //Process the forms in the order identified in the buildFormOrder call and add to the result in that order
         int count = 0;
         String parentDataHolderOutId = queryResult.getHolders().get(0).getOutId();
-        for (String fieldId : fieldIdOrder) {
 
+        if (queryResult != null) {
+            count++;
+        }
+
+        for (String fieldId : fieldIdOrder) {
             PamArray pamArray = fieldToForms.get(fieldId);
 
             if (pamArray != null) {
-
                 if (count == 0) {
                     queryResult = pamSevenFormToPamSix(pamArray, formModelTypes);
                     queryResult.getHolders().get(0).setOutId(parentDataHolderOutId);
                 }
-
                 if (count > 0) {
                     if (queryResult.getNestedForms() == null) {
                         queryResult.setNestedForms(new ArrayList<>());
                     }
                     queryResult.getNestedForms().add(pamSevenFormToPamSix(pamArray, formModelTypes));
+
                 }
 
                 count++;
@@ -273,16 +275,10 @@ public class KieVersionTransformer {
             }
 
             if (code.equals("MultipleSubForm")) {
-                logger.info("*************************************************************");
-                logger.info("MultipleSubForm");
                 List<PamColumnMetas> columnsMetaList = field.getColumnMetas();
-
                 for (PamColumnMetas column : columnsMetaList) {
-                    logger.info("property {} label {} ", column.getProperty(), column.getLabel());
                     columnsMeta.put(column.getProperty(), column.getLabel());
                 }
-                logger.info("*************************************************************");
-
             }
 
 
@@ -304,30 +300,70 @@ public class KieVersionTransformer {
         List<PamLayoutTemplateRow> rows = pamSeven.getLayoutTemplate().getRows();
 
         for (PamLayoutTemplateRow row : rows) {
-
-            //TODO Support columns in form gen from PAM fields
-            //The PAM 7 form supports the creation of forms in rows and columns. The current data model
-            //layout doesn't suppor the creation of separate columns for fields on the same row. So move everything to
-            //a row in the result for now.
+            //The PAM 7 form supports the creation of forms in rows and columns.
             List<PamLayoutColumn> columns = row.getLayoutColums();
+            int columnCount = 0;
+            int columnSize = columns.size();
             for (PamLayoutColumn column : columns) {
 
                 List<PamLayoutComponent> components = column.getLayoutComponents();
                 if (components != null) {
-                    for (PamLayoutComponent component : components) {
-                        String fieldId = component.getProperties().getFieldId();
-
-                        //If the value is a form it won't be in the map. Those get ordered elsewhere. This just orders fields
-                        if (fieldMap.containsKey(fieldId)) {
-                            fieldMap.get(fieldId).setPosition(count);
-                            result.getFields().add(fieldMap.get(fieldId));
-                            count++;
+                    count = getCount(result, fieldMap, count, components, column, columnCount, columnSize);
+                } else {
+                    List<PamLayoutTemplateRow> rows1 = column.getRows();
+                    for (PamLayoutTemplateRow row1 : rows1) {
+                        int columnCount1 = 0;
+                        List<PamLayoutColumn> columns1 = row1.getLayoutColums();
+                        int columnSize1 = columns1.size();
+                        for (PamLayoutColumn column1 : columns1) {
+                            components = column1.getLayoutComponents();
+                            if (components != null) {
+                                count = getCount(result, fieldMap, count, components, column1, columnCount1, columnSize1);
+                            }
+                            columnCount1++;
                         }
                     }
                 }
+            columnCount++;
             }
         }
+
+        fieldMap.forEach((k, v) -> logger.debug("fieldMap Key : {} , Value : {}", k, v));
+        result.getFields().forEach(field -> logger.debug("result : {}  {} ", field.getId(), field.getName()));
+
         return result;
+    }
+
+    private static int getCount(KieProcessFormQueryResult result,
+                                Map<String, KieProcessFormField> fieldMap,
+                                int count,
+                                List<PamLayoutComponent> components,
+                                PamLayoutColumn column1,
+                                int columnCount,
+                                int columnSize) {
+        for (PamLayoutComponent component : components) {
+            String fieldId = component.getProperties().getFieldId();
+            logger.debug("Check if fieldMap.containsKey() {}", fieldId);
+            //If the value is a form it won't be in the map. Those get ordered elsewhere. This just orders fields
+            if (fieldMap.containsKey(fieldId)) {
+                logger.debug("fieldMap containsKey {}", fieldId);
+                fieldMap.get(fieldId).setPosition(count);
+                fieldMap.get(fieldId).addProperty("span", column1.span);
+
+                if (columnCount==0) {
+                    fieldMap.get(fieldId).addProperty("openRow", true);
+                }
+                if (columnCount==columnSize-1) {
+                    fieldMap.get(fieldId).addProperty("closeRow", true);
+                }
+
+                result.getFields().add(fieldMap.get(fieldId));
+                count++;
+            } else {
+                logger.debug("fieldMap NOT containsKey {}", fieldId);
+            }
+        }
+        return count;
     }
 
     public static void pamSixFormToPamSeven() {

@@ -48,6 +48,7 @@ import com.agiletec.apsadmin.system.entity.AbstractApsEntityAction;
 import java.io.StringWriter;
 import java.math.BigDecimal;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.entando.entando.aps.system.services.dataobject.IDataObjectManager;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
@@ -565,6 +566,10 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
         dataModel.setDataType(typeCode);
         dataModel.setDescription("Model for " + containerId + " and " + taskId);
 
+
+        logger.debug("set dataObject on session",dataObject.toString());
+
+
         this.setDataObjectOnSession(dataObject);
 
         String urlParameters = "&configId=" + configId + "&containerId=" + containerId + "&taskId=" + taskId;
@@ -717,10 +722,14 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
 
     private void processField(KieProcessFormField field, String langCode) throws ApsSystemException {
         String bpmLabel = KieApiUtil.getFieldProperty(field, "label");
+        String fieldName = KieApiUtil.getI18nLabelProperty(field);
         if (org.apache.commons.lang.StringUtils.isNotBlank(bpmLabel)) {
-            String fieldName = KieApiUtil.getI18nLabelProperty(field);
             if (null == this.getI18nManager().getLabel(fieldName, langCode)) {
                 this.saveEntandoLabel(fieldName, bpmLabel);
+            }
+        } else {
+            if (null == this.getI18nManager().getLabel(fieldName, langCode)) {
+                this.saveEntandoLabel(fieldName, StringUtils.capitalize(field.getName().replace("_"," ")));
             }
         }
     }

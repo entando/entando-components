@@ -37,11 +37,44 @@ public class PamLayoutColumn {
     @XmlElement(name = "layoutComponents")
     public List<PamLayoutComponent> layoutComponents;
 
+    @XmlElement(name = "rows")
+    public List<PamLayoutTemplateRow> rows;
+
+    @XmlElement(name = "span")
+    public int span;
+
+    @XmlElement(name = "height")
+    public int height;
+
     public List<PamLayoutComponent> getLayoutComponents() {
         return layoutComponents;
     }
 
     public void setLayoutComponents(List<PamLayoutComponent> layoutComponents) {
         this.layoutComponents = layoutComponents;
+    }
+
+    public List<PamLayoutTemplateRow> getRows() {
+        return rows;
+    }
+
+    public void setRows(List<PamLayoutTemplateRow> rows) {
+        this.rows = rows;
+    }
+
+    public int getSpan() {
+        return span;
+    }
+
+    public void setSpan(int span) {
+        this.span = span;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
     }
 }

@@ -1,5 +1,5 @@
-<div class="row">
-<div class="col-md-12">
+<#include "/RowOpen.ftl">
+<div class="col-md-${field.span} col-sm-12">
 
     <div class="ui-dform-div form-group">
         <input type="${field.typeHTML}" id="${field.id}" name="$data.${field.name}.type:${field.name}" labelkey="JPKIE_${field.name}" class="ui-widget " aria-required="true" value="true" <#include "/FieldDisabled.ftl" >>
@@ -21,4 +21,4 @@
         });
     </script>
 </div>
-</div>
+<#include "/RowClose.ftl">
