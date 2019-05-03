@@ -729,6 +729,11 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
             }
         } else {
             if (null == this.getI18nManager().getLabel(fieldName, langCode)) {
+                fieldName = StringUtils.capitalize(field.getName().replace("_"," "));
+
+                int index =fieldName.lastIndexOf(" ");
+                fieldName = fieldName.substring(index);
+
                 this.saveEntandoLabel(fieldName, StringUtils.capitalize(field.getName().replace("_"," ")));
             }
         }
