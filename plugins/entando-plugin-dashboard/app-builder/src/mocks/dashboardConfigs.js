@@ -105,7 +105,7 @@ export const DATASOURCE_PARKING_DATA = {
       {sourceName: "batteryLevel", destinationName: "batteryLevel"},
       {sourceName: "deviceCode", destinationName: "deviceCode"},
       {sourceName: "deviceBrand", destinationName: "deviceBrand"},
-      {sourceName: "expirationGuarantee", destinationName: "expirationG."},
+      {sourceName: "expirationGuarantee", destinationName: "expiration"},
       {sourceName: "coordinates", destinationName: "coordinates"},
       {sourceName: "information", destinationName: "information"}
     ]
