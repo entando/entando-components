@@ -50,6 +50,7 @@
 
         <action name="view" class="jpkieBpmDataTypeTaskFormFrontAction" method="createNew">
             <result type="dispatcher">/WEB-INF/plugins/jpkiebpm/aps/jsp/internalservlet/form/form_type_view.jsp</result>
+
             <interceptor-ref name="entandoFrontEndFreeStack" >
                 <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
             </interceptor-ref>
@@ -57,11 +58,13 @@
 
         <action name="save" class="jpkieBpmDataTypeTaskFormFrontAction" method="save">
             <result type="dispatcher">/WEB-INF/plugins/jpkiebpm/aps/jsp/internalservlet/form/form_type_view.jsp</result>
+            <result name="input" type="chain">
+                <param name="actionName">view</param>
+            </result>
             <interceptor-ref name="entandoFrontEndFreeStack" >
                 <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
             </interceptor-ref>
         </action>
-
 
     </package>
     
