@@ -132,21 +132,36 @@ public class IoTUtils {
 		Gson gson = new Gson();
 		return gson.fromJson(gson.toJson(payload), HashMap.class);
 	}
-	
-	public static ResponseEntity<String> getRequestMethod(String url, HttpHeaders headers) {
-		HttpEntity httpEntity = new HttpEntity(headers);
 
-		RestTemplate restTemplate = new RestTemplate();
-		try {
-		return restTemplate.exchange(url, HttpMethod.GET, httpEntity, String.class); 
-		}
-		catch (ResourceAccessException | IllegalArgumentException e){
-		  return new ResponseEntity(e, HttpStatus.REQUEST_TIMEOUT);
+  public static ResponseEntity<String> getRequestMethod(String url, HttpHeaders headers) {
+    HttpEntity httpEntity = new HttpEntity(headers);
+
+    RestTemplate restTemplate = new RestTemplate();
+    try {
+      return restTemplate.exchange(url, HttpMethod.GET, httpEntity, String.class);
+    }
+    catch (ResourceAccessException | IllegalArgumentException e){
+      return new ResponseEntity(e, HttpStatus.REQUEST_TIMEOUT);
     }
 //    catch (MalformedURLException e) {
 //		  throw new MalformedURLException(e.getMessage());
 //    }
-	}
+  }
+
+  public static ResponseEntity<String> postRequestMethod(String url, HttpHeaders headers, JsonObject body) {
+    HttpEntity<?> httpEntity = new HttpEntity<Object>(IoTUtils.getMapFromJson(body), headers);
+    
+    RestTemplate restTemplate = new RestTemplate();
+    try {
+      return restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
+    }
+    catch (ResourceAccessException | IllegalArgumentException e){
+      return new ResponseEntity(e, HttpStatus.REQUEST_TIMEOUT);
+    }
+//    catch (MalformedURLException e) {
+//		  throw new MalformedURLException(e.getMessage());
+//    }
+  }
 
 	public static boolean isValidResponse(ResponseEntity<String> response) {
 		if(response.getStatusCode().is2xxSuccessful()) {

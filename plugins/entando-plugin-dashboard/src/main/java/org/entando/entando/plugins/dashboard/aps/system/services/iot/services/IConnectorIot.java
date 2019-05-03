@@ -8,6 +8,7 @@ import java.util.Map;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.ServerType;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.dto.DeviceLocations;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.exception.ApiResourceNotAvailableException;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
@@ -49,4 +50,6 @@ public interface IConnectorIot {
       throws ApsSystemException;
 
   DashboardConfigDto refreshMetadata(DashboardConfigDto dto, String datasourceCode) throws ApsSystemException;
+
+  DeviceLocations getDeviceLocations(DashboardConfigDto dto, String datasourceCode);
 }

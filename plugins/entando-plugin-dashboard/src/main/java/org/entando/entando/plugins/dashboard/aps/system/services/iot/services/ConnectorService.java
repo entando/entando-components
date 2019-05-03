@@ -12,6 +12,7 @@ import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.ServerType;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.dto.DeviceLocations;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.factory.ConnectorFactory;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
@@ -163,5 +164,9 @@ public class ConnectorService extends AbstractConnectorService implements IConne
   public DashboardConfigDto refreshMetadata(DashboardConfigDto dto,
       String datasourceCode) throws ApsSystemException {
     return connectorFactory.getConnector(dto.getType()).refreshMetadata(dto,datasourceCode);
+  }
+
+  public DeviceLocations getDeviceLocations(DashboardConfigDto dto, String datasourceCode) {
+      return connectorFactory.getConnector(dto.getType()).getDeviceLocations(dto,datasourceCode);
   }
 }
