@@ -1,13 +1,13 @@
-import {connect} from "react-redux";
+import { connect } from 'react-redux';
 
-import DashboardConfigDatasourceStatus from "ui/dashboard-config/common/components/DashboardConfigDatasourceStatus";
+import DashboardConfigDatasourceStatus from 'ui/dashboard-config/common/components/DashboardConfigDatasourceStatus';
 
 const mapDispatchToProps = () => ({
-  testConnection: () => {}
+  testConnection: () => {},
 });
 
 const DashboardConfigDatasourceStatusContainer = connect(
   null,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(DashboardConfigDatasourceStatus);
 export default DashboardConfigDatasourceStatusContainer;

@@ -1,23 +1,24 @@
-import {connect} from "react-redux";
-import {formValueSelector} from "redux-form";
+import { connect } from 'react-redux';
+import { formValueSelector } from 'redux-form';
 
-import SettingsChartGauge from "../components/SettingsChartGauge";
+import { getDatasourceColumns } from 'state/main/selectors';
 
-import {getDatasourceColumns} from "state/main/selectors";
+import SettingsChartGauge from '../components/SettingsChartGauge';
+
 
 export const mapStateToProps = (state, ownProps) => {
   const selector = formValueSelector(ownProps.formName);
   return {
-    datasourceSelected: selector(state, "datasource"),
+    datasourceSelected: selector(state, 'datasource'),
     optionColumns: getDatasourceColumns(state),
-    optionColumnXSelected: selector(state, "columns.x") || [],
-    optionColumnYSelected: selector(state, "columns.y") || []
+    optionColumnXSelected: selector(state, 'columns.x') || [],
+    optionColumnYSelected: selector(state, 'columns.y') || [],
   };
 };
 
 const SettingsChartGaugeContainer = connect(
   mapStateToProps,
-  null
+  null,
 )(SettingsChartGauge);
 
 export default SettingsChartGaugeContainer;

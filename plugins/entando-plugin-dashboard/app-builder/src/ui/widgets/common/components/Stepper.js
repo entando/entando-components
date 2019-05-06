@@ -1,41 +1,41 @@
-import React, {Component} from "react";
-import PropTypes from "prop-types";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
-import {Button, Icon, Wizard} from "patternfly-react";
+import { Button, Icon, Wizard } from 'patternfly-react';
 
-import Steps from "ui/widgets/common/components/Steps";
+import Steps from 'ui/widgets/common/components/Steps';
 
 class Stepper extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeSubStepIndex: 0
+      activeSubStepIndex: 0,
     };
     this.onNextButtonClick = this.onNextButtonClick.bind(this);
     this.onBackButtonClick = this.onBackButtonClick.bind(this);
   }
 
   onBackButtonClick() {
-    const {activeSubStepIndex} = this.state;
+    const { activeSubStepIndex } = this.state;
 
     if (activeSubStepIndex > 0) {
       this.setState(prevState => ({
-        activeSubStepIndex: prevState.activeSubStepIndex - 1
+        activeSubStepIndex: prevState.activeSubStepIndex - 1,
       }));
     }
   }
   onNextButtonClick() {
-    const {activeSubStepIndex} = this.state;
+    const { activeSubStepIndex } = this.state;
     if (activeSubStepIndex < 3) {
       this.setState(prevState => ({
-        activeSubStepIndex: prevState.activeSubStepIndex + 1
+        activeSubStepIndex: prevState.activeSubStepIndex + 1,
       }));
     }
   }
 
   renderButtons() {
-    const {activeSubStepIndex} = this.state;
-    const {validateSteps} = this.props;
+    const { activeSubStepIndex } = this.state;
+    const { validateSteps } = this.props;
     const disabledButtonNext = !validateSteps[activeSubStepIndex];
     return (
       <div className="Stepper__btn-container">
@@ -81,8 +81,10 @@ class Stepper extends Component {
   }
 
   render() {
-    const {activeSubStepIndex} = this.state;
-    const {handleSubmit, step1, step2, step3} = this.props;
+    const { activeSubStepIndex } = this.state;
+    const {
+      handleSubmit, step1, step2, step3,
+    } = this.props;
     return (
       <Wizard className="Stepper">
         <Wizard.Body>
@@ -138,13 +140,13 @@ Stepper.propTypes = {
   step1: PropTypes.node,
   step2: PropTypes.node,
   step3: PropTypes.node,
-  validateSteps: PropTypes.arrayOf(PropTypes.bool).isRequired
+  validateSteps: PropTypes.arrayOf(PropTypes.bool).isRequired,
 };
 
 Stepper.defaultProps = {
   handleSubmit: () => {},
   step1: null,
   step2: null,
-  step3: null
+  step3: null,
 };
 export default Stepper;

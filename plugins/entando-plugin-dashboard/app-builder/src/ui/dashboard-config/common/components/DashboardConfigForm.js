@@ -1,21 +1,22 @@
-import React, {Component} from "react";
-import {Field, FieldArray, reduxForm} from "redux-form";
-import PropTypes from "prop-types";
-import {FormGroup, Row, Col, Button} from "patternfly-react";
-import FormSectionTitle from "ui/common/form/FormSectionTitle";
+import React, { Component } from 'react';
+import { Field, FieldArray, reduxForm } from 'redux-form';
+import PropTypes from 'prop-types';
+import { FormGroup, Row, Col, Button } from 'patternfly-react';
+import FormSectionTitle from 'ui/common/form/FormSectionTitle';
 import {
   formattedText,
   required,
   minLength,
   maxLength,
-  isNumber
-} from "@entando/utils";
-import FormattedMessageLocal from "ui/i18n/FormattedMessage";
-import SwitchRenderer from "ui/common/form/SwitchRenderer";
-import RenderTextInput from "ui/common/form/RenderTextInput";
-import RenderSelectInput from "ui/common/form/RenderSelectInput";
-import FormLabel from "ui/common/form/FormLabel";
-import DashboardConfigDatasource from "ui/dashboard-config/common/components/DashboardConfigDatasource";
+  isNumber,
+} from '@entando/utils';
+import FormattedMessageLocal from 'ui/i18n/FormattedMessage';
+import SwitchRenderer from 'ui/common/form/SwitchRenderer';
+import RenderTextInput from 'ui/common/form/RenderTextInput';
+import RenderSelectInput from 'ui/common/form/RenderSelectInput';
+import FormLabel from 'ui/common/form/FormLabel';
+import DashboardConfigDatasource from 'ui/dashboard-config/common/components/DashboardConfigDatasource';
+
 const maxLength30 = maxLength(30);
 const minLength3 = minLength(3);
 const renderField = (
@@ -24,13 +25,13 @@ const renderField = (
   placeholder,
   validate,
   labelSize,
-  append
+  append,
 ) => {
-  let required = false;
+  let requiredLabel = false;
   if (validate) {
-    required = validate.includes("required");
+    requiredLabel = validate.includes('required');
   }
-  let pholder = "";
+  let pholder = '';
   if (placeholder) {
     pholder = placeholder;
   } else {
@@ -40,7 +41,7 @@ const renderField = (
     <Field
       component={RenderTextInput}
       name={name}
-      label={<FormLabel labelId={labelId} required={required} />}
+      label={<FormLabel labelId={labelId} required={requiredLabel} />}
       placeholder={formattedText(pholder)}
       validate={validate}
       labelSize={labelSize}
@@ -62,16 +63,15 @@ export class DashboardConfigFormBody extends Component {
       serverTypeList,
       datasources,
       datasourceValue,
-      testConnection,
       gotoHomePage,
-      datasourceCode
+      datasourceCode,
     } = this.props;
 
     const disableSubmit = invalid || submitting || datasources.length === 0;
 
     const optionServerTypeList = serverTypeList.map(m => ({
       value: m.code,
-      text: m.description
+      text: m.description,
     }));
 
     return (
@@ -89,12 +89,8 @@ export class DashboardConfigFormBody extends Component {
               <Col xs={1}>
                 <Field component={SwitchRenderer} name="active" />
               </Col>
-              <label htmlFor="debug" className="col-xs-1 control-label">
-                <FormattedMessageLocal id="common.debug" />
-              </label>
-              <Col xs={1}>
-                <Field component={SwitchRenderer} name="debug" disabled />
-              </Col>
+
+
             </FormGroup>
             <div className="DashboardConfig__server-configure">
               <FormattedMessageLocal id="plugin.config.serverConfigure" />
@@ -117,21 +113,21 @@ export class DashboardConfigFormBody extends Component {
               <Row>
                 <Col xs={6}>
                   {renderField(
-                    "serverDescription",
-                    "plugin.config.serverDescription",
+                    'serverDescription',
+                    'plugin.config.serverDescription',
                     null,
                     [required, minLength3, maxLength30],
                     2,
-                    formattedText("plugin.table.requirement")
+                    formattedText('plugin.table.requirement'),
                   )}
                 </Col>
                 <Col xs={6}>
                   {renderField(
-                    "serverURI",
-                    "plugin.config.serverURI",
+                    'serverURI',
+                    'plugin.config.serverURI',
                     null,
                     [required],
-                    2
+                    2,
                   )}
                 </Col>
               </Row>
@@ -139,53 +135,40 @@ export class DashboardConfigFormBody extends Component {
               <Row>
                 <Col xs={6}>
                   {renderField(
-                    "username",
-                    "plugin.config.username",
+                    'username',
+                    'plugin.config.username',
                     null,
                     [required],
-                    2
+                    2,
                   )}
                 </Col>
                 <Col xs={6}>
                   {renderField(
-                    "password",
-                    "plugin.config.password",
+                    'password',
+                    'plugin.config.password',
                     null,
                     [required],
-                    2
+                    2,
                   )}
                 </Col>
               </Row>
 
               <Row>
                 <Col xs={12}>
-                  {renderField("token", "plugin.config.token", null, null, 1)}
+                  {renderField('token', 'plugin.config.token', null, null, 1)}
                 </Col>
               </Row>
 
               <Row>
                 <Col xs={6}>
                   {renderField(
-                    "timeConnection",
-                    "plugin.config.connectionTimeOut",
+                    'timeConnection',
+                    'plugin.config.connectionTimeOut',
                     null,
                     [isNumber],
                     2,
-                    formattedText("plugin.config.connectionTimeOutAppend")
+                    formattedText('plugin.config.connectionTimeOutAppend'),
                   )}
-                </Col>
-                <Col xs={6}>
-                  <div className="btn-toolbar pull-right">
-                    <Button
-                      className="DashboardConfig__test-btn"
-                      type="button"
-                      bsStyle="default"
-                      disabled={testConnection ? false : true}
-                      onClick={testConnection}
-                    >
-                      <FormattedMessageLocal id="plugin.config.testConnection" />
-                    </Button>
-                  </div>
                 </Col>
               </Row>
             </fieldset>
@@ -197,34 +180,34 @@ export class DashboardConfigFormBody extends Component {
             <Row>
               <Col xs={6}>
                 {renderField(
-                  "datasourceCode",
-                  "plugin.config.datasourceCode",
+                  'datasourceCode',
+                  'plugin.config.datasourceCode',
                   null,
                   null,
                   2,
-                  null
+                  null,
                 )}
               </Col>
             </Row>
             <Row>
               <Col xs={6}>
                 {renderField(
-                  "datasource",
-                  "plugin.config.datasource",
+                  'datasource',
+                  'plugin.config.datasource',
                   null,
                   [minLength3, maxLength30],
                   2,
-                  formattedText("plugin.table.requirement")
+                  formattedText('plugin.table.requirement'),
                 )}
               </Col>
               <Col xs={6}>
                 {renderField(
-                  "datasourceURI",
-                  "plugin.config.datasourceURI",
+                  'datasourceURI',
+                  'plugin.config.datasourceURI',
                   null,
                   null,
                   2,
-                  formattedText("plugin.config.datasourceURIExample")
+                  formattedText('plugin.config.datasourceURIExample'),
                 )}
               </Col>
             </Row>
@@ -263,28 +246,28 @@ export class DashboardConfigFormBody extends Component {
 }
 const DATASOURCE_TYPE = {
   datasource: PropTypes.string,
-  datasourceURI: PropTypes.string
+  datasourceURI: PropTypes.string,
 };
 DashboardConfigFormBody.propTypes = {
   onWillMount: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   gotoHomePage: PropTypes.func.isRequired,
-  testConnection: PropTypes.func,
   serverTypeList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   datasources: PropTypes.arrayOf(PropTypes.shape(DATASOURCE_TYPE)),
   datasourceValue: PropTypes.shape(DATASOURCE_TYPE),
+  datasourceCode: PropTypes.string,
   invalid: PropTypes.bool.isRequired,
-  submitting: PropTypes.bool.isRequired
+  submitting: PropTypes.bool.isRequired,
 };
 DashboardConfigFormBody.defaultProps = {
   datasourceValue: {
     datasource: undefined,
-    datasourceURI: undefined
+    datasourceURI: undefined,
   },
   datasources: [],
-  testConnection: null
+  datasourceCode: '',
 };
 const DashboardConfigForm = reduxForm({
-  form: "dashboard-config-form"
+  form: 'dashboard-config-form',
 })(DashboardConfigFormBody);
 export default DashboardConfigForm;

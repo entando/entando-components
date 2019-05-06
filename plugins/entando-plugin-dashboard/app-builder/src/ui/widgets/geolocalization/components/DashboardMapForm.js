@@ -1,12 +1,12 @@
-import React, {Component} from "react";
-import PropTypes from "prop-types";
-import {reduxForm} from "redux-form";
-import Stepper from "ui/widgets/common/components/Stepper";
-import MapFirstStepContent from "ui/widgets/geolocalization/components/MapFirstStepContent";
-import MapSecondStepContentContainer from "ui/widgets/geolocalization/containers/MapSecondStepContentContainer";
-import MapThirdStepContent from "ui/widgets/geolocalization/components/MapThirdStepContent";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { reduxForm } from 'redux-form';
+import Stepper from 'ui/widgets/common/components/Stepper';
+import MapFirstStepContent from 'ui/widgets/geolocalization/components/MapFirstStepContent';
+import MapSecondStepContentContainer from 'ui/widgets/geolocalization/containers/MapSecondStepContentContainer';
+import MapThirdStepContent from 'ui/widgets/geolocalization/components/MapThirdStepContent';
 
-const FORM_NAME = "form-dashboard-map";
+const FORM_NAME = 'form-dashboard-map';
 
 class DashboardMapFormBody extends Component {
   componentWillMount() {
@@ -16,7 +16,7 @@ class DashboardMapFormBody extends Component {
   }
 
   render() {
-    const {formSyncErrors, datasources} = this.props;
+    const { formSyncErrors, datasources } = this.props;
     const validateSteps = [false, false, false];
     if (!formSyncErrors.title && !formSyncErrors.serverName) {
       validateSteps[0] = true;
@@ -40,16 +40,16 @@ DashboardMapFormBody.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   onWillMount: PropTypes.func.isRequired,
   formSyncErrors: PropTypes.shape({}),
-  datasources: PropTypes.arrayOf(PropTypes.shape({}))
+  datasources: PropTypes.arrayOf(PropTypes.shape({})),
 };
 
 DashboardMapFormBody.defaultProps = {
   formSyncErrors: {},
-  datasources: []
+  datasources: [],
 };
 
 const DashboardMapForm = reduxForm({
-  form: FORM_NAME
+  form: FORM_NAME,
 })(DashboardMapFormBody);
 
 export default DashboardMapForm;

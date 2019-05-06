@@ -1,21 +1,21 @@
-import React from "react";
-import PropTypes from "prop-types";
-import FormattedMessage from "ui/i18n/FormattedMessage";
+import React from 'react';
+import PropTypes from 'prop-types';
+import FormattedMessage from 'ui/i18n/FormattedMessage';
 import {
   Col,
   Card,
   CardTitle,
   CardBody,
   DropdownKebab,
-  MenuItem
-} from "patternfly-react";
+  MenuItem,
+} from 'patternfly-react';
 
 const ServerConfigCard = ({
   configItem,
   onClickRemove,
   onClickTest,
   onClickEdit,
-  testConnectionOutcome
+  testConnectionOutcome,
 }) => {
   let testConnectionDiv = null;
   if (testConnectionOutcome) {
@@ -27,7 +27,7 @@ const ServerConfigCard = ({
           </strong>
         </div>
         <div className="card-pf-item">
-          {testConnectionOutcome.toUpperCase() === "SUCCESS" ? (
+          {testConnectionOutcome.status === 'online' ? (
             <span className="fa fa-check" />
           ) : (
             <span className="fa fa-times" />
@@ -44,7 +44,7 @@ const ServerConfigCard = ({
             <MenuItem
               className="ServerConfigCard__menu-item-test"
               onClick={onClickTest}
-              disabled
+
             >
               <FormattedMessage id="common.test" />
             </MenuItem>
@@ -88,6 +88,7 @@ const ServerConfigCard = ({
               )}
             </div>
           </div>
+
           <p className="card-pf-info">
             <strong>
               <FormattedMessage id="plugin.config.id" />
@@ -96,20 +97,9 @@ const ServerConfigCard = ({
           </p>
           <p className="card-pf-info">
             <strong>
-              <FormattedMessage id="plugin.config.debug" />
-            </strong>
-            {configItem.debug ? (
-              <FormattedMessage id="plugin.config.enabled" />
-            ) : (
-              <FormattedMessage id="plugin.config.disabled" />
-            )}
-          </p>
-
-          <p className="card-pf-info">
-            <strong>
               <FormattedMessage id="plugin.config.serverURI" />
             </strong>
-            {configItem.serverURI}
+            <span>{configItem.serverURI}</span>
           </p>
         </CardBody>
         <hr />
@@ -120,14 +110,15 @@ const ServerConfigCard = ({
 
 ServerConfigCard.propTypes = {
   configItem: PropTypes.shape({}).isRequired,
-  testConnectionOutcome: PropTypes.string,
+  testConnectionOutcome: PropTypes.shape({}),
   onClickRemove: PropTypes.func.isRequired,
   onClickTest: PropTypes.func.isRequired,
-  onClickEdit: PropTypes.func.isRequired
+  onClickEdit: PropTypes.func.isRequired,
 };
 
 ServerConfigCard.defaultProps = {
-  testConnectionOutcome: ""
+  testConnectionOutcome: {},
 };
+
 
 export default ServerConfigCard;

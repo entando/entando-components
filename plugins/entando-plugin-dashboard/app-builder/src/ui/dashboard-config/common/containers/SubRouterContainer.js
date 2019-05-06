@@ -1,23 +1,23 @@
-import {connect} from "react-redux";
-import {isEmpty} from "lodash";
-import {getPluginPage, getInternalRoute} from "state/main/selectors";
+import { connect } from 'react-redux';
+import { isEmpty } from 'lodash';
+import { getPluginPage, getInternalRoute } from 'state/main/selectors';
 
-import SubRouter from "../components/SubRouter";
+import SubRouter from '../components/SubRouter';
 
-export const mapStateToProps = state => {
+export const mapStateToProps = (state) => {
   let pluginPage = getPluginPage(state);
   const internalRoute = getInternalRoute(state);
   if (isEmpty(pluginPage) && !isEmpty(internalRoute)) {
     pluginPage = internalRoute;
   }
   return {
-    pluginPage
+    pluginPage,
   };
 };
 
 const SubRouterContainer = connect(
   mapStateToProps,
-  null
+  null,
 )(SubRouter);
 
 export default SubRouterContainer;

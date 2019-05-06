@@ -1,17 +1,17 @@
-import React, {Component} from "react";
-import PropTypes from "prop-types";
-import {reduxForm} from "redux-form";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { reduxForm } from 'redux-form';
 
-import Stepper from "ui/widgets/common/components/Stepper";
-import ChartFirstStepContent from "ui/widgets/charts/common/components/ChartFirstStepContent";
-import ChartSecondStepContent from "ui/widgets/charts/common/components/ChartSecondStepContent";
-import ChartThirdStepContent from "ui/widgets/charts/common/components/ChartThirdStepContent";
+import Stepper from 'ui/widgets/common/components/Stepper';
+import ChartFirstStepContent from 'ui/widgets/charts/common/components/ChartFirstStepContent';
+import ChartSecondStepContent from 'ui/widgets/charts/common/components/ChartSecondStepContent';
+import ChartThirdStepContent from 'ui/widgets/charts/common/components/ChartThirdStepContent';
 
-const data = {columns: [["data1", 30], ["data2", 120]]};
+const data = { columns: [['data1', 30], ['data2', 120]] };
 
-const FORM_NAME = "form-dashboard-pie-chart";
-const TYPE_CHART = "PIE_CHART";
-const CHART_PREVIEW = "Pie Chart";
+const FORM_NAME = 'form-dashboard-pie-chart';
+const TYPE_CHART = 'PIE_CHART';
+const CHART_PREVIEW = 'Pie Chart';
 
 export class DashboardPieChartFormBody extends Component {
   componentWillMount() {
@@ -19,7 +19,7 @@ export class DashboardPieChartFormBody extends Component {
   }
 
   render() {
-    const {formSyncErrors, chart} = this.props;
+    const { formSyncErrors, chart } = this.props;
     const validateSteps = [false, false, false];
     if (
       !formSyncErrors.title &&
@@ -61,10 +61,17 @@ export class DashboardPieChartFormBody extends Component {
 DashboardPieChartFormBody.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   onWillMount: PropTypes.func.isRequired,
-  onCancel: PropTypes.func.isRequired
+  onCancel: PropTypes.func.isRequired,
+  chart: PropTypes.string.isRequired,
+  formSyncErrors: PropTypes.shape({}),
 };
+
+DashboardPieChartFormBody.defaultProps = {
+  formSyncErrors: {},
+};
+
 const DashboardPieChartForm = reduxForm({
-  form: FORM_NAME
+  form: FORM_NAME,
 })(DashboardPieChartFormBody);
 
 export default DashboardPieChartForm;

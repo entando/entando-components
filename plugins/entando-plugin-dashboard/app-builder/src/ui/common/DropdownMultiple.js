@@ -1,54 +1,55 @@
-import React, {Component} from "react";
-import PropTypes from "prop-types";
-import {uniqueId} from "lodash";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { uniqueId } from 'lodash';
 
 class DropdownMultiple extends Component {
+  static getDerivedStateFromProps(nextProps, state) {
+    const { list, title, titleHelper } = nextProps;
+    const count = list.filter(f => f.selected).length;
+    if (count === 0) {
+      return { headerTitle: title };
+    } else if (count === 1) {
+      return { headerTitle: `${count} ${titleHelper}` };
+    } else if (count > 1) {
+      return { headerTitle: `${count} ${titleHelper}s` };
+    }
+    return state;
+  }
+
   constructor(props) {
     super(props);
     this.state = {
       listOpen: false,
       headerTitle: props.title,
-      timeOut: null
+      // timeOut: null,
     };
-    this.close = this.close.bind(this);
+    // this.close = this.close.bind(this);
   }
 
   componentDidUpdate() {
-    const {listOpen} = this.state;
+    const { listOpen } = this.state;
     setTimeout(() => {
       if (listOpen) {
-        window.addEventListener("click", this.close);
+        window.addEventListener('click', this.close);
       } else {
-        window.removeEventListener("click", this.close);
+        window.removeEventListener('click', this.close);
       }
     }, 0);
   }
 
   componentWillUnmount() {
-    window.removeEventListener("click", this.close);
+    window.removeEventListener('click', this.close);
   }
 
-  close(timeOut) {
-    this.setState({
-      listOpen: false
-    });
-  }
-
-  static getDerivedStateFromProps(nextProps, state) {
-    const {list, title, titleHelper} = nextProps;
-    const count = list.filter(f => f.selected).length;
-    if (count === 0) {
-      return {headerTitle: title};
-    } else if (count === 1) {
-      return {headerTitle: `${count} ${titleHelper}`};
-    } else if (count > 1) {
-      return {headerTitle: `${count} ${titleHelper}s`};
-    }
-  }
+  // close(timeOut) {
+  //   this.setState({
+  //     listOpen: false,
+  //   });
+  // }
 
   toggleList() {
     this.setState(prevState => ({
-      listOpen: !prevState.listOpen
+      listOpen: !prevState.listOpen,
     }));
   }
 
@@ -59,15 +60,18 @@ class DropdownMultiple extends Component {
       searchItem,
       searchValue,
       list,
-      clearSearch
+      clearSearch,
     } = this.props;
-    const {listOpen, headerTitle} = this.state;
+    const { listOpen, headerTitle } = this.state;
     return (
-      <div className={`DropdownMultiple ${disabled ? "disabled" : ""}`}>
+      <div className={`DropdownMultiple ${disabled ? 'disabled' : ''}`}>
         <div
           className="dd-header "
           onClick={() => (!disabled ? this.toggleList() : null)}
+          onKeyPress={() => (!disabled ? this.toggleList() : null)}
           disabled={disabled}
+          role="button"
+          tabIndex={0}
         >
           <div className="dd-header-title">{headerTitle}</div>
           {listOpen ? (
@@ -77,7 +81,12 @@ class DropdownMultiple extends Component {
           )}
         </div>
         {listOpen && (
-          <ul className="dd-list" onClick={e => e.stopPropagation()}>
+          <ul
+            className="dd-list"
+            onClick={e => e.stopPropagation()}
+            onKeyPress={e => e.stopPropagation()}
+            role="menu"
+          >
             <li className="dd-list-search">
               <div className="input-group">
                 <input
@@ -99,18 +108,18 @@ class DropdownMultiple extends Component {
                 </span>
               </div>
             </li>
-            {list.map(item => {
-              return (
-                <li
-                  className={`dd-list-item ${item.selected ? "selected" : ""}`}
-                  key={`${item.value}_${uniqueId()}`}
-                  onClick={() => toggleItem(item.id, item.key)}
-                >
-                  {item.value}
-                  {item.selected && <i className="fa fa-check check" />}
-                </li>
-              );
-            })}
+            {list.map(item => (
+              <li
+                className={`dd-list-item ${item.selected ? 'selected' : ''}`}
+                key={`${item.value}_${uniqueId()}`}
+                onClick={() => toggleItem(item.id, item.key)}
+                onKeyPress={() => toggleItem(item.id, item.key)}
+                role="presentation"
+              >
+                {item.value}
+                {item.selected && <i className="fa fa-check check" />}
+              </li>
+              ))}
           </ul>
         )}
       </div>
@@ -122,27 +131,32 @@ const COLUMN_TYPE = {
   id: PropTypes.number,
   key: PropTypes.PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   value: PropTypes.string,
-  selected: PropTypes.bool
+  selected: PropTypes.bool,
 };
 
 DropdownMultiple.propTypes = {
-  titleHelper: PropTypes.string,
+  // titleHelper: PropTypes.string,
   title: PropTypes.string,
   list: PropTypes.arrayOf(PropTypes.shape(COLUMN_TYPE)),
   toggleItem: PropTypes.func,
   searchValue: PropTypes.string,
-  searchNotFound: PropTypes.string,
-  caseSensitiveSearch: PropTypes.bool
+  // searchNotFound: PropTypes.string,
+  // caseSensitiveSearch: PropTypes.bool,
+  disabled: PropTypes.bool,
+  searchItem: PropTypes.func.isRequired,
+  clearSearch: PropTypes.func.isRequired,
+
 };
 
 DropdownMultiple.defaultProps = {
-  titleHelper: "",
-  title: "",
+  disabled: false,
+  // titleHelper: '',
+  title: '',
   list: [],
   toggleItem: () => {},
-  searchValue: "",
-  searchNotFound: "Not Found",
-  caseSensitiveSearch: true
+  searchValue: '',
+  // searchNotFound: 'Not Found',
+  // caseSensitiveSearch: true,
 };
 
 export default DropdownMultiple;

@@ -1,31 +1,31 @@
-import React, {Component} from "react";
-import PropTypes from "prop-types";
-import {Field, FieldArray} from "redux-form";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Field, FieldArray } from 'redux-form';
 import {
   Row,
   Col,
   FormGroup,
   ControlLabel,
-  FieldLevelHelp
-} from "patternfly-react";
+  FieldLevelHelp,
+} from 'patternfly-react';
 
-import {formattedText, required, minLength, maxLength} from "@entando/utils";
-import FormattedMessage from "ui/i18n/FormattedMessage";
-import SwitchRenderer from "ui/common/form/SwitchRenderer";
+import { formattedText, required, minLength, maxLength } from '@entando/utils';
+import FormattedMessage from 'ui/i18n/FormattedMessage';
+import SwitchRenderer from 'ui/common/form/SwitchRenderer';
 
-import FieldArrayDropDownMultiple from "ui/common/FieldArrayDropDownMultiple";
+import FieldArrayDropDownMultiple from 'ui/common/FieldArrayDropDownMultiple';
 
 const maxLength30 = maxLength(30);
 const minLength3 = minLength(3);
 
 const inputTextField = ({
   input,
-  meta: {touched, error},
+  meta: { touched, error },
   label,
   append,
-  disabled
+  disabled,
 }) => (
-  <FormGroup validationState={touched && error ? "error" : null}>
+  <FormGroup validationState={touched && error ? 'error' : null}>
     <ControlLabel htmlFor={input.name}>
       <FormattedMessage id={label} />
     </ControlLabel>
@@ -58,64 +58,64 @@ const wrapInputTextField = (name, label, append, disabled = false) => {
   );
 };
 
-class SettingsChart extends Component {
-  chooseTimeFormat() {
-    return (
-      <div className="SettingsChart__timeformat-container">
-        <div className="radio">
-          <label>
-            <Field
-              name="axis.x.tick.format"
-              component="input"
-              type="radio"
-              value="%Y-%m-%d"
-            />
-            <FormattedMessage id="plugin.chart.timeFormat-Y-M-D" />
-          </label>
-        </div>
-        <div className="radio">
-          <label>
-            <Field
-              name="axis.x.tick.format"
-              component="input"
-              type="radio"
-              value="%d-%m-%Y"
-            />
-            <FormattedMessage id="plugin.chart.timeFormat-D-M-Y" />
-          </label>
-        </div>
-        <div className="radio">
-          <label>
-            <Field
-              name="axis.x.tick.format"
-              component="input"
-              type="radio"
-              value="%m-%d-%Y"
-            />
-            <FormattedMessage id="plugin.chart.timeFormat-M-D-Y" />
-          </label>
-        </div>
-        <div className="radio">
-          <FormGroup>
-            <ControlLabel>
-              <FormattedMessage id="plugin.chart.timeFormatCustom" />
-              &nbsp;
-              <Field name="axis.x.tick.format" component="input" type="text" />
-              <br />
-              <FormattedMessage id="plugin.chart.timeFormatCustom.help" />
-            </ControlLabel>
-          </FormGroup>
-        </div>
-      </div>
-    );
-  }
 
+const chooseTimeFormat = (
+  <div className="SettingsChart__timeformat-container">
+    <div className="radio">
+      <label htmlFor="tick">
+        <Field
+          name="axis.x.tick.format"
+          component="input"
+          type="radio"
+          value="%Y-%m-%d"
+        />
+        <FormattedMessage id="plugin.chart.timeFormat-Y-M-D" />
+      </label>
+    </div>
+    <div className="radio">
+      <label htmlFor="tick">
+        <Field
+          name="axis.x.tick.format"
+          component="input"
+          type="radio"
+          value="%d-%m-%Y"
+        />
+        <FormattedMessage id="plugin.chart.timeFormat-D-M-Y" />
+      </label>
+    </div>
+    <div className="radio">
+      <label htmlFor="tick">
+        <Field
+          name="axis.x.tick.format"
+          component="input"
+          type="radio"
+          value="%m-%d-%Y"
+        />
+        <FormattedMessage id="plugin.chart.timeFormat-M-D-Y" />
+      </label>
+    </div>
+    <div className="radio">
+      <FormGroup>
+        <ControlLabel>
+          <FormattedMessage id="plugin.chart.timeFormatCustom" />
+              &nbsp;
+          <Field name="axis.x.tick.format" component="input" type="text" />
+          <br />
+          <FormattedMessage id="plugin.chart.timeFormatCustom.help" />
+        </ControlLabel>
+      </FormGroup>
+    </div>
+  </div>
+);
+
+
+class SettingsChart extends Component {
   rederAxisX() {
     const {
       optionColumns,
       datasourceSelected,
       optionColumnXSelected,
-      axisXType
+      axisXType,
     } = this.props;
     return (
       <Col xs={4} className="SettingsChart__col">
@@ -125,9 +125,9 @@ class SettingsChart extends Component {
           </ControlLabel>
         </FormGroup>
         {wrapInputTextField(
-          "axis.x.label",
-          "plugin.chart.labelXaxis",
-          "plugin.table.requirement"
+          'axis.x.label',
+          'plugin.chart.labelXaxis',
+          'plugin.table.requirement',
         )}
         <FieldArray
           className="SettingsChart__column-selected"
@@ -144,7 +144,7 @@ class SettingsChart extends Component {
             <option value="timeseries">Timeseries</option>
           </Field>
         </FormGroup>
-        {axisXType === "timeseries" ? this.chooseTimeFormat() : null}
+        {axisXType === 'timeseries' ? chooseTimeFormat : null}
       </Col>
     );
   }
@@ -153,7 +153,7 @@ class SettingsChart extends Component {
     const {
       optionColumns,
       datasourceSelected,
-      optionColumnYSelected
+      optionColumnYSelected,
     } = this.props;
 
     return (
@@ -164,9 +164,9 @@ class SettingsChart extends Component {
           </ControlLabel>
         </FormGroup>
         {wrapInputTextField(
-          "axis.y.label",
-          "plugin.chart.labelYaxis",
-          "plugin.table.requirement"
+          'axis.y.label',
+          'plugin.chart.labelYaxis',
+          'plugin.table.requirement',
         )}
         <FieldArray
           className="SettingsChart__column-selected"
@@ -185,7 +185,7 @@ class SettingsChart extends Component {
     const {
       optionColumns,
       datasourceSelected,
-      optionColumnY2Selected
+      optionColumnY2Selected,
     } = this.props;
     return (
       <Col xs={4} className="SettingsChart__col">
@@ -204,10 +204,10 @@ class SettingsChart extends Component {
           </ControlLabel>
         </FormGroup>
         {wrapInputTextField(
-          "axis.y2.label",
-          "plugin.chart.labelY2axis",
-          "plugin.table.requirement",
-          !this.props.axisY2Show
+          'axis.y2.label',
+          'plugin.chart.labelY2axis',
+          'plugin.table.requirement',
+          !this.props.axisY2Show,
         )}
 
         <FieldArray
@@ -229,7 +229,7 @@ class SettingsChart extends Component {
           <Col xs={12}>
             <FormGroup className="SettingsChart__input-group">
               <div className="checkbox">
-                <label>
+                <label htmlFor="rotated">
                   <Field
                     component="input"
                     type="checkbox"
@@ -257,10 +257,31 @@ SettingsChart.propTypes = {
   optionColumns: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   axisY2Show: PropTypes.bool.isRequired,
   axisXType: PropTypes.string.isRequired,
-  selectedColumnsY: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  selectedColumnsY2: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  // selectedColumnsY: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  // selectedColumnsY2: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  optionColumnXSelected: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   optionColumnYSelected: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  optionColumnY2Selected: PropTypes.arrayOf(PropTypes.shape({})).isRequired
+  optionColumnY2Selected: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  datasourceSelected: PropTypes.string,
+};
+
+SettingsChart.defaultProps = {
+  datasourceSelected: '',
+};
+
+inputTextField.propTypes = {
+  input: PropTypes.shape({}).isRequired,
+  meta: PropTypes.shape({}).isRequired,
+  label: PropTypes.string,
+  append: PropTypes.string,
+  disabled: PropTypes.bool,
+
+};
+
+inputTextField.defaultProps = {
+  label: '',
+  append: '',
+  disabled: false,
 };
 
 export default SettingsChart;

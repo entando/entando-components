@@ -1,27 +1,27 @@
-import {connect} from "react-redux";
+import { connect } from 'react-redux';
 
-import {fetchDatasourceColumns} from "state/main/actions";
+import { fetchDatasourceColumns } from 'state/main/actions';
 
-import {getDatasourceList} from "state/main/selectors";
+import { getDatasourceList } from 'state/main/selectors';
 
-import DatasourceForm from "ui/widgets/common/form/components/DatasourceForm";
+import DatasourceForm from 'ui/widgets/common/form/components/DatasourceForm';
 
 const mapStateToProps = (state, ownProps) => ({
   datasources: getDatasourceList(state),
   nameFieldArray: ownProps.nameFieldArray,
   disabled: ownProps.disabled,
-  labelSize: ownProps.labelSize
+  labelSize: ownProps.labelSize,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  onChange: value => {
-    dispatch(fetchDatasourceColumns(ownProps.formName, "serverName", value));
-  }
+  onChange: (value) => {
+    dispatch(fetchDatasourceColumns(ownProps.formName, 'serverName', value));
+  },
 });
 
 const DatasourceFormContainer = connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(DatasourceForm);
 
 export default DatasourceFormContainer;

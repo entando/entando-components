@@ -1,38 +1,38 @@
-import React from "react";
-import PropTypes from "prop-types";
-import {Field, FieldArray} from "redux-form";
-import {Grid, Row, Col, InputGroup} from "patternfly-react";
-import DatasourceFormContainer from "ui/widgets/common/form/containers/DatasourceFormContainer";
-import {formattedText, required, minLength, maxLength} from "@entando/utils";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Field, FieldArray } from 'redux-form';
+import { Grid, Row, Col, InputGroup } from 'patternfly-react';
+import DatasourceFormContainer from 'ui/widgets/common/form/containers/DatasourceFormContainer';
+import { formattedText, required, minLength, maxLength } from '@entando/utils';
 
-import RenderTextInput from "ui/common/form/RenderTextInput";
-import FormLabel from "ui/common/form/FormLabel";
-import FieldArrayDropDownMultiple from "ui/common/FieldArrayDropDownMultiple";
-import FormattedMessage from "ui/i18n/FormattedMessage";
-import IconMarker from "./IconMarker";
+import RenderTextInput from 'ui/common/form/RenderTextInput';
+import FormLabel from 'ui/common/form/FormLabel';
+import FieldArrayDropDownMultiple from 'ui/common/FieldArrayDropDownMultiple';
+import FormattedMessage from 'ui/i18n/FormattedMessage';
+import IconMarker from './IconMarker';
 
 const maxLength20 = maxLength(20);
 const minLength3 = minLength(3);
 
 const ICONS_MARKER_1 = [
-  "fa-map-marker",
-  "fa-map-pin",
-  "fa-circle",
-  "fa-exclamation-triangle",
-  "fa-flag",
-  "fa-star",
-  "fa-street-view",
-  "fa-bed"
+  'fa-map-marker',
+  'fa-map-pin',
+  'fa-circle',
+  'fa-exclamation-triangle',
+  'fa-flag',
+  'fa-star',
+  'fa-street-view',
+  'fa-bed',
 ];
 const ICONS_MARKER_2 = [
-  "fa-male",
-  "fa-female",
-  "fa-car",
-  "fa-bus",
-  "fa-bicycle",
-  "fa-train",
-  "fa-plane",
-  "fa-ship"
+  'fa-male',
+  'fa-female',
+  'fa-car',
+  'fa-bus',
+  'fa-bicycle',
+  'fa-train',
+  'fa-plane',
+  'fa-ship',
 ];
 
 const DatasourceLayer = ({
@@ -43,7 +43,7 @@ const DatasourceLayer = ({
   addColumnOptionSelected,
   removeColumnOptionSelected,
   datasourceSelected,
-  disabled
+  disabled,
 }) => (
   <Grid className="DatasourceLayer">
     <Row>
@@ -59,14 +59,14 @@ const DatasourceLayer = ({
         <InputGroup className="DatasourceLayer__input-group">
           <Field
             component={RenderTextInput}
-            name={nameFieldArray ? `${nameFieldArray}[label]` : "label"}
+            name={nameFieldArray ? `${nameFieldArray}[label]` : 'label'}
             label={
               <FormLabel labelId="plugin.geolocalization.label" required />
             }
             alignClass="DatasourceLayer__align-class"
             labelSize={2}
             validate={[required, minLength3, maxLength20]}
-            append={formattedText("plugin.geolocalization.label.requirement")}
+            append={formattedText('plugin.geolocalization.label.requirement')}
           />
         </InputGroup>
       </Col>
@@ -107,21 +107,21 @@ const DatasourceLayer = ({
                 id="label-item"
                 className="SettingsChartPie__column-selected"
                 name={
-                  nameFieldArray
-                    ? `${nameFieldArray}[datasourceColumns]`
-                    : "datasourceColumns"
+                  nameFieldArray ?
+                    `${nameFieldArray}[datasourceColumns]` :
+                    'datasourceColumns'
                 }
                 component={FieldArrayDropDownMultiple}
                 idKey={datasourceSelected}
                 optionColumns={optionColumns}
                 optionColumnSelected={optionColumnSelected}
-                disabled={optionColumns.length === 0 ? true : false}
+                disabled={optionColumns.length === 0}
                 addColumnOptionSelected={addColumnOptionSelected}
                 removeColumnOptionSelected={removeColumnOptionSelected}
                 nameFieldArray={
-                  nameFieldArray
-                    ? `${nameFieldArray}[optionColumnSelected]`
-                    : null
+                  nameFieldArray ?
+                    `${nameFieldArray}[optionColumnSelected]` :
+                    null
                 }
               />
             </Col>
@@ -142,16 +142,18 @@ DatasourceLayer.propTypes = {
   optionColumnSelected: PropTypes.arrayOf(PropTypes.shape({})),
   nameFieldArray: PropTypes.string,
   addColumnOptionSelected: PropTypes.func,
-  removeColumnOptionSelected: PropTypes.func
+  removeColumnOptionSelected: PropTypes.func,
+  disabled: PropTypes.bool,
 };
 
 DatasourceLayer.defaultProps = {
-  datasourceSelected: "",
-  formName: "",
+  datasourceSelected: '',
+  formName: '',
   optionColumnSelected: [],
   nameFieldArray: undefined,
   addColumnOptionSelected: () => null,
-  removeColumnOptionSelected: () => null
+  removeColumnOptionSelected: () => null,
+  disabled: false,
 };
 
 export default DatasourceLayer;

@@ -1,50 +1,48 @@
-import {connect} from "react-redux";
-import {formValueSelector} from "redux-form";
+import { connect } from 'react-redux';
+import { formValueSelector } from 'redux-form';
+import { omit } from 'lodash';
 
-import DashboardConfigForm from "ui/dashboard-config/common/components/DashboardConfigForm";
+import DashboardConfigForm from 'ui/dashboard-config/common/components/DashboardConfigForm';
 
 import {
   fetchServerType,
   createServerConfig,
   updateServerConfig,
-  setInternalRoute
-} from "state/main/actions";
+  setInternalRoute,
+} from 'state/main/actions';
 
-import {getServerType} from "state/main/selectors";
+import { getServerType } from 'state/main/selectors';
 
-const selector = formValueSelector("dashboard-config-form");
+const selector = formValueSelector('dashboard-config-form');
 
 export const mapStateToProps = state => ({
   datasourceValue: {
-    datasource: selector(state, "datasource"),
-    datasourceURI: selector(state, "datasourceURI")
+    datasource: selector(state, 'datasource'),
+    datasourceURI: selector(state, 'datasourceURI'),
   },
-  datasourceCode: selector(state, "datasourceCode"),
-  datasources: selector(state, "datasources"),
-  serverTypeList: getServerType(state)
+  datasourceCode: selector(state, 'datasourceCode'),
+  datasources: selector(state, 'datasources'),
+  serverTypeList: getServerType(state),
 });
 
 export const mapDispatchToProps = (dispatch, ownProps) => ({
   onWillMount: () => dispatch(fetchServerType()),
-  onSubmit: values => {
-    delete values.datasourceCode;
-    delete values.datasource;
-    delete values.datasourceURI;
-    if (ownProps.mode === "add") {
-      dispatch(createServerConfig(values));
-    } else if (ownProps.mode === "edit") {
-      dispatch(updateServerConfig(values));
+  onSubmit: (values) => {
+    const obj = omit(values, ['datasourceCode', 'datasource', 'datasourceURI']);
+    if (ownProps.mode === 'add') {
+      dispatch(createServerConfig(obj));
+    } else if (ownProps.mode === 'edit') {
+      dispatch(updateServerConfig(obj));
     }
   },
-  testConnection: () => {},
   gotoHomePage: () => {
-    dispatch(setInternalRoute("home"));
-  }
+    dispatch(setInternalRoute('home'));
+  },
 });
 
 const DashboardConfigFormContainer = connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(DashboardConfigForm);
 
 export default DashboardConfigFormContainer;

@@ -1,16 +1,16 @@
-import React from "react";
-import PropTypes from "prop-types";
-import {Row, Col, Button, Icon} from "patternfly-react";
-import FormattedMessageLocal from "ui/i18n/FormattedMessage";
-import DashboardConfigDatasourceStatusContainer from "ui/dashboard-config/common/containers/DashboardConfigDatasourceStatusContainer";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Row, Col, Button, Icon } from 'patternfly-react';
+import FormattedMessageLocal from 'ui/i18n/FormattedMessage';
+import DashboardConfigDatasourceStatusContainer from 'ui/dashboard-config/common/containers/DashboardConfigDatasourceStatusContainer';
 
 const addDatasource = (fields, obj) => {
   const {
     datasourceCode,
-    datasourceValue: {datasource, datasourceURI}
+    datasourceValue: { datasource, datasourceURI },
   } = obj;
   if (obj.datasourceValue.datasource !== undefined) {
-    fields.push({datasourceCode, datasource, datasourceURI});
+    fields.push({ datasourceCode, datasource, datasourceURI });
   }
 };
 
@@ -21,7 +21,7 @@ const DashboardConfigDatasource = ({
   fields,
   datasourceValue,
   datasources,
-  datasourceCode
+  datasourceCode,
 }) => (
   <div className="DashboardConfigDatasource">
     <Row>
@@ -36,7 +36,7 @@ const DashboardConfigDatasource = ({
             type="button"
             bsStyle="default"
             onClick={() =>
-              addDatasource(fields, {datasourceCode, datasourceValue})
+              addDatasource(fields, { datasourceCode, datasourceValue })
             }
           >
             <FormattedMessageLocal id="common.add" />
@@ -65,7 +65,7 @@ const DashboardConfigDatasource = ({
             </thead>
             <tbody>
               {datasources.map((ds, index) => (
-                <tr key={`datasource-${index}`}>
+                <tr key={`datasource-${ds.datasourceCode}`}>
                   <td>{ds.datasourceCode}</td>
                   <td>{ds.datasource}</td>
                   <td>{ds.datasourceURI}</td>
@@ -91,17 +91,20 @@ const DashboardConfigDatasource = ({
 );
 const DATASOURCE_TYPE = {
   datasource: PropTypes.string,
-  datasourceURI: PropTypes.string
+  datasourceURI: PropTypes.string,
 };
-DashboardConfigDatasource.PropType = {
+DashboardConfigDatasource.propTypes = {
   datasourceValue: PropTypes.shape(DATASOURCE_TYPE),
-  datasources: PropTypes.arrayOf(PropTypes.shape(DATASOURCE_TYPE))
+  datasourceCode: PropTypes.string.isRequired,
+  datasources: PropTypes.arrayOf(PropTypes.shape(DATASOURCE_TYPE)),
+  fields: PropTypes.shape({}),
 };
 DashboardConfigDatasource.defaultProps = {
   datasourceValue: {
     datasource: undefined,
-    datasourceURI: undefined
+    datasourceURI: undefined,
   },
-  datasources: []
+  datasources: [],
+  fields: {},
 };
 export default DashboardConfigDatasource;

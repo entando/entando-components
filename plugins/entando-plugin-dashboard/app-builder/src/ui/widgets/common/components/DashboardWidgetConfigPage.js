@@ -1,17 +1,17 @@
-import React from "react";
-import PropTypes from "prop-types";
-import FormattedMessage from "ui/i18n/FormattedMessage";
+import React from 'react';
+import PropTypes from 'prop-types';
+import FormattedMessage from 'ui/i18n/FormattedMessage';
 import {
   TabContainer,
   Nav,
   NavItem,
   TabContent,
-  TabPane
-} from "patternfly-react";
+  TabPane,
+} from 'patternfly-react';
 
-import InfoContainer from "ui/widgets/common/containers/InfoContainer";
+import InfoContainer from 'ui/widgets/common/containers/InfoContainer';
 
-const DashboardWidgetConfigPage = ({children}) => (
+const DashboardWidgetConfigPage = ({ children }) => (
   <div className="DashboardWidgetConfigPage">
     <TabContainer
       id={1}
@@ -39,7 +39,7 @@ const DashboardWidgetConfigPage = ({children}) => (
 );
 
 DashboardWidgetConfigPage.propTypes = {
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
 };
 
 export default DashboardWidgetConfigPage;

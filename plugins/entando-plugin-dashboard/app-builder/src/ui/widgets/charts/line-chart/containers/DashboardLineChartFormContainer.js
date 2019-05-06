@@ -1,47 +1,47 @@
-import {connect} from "react-redux";
-import {formValueSelector, getFormSyncErrors} from "redux-form";
-import {get, set, pick} from "lodash";
+import { connect } from 'react-redux';
+import { formValueSelector, getFormSyncErrors } from 'redux-form';
+import { get, set, pick } from 'lodash';
 
 import {
   fetchServerConfigList,
   getWidgetConfigChart,
-  gotoConfigurationPage
-} from "state/main/actions";
+  gotoConfigurationPage,
+} from 'state/main/actions';
 
-import DashboardLineChartForm from "ui/widgets/charts/line-chart/components/DashboardLineChartForm";
+import DashboardLineChartForm from 'ui/widgets/charts/line-chart/components/DashboardLineChartForm';
 
-const FORM_NAME = "form-dashboard-line-chart";
+const FORM_NAME = 'form-dashboard-line-chart';
 const selector = formValueSelector(FORM_NAME);
 
 export const mapStateToProps = state => ({
-  chart: "line",
-  datasource: selector(state, "datasource"),
+  chart: 'line',
+  datasource: selector(state, 'datasource'),
   formSyncErrors: getFormSyncErrors(FORM_NAME)(state),
-  axis: {rotated: selector(state, "axis.rotated")},
-  spline: selector(state, "spline"),
-  columns: selector(state, "columns"),
+  axis: { rotated: selector(state, 'axis.rotated') },
+  spline: selector(state, 'spline'),
+  columns: selector(state, 'columns'),
 
   initialValues: {
     axis: {
-      chart: "line",
+      chart: 'line',
       rotated: false,
-      x: {type: "indexed"},
-      y2: {show: false}
+      x: { type: 'indexed' },
+      y2: { show: false },
     },
     size: {
       width: 300,
-      height: 500
+      height: 500,
     },
     padding: {
       top: 50,
       right: 50,
       bottom: 50,
-      left: 50
+      left: 50,
     },
     legend: {
-      position: "bottom"
-    }
-  }
+      position: 'bottom',
+    },
+  },
 });
 
 export const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -53,58 +53,58 @@ export const mapDispatchToProps = (dispatch, ownProps) => ({
 
   onCancel: () => dispatch(gotoConfigurationPage()),
 
-  onSubmit: data => {
+  onSubmit: (data) => {
     const transformData = {
       ...data,
       size: {
         width: parseInt(data.size.width, 10),
-        height: parseInt(data.size.height, 10)
+        height: parseInt(data.size.height, 10),
       },
       padding: {
         top: parseInt(data.padding.top, 10),
         right: parseInt(data.padding.right, 10),
         bottom: parseInt(data.padding.bottom, 10),
-        left: parseInt(data.padding.left, 10)
-      }
+        left: parseInt(data.padding.left, 10),
+      },
     };
     transformData.data = {
-      type: "line",
+      type: 'line',
       json: [],
       keys: {
         value: [
-          ...get(data, "columns.x").map(m => m.key),
-          ...get(data, "columns.y").map(m => m.key)
-        ]
-      }
+          ...get(data, 'columns.x').map(m => m.key),
+          ...get(data, 'columns.y').map(m => m.key),
+        ],
+      },
     };
-    /* https://c3js.org/reference.html#data-xs This option can be used if we want to show the data that has different x values.*/
+    /* https://c3js.org/reference.html#data-xs This option can be used if we want to show the data that has different x values. */
     if (data.columns.x.length > 1) {
-      const {x, y} = data.columns;
+      const { x, y } = data.columns;
       transformData.data.xs = x.reduce((acc, item, index) => {
         acc[y[index].key] = item.key;
         return acc;
       }, {});
-      set(transformData, "axis.x.tick.multiline", true);
-      set(transformData, "axis.x.tick.multilineMax", 2);
-      set(transformData, "axis.x.tick.rotate", 75);
+      set(transformData, 'axis.x.tick.multiline', true);
+      set(transformData, 'axis.x.tick.multilineMax', 2);
+      set(transformData, 'axis.x.tick.rotate', 75);
     } else {
-      transformData.data.keys.x = get(data, "columns.x[0].key");
+      transformData.data.keys.x = get(data, 'columns.x[0].key');
     }
 
-    if (get(data, "axis.x.type") === "timeseries") {
-      set(transformData, "axis.x.type", "timeseries");
-      transformData.data.xFormat = get(data, "axis.x.tick.format");
+    if (get(data, 'axis.x.type') === 'timeseries') {
+      set(transformData, 'axis.x.type', 'timeseries');
+      transformData.data.xFormat = get(data, 'axis.x.tick.format');
     }
 
-    transformData.columns = pick(transformData.columns, ["x", "y"]);
-    console.log("Submit data ", {config: transformData});
-    ownProps.onSubmit({config: JSON.stringify(transformData)});
-  }
+    transformData.columns = pick(transformData.columns, ['x', 'y']);
+    console.log('Submit data ', { config: transformData });
+    ownProps.onSubmit({ config: JSON.stringify(transformData) });
+  },
 });
 
 const DashboardLineChartFormContainer = connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(DashboardLineChartForm);
 
 export default DashboardLineChartFormContainer;

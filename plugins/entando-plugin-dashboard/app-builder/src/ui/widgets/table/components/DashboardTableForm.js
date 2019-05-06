@@ -1,25 +1,68 @@
-import React, {Component} from "react";
-import PropTypes from "prop-types";
-import {Field, reduxForm} from "redux-form";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Field, reduxForm } from 'redux-form';
 import {
   InputGroup,
   FormGroup,
   Button,
   Col,
-  ControlLabel
-} from "patternfly-react";
-import FormattedMessage from "ui/i18n/FormattedMessage";
-import SwitchRenderer from "ui/common/form/SwitchRenderer";
-import ServerNameFormContainer from "ui/widgets/common/form/containers/ServerNameFormContainer";
-import DatasourceFormContainer from "ui/widgets/common/form/containers/DatasourceFormContainer";
-import DashboardTableColumnsContainer from "ui/widgets/table/containers/DashboardTableColumnsContainer";
-import DashboardWidgetTitleContainer from "ui/widgets/common/form/containers/DashboardWidgetTitleContainer";
+  ControlLabel,
+} from 'patternfly-react';
+import FormattedMessage from 'ui/i18n/FormattedMessage';
+import SwitchRenderer from 'ui/common/form/SwitchRenderer';
+import ServerNameFormContainer from 'ui/widgets/common/form/containers/ServerNameFormContainer';
+import DatasourceFormContainer from 'ui/widgets/common/form/containers/DatasourceFormContainer';
+import DashboardTableColumnsContainer from 'ui/widgets/table/containers/DashboardTableColumnsContainer';
+import DashboardWidgetTitleContainer from 'ui/widgets/common/form/containers/DashboardWidgetTitleContainer';
+
+
+const renderDownlodable = (
+  <FormGroup className="DashboardTableForm__input-group">
+    <Col smOffset={2} xs={10}>
+      <div className="checkbox">
+        <label htmlFor="options.downlodable">
+          <Field
+            component="input"
+            type="checkbox"
+            name="options.downlodable"
+          />
+          <strong>
+            <FormattedMessage id="plugin.table.downlodable" />
+          </strong>
+          <br />
+          <FormattedMessage id="plugin.table.downlodable.format" />
+        </label>
+      </div>
+    </Col>
+  </FormGroup>
+);
+
+
+const renderFiltrable = (
+  <FormGroup className="DashboardTableForm__input-group">
+    <Col smOffset={2} xs={10}>
+      <div className="checkbox">
+        <label htmlFor="options.filtrable">
+          <Field
+            component="input"
+            type="checkbox"
+            name="options.filtrable"
+          />
+          <strong>
+            <FormattedMessage id="plugin.table.filterable" />
+          </strong>
+        </label>
+      </div>
+    </Col>
+  </FormGroup>
+);
+
 
 export class DashboardTableFormBody extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      toggleAllColums: true
+      toggleAllColums: true,
     };
     this.handleChange = this.handleChange.bind(this);
   }
@@ -27,48 +70,11 @@ export class DashboardTableFormBody extends Component {
   componentWillMount() {
     this.props.onWillMount();
   }
-  renderDownlodable() {
-    return (
-      <FormGroup className="DashboardTableForm__input-group">
-        <Col smOffset={2} xs={10}>
-          <div className="checkbox">
-            <label>
-              <Field
-                component="input"
-                type="checkbox"
-                name="options.downlodable"
-              />
-              <strong>
-                <FormattedMessage id="plugin.table.downlodable" />
-              </strong>
-              <br />
-              <FormattedMessage id="plugin.table.downlodable.format" />
-            </label>
-          </div>
-        </Col>
-      </FormGroup>
-    );
+
+  handleChange() {
+    this.setState({ toggleAllColums: !this.state.toggleAllColums });
   }
-  renderFiltrable() {
-    return (
-      <FormGroup className="DashboardTableForm__input-group">
-        <Col smOffset={2} xs={10}>
-          <div className="checkbox">
-            <label>
-              <Field
-                component="input"
-                type="checkbox"
-                name="options.filtrable"
-              />
-              <strong>
-                <FormattedMessage id="plugin.table.filterable" />
-              </strong>
-            </label>
-          </div>
-        </Col>
-      </FormGroup>
-    );
-  }
+
   renderColumnInformation() {
     return (
       <InputGroup className="DashboardTableForm__input-group">
@@ -82,18 +88,17 @@ export class DashboardTableFormBody extends Component {
           component={SwitchRenderer}
           name="allColumns"
           onChange={this.handleChange}
-          disabled={this.props.datasource ? false : true}
+          disabled={!this.props.datasource}
         />
       </InputGroup>
     );
   }
 
-  handleChange(ev, newValue) {
-    this.setState({toggleAllColums: !this.state.toggleAllColums});
-  }
 
   render() {
-    const {handleSubmit, invalid, submitting} = this.props;
+    const { handleSubmit, invalid, submitting } = this.props;
+
+
     return (
       <form
         onSubmit={handleSubmit}
@@ -126,11 +131,11 @@ export class DashboardTableFormBody extends Component {
             <Col xs={6}>
               <ServerNameFormContainer />
             </Col>
-            <Col xs={6}>{this.renderDownlodable()}</Col>
+            <Col xs={6}>{renderDownlodable}</Col>
             <Col xs={6}>
               <DatasourceFormContainer formName="form-dashboard-table" />
             </Col>
-            <Col xs={6}>{this.renderFiltrable()}</Col>
+            <Col xs={6}>{renderFiltrable}</Col>
           </Col>
 
           <Col xs={12} className="DashboardTableForm__container-data">
@@ -140,9 +145,9 @@ export class DashboardTableFormBody extends Component {
           <Col
             xs={12}
             className={
-              this.state.toggleAllColums
-                ? "DashboardTableForm__container-data--disabled"
-                : "DashboardTableForm__container-data"
+              this.state.toggleAllColums ?
+                'DashboardTableForm__container-data--disabled' :
+                'DashboardTableForm__container-data'
             }
           >
             <Col xs={6}>
@@ -159,9 +164,9 @@ export class DashboardTableFormBody extends Component {
           <Col
             xs={12}
             className={
-              this.state.toggleAllColums
-                ? "DashboardTableForm__container-data--disabled"
-                : "DashboardTableForm__container-data"
+              this.state.toggleAllColums ?
+                'DashboardTableForm__container-data--disabled' :
+                'DashboardTableForm__container-data'
             }
           >
             <DashboardTableColumnsContainer />
@@ -204,16 +209,16 @@ DashboardTableFormBody.propTypes = {
   onCancel: PropTypes.func.isRequired,
   invalid: PropTypes.bool,
   submitting: PropTypes.bool,
-  datasource: PropTypes.string
+  datasource: PropTypes.string,
 };
 
 DashboardTableFormBody.defaultProps = {
   invalid: false,
   submitting: false,
-  datasource: ""
+  datasource: '',
 };
 const DashboardTableForm = reduxForm({
-  form: "form-dashboard-table"
+  form: 'form-dashboard-table',
 })(DashboardTableFormBody);
 
 export default DashboardTableForm;

@@ -1,17 +1,17 @@
-import React, {Component} from "react";
-import PropTypes from "prop-types";
-import {reduxForm} from "redux-form";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { reduxForm } from 'redux-form';
 
-import Stepper from "ui/widgets/common/components/Stepper";
-import ChartFirstStepContent from "ui/widgets/charts/common/components/ChartFirstStepContent";
-import ChartSecondStepContent from "ui/widgets/charts/common/components/ChartSecondStepContent";
-import ChartThirdStepContent from "ui/widgets/charts/common/components/ChartThirdStepContent";
+import Stepper from 'ui/widgets/common/components/Stepper';
+import ChartFirstStepContent from 'ui/widgets/charts/common/components/ChartFirstStepContent';
+import ChartSecondStepContent from 'ui/widgets/charts/common/components/ChartSecondStepContent';
+import ChartThirdStepContent from 'ui/widgets/charts/common/components/ChartThirdStepContent';
 
-const data = {columns: [["data1", 10, 30, 10, 20, 40, 50]]};
+const data = { columns: [['data1', 10, 30, 10, 20, 40, 50]] };
 
-const FORM_NAME = "form-dashboard-bar-chart";
-const TYPE_CHART = "BAR_CHART";
-const CHART_PREVIEW = "Bar Chart";
+const FORM_NAME = 'form-dashboard-bar-chart';
+const TYPE_CHART = 'BAR_CHART';
+const CHART_PREVIEW = 'Bar Chart';
 
 export class DashboardBarChartFormBody extends Component {
   componentWillMount() {
@@ -21,9 +21,9 @@ export class DashboardBarChartFormBody extends Component {
   render() {
     const {
       formSyncErrors,
-      axis: {rotated},
+      axis: { rotated },
       columns,
-      chart
+      chart,
     } = this.props;
     const validateSteps = [false, false, false];
     if (
@@ -87,11 +87,20 @@ export class DashboardBarChartFormBody extends Component {
 DashboardBarChartFormBody.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   onWillMount: PropTypes.func.isRequired,
-  onCancel: PropTypes.func.isRequired
+  onCancel: PropTypes.func.isRequired,
+  formSyncErrors: PropTypes.shape({}),
+  axis: PropTypes.shape({ rotated: PropTypes.bool }).isRequired,
+  chart: PropTypes.string.isRequired,
+  columns: PropTypes.arrayOf(PropTypes.shape({})),
+};
+
+DashboardBarChartFormBody.defaultProps = {
+  formSyncErrors: {},
+  columns: [],
 };
 
 const DashboardBarChartForm = reduxForm({
-  form: FORM_NAME
+  form: FORM_NAME,
 })(DashboardBarChartFormBody);
 
 export default DashboardBarChartForm;

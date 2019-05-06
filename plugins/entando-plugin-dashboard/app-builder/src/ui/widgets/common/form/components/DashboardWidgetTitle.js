@@ -1,11 +1,11 @@
-import React, {Component} from "react";
-import PropTypes from "prop-types";
-import {Field, FormSection} from "redux-form";
-import {Tabs, Tab, InputGroup} from "patternfly-react";
-import {formattedText, required, minLength, maxLength} from "@entando/utils";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Field, FormSection } from 'redux-form';
+import { Tabs, Tab, InputGroup } from 'patternfly-react';
+import { formattedText, required, minLength, maxLength } from '@entando/utils';
 
-import RenderTextInput from "ui/common/form/RenderTextInput";
-import FormLabel from "ui/common/form/FormLabel";
+import RenderTextInput from 'ui/common/form/RenderTextInput';
+import FormLabel from 'ui/common/form/FormLabel';
 
 const maxLength30 = maxLength(30);
 const minLength3 = minLength(3);
@@ -45,7 +45,7 @@ class DashboardWidgetTitle extends Component {
                   }
                   alignClass="text-left"
                   validate={validate}
-                  append={formattedText("plugin.table.requirement")}
+                  append={formattedText('plugin.table.requirement')}
                 />
               </InputGroup>
             </FormSection>
@@ -65,7 +65,7 @@ class DashboardWidgetTitle extends Component {
 
 DashboardWidgetTitle.propTypes = {
   languages: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  onWillMount: PropTypes.func.isRequired
+  onWillMount: PropTypes.func.isRequired,
 };
 
 export default DashboardWidgetTitle;

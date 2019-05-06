@@ -1,17 +1,18 @@
-import React from "react";
-import {Field} from "redux-form";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Field } from 'redux-form';
 import {
   Grid,
   Row,
   Col,
   FormGroup,
   ControlLabel,
-  FieldLevelHelp
-} from "patternfly-react";
-import FormattedMessage from "ui/i18n/FormattedMessage";
-import SwitchRenderer from "ui/common/form/SwitchRenderer";
+  FieldLevelHelp,
+} from 'patternfly-react';
+import FormattedMessage from 'ui/i18n/FormattedMessage';
+import SwitchRenderer from 'ui/common/form/SwitchRenderer';
 
-import {required} from "@entando/utils";
+import { required } from '@entando/utils';
 
 const renderField = ({
   input,
@@ -22,46 +23,44 @@ const renderField = ({
   className,
   classInput,
   disabled,
-  meta: {touched, error},
-  addon = true
-}) => {
-  return (
-    <FormGroup
-      className="GeneralSettings__field-form-group"
-      validationState={touched && error ? "error" : null}
-    >
-      <ControlLabel htmlFor={input.name} className={className}>
-        <FormattedMessage id={label} />
-      </ControlLabel>
+  meta: { touched, error },
+  addon,
+}) => (
+  <FormGroup
+    className="GeneralSettings__field-form-group"
+    validationState={touched && error ? 'error' : null}
+  >
+    <ControlLabel htmlFor={input.name} className={className}>
+      <FormattedMessage id={label} />
+    </ControlLabel>
 
-      <input
-        {...input}
-        type="number"
-        className={
+    <input
+      {...input}
+      type="number"
+      className={
           addon ? `GeneralSettings__input-number ${classInput}` : classInput
         }
-        min={min}
-        max={max}
-        dir={direction}
-        disabled={disabled}
-      />
-      {addon ? (
-        <span className="GeneralSettings__input-number-addon">PX</span>
+      min={min}
+      max={max}
+      dir={direction}
+      disabled={disabled}
+    />
+    {addon ? (
+      <span className="GeneralSettings__input-number-addon">PX</span>
       ) : null}
 
-      {touched && error && (
-        <span className="GeneralSettings__error help-block">{error}</span>
+    {touched && error && (
+    <span className="GeneralSettings__error help-block">{error}</span>
       )}
-    </FormGroup>
-  );
-};
+  </FormGroup>
+);
 
-const gaugeSettings = chart => (
+const gaugeSettings = () => (
   <Row>
     <Col xs={6}>
       <Row>
         <Col xs={12}>
-          <label className="GeneralSettings__title">
+          <label className="GeneralSettings__title" htmlFor="gauge">
             <FormattedMessage id="plugin.chart.gauge" />
           </label>
         </Col>
@@ -102,12 +101,12 @@ const gaugeSettings = chart => (
     </Col>
   </Row>
 );
-const pieSettings = chart => (
+const pieSettings = () => (
   <Row>
     <Col xs={6}>
       <Row>
         <Col xs={12}>
-          <label className="GeneralSettings__title">
+          <label className="GeneralSettings__title" htmlFor="pieSettings">
             <FormattedMessage id="plugin.chart.pieSettings" />
           </label>
         </Col>
@@ -131,7 +130,7 @@ const pieSettings = chart => (
   </Row>
 );
 
-const GeneralSettings = ({typeChart, chart}) => (
+const GeneralSettings = ({ typeChart, chart }) => (
   <div className="GeneralSettings">
     <Grid
       fluid
@@ -139,7 +138,7 @@ const GeneralSettings = ({typeChart, chart}) => (
     >
       <Row>
         <Col xs={12}>
-          <label className="GeneralSettings__title">
+          <label className="GeneralSettings__title" htmlFor="generalSettings">
             <FormattedMessage id="plugin.chart.generalSettings" />
           </label>
         </Col>
@@ -234,7 +233,7 @@ const GeneralSettings = ({typeChart, chart}) => (
         </Col>
 
         <Col xs={12}>
-          {typeChart === "LINE_CHART" || typeChart === "SPLINE_CHART" ? (
+          {typeChart === 'LINE_CHART' || typeChart === 'SPLINE_CHART' ? (
             <FormGroup className="GeneralSettings__form-group">
               <Field
                 name="spline"
@@ -250,9 +249,9 @@ const GeneralSettings = ({typeChart, chart}) => (
               </ControlLabel>
             </FormGroup>
           ) : null}
-          {typeChart === "BAR_CHART" ||
-          typeChart === "DONUT_CHART" ||
-          typeChart === "GAUGE_CHART" ? (
+          {typeChart === 'BAR_CHART' ||
+          typeChart === 'DONUT_CHART' ||
+          typeChart === 'GAUGE_CHART' ? (
             <Field
               type="number"
               component={renderField}
@@ -262,7 +261,7 @@ const GeneralSettings = ({typeChart, chart}) => (
               max={999}
               direction="rtl"
               className="GeneralSettings__field-thickness"
-              disabled={typeChart === "LINE_CHART" ? true : false}
+              disabled={typeChart === 'LINE_CHART'}
             />
           ) : null}
         </Col>
@@ -272,8 +271,8 @@ const GeneralSettings = ({typeChart, chart}) => (
       fluid
       className={`GeneralSettings__interactive-chart-container ${typeChart}`}
     >
-      {chart === "gauge" ? gaugeSettings(chart) : null}
-      {chart === "pie" ? pieSettings(chart) : null}
+      {chart === 'gauge' ? gaugeSettings(chart) : null}
+      {chart === 'pie' ? pieSettings(chart) : null}
       <Row>
         <Col xs={12} className="GeneralSettings__col">
           <FormGroup className="GeneralSettings__form-group">
@@ -308,7 +307,7 @@ const GeneralSettings = ({typeChart, chart}) => (
         </Col>
         <Col xs={4} className="GeneralSettings__col">
           <FormGroup className="GeneralSettings__form-group">
-            <label className="radio-inline">
+            <label className="radio-inline" htmlFor="legend.position">
               <Field
                 component="input"
                 type="radio"
@@ -317,7 +316,7 @@ const GeneralSettings = ({typeChart, chart}) => (
               />
               <FormattedMessage id="common.bottom" />
             </label>
-            <label className="radio-inline">
+            <label className="radio-inline" htmlFor="legend.position">
               <Field
                 component="input"
                 type="radio"
@@ -332,5 +331,34 @@ const GeneralSettings = ({typeChart, chart}) => (
     </Grid>
   </div>
 );
+GeneralSettings.propTypes = {
+  typeChart: PropTypes.string.isRequired,
+  chart: PropTypes.string.isRequired,
+};
+
+renderField.propTypes = {
+  input: PropTypes.shape({}).isRequired,
+  classInput: PropTypes.string,
+  label: PropTypes.string.isRequired,
+  min: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  max: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]),
+  direction: PropTypes.string.isRequired,
+  disabled: PropTypes.bool,
+  className: PropTypes.string.isRequired,
+  meta: PropTypes.shape({}).isRequired,
+  addon: PropTypes.bool,
+
+};
+
+renderField.defaultProps = {
+  classInput: '',
+  addon: true,
+  disabled: false,
+  min: '',
+  max: '',
+};
 
 export default GeneralSettings;

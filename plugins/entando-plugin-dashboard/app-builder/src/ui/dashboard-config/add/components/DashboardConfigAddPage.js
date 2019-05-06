@@ -1,10 +1,10 @@
-import React from "react";
-import {FormattedMessage} from "react-intl";
-import {Row, Col, Grid, Breadcrumb} from "patternfly-react";
+import React from 'react';
+import { FormattedMessage } from 'react-intl';
+import { Row, Col, Grid, Breadcrumb } from 'patternfly-react';
 
-import FormattedMessageLocal from "ui/i18n/FormattedMessage";
-import DashboardConfigFormContainer from "ui/dashboard-config/common/containers/DashboardConfigFormContainer";
-import PageTitle from "ui/PageTitle";
+import FormattedMessageLocal from 'ui/i18n/FormattedMessage';
+import DashboardConfigFormContainer from 'ui/dashboard-config/common/containers/DashboardConfigFormContainer';
+import PageTitle from 'ui/PageTitle';
 
 const DashboardConfigAddPage = () => (
   <Grid fluid>

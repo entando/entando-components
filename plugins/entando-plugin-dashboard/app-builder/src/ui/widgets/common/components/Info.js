@@ -1,9 +1,9 @@
-import React from "react";
-import PropTypes from "prop-types";
-import {Grid, Row, Col} from "patternfly-react";
-import {get} from "lodash";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Grid, Row, Col } from 'patternfly-react';
+import { get } from 'lodash';
 
-import FormattedMessage from "ui/i18n/FormattedMessage";
+import FormattedMessage from 'ui/i18n/FormattedMessage';
 
 const row = (idMessage, label) => (
   <div className="Info__table-row">
@@ -11,18 +11,18 @@ const row = (idMessage, label) => (
       <FormattedMessage id={idMessage} />
     </div>
     <div className="Info__table-cell">
-      <label>{label}</label>
+      <label htmlFor="info">{label}</label>
     </div>
   </div>
 );
 
-const Info = ({pageInformation}) => {
+const Info = ({ pageInformation }) => {
   const renderBool = value =>
-    value ? (
+    (value ? (
       <i className="fa fa-check-square-o" />
     ) : (
       <i className="fa fa-square-o" />
-    );
+    ));
   return (
     <Grid className="Info">
       <Row>
@@ -49,10 +49,10 @@ const Info = ({pageInformation}) => {
                 xs={4}
                 className="Info__container-data-information Info__table"
               >
-                {row("common.code", pageInformation.code)}
-                {row("common.title", get(pageInformation, "titles.en", ""))}
-                {row("common.ownerGroup", pageInformation.ownerGroup)}
-                {row("common.pageModel", pageInformation.pageModel)}
+                {row('common.code', pageInformation.code)}
+                {row('common.title', get(pageInformation, 'titles.en', ''))}
+                {row('common.ownerGroup', pageInformation.ownerGroup)}
+                {row('common.pageModel', pageInformation.pageModel)}
                 <div className="Info__table-row">
                   <div className="Info__table-cell">
                     <FormattedMessage id="common.configureOnThefly" />
@@ -81,28 +81,28 @@ const Info = ({pageInformation}) => {
 
 const INFORMATION_TYPE = {
   code: PropTypes.string,
-  titles: PropTypes.shape({en: PropTypes.string}),
+  titles: PropTypes.shape({ en: PropTypes.string }),
   ownerGroup: PropTypes.string,
   pageModel: PropTypes.string,
   lastModified: PropTypes.string,
-  status: PropTypes.string
+  status: PropTypes.string,
 };
 
 Info.propTypes = {
-  pageInformation: PropTypes.shape(INFORMATION_TYPE)
+  pageInformation: PropTypes.shape(INFORMATION_TYPE),
 };
 
 Info.defaultProps = {
   pageInformation: {
-    code: "",
+    code: '',
     titles: {
-      en: ""
+      en: '',
     },
-    ownerGroup: "",
-    pageModel: "",
-    lastModified: "",
-    status: ""
-  }
+    ownerGroup: '',
+    pageModel: '',
+    lastModified: '',
+    status: '',
+  },
 };
 
 export default Info;

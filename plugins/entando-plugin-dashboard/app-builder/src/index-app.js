@@ -1,46 +1,48 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-import {createStore, compose, applyMiddleware, combineReducers} from "redux";
-import {reducer as formReducer} from "redux-form";
+import { createStore, compose, applyMiddleware, combineReducers } from 'redux';
+import { reducer as formReducer } from 'redux-form';
 
-import thunk from "redux-thunk";
-import rootReducer from "state/main/reducer";
+import thunk from 'redux-thunk';
+import rootReducer from 'state/main/reducer';
 
-import {config, api, setApi} from "@entando/apimanager";
+import { config, api, setApi } from '@entando/apimanager';
 
-import {name} from "../package.json";
+import { Grid, Row, Col } from 'patternfly-react';
 
-import {Grid, Row, Col} from "patternfly-react";
-
-import registerServiceWorker from "registerServiceWorker";
-import {setCurrentLocale} from "@entando/utils";
+import registerServiceWorker from 'registerServiceWorker';
+import { setCurrentLocale } from '@entando/utils';
 
 // state manager (Redux)
-import {Provider} from "react-redux";
+import { Provider } from 'react-redux';
 
 // IntlProvider
-import {IntlProvider} from "react-intl";
+import { IntlProvider } from 'react-intl';
 
 // use en locale by default
-import enLocale from "locales/en";
-import plugin from "./index";
+import enLocale from 'locales/en';
 
-import "./sass/index.css";
-import "patternfly/dist/css/patternfly.min.css";
-import "patternfly/dist/css/patternfly-additions.min.css";
-import "react-bootstrap-typeahead/css/Typeahead.css";
+import 'patternfly/dist/css/patternfly.min.css';
+import 'patternfly/dist/css/patternfly-additions.min.css';
+import 'react-bootstrap-typeahead/css/Typeahead.css';
 
-import DashboardTable from "ui/widgets/table/components/DashboardTable";
-import DashboardLineChart from "ui/widgets/charts/line-chart/components/DashboardLineChart";
-import DashboardBarChart from "ui/widgets/charts/bar-chart/components/DashboardBarChart";
-import DashboardDonutChart from "ui/widgets/charts/donut-chart/components/DashboardDonutChart";
-import DashboardGaugeChart from "ui/widgets/charts/gauge-chart/components/DashboardGaugeChart";
-import DashboardPieChart from "ui/widgets/charts/pie-chart/components/DashboardPieChart";
-import DashboardMap from "ui/widgets/geolocalization/components/DashboardMap";
+import DashboardConfigAddPage from 'ui/dashboard-config/add/components/DashboardConfigAddPage';
+import DashboardConfigPageContainer from 'ui/dashboard-config/list/containers/DashboardConfigPageContainer';
 
-import DashboardConfigAddPage from "ui/dashboard-config/add/components/DashboardConfigAddPage";
-import DashboardConfigPageContainer from "ui/dashboard-config/list/containers/DashboardConfigPageContainer";
+// import DashboardTable from 'ui/widgets/table/components/DashboardTable';
+import DashboardLineChart from 'ui/widgets/charts/line-chart/components/DashboardLineChart';
+// import DashboardBarChart from 'ui/widgets/charts/bar-chart/components/DashboardBarChart';
+// import DashboardDonutChart from 'ui/widgets/charts/donut-chart/components/DashboardDonutChart';
+// import DashboardGaugeChart from 'ui/widgets/charts/gauge-chart/components/DashboardGaugeChart';
+// import DashboardPieChart from 'ui/widgets/charts/pie-chart/components/DashboardPieChart';
+// import DashboardMap from 'ui/widgets/geolocalization/components/DashboardMap';
+
+
+import plugin from 'index';
+import 'sass/index.css';
+
+import { name } from '../package.json';
 
 const mappedMessages = Object.keys(enLocale.messages).reduce((acc, key) => {
   acc[`plugin.${plugin.id}.${key}`] = enLocale.messages[key];
@@ -49,22 +51,22 @@ const mappedMessages = Object.keys(enLocale.messages).reduce((acc, key) => {
 
 setCurrentLocale(enLocale);
 
-/*Dichiarazione dello store. E' stato inserito qui per forzare il currentUser */
+/* Dichiarazione dello store. E' stato inserito qui per forzare il currentUser */
 
 const currentUser = combineReducers({
-  username: () => "admin",
-  token: () => "23ee9aa496cbadca67b0a77a4eb00c01"
+  username: () => 'admin',
+  token: () => 'e725a0d768f15f1a1a3bf547766e7c24',
 });
 
 const wrappedReducer = combineReducers({
-  [name]: rootReducer
+  [name]: rootReducer,
 });
 
 const pluginsReducer = combineReducers({
   plugins: wrappedReducer,
   currentUser,
   api,
-  form: formReducer
+  form: formReducer,
 });
 
 const store = createStore(
@@ -74,7 +76,7 @@ const store = createStore(
     applyMiddleware(thunk),
     // eslint-disable-next-line
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-  )
+  ),
 );
 config(store);
 
@@ -90,22 +92,14 @@ export default ReactDOM.render(
       <Grid fluid>
         <Row>
           <Col xs={12}>
-            <DashboardTable />
-            <DashboardDonutChart />
-            <DashboardLineChart />
-            <DashboardConfigAddPage />
-            <DashboardPieChart />
-            <DashboardDonutChart />
-            <DashboardBarChart />
-            <DashboardGaugeChart />
-            <DashboardPieChart />
-            <DashboardMap />
+            <DashboardLineChart onSubmit={() => {}} />
             <DashboardConfigPageContainer />
+            <DashboardConfigAddPage />
           </Col>
         </Row>
       </Grid>
     </IntlProvider>
   </Provider>,
-  document.getElementById("entando-dashboard")
+  document.getElementById('entando-dashboard'),
 );
 registerServiceWorker();

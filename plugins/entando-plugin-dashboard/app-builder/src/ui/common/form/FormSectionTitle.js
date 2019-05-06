@@ -1,9 +1,9 @@
-import React from "react";
-import PropTypes from "prop-types";
-import {Col} from "patternfly-react";
-import FormattedMessage from "ui/i18n/FormattedMessage";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Col } from 'patternfly-react';
+import FormattedMessage from 'ui/i18n/FormattedMessage';
 
-const FormSectionTitle = ({titleId}) => (
+const FormSectionTitle = ({ titleId }) => (
   <div className="FormSectionTitle">
     <Col xs={12}>
       <div className="FormSectionTitle__title">
@@ -21,7 +21,7 @@ const FormSectionTitle = ({titleId}) => (
 );
 
 FormSectionTitle.propTypes = {
-  titleId: PropTypes.string.isRequired
+  titleId: PropTypes.string.isRequired,
 };
 
 export default FormSectionTitle;

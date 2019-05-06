@@ -1,10 +1,10 @@
-import React from "react";
-import PropType from "prop-types";
-import {Label, Button} from "patternfly-react";
+import React from 'react';
+import PropType from 'prop-types';
+import { Label, Button } from 'patternfly-react';
 
-import FormattedMessageLocal from "ui/i18n/FormattedMessage";
+import FormattedMessageLocal from 'ui/i18n/FormattedMessage';
 
-const DashboardConfigDatasourceStatus = ({status, testConnection}) => (
+const DashboardConfigDatasourceStatus = ({ status, testConnection }) => (
   <div className="DashboardConfigDatasourceStatus">
     <Label bsStyle="default">{status}</Label>
     <Button
@@ -18,14 +18,14 @@ const DashboardConfigDatasourceStatus = ({status, testConnection}) => (
   </div>
 );
 
-DashboardConfigDatasourceStatus.PropType = {
+DashboardConfigDatasourceStatus.propTypes = {
   status: PropType.string,
-  testConnection: PropType.func
+  testConnection: PropType.func,
 };
 
 DashboardConfigDatasourceStatus.defaultProps = {
   status: null,
-  testConnection: null
+  testConnection: null,
 };
 
 export default DashboardConfigDatasourceStatus;

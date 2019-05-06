@@ -1,23 +1,29 @@
-import {connect} from "react-redux";
-import DashboardConfigPage from "ui/dashboard-config/list/components/DashboardConfigPage";
+import { connect } from 'react-redux';
+import DashboardConfigPage from 'ui/dashboard-config/list/components/DashboardConfigPage';
 
 import {
   fetchServerConfigList,
   editServerConfig,
   removeServerConfig,
-  gotoPluginPage
-} from "state/main/actions";
+  checkServerConfig,
+  gotoPluginPage,
+} from 'state/main/actions';
 
-import {getServerConfigList} from "state/main/selectors";
+import { getServerConfigList, getServerCheck } from 'state/main/selectors';
 
 export const mapStateToProps = state => ({
-  serverList: getServerConfigList(state)
+  serverList: getServerConfigList(state),
+  serverCheck: getServerCheck(state),
 });
 
 export const mapDispatchToProps = dispatch => ({
-  onWillMount: () => dispatch(fetchServerConfigList()),
+  onWillMount: () => {
+    dispatch(fetchServerConfigList()).then(() => {
+      dispatch(checkServerConfig());
+    });
+  },
 
-  removeConfigItem: id => {
+  removeConfigItem: (id) => {
     dispatch(removeServerConfig(id));
   },
 
@@ -25,16 +31,16 @@ export const mapDispatchToProps = dispatch => ({
     dispatch(editServerConfig(formName, configItem));
   },
 
-  testConfigItem: () => {},
+  testConfigItem: (serverId) => { dispatch(checkServerConfig(serverId)); },
 
-  testAllConfigItems: () => {},
+  testAllConfigItems: () => dispatch(checkServerConfig()),
 
-  gotoPluginPage: page => dispatch(gotoPluginPage(page))
+  gotoPluginPage: page => dispatch(gotoPluginPage(page)),
 });
 
 const DashboardConfigPageContainer = connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(DashboardConfigPage);
 
 export default DashboardConfigPageContainer;
