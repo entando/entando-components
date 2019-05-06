@@ -18,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class IotUtilsTest {
+public class JsonUtilsTest {
 
   @Test
   public void testGetNestedFieldsFromJson() throws IOException {
@@ -26,10 +26,10 @@ public class IotUtilsTest {
     final FileInputStream fis;
     fis = new FileInputStream(file);
     final String flusso = IOUtils.toString(fis, "UTF-8");
-    JsonObject jsonObject = IoTUtils.getObjectFromJson(flusso, new TypeToken<JsonObject>() {
+    JsonObject jsonObject = JsonUtils.getObjectFromJson(flusso, new TypeToken<JsonObject>() {
     }.getType(), JsonObject.class);
-    assertTrue(StringUtils.isNotBlank(IoTUtils.getNestedFieldFromJson(jsonObject,"hardwareId").getAsString()));
-    assertTrue(IoTUtils.getNestedFieldFromJson(jsonObject,"specification" + IoTConstants.JSON_FIELD_SEPARATOR + "asset").getAsJsonObject() != null);
+    assertTrue(StringUtils.isNotBlank(JsonUtils.getNestedFieldFromJson(jsonObject,"hardwareId").getAsString()));
+    assertTrue(JsonUtils.getNestedFieldFromJson(jsonObject,"specification" + IoTConstants.JSON_FIELD_SEPARATOR + "asset").getAsJsonObject() != null);
   }
   
   @Test
@@ -38,9 +38,9 @@ public class IotUtilsTest {
     final FileInputStream fis;
     fis = new FileInputStream(file);
     final String flusso = IOUtils.toString(fis, "UTF-8");
-    JsonObject jsonObject = IoTUtils.getObjectFromJson(flusso, new TypeToken<JsonObject>() {
+    JsonObject jsonObject = JsonUtils.getObjectFromJson(flusso, new TypeToken<JsonObject>() {
     }.getType(), JsonObject.class);
-    JsonElement res = IoTUtils.getNestedFieldFromJson(jsonObject,
+    JsonElement res = JsonUtils.getNestedFieldFromJson(jsonObject,
         "results" + IoTConstants.JSON_FIELD_SEPARATOR + "measurementsSummary");
     
     res.getAsJsonArray().forEach(x -> assertTrue(StringUtils.isNotBlank(x.getAsString())));
@@ -52,9 +52,9 @@ public class IotUtilsTest {
     final FileInputStream fis;
     fis = new FileInputStream(file);
     final String flusso = IOUtils.toString(fis, "UTF-8");
-    JsonObject jsonObject = IoTUtils.getObjectFromJson(flusso, new TypeToken<JsonObject>() {
+    JsonObject jsonObject = JsonUtils.getObjectFromJson(flusso, new TypeToken<JsonObject>() {
     }.getType(), JsonObject.class);
-    JsonElement res = IoTUtils.getNestedFieldFromJson(jsonObject,
+    JsonElement res = JsonUtils.getNestedFieldFromJson(jsonObject,
         "body" + IoTConstants.JSON_FIELD_SEPARATOR + "fields");
 
     assertNotNull(res);
@@ -68,7 +68,7 @@ public class IotUtilsTest {
     json.addProperty("x", "y");
     json.addProperty("z", "w");
 
-    Map<String, Object> x = IoTUtils.getMapFromJson(json);
+    Map<String, Object> x = JsonUtils.getMapFromJson(json);
 
     assertEquals(x.get("x"), "y");
     assertEquals(x.get("z"), "w");

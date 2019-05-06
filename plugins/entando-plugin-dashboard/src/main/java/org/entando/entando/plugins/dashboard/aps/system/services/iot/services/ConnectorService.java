@@ -13,6 +13,7 @@ import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.ServerType;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.dto.DeviceLocations;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.dto.ParkingStatuses;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.factory.ConnectorFactory;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
@@ -166,6 +167,12 @@ public class ConnectorService extends AbstractConnectorService implements IConne
     return connectorFactory.getConnector(dto.getType()).refreshMetadata(dto,datasourceCode);
   }
 
+  @Override
+  public void setDeviceStatuses(DashboardConfigDto dto, String datasourceCode, ParkingStatuses parkingStatuses) {
+    connectorFactory.getConnector(dto.getType()).setDeviceStatuses(dto, datasourceCode, parkingStatuses);
+  }
+
+  @Override
   public DeviceLocations getDeviceLocations(DashboardConfigDto dto, String datasourceCode) {
       return connectorFactory.getConnector(dto.getType()).getDeviceLocations(dto,datasourceCode);
   }

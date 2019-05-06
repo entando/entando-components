@@ -5,6 +5,8 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.ServerType;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.dto.DeviceLocations;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.dto.ParkingStatuses;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigRequest;
@@ -54,4 +56,9 @@ public interface IConnectorService {
       throws ApsSystemException;
 
   DashboardConfigDto refreshMetadata(DashboardConfigDto dto, String datasourceCode) throws ApsSystemException;
+
+  void setDeviceStatuses(DashboardConfigDto dto, String datasourceCode,
+      ParkingStatuses parkingStatuses);
+
+  DeviceLocations getDeviceLocations(DashboardConfigDto dto, String datasourceCode);
 }

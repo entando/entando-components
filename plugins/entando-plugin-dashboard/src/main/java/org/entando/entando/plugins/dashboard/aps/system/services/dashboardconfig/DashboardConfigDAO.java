@@ -26,6 +26,7 @@ import org.apache.commons.lang.StringUtils;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.ServerType;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -382,7 +383,7 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
 				datasource.setStatus(res.getString("status"));
 				datasource.setName(res.getString("name"));
 				JsonObject metadata = new Gson().fromJson(res.getString("metadata"), JsonObject.class);
-				datasource.setMetadata(IoTUtils.getMapFromJson(metadata));
+				datasource.setMetadata(JsonUtils.getMapFromJson(metadata));
 				dashboardConfig.getDatasources().add(datasource);
 			}
 

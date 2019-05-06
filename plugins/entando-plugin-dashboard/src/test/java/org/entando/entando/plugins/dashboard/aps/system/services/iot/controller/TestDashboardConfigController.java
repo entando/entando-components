@@ -17,6 +17,7 @@ import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.Measu
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementType;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IConnectorService;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.JsonUtils;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.DashboardConfigController;
 import org.entando.entando.plugins.dashboard.web.iot.IoTExceptionHandler;
 import org.entando.entando.web.AbstractControllerTest;
@@ -271,7 +272,7 @@ public class TestDashboardConfigController extends AbstractControllerTest {
     result.andExpect(status().is2xxSuccessful());
     JsonElement jsonPayload = new Gson().fromJson(result.andReturn().getResponse().getContentAsString(), JsonObject.class)
         .get("payload");
-    MeasurementTemplate payload = IoTUtils.getObjectFromJson(jsonPayload,new TypeToken<MeasurementTemplate>(){}.getType(),MeasurementTemplate.class);
+    MeasurementTemplate payload = JsonUtils.getObjectFromJson(jsonPayload,new TypeToken<MeasurementTemplate>(){}.getType(),MeasurementTemplate.class);
     assertEquals(payload, measurementTemplate);
   }
   
@@ -371,7 +372,7 @@ public class TestDashboardConfigController extends AbstractControllerTest {
     result.andExpect(status().is2xxSuccessful());
     JsonElement jsonPayload = new Gson().fromJson(result.andReturn().getResponse().getContentAsString(), JsonObject.class)
         .get("payload");
-    MeasurementConfig payload = IoTUtils.getObjectFromJson(jsonPayload,new TypeToken<MeasurementConfig>(){}.getType(),MeasurementConfig.class);
+    MeasurementConfig payload = JsonUtils.getObjectFromJson(jsonPayload,new TypeToken<MeasurementConfig>(){}.getType(),MeasurementConfig.class);
     assertEquals(payload, measurementConfig);
   }
 
@@ -452,7 +453,7 @@ public class TestDashboardConfigController extends AbstractControllerTest {
     
     JsonElement jsonPayload = new Gson().fromJson(result.andReturn().getResponse().getContentAsString(), JsonObject.class)
         .get("payload");
-    List<DatasourcesConfigDto> datasources = IoTUtils.getObjectFromJson(jsonPayload,new TypeToken<List<DatasourcesConfigDto>>(){}.getType(),ArrayList.class);
+    List<DatasourcesConfigDto> datasources = JsonUtils.getObjectFromJson(jsonPayload,new TypeToken<List<DatasourcesConfigDto>>(){}.getType(),ArrayList.class);
     assertEquals(datasources, mockDatasources);
   }
 
