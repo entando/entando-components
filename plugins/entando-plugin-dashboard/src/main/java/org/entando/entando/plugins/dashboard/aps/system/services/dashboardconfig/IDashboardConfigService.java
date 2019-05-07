@@ -39,5 +39,9 @@ public interface IDashboardConfigService {
   boolean existsById(int id);
 
   boolean existsByIdAndIsActive(int id);
+  
+  boolean datasourceExistsByDatasourceName(String datasourceName);
+
+  boolean datasourceExistsByDatasourceCode(String id_datasource);
 }
 

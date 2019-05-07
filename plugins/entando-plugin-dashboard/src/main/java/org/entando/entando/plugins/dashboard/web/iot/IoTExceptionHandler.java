@@ -3,6 +3,7 @@ package org.entando.entando.plugins.dashboard.web.iot;
 import com.agiletec.aps.system.exception.ApsSystemException;
 
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.exception.ApiResourceNotAvailableException;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.exception.InvalidFieldException;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.DashboardConfigController;
 import org.entando.entando.web.common.handlers.RestExceptionHandler;
 import org.entando.entando.web.common.model.ErrorRestResponse;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.net.MalformedURLException;
 import javax.net.ssl.HttpsURLConnection;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Produces;
 
 @ControllerAdvice(basePackageClasses = {DashboardConfigController.class, ConnectorController.class})
@@ -61,6 +63,16 @@ public class IoTExceptionHandler  extends  RestExceptionHandler{
   public ErrorRestResponse processApiResourceNotAvailableException(ApsSystemException ex) {
     logger.debug("Handling {} error", ex.getClass().getSimpleName());
     RestError error = new RestError("500", ex.getMessage());
+    return new ErrorRestResponse(error);
+  }
+  
+  @ExceptionHandler(value = InvalidFieldException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @Produces("application/json")
+  @ResponseBody
+  public ErrorRestResponse processBadRequestException(InvalidFieldException ex) {
+    logger.debug("Handling {} error", ex.getClass().getSimpleName());
+    RestError error = new RestError("400", ex.getMessage());
     return new ErrorRestResponse(error);
   }
   

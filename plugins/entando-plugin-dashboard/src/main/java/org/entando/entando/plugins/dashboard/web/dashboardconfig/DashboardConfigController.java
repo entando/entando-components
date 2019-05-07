@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
+import javax.ws.rs.BadRequestException;
 
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
@@ -106,15 +107,6 @@ public class DashboardConfigController {
   @RestAccessControl(permission = "superuser")
   @RequestMapping(value = "/servertypes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SimpleRestResponse<ServerType>> getDashboardTypes() {
-//    ServerType sitewhere = new ServerType();
-//    sitewhere.setCode("SITEWHERE");
-//    sitewhere.setDescription("SITEWHERE");
-//    ServerType kaa = new ServerType();
-//    kaa.setCode("KAA");
-//    kaa.setDescription("KAA");
-//    List<ServerType> lista = new ArrayList<ServerType>();
-//    lista.add(kaa);
-//    lista.add(sitewhere);
     List<ServerType> lista = connectorService.getDashboardTypes();
     return new ResponseEntity<>(new SimpleRestResponse(lista), HttpStatus.OK);
   }
@@ -188,7 +180,8 @@ public class DashboardConfigController {
     if (bindingResult.hasErrors()) {
       throw new ValidationConflictException(bindingResult);
     }
-    dashboardConfigRequest =connectorService.setDevicesMetadata(dashboardConfigRequest);
+    
+    dashboardConfigRequest = connectorService.setDevicesMetadata(dashboardConfigRequest);
     DashboardConfigDto dto = this.getDashboardConfigService()
         .addDashboardConfig(dashboardConfigRequest);
     return new ResponseEntity<>(new SimpleRestResponse(dto), HttpStatus.OK);
@@ -209,11 +202,12 @@ public class DashboardConfigController {
   @RequestMapping(value = "/server/{serverId}/ping", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SimpleRestResponse<Boolean>> pingDashboardConfig(
       @PathVariable int serverId) throws IOException {
-    
+
     logger.debug("{} ping to {}", this.getClass().getSimpleName(), serverId);
 
     if (!dashboardConfigService.existsByIdAndIsActive(serverId)) {
-      throw new ResourceNotFoundException(ERRCODE_ENTITY_DOES_NOT_EXIST, "server", String.valueOf(serverId));
+      throw new ResourceNotFoundException(ERRCODE_ENTITY_DOES_NOT_EXIST, "server",
+          String.valueOf(serverId));
     }
     DashboardConfigDto dto = dashboardConfigService.getDashboardConfig(serverId);
 
@@ -237,11 +231,12 @@ public class DashboardConfigController {
   @RequestMapping(value = "/server/{serverId}/datasource/{datasourceCode}/preview", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SimpleRestResponse<MeasurementColumn>> getMeasurementPreview(
       @PathVariable int serverId, @PathVariable String datasourceCode) {
-    
-    DashboardConfigDto dto = IoTUtils.checkServerAndDatasource(serverId, datasourceCode, dashboardConfigService);
-    
-      MeasurementTemplate template = connectorService
-          .getDeviceMeasurementSchema(dto, datasourceCode);
+
+    DashboardConfigDto dto = IoTUtils
+        .checkServerAndDatasource(serverId, datasourceCode, dashboardConfigService);
+
+    MeasurementTemplate template = connectorService
+        .getDeviceMeasurementSchema(dto, datasourceCode);
     return new ResponseEntity<>(new SimpleRestResponse(template), HttpStatus.OK);
   }
 
@@ -249,9 +244,10 @@ public class DashboardConfigController {
   @RequestMapping(value = "/server/{serverId}/datasource/{datasourceCode}/columns", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SimpleRestResponse<MeasurementColumn>> getDatasourceColumns(
       @PathVariable int serverId, @PathVariable String datasourceCode) {
-    
-    DashboardConfigDto dto = IoTUtils.checkServerAndDatasource(serverId, datasourceCode, dashboardConfigService);
-    
+
+    DashboardConfigDto dto = IoTUtils
+        .checkServerAndDatasource(serverId, datasourceCode, dashboardConfigService);
+
     MeasurementConfig config = connectorService.getMeasurementsConfig(dto, datasourceCode);
     return new ResponseEntity<>(new SimpleRestResponse(config), HttpStatus.OK);
   }
@@ -261,9 +257,10 @@ public class DashboardConfigController {
   @RequestMapping(value = "/server/{serverId}/getAllDevices", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SimpleRestResponse<MeasurementColumn>> getAllDevices(
       @PathVariable int serverId) {
-    
+
     if (!dashboardConfigService.existsByIdAndIsActive(serverId)) {
-      throw new ResourceNotFoundException(ERRCODE_ENTITY_DOES_NOT_EXIST, "dashboard", String.valueOf(serverId));
+      throw new ResourceNotFoundException(ERRCODE_ENTITY_DOES_NOT_EXIST, "dashboard",
+          String.valueOf(serverId));
     }
 
     DashboardConfigDto dashboard = dashboardConfigService.getDashboardConfig(serverId);
@@ -274,19 +271,22 @@ public class DashboardConfigController {
   @RequestMapping(value = "/server/{serverId}/datasource/{datasourceCode}/refreshMetadata", method = RequestMethod.POST)
   public ResponseEntity<?> refreshMetadata(@PathVariable int serverId,
       @PathVariable String datasourceCode) throws ApsSystemException {
-    DashboardConfigDto dto = IoTUtils.checkServerAndDatasource(serverId, datasourceCode, dashboardConfigService);
+    DashboardConfigDto dto = IoTUtils
+        .checkServerAndDatasource(serverId, datasourceCode, dashboardConfigService);
     dto = connectorService.refreshMetadata(dto, datasourceCode);
-    
+
     DashboardConfigDto dashboard = getDashboardConfigService().getDashboardConfig(serverId);
-    
+
     DatasourcesConfigDto toRemove = dashboard.getDatasources().stream()
         .filter(d -> d.getDatasourceCode().equals(datasourceCode)).findFirst().get();
     dashboard.getDatasources().remove(toRemove);
-    dashboard.getDatasources().add(dto.getDatasources().stream().filter(d -> d.getDatasourceCode().equals(datasourceCode)).findFirst().get());
-    
+    dashboard.getDatasources().add(
+        dto.getDatasources().stream().filter(d -> d.getDatasourceCode().equals(datasourceCode))
+            .findFirst().get());
+
     DashboardConfigRequest request = DashboardConfigBuilder.fromDtoToRequest(dashboard);
     dashboardConfigService.updateDashboardConfig(request);
     return new ResponseEntity(HttpStatus.OK);
   }
-  
+
 }

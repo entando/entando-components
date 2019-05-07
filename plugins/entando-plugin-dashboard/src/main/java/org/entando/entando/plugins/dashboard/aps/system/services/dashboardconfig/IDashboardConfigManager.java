@@ -47,4 +47,8 @@ public interface IDashboardConfigManager {
   boolean existsById(int id);
 
   boolean existsByIdAndActive(int id, int active);
+
+  boolean datasourceExistsByDatasourceName(String datasourceName);
+
+  boolean datasourceExistsByDatasourceCode(String id_datasource);
 }

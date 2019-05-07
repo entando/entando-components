@@ -36,402 +36,454 @@ import java.util.List;
 
 public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboardConfigDAO {
 
-	private static final Logger logger = LoggerFactory.getLogger(DashboardConfigDAO.class);
+  private static final Logger logger = LoggerFactory.getLogger(DashboardConfigDAO.class);
 
-	@Override
-	public int countDashboardConfigs(FieldSearchFilter[] filters) {
-		Integer dashboardConfigs = null;
-		try {
-			dashboardConfigs = super.countId(filters);
-		} catch (Throwable t) {
-			logger.error("error in count dashboardConfigs", t);
-			throw new RuntimeException("error in count dashboardConfigs", t);
-		}
-		return dashboardConfigs;
-	}
+  @Override
+  public int countDashboardConfigs(FieldSearchFilter[] filters) {
+    Integer dashboardConfigs = null;
+    try {
+      dashboardConfigs = super.countId(filters);
+    } catch (Throwable t) {
+      logger.error("error in count dashboardConfigs", t);
+      throw new RuntimeException("error in count dashboardConfigs", t);
+    }
+    return dashboardConfigs;
+  }
 
-	@Override
-	protected String getTableFieldName(String metadataFieldKey) {
-		return metadataFieldKey;
-	}
+  @Override
+  public int countDatasourceByName(String datasourceName) {
+    Integer datasource = null;
+    Connection conn = null;
+    PreparedStatement stat = null;
+    ResultSet res = null;
+    try {
+      conn = this.getConnection();
+      stat = conn.prepareStatement(COUNT_DATASOURCE_BY_NAME);
+      int index = 1;
+      stat.setString(index++, datasourceName);
+      res = stat.executeQuery();
+      while(res.next()) {
+        datasource = res.getInt("count");
+      }
+    } catch (Throwable t) {
+      logger.error("Error in count datasource", t);
+      throw new RuntimeException("Error in count datasource", t);
+    } finally {
+      closeDaoResources(res, stat, conn);
+    }
+    return datasource;
+  }
 
-	@Override
-	protected String getMasterTableName() {
-		return "dashboard_config";
-	}
+  @Override
+  public int countDatasourceByCode(String datasourceCode) {
+    Integer datasource = null;
+    Connection conn = null;
+    PreparedStatement stat = null;
+    ResultSet res = null;
+    try {
+      conn = this.getConnection();
+      stat = conn.prepareStatement(COUNT_DATASOURCE_BY_CODE);
+      int index = 1;
+      stat.setString(index++, datasourceCode);
+      res = stat.executeQuery();
+      while(res.next()) {
+        datasource = res.getInt("count");
+      }
+    } catch (Throwable t) {
+      logger.error("Error in count datasource", t);
+      throw new RuntimeException("Error in count datasource", t);
+    } finally {
+      closeDaoResources(res, stat, conn);
+    }
+    return datasource;
+  }
 
-	@Override
-	protected String getMasterTableIdFieldName() {
-		return "id";
-	}
 
-	@Override
-	public List<Integer> searchDashboardConfigs(FieldSearchFilter[] filters) {
-		List<Integer> dashboardConfigsId = new ArrayList<>();
-		List<String> masterList = super.searchId(filters);
-		masterList.stream().forEach(idString -> dashboardConfigsId.add(Integer.parseInt(idString)));
-		return dashboardConfigsId;
-	}
+  @Override
+  protected String getTableFieldName(String metadataFieldKey) {
+    return metadataFieldKey;
+  }
 
-	@Override
-	public List<Integer> loadDashboardConfigs() {
-		List<Integer> dashboardConfigsId = new ArrayList<Integer>();
-		Connection conn = null;
-		PreparedStatement stat = null;
-		ResultSet res = null;
-		try {
-			conn = this.getConnection();
-			stat = conn.prepareStatement(LOAD_DASHBOARD_CONFIGS_ID);
-			res = stat.executeQuery();
-			while (res.next()) {
-				int id = res.getInt("id");
-				dashboardConfigsId.add(id);
-			}
-		} catch (Throwable t) {
-			logger.error("Error loading DashboardConfig list", t);
-			throw new RuntimeException("Error loading DashboardConfig list", t);
-		} finally {
-			closeDaoResources(res, stat, conn);
-		}
-		return dashboardConfigsId;
-	}
+  @Override
+  protected String getMasterTableName() {
+    return "dashboard_config";
+  }
 
-	@Override
-	public void insertDashboardConfig(DashboardConfig dashboardConfig) {
-		Connection conn = null;
-		try {
-			conn = this.getConnection();
-			conn.setAutoCommit(false);
-			this.insertDashboardConfig(dashboardConfig, conn);
-			this.insertDashboardConfigDatasource(dashboardConfig, conn);
-			conn.commit();
-		} catch (Throwable t) {
-			this.executeRollback(conn);
-			logger.error("Error on insert dashboardConfig", t);
-			throw new RuntimeException("Error on insert dashboardConfig", t);
-		} finally {
-			this.closeDaoResources(null, null, conn);
-		}
-	}
+  @Override
+  protected String getMasterTableIdFieldName() {
+    return "id";
+  }
 
-	private void insertDashboardConfigDatasource(DashboardConfig dashboardConfig, final Connection conn)
-			throws SQLException {
-		final PreparedStatement stat = conn.prepareStatement(ADD_DATASOURCE);
-		try {
-			dashboardConfig.getDatasources().forEach(c -> {
-				try {
-					int index = 1;
-					stat.setInt(index++, dashboardConfig.getId());
-					stat.setString(index++, c.getDatasourceCode());
-					stat.setString(index++, c.getDatasource());
-					if (StringUtils.isNotBlank(c.getDatasourceURI())) {
-						stat.setString(index++, c.getDatasourceURI());
-					} else {
-						stat.setNull(index++, Types.VARCHAR);
-					}
-					if (StringUtils.isNotBlank(c.getStatus())) {
-						stat.setString(index++, c.getStatus());
-					} else {
-						stat.setNull(index++, Types.VARCHAR);
-					}
-					if (StringUtils.isNotBlank(c.getName())) {
-						stat.setString(index++, c.getName());
-					} else {
-						stat.setNull(index++, Types.VARCHAR);
-					}
-					if (c.getMetadata() != null && StringUtils.isNotBlank(new Gson().toJson(c.getMetadata()))) {
-						stat.setString(index++, new Gson().toJson(c.getMetadata()));
-					} else {
-						stat.setNull(index++, Types.VARCHAR);
-					}
-					stat.executeUpdate();
-				} catch (Throwable t) {
-					logger.error("Error on insert dashboardConfig Datasource", t);
-					throw new RuntimeException("Error on insert dashboardConfig DataSource", t);
-				}
+  @Override
+  public List<Integer> searchDashboardConfigs(FieldSearchFilter[] filters) {
+    List<Integer> dashboardConfigsId = new ArrayList<>();
+    List<String> masterList = super.searchId(filters);
+    masterList.stream().forEach(idString -> dashboardConfigsId.add(Integer.parseInt(idString)));
+    return dashboardConfigsId;
+  }
 
-			});
-		} finally {
-			closeDaoResources(null, stat);
-		}
+  @Override
+  public List<Integer> loadDashboardConfigs() {
+    List<Integer> dashboardConfigsId = new ArrayList<Integer>();
+    Connection conn = null;
+    PreparedStatement stat = null;
+    ResultSet res = null;
+    try {
+      conn = this.getConnection();
+      stat = conn.prepareStatement(LOAD_DASHBOARD_CONFIGS_ID);
+      res = stat.executeQuery();
+      while (res.next()) {
+        int id = res.getInt("id");
+        dashboardConfigsId.add(id);
+      }
+    } catch (Throwable t) {
+      logger.error("Error loading DashboardConfig list", t);
+      throw new RuntimeException("Error loading DashboardConfig list", t);
+    } finally {
+      closeDaoResources(res, stat, conn);
+    }
+    return dashboardConfigsId;
+  }
 
-	}
+  @Override
+  public void insertDashboardConfig(DashboardConfig dashboardConfig) {
+    Connection conn = null;
+    try {
+      conn = this.getConnection();
+      conn.setAutoCommit(false);
+      this.insertDashboardConfig(dashboardConfig, conn);
+      this.insertDashboardConfigDatasource(dashboardConfig, conn);
+      conn.commit();
+    } catch (Throwable t) {
+      this.executeRollback(conn);
+      logger.error("Error on insert dashboardConfig", t);
+      throw new RuntimeException("Error on insert dashboardConfig", t);
+    } finally {
+      this.closeDaoResources(null, null, conn);
+    }
+  }
 
-	private void insertDashboardConfig(DashboardConfig dashboardConfig, Connection conn) {
-		PreparedStatement stat = null;
-		try {
-			stat = conn.prepareStatement(ADD_DASHBOARD_CONFIG);
-			int index = 1;
-			stat.setInt(index++, dashboardConfig.getId());
-			stat.setString(index++, dashboardConfig.getServerDescription());
-			stat.setString(index++, dashboardConfig.getServerURI());
-			if (StringUtils.isNotBlank(dashboardConfig.getUsername())) {
-				stat.setString(index++, dashboardConfig.getUsername());
-			} else {
-				stat.setNull(index++, Types.VARCHAR);
-			}
-			if (StringUtils.isNotBlank(dashboardConfig.getPassword())) {
-				stat.setString(index++, dashboardConfig.getPassword());
-			} else {
-				stat.setNull(index++, Types.VARCHAR);
-			}
-			if (StringUtils.isNotBlank(dashboardConfig.getToken())) {
-				stat.setString(index++, dashboardConfig.getToken());
-			} else {
-				stat.setNull(index++, Types.VARCHAR);
-			}
-			stat.setInt(index++, dashboardConfig.getTimeConnection());
-			stat.setInt(index++, dashboardConfig.getActive() ? 1 : 0);
-			stat.setInt(index++, dashboardConfig.getDebug() ? 1 : 0);
-			if (dashboardConfig.getType() != null && StringUtils.isNotBlank(dashboardConfig.getType())) {
-				stat.setString(index++, dashboardConfig.getType());
-			} else {
-				stat.setNull(index++, Types.VARCHAR);
-			}
+  private void insertDashboardConfigDatasource(DashboardConfig dashboardConfig, final Connection conn)
+      throws SQLException {
+    final PreparedStatement stat = conn.prepareStatement(ADD_DATASOURCE);
+    try {
+      dashboardConfig.getDatasources().forEach(c -> {
+        try {
+          int index = 1;
+          stat.setInt(index++, dashboardConfig.getId());
+          stat.setString(index++, c.getDatasourceCode());
+          stat.setString(index++, c.getDatasource());
+          if (StringUtils.isNotBlank(c.getDatasourceURI())) {
+            stat.setString(index++, c.getDatasourceURI());
+          } else {
+            stat.setNull(index++, Types.VARCHAR);
+          }
+          if (StringUtils.isNotBlank(c.getStatus())) {
+            stat.setString(index++, c.getStatus());
+          } else {
+            stat.setNull(index++, Types.VARCHAR);
+          }
+          if (StringUtils.isNotBlank(c.getName())) {
+            stat.setString(index++, c.getName());
+          } else {
+            stat.setNull(index++, Types.VARCHAR);
+          }
+          if (c.getMetadata() != null && StringUtils.isNotBlank(new Gson().toJson(c.getMetadata()))) {
+            stat.setString(index++, new Gson().toJson(c.getMetadata()));
+          } else {
+            stat.setNull(index++, Types.VARCHAR);
+          }
+          stat.executeUpdate();
+        } catch (Throwable t) {
+          logger.error("Error on insert dashboardConfig Datasource", t);
+          throw new RuntimeException("Error on insert dashboardConfig DataSource", t);
+        }
+
+      });
+    } finally {
+      closeDaoResources(null, stat);
+    }
+
+  }
+
+  private void insertDashboardConfig(DashboardConfig dashboardConfig, Connection conn) {
+    PreparedStatement stat = null;
+    try {
+      stat = conn.prepareStatement(ADD_DASHBOARD_CONFIG);
+      int index = 1;
+      stat.setInt(index++, dashboardConfig.getId());
+      stat.setString(index++, dashboardConfig.getServerDescription());
+      stat.setString(index++, dashboardConfig.getServerURI());
+      if (StringUtils.isNotBlank(dashboardConfig.getUsername())) {
+        stat.setString(index++, dashboardConfig.getUsername());
+      } else {
+        stat.setNull(index++, Types.VARCHAR);
+      }
+      if (StringUtils.isNotBlank(dashboardConfig.getPassword())) {
+        stat.setString(index++, dashboardConfig.getPassword());
+      } else {
+        stat.setNull(index++, Types.VARCHAR);
+      }
+      if (StringUtils.isNotBlank(dashboardConfig.getToken())) {
+        stat.setString(index++, dashboardConfig.getToken());
+      } else {
+        stat.setNull(index++, Types.VARCHAR);
+      }
+      stat.setInt(index++, dashboardConfig.getTimeConnection());
+      stat.setInt(index++, dashboardConfig.getActive() ? 1 : 0);
+      stat.setInt(index++, dashboardConfig.getDebug() ? 1 : 0);
+      if (dashboardConfig.getType() != null && StringUtils.isNotBlank(dashboardConfig.getType())) {
+        stat.setString(index++, dashboardConfig.getType());
+      } else {
+        stat.setNull(index++, Types.VARCHAR);
+      }
 //			if (dashboardConfig.getType() != null && StringUtils.isNotBlank(dashboardConfig.getType().getDescription())) {
 //				stat.setString(index++, dashboardConfig.getType().getDescription());
 //			} else {
 //				stat.setNull(index++, Types.VARCHAR);
 //			}
-			stat.executeUpdate();
-		} catch (Throwable t) {
-			logger.error("Error on insert dashboardConfig", t);
-			throw new RuntimeException("Error on insert dashboardConfig", t);
-		} finally {
-			this.closeDaoResources(null, stat, null);
-		}
-	}
+      stat.executeUpdate();
+    } catch (Throwable t) {
+      logger.error("Error on insert dashboardConfig", t);
+      throw new RuntimeException("Error on insert dashboardConfig", t);
+    } finally {
+      this.closeDaoResources(null, stat, null);
+    }
+  }
 
-	@Override
-	public void updateDashboardConfig(DashboardConfig dashboardConfig) {
-		PreparedStatement stat = null;
-		Connection conn = null;
-		try {
-			conn = this.getConnection();
-			conn.setAutoCommit(false);
-			this.updateDashboardConfigDatasource(dashboardConfig, conn);
-			this.updateDashboardConfig(dashboardConfig, conn);
-			conn.commit();
-		} catch (Throwable t) {
-			this.executeRollback(conn);
-			logger.error("Error updating dashboardConfig {}", dashboardConfig.getId(), t);
-			throw new RuntimeException("Error updating dashboardConfig", t);
-		} finally {
-			this.closeDaoResources(null, stat, conn);
-		}
-	}
+  @Override
+  public void updateDashboardConfig(DashboardConfig dashboardConfig) {
+    PreparedStatement stat = null;
+    Connection conn = null;
+    try {
+      conn = this.getConnection();
+      conn.setAutoCommit(false);
+      this.updateDashboardConfigDatasource(dashboardConfig, conn);
+      this.updateDashboardConfig(dashboardConfig, conn);
+      conn.commit();
+    } catch (Throwable t) {
+      this.executeRollback(conn);
+      logger.error("Error updating dashboardConfig {}", dashboardConfig.getId(), t);
+      throw new RuntimeException("Error updating dashboardConfig", t);
+    } finally {
+      this.closeDaoResources(null, stat, conn);
+    }
+  }
 
-	private void updateDashboardConfigDatasource(final DashboardConfig dashboardConfig, final Connection conn)
-			throws SQLException {
-		this.removeDashboardConfigDatasource(dashboardConfig.getId(), conn);
-		this.insertDashboardConfigDatasource(dashboardConfig, conn);
+  private void updateDashboardConfigDatasource(final DashboardConfig dashboardConfig, final Connection conn)
+      throws SQLException {
+    this.removeDashboardConfigDatasource(dashboardConfig.getId(), conn);
+    this.insertDashboardConfigDatasource(dashboardConfig, conn);
 
-	}
+  }
 
-	public void updateDashboardConfig(DashboardConfig dashboardConfig, Connection conn) {
-		PreparedStatement stat = null;
-		try {
-			stat = conn.prepareStatement(UPDATE_DASHBOARD_CONFIG);
-			int index = 1;
+  public void updateDashboardConfig(DashboardConfig dashboardConfig, Connection conn) {
+    PreparedStatement stat = null;
+    try {
+      stat = conn.prepareStatement(UPDATE_DASHBOARD_CONFIG);
+      int index = 1;
 
-			stat.setString(index++, dashboardConfig.getServerDescription());
-			stat.setString(index++, dashboardConfig.getServerURI());
-			if (StringUtils.isNotBlank(dashboardConfig.getUsername())) {
-				stat.setString(index++, dashboardConfig.getUsername());
-			} else {
-				stat.setNull(index++, Types.VARCHAR);
-			}
-			if (StringUtils.isNotBlank(dashboardConfig.getPassword())) {
-				stat.setString(index++, dashboardConfig.getPassword());
-			} else {
-				stat.setNull(index++, Types.VARCHAR);
-			}
-			if (StringUtils.isNotBlank(dashboardConfig.getToken())) {
-				stat.setString(index++, dashboardConfig.getToken());
-			} else {
-				stat.setNull(index++, Types.VARCHAR);
-			}
-			stat.setInt(index++, dashboardConfig.getTimeConnection());
-			stat.setInt(index++, dashboardConfig.getActive() ? 1 : 0);
-			stat.setInt(index++, dashboardConfig.getDebug() ? 1 : 0);
-			if (dashboardConfig.getType() != null && StringUtils.isNotBlank(dashboardConfig.getType())) {
-				stat.setString(index++, dashboardConfig.getType());
-			} else {
-				stat.setNull(index++, Types.VARCHAR);
-			}
-			stat.setInt(index++, dashboardConfig.getId());
-			stat.executeUpdate();
-		} catch (Throwable t) {
-			logger.error("Error updating dashboardConfig {}", dashboardConfig.getId(), t);
-			throw new RuntimeException("Error updating dashboardConfig", t);
-		} finally {
-			this.closeDaoResources(null, stat, null);
-		}
-	}
+      stat.setString(index++, dashboardConfig.getServerDescription());
+      stat.setString(index++, dashboardConfig.getServerURI());
+      if (StringUtils.isNotBlank(dashboardConfig.getUsername())) {
+        stat.setString(index++, dashboardConfig.getUsername());
+      } else {
+        stat.setNull(index++, Types.VARCHAR);
+      }
+      if (StringUtils.isNotBlank(dashboardConfig.getPassword())) {
+        stat.setString(index++, dashboardConfig.getPassword());
+      } else {
+        stat.setNull(index++, Types.VARCHAR);
+      }
+      if (StringUtils.isNotBlank(dashboardConfig.getToken())) {
+        stat.setString(index++, dashboardConfig.getToken());
+      } else {
+        stat.setNull(index++, Types.VARCHAR);
+      }
+      stat.setInt(index++, dashboardConfig.getTimeConnection());
+      stat.setInt(index++, dashboardConfig.getActive() ? 1 : 0);
+      stat.setInt(index++, dashboardConfig.getDebug() ? 1 : 0);
+      if (dashboardConfig.getType() != null && StringUtils.isNotBlank(dashboardConfig.getType())) {
+        stat.setString(index++, dashboardConfig.getType());
+      } else {
+        stat.setNull(index++, Types.VARCHAR);
+      }
+      stat.setInt(index++, dashboardConfig.getId());
+      stat.executeUpdate();
+    } catch (Throwable t) {
+      logger.error("Error updating dashboardConfig {}", dashboardConfig.getId(), t);
+      throw new RuntimeException("Error updating dashboardConfig", t);
+    } finally {
+      this.closeDaoResources(null, stat, null);
+    }
+  }
 
-	@Override
-	public void removeDashboardConfig(int id) {
-		PreparedStatement stat = null;
-		Connection conn = null;
-		try {
-			conn = this.getConnection();
-			conn.setAutoCommit(false);
-			this.removeDashboardConfigDatasource(id, conn);
-			this.removeDashboardConfig(id, conn);
-			conn.commit();
-		} catch (Throwable t) {
-			this.executeRollback(conn);
-			logger.error("Error deleting dashboardConfig {}", id, t);
-			throw new RuntimeException("Error deleting dashboardConfig", t);
-		} finally {
-			this.closeDaoResources(null, stat, conn);
-		}
-	}
+  @Override
+  public void removeDashboardConfig(int id) {
+    PreparedStatement stat = null;
+    Connection conn = null;
+    try {
+      conn = this.getConnection();
+      conn.setAutoCommit(false);
+      this.removeDashboardConfigDatasource(id, conn);
+      this.removeDashboardConfig(id, conn);
+      conn.commit();
+    } catch (Throwable t) {
+      this.executeRollback(conn);
+      logger.error("Error deleting dashboardConfig {}", id, t);
+      throw new RuntimeException("Error deleting dashboardConfig", t);
+    } finally {
+      this.closeDaoResources(null, stat, conn);
+    }
+  }
 
-	private void removeDashboardConfigDatasource(int id, Connection conn) {
-		PreparedStatement stat = null;
-		try {
-			stat = conn.prepareStatement(DELETE_DATASOURCE);
-			stat.setInt(1, id);
-			stat.executeUpdate();
-		} catch (Throwable t) {
-			logger.error("Error deleting dashboardConfig Datasource{}", id, t);
-			throw new RuntimeException("Error deleting dashboardConfig Datasource", t);
-		}
-	}
+  private void removeDashboardConfigDatasource(int id, Connection conn) {
+    PreparedStatement stat = null;
+    try {
+      stat = conn.prepareStatement(DELETE_DATASOURCE);
+      stat.setInt(1, id);
+      stat.executeUpdate();
+    } catch (Throwable t) {
+      logger.error("Error deleting dashboardConfig Datasource{}", id, t);
+      throw new RuntimeException("Error deleting dashboardConfig Datasource", t);
+    }
+  }
 
-	public void removeDashboardConfig(int id, Connection conn) {
-		PreparedStatement stat = null;
-		try {
-			stat = conn.prepareStatement(DELETE_DASHBOARD_CONFIG);
-			int index = 1;
-			stat.setInt(index++, id);
-			stat.executeUpdate();
-		} catch (Throwable t) {
-			logger.error("Error deleting dashboardConfig {}", id, t);
-			throw new RuntimeException("Error deleting dashboardConfig", t);
-		} finally {
-			this.closeDaoResources(null, stat, null);
-		}
-	}
+  public void removeDashboardConfig(int id, Connection conn) {
+    PreparedStatement stat = null;
+    try {
+      stat = conn.prepareStatement(DELETE_DASHBOARD_CONFIG);
+      int index = 1;
+      stat.setInt(index++, id);
+      stat.executeUpdate();
+    } catch (Throwable t) {
+      logger.error("Error deleting dashboardConfig {}", id, t);
+      throw new RuntimeException("Error deleting dashboardConfig", t);
+    } finally {
+      this.closeDaoResources(null, stat, null);
+    }
+  }
 
-	public DashboardConfig loadDashboardConfig(int id) {
-		DashboardConfig dashboardConfig = null;
-		Connection conn = null;
-		PreparedStatement stat = null;
-		ResultSet res = null;
-		try {
-			conn = this.getConnection();
-			dashboardConfig = this.loadDashboardConfig(id, conn);
-		} catch (Throwable t) {
-			logger.error("Error loading dashboardConfig with id {}", id, t);
-			throw new RuntimeException("Error loading dashboardConfig with id " + id, t);
-		} finally {
-			closeDaoResources(res, stat, conn);
-		}
-		return dashboardConfig;
-	}
+  public DashboardConfig loadDashboardConfig(int id) {
+    DashboardConfig dashboardConfig = null;
+    Connection conn = null;
+    PreparedStatement stat = null;
+    ResultSet res = null;
+    try {
+      conn = this.getConnection();
+      dashboardConfig = this.loadDashboardConfig(id, conn);
+    } catch (Throwable t) {
+      logger.error("Error loading dashboardConfig with id {}", id, t);
+      throw new RuntimeException("Error loading dashboardConfig with id " + id, t);
+    } finally {
+      closeDaoResources(res, stat, conn);
+    }
+    return dashboardConfig;
+  }
 
-	@Override
-	public DatasourcesConfigDto loadDatasourceConfigByDatasourceCodeAndDashboardConfig(int dashboardId,
-			String datasourceCode) {
-		Connection conn;
-		DatasourcesConfigDto datasource = new DatasourcesConfigDto();
-		PreparedStatement stat = null;
-		ResultSet res = null;
-		try {
-			conn = this.getConnection();
-			stat = conn.prepareStatement(LOAD_DATASOURCE_BY_DASHBOARD_AND_DATASOURCECODE);
-			stat.setInt(1, dashboardId);
-			stat.setString(2, datasourceCode);
+  @Override
+  public DatasourcesConfigDto loadDatasourceConfigByDatasourceCodeAndDashboardConfig(int dashboardId,
+      String datasourceCode) {
+    Connection conn;
+    DatasourcesConfigDto datasource = new DatasourcesConfigDto();
+    PreparedStatement stat = null;
+    ResultSet res = null;
+    try {
+      conn = this.getConnection();
+      stat = conn.prepareStatement(LOAD_DATASOURCE_BY_DASHBOARD_AND_DATASOURCECODE);
+      stat.setInt(1, dashboardId);
+      stat.setString(2, datasourceCode);
 
-			res = stat.executeQuery();
-			datasource.setDatasourceCode(res.getString("datasourcecode"));
-			datasource.setDatasource(res.getString("datasource"));
-			datasource.setDatasourceURI(res.getString("datasourceuri"));
-			datasource.setStatus(res.getString("status"));
-		} catch (Throwable t) {
-			logger.error("Error loading dashboardConfig with dashboardId {}", dashboardId, t);
-			throw new RuntimeException("Error loading dashboardConfig with dashboardId " + dashboardId, t);
-		} finally {
-			closeDaoResources(res, stat, null);
-		}
+      res = stat.executeQuery();
+      datasource.setDatasourceCode(res.getString("datasourcecode"));
+      datasource.setDatasource(res.getString("datasource"));
+      datasource.setDatasourceURI(res.getString("datasourceuri"));
+      datasource.setStatus(res.getString("status"));
+    } catch (Throwable t) {
+      logger.error("Error loading dashboardConfig with dashboardId {}", dashboardId, t);
+      throw new RuntimeException("Error loading dashboardConfig with dashboardId " + dashboardId, t);
+    } finally {
+      closeDaoResources(res, stat, null);
+    }
 
-		return datasource;
-	}
+    return datasource;
+  }
 
-	public DashboardConfig loadDashboardConfig(int id, Connection conn) {
-		DashboardConfig dashboardConfig = null;
-		PreparedStatement stat = null;
-		ResultSet res = null;
-		try {
-			stat = conn.prepareStatement(LOAD_DASHBOARD_CONFIG);
-			stat.setInt(1, id);
-			res = stat.executeQuery();
-			if (res.next()) {
-				dashboardConfig = this.buildDashboardConfigFromRes(res);
-			}
-			closeDaoResources(res, stat);
-			stat = conn.prepareStatement(LOAD_DATASOURCE);
-			stat.setInt(1, id);
-			res = stat.executeQuery();
-			while (res.next()) {
-				DatasourcesConfigDto datasource = new DatasourcesConfigDto();
-				datasource.setDatasourceCode(res.getString("datasourcecode"));
-				datasource.setDatasource(res.getString("datasource"));
-				datasource.setDatasourceURI(res.getString("datasourceuri"));
-				datasource.setStatus(res.getString("status"));
-				datasource.setName(res.getString("name"));
-				JsonObject metadata = new Gson().fromJson(res.getString("metadata"), JsonObject.class);
-				datasource.setMetadata(JsonUtils.getMapFromJson(metadata));
-				dashboardConfig.getDatasources().add(datasource);
-			}
+  public DashboardConfig loadDashboardConfig(int id, Connection conn) {
+    DashboardConfig dashboardConfig = null;
+    PreparedStatement stat = null;
+    ResultSet res = null;
+    try {
+      stat = conn.prepareStatement(LOAD_DASHBOARD_CONFIG);
+      stat.setInt(1, id);
+      res = stat.executeQuery();
+      if (res.next()) {
+        dashboardConfig = this.buildDashboardConfigFromRes(res);
+      }
+      closeDaoResources(res, stat);
+      stat = conn.prepareStatement(LOAD_DATASOURCE);
+      stat.setInt(1, id);
+      res = stat.executeQuery();
+      while (res.next()) {
+        DatasourcesConfigDto datasource = new DatasourcesConfigDto();
+        datasource.setDatasourceCode(res.getString("datasourcecode"));
+        datasource.setDatasource(res.getString("datasource"));
+        datasource.setDatasourceURI(res.getString("datasourceuri"));
+        datasource.setStatus(res.getString("status"));
+        datasource.setName(res.getString("name"));
+        JsonObject metadata = new Gson().fromJson(res.getString("metadata"), JsonObject.class);
+        datasource.setMetadata(JsonUtils.getMapFromJson(metadata));
+        dashboardConfig.getDatasources().add(datasource);
+      }
 
-		} catch (Throwable t) {
-			logger.error("Error loading dashboardConfig with id {}", id, t);
-			throw new RuntimeException("Error loading dashboardConfig with id " + id, t);
-		} finally {
-			closeDaoResources(res, stat, null);
-		}
-		return dashboardConfig;
-	}
+    } catch (Throwable t) {
+      logger.error("Error loading dashboardConfig with id {}", id, t);
+      throw new RuntimeException("Error loading dashboardConfig with id " + id, t);
+    } finally {
+      closeDaoResources(res, stat, null);
+    }
+    return dashboardConfig;
+  }
 
-	protected DashboardConfig buildDashboardConfigFromRes(ResultSet res) {
-		DashboardConfig dashboardConfig = null;
-		try {
-			dashboardConfig = new DashboardConfig();
-			dashboardConfig.setId(res.getInt("id"));
-			dashboardConfig.setServerDescription(res.getString("serverdescription"));
-			dashboardConfig.setServerURI(res.getString("serveruri"));
-			dashboardConfig.setUsername(res.getString("username"));
-			dashboardConfig.setPassword(res.getString("password"));
-			dashboardConfig.setToken(res.getString("token"));
-			dashboardConfig.setTimeConnection(res.getInt("timeconnection"));
-			dashboardConfig.setActive(res.getBoolean("active"));
-			dashboardConfig.setDebug(res.getBoolean("debug"));
-			dashboardConfig.setType(res.getString("type"));
-		} catch (Throwable t) {
-			logger.error("Error in buildDashboardConfigFromRes", t);
-		}
-		return dashboardConfig;
-	}
+  protected DashboardConfig buildDashboardConfigFromRes(ResultSet res) {
+    DashboardConfig dashboardConfig = null;
+    try {
+      dashboardConfig = new DashboardConfig();
+      dashboardConfig.setId(res.getInt("id"));
+      dashboardConfig.setServerDescription(res.getString("serverdescription"));
+      dashboardConfig.setServerURI(res.getString("serveruri"));
+      dashboardConfig.setUsername(res.getString("username"));
+      dashboardConfig.setPassword(res.getString("password"));
+      dashboardConfig.setToken(res.getString("token"));
+      dashboardConfig.setTimeConnection(res.getInt("timeconnection"));
+      dashboardConfig.setActive(res.getBoolean("active"));
+      dashboardConfig.setDebug(res.getBoolean("debug"));
+      dashboardConfig.setType(res.getString("type"));
+    } catch (Throwable t) {
+      logger.error("Error in buildDashboardConfigFromRes", t);
+    }
+    return dashboardConfig;
+  }
 
-	private static final String ADD_DASHBOARD_CONFIG = "INSERT INTO dashboard_config (id, serverdescription, serveruri, username, password, token, timeconnection, active, debug, type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+  private static final String ADD_DASHBOARD_CONFIG = "INSERT INTO dashboard_config (id, serverdescription, serveruri, username, password, token, timeconnection, active, debug, type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-	private static final String UPDATE_DASHBOARD_CONFIG = "UPDATE dashboard_config SET  serverdescription=?,  serveruri=?,  username=?,  password=?,  token=?,  timeconnection=?,  active=?, debug=?, type = ? WHERE id = ?";
+  private static final String UPDATE_DASHBOARD_CONFIG = "UPDATE dashboard_config SET  serverdescription=?,  serveruri=?,  username=?,  password=?,  token=?,  timeconnection=?,  active=?, debug=?, type = ? WHERE id = ?";
 
-	private static final String DELETE_DASHBOARD_CONFIG = "DELETE FROM dashboard_config WHERE id = ?";
+  private static final String DELETE_DASHBOARD_CONFIG = "DELETE FROM dashboard_config WHERE id = ?";
 
-	private static final String LOAD_DASHBOARD_CONFIG = "SELECT id, serverdescription, serveruri, username, password, token, timeconnection, active, debug, type  FROM dashboard_config WHERE id = ?";
+  private static final String LOAD_DASHBOARD_CONFIG = "SELECT id, serverdescription, serveruri, username, password, token, timeconnection, active, debug, type  FROM dashboard_config WHERE id = ?";
 
-	private static final String LOAD_DASHBOARD_CONFIGS_ID = "SELECT id FROM dashboard_config";
+  private static final String LOAD_DASHBOARD_CONFIGS_ID = "SELECT id FROM dashboard_config";
 
-	private static final String ADD_DATASOURCE = "INSERT INTO dashboard_config_datasource (fk_dashboard_config, datasourcecode ,datasource, datasourceuri, status , name, metadata) VALUES (?, ?, ?, ?, ?, ? , ?)";
+  private static final String ADD_DATASOURCE = "INSERT INTO dashboard_config_datasource (fk_dashboard_config, datasourcecode ,datasource, datasourceuri, status , name, metadata) VALUES (?, ?, ?, ?, ?, ? , ?)";
 
-	private static final String DELETE_DATASOURCE = "DELETE FROM dashboard_config_datasource WHERE fk_dashboard_config = ?";
+  private static final String DELETE_DATASOURCE = "DELETE FROM dashboard_config_datasource WHERE fk_dashboard_config = ?";
 
-	private static final String LOAD_DATASOURCE = "SELECT * FROM dashboard_config_datasource WHERE fk_dashboard_config = ?";
+  private static final String LOAD_DATASOURCE = "SELECT * FROM dashboard_config_datasource WHERE fk_dashboard_config = ?";
 
-	private static final String LOAD_DATASOURCE_BY_DASHBOARD_AND_DATASOURCECODE = "SELECT * FROM dashboard_config_datasource WHERE fk_dashboard_config = ? AND datasourcecode = ?";
+  private static final String LOAD_DATASOURCE_BY_DASHBOARD_AND_DATASOURCECODE = "SELECT * FROM dashboard_config_datasource WHERE fk_dashboard_config = ? AND datasourcecode = ?";
 
+  private static final String COUNT_DATASOURCE_BY_NAME = "SELECT COUNT(*) FROM dashboard_config_datasource WHERE datasource = ?";
+  
+  private static final String COUNT_DATASOURCE_BY_CODE = "SELECT COUNT(*) FROM dashboard_config_datasource WHERE datasourcecode = ?";
 }

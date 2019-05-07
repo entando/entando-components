@@ -176,6 +176,16 @@ public class DashboardConfigManager extends AbstractService implements IDashboar
     return this.getDashboardConfigDAO().countDashboardConfigs(filters) > 0;
   }
 
+  @Override
+  public boolean datasourceExistsByDatasourceName(String datasourceName) {
+    return this.getDashboardConfigDAO().countDatasourceByName(datasourceName) > 0;
+  }
+
+  @Override
+  public boolean datasourceExistsByDatasourceCode(String datasourceCode) {
+    return this.getDashboardConfigDAO().countDatasourceByCode(datasourceCode) > 0;
+  }
+
   protected IKeyGeneratorManager getKeyGeneratorManager() {
     return _keyGeneratorManager;
   }

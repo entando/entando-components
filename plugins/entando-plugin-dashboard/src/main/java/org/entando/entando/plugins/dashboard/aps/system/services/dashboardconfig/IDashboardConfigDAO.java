@@ -26,19 +26,23 @@ import java.util.List;
 
 public interface IDashboardConfigDAO {
 
-    List<Integer> searchDashboardConfigs(FieldSearchFilter[] filters);
+  int countDatasourceByName(String datasourceName);
 
-    DashboardConfig loadDashboardConfig(int id);
+  int countDatasourceByCode(String datasourceCode);
 
-    List<Integer> loadDashboardConfigs();
+  List<Integer> searchDashboardConfigs(FieldSearchFilter[] filters);
 
-    void removeDashboardConfig(int id);
+  DashboardConfig loadDashboardConfig(int id);
 
-    void updateDashboardConfig(DashboardConfig dashboardConfig);
+  List<Integer> loadDashboardConfigs();
 
-    void insertDashboardConfig(DashboardConfig dashboardConfig);
+  void removeDashboardConfig(int id);
 
-    int countDashboardConfigs(FieldSearchFilter[] filters);
-    
-    DatasourcesConfigDto loadDatasourceConfigByDatasourceCodeAndDashboardConfig(int dashboardId, String datasourceCode);
+  void updateDashboardConfig(DashboardConfig dashboardConfig);
+
+  void insertDashboardConfig(DashboardConfig dashboardConfig);
+
+  int countDashboardConfigs(FieldSearchFilter[] filters);
+
+  DatasourcesConfigDto loadDatasourceConfigByDatasourceCodeAndDashboardConfig(int dashboardId, String datasourceCode);
 }
