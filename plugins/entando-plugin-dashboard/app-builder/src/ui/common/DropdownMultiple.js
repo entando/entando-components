@@ -21,9 +21,8 @@ class DropdownMultiple extends Component {
     this.state = {
       listOpen: false,
       headerTitle: props.title,
-      // timeOut: null,
     };
-    // this.close = this.close.bind(this);
+    this.close = this.close.bind(this);
   }
 
   componentDidUpdate() {
@@ -41,11 +40,11 @@ class DropdownMultiple extends Component {
     window.removeEventListener('click', this.close);
   }
 
-  // close(timeOut) {
-  //   this.setState({
-  //     listOpen: false,
-  //   });
-  // }
+  close() {
+    this.setState({
+      listOpen: false,
+    });
+  }
 
   toggleList() {
     this.setState(prevState => ({
