@@ -91,12 +91,12 @@ DashboardBarChartFormBody.propTypes = {
   formSyncErrors: PropTypes.shape({}),
   axis: PropTypes.shape({ rotated: PropTypes.bool }).isRequired,
   chart: PropTypes.string.isRequired,
-  columns: PropTypes.arrayOf(PropTypes.shape({})),
+  columns: PropTypes.shape({}),
 };
 
 DashboardBarChartFormBody.defaultProps = {
   formSyncErrors: {},
-  columns: [],
+  columns: {},
 };
 
 const DashboardBarChartForm = reduxForm({

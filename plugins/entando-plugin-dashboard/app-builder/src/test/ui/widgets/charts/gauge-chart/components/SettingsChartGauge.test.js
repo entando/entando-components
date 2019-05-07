@@ -1,26 +1,27 @@
-import React from "react";
-import "test/enzyme-init";
-import {shallow} from "enzyme";
-import {FieldArray} from "redux-form";
+import React from 'react';
+import 'test/enzyme-init';
+import { shallow } from 'enzyme';
+import { FieldArray } from 'redux-form';
 
-import SettingsChartGauge from "ui/widgets/charts/gauge-chart/components/SettingsChartGauge";
+import SettingsChartGauge from 'ui/widgets/charts/gauge-chart/components/SettingsChartGauge';
 
 const props = {
   optionColumns: [],
-  optionColumnXSelected: []
+  optionColumnXSelected: [],
+  datasourceSelected: '',
 };
 
-describe("SettingsChartGauge", () => {
+describe('SettingsChartGauge', () => {
   let component;
   beforeEach(() => {
     component = shallow(<SettingsChartGauge {...props} />);
   });
 
-  it("renders without crashing", () => {
+  it('renders without crashing', () => {
     expect(component.exists()).toBe(true);
   });
 
-  it("have FieldArray", () => {
+  it('have FieldArray', () => {
     expect(component.find(FieldArray)).toHaveLength(1);
   });
 });
