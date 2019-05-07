@@ -5,7 +5,8 @@ import {
   fetchServerConfigList,
   editServerConfig,
   removeServerConfig,
-  checkServerConfig,
+  checkStatusServerConfig,
+  checkStatusDatasource,
   gotoPluginPage,
 } from 'state/main/actions';
 
@@ -19,7 +20,7 @@ export const mapStateToProps = state => ({
 export const mapDispatchToProps = dispatch => ({
   onWillMount: () => {
     dispatch(fetchServerConfigList()).then(() => {
-      dispatch(checkServerConfig());
+      dispatch(checkStatusServerConfig());
     });
   },
 
@@ -28,12 +29,13 @@ export const mapDispatchToProps = dispatch => ({
   },
 
   editConfigItem: (formName, configItem) => {
-    dispatch(editServerConfig(formName, configItem));
+    dispatch(editServerConfig(formName, configItem)).then(() =>
+      dispatch(checkStatusDatasource()));
   },
 
-  testConfigItem: (serverId) => { dispatch(checkServerConfig(serverId)); },
+  testConfigItem: (serverId) => { dispatch(checkStatusServerConfig(serverId)); },
 
-  testAllConfigItems: () => dispatch(checkServerConfig()),
+  testAllConfigItems: () => dispatch(checkStatusServerConfig()),
 
   gotoPluginPage: page => dispatch(gotoPluginPage(page)),
 });

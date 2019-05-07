@@ -9,6 +9,7 @@ export const UPDATE_SERVER_CONFIG =
   'plugin/dashboard/update-server-config-list';
 
 export const SET_CHECK_SERVER = 'plugin/dashboard/set-check-server';
+export const SET_CHECK_DATASOURCE = 'plugin/dashboard/set-check-datasource';
 
 export const REMOVE_SERVER_CONFIG = 'plugin/dashboard/remove-server-config';
 export const SET_DATASOURCE_LIST = 'plugin/dashboard/set-datasource-list';

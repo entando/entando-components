@@ -70,7 +70,7 @@ const DashboardConfigDatasource = ({
                   <td>{ds.datasource}</td>
                   <td>{ds.datasourceURI}</td>
                   <td>
-                    <DashboardConfigDatasourceStatusContainer />
+                    <DashboardConfigDatasourceStatusContainer datasourceCode={ds.datasourceCode} />
                   </td>
                   <td className="text-center">
                     <Icon
