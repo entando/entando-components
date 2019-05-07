@@ -59,6 +59,7 @@
         <module>entando-plugin-jpseo</module>
         <module>entando-plugin-jpdigital-exchange</module>
         <module>entando-plugin-jpoidc</module>
+        <module>entando-plugin-jpcrypt</module>
     </modules>
     <profiles>
         <profile>

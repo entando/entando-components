@@ -9,7 +9,7 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'jpkiebpm_c
             <id>1</id>
             <name>default</name>
             <username>krisv</username>
-            <password>EFMBY42jI+kPeV8xX0UqkZH6CZq8nwcdR2tJpyxSUuSYjzBn0IltoQ==</password>
+            <password>hgpmhf2K6JX9u0NJ1P5aAvBCTjY6ixEmrGGEr8nZidQ4fJ9JaVIBTNHsD6oo</password>
             <hostname>localhost</hostname>
             <schema>http</schema>
             <port>8080</port>
@@ -24,7 +24,7 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'jpkiebpm_c
             <id>2</id>
             <name>test2</name>
             <username>krisv</username>
-            <password>EFMBY42jI+kPeV8xX0UqkZH6CZq8nwcdR2tJpyxSUuSYjzBn0IltoQ==</password>
+            <password>hgpmhf2K6JX9u0NJ1P5aAvBCTjY6ixEmrGGEr8nZidQ4fJ9JaVIBTNHsD6oo</password>
             <hostname>localhost</hostname>
             <schema>http</schema>
             <port>8082</port>

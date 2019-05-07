@@ -16,20 +16,21 @@ package org.entando.entando.aps.system.services.digitalexchange;
 import java.io.StringReader;
 import java.io.StringWriter;
 import javax.xml.bind.JAXB;
+import org.entando.entando.crypt.DefaultTextEncryptor;
 import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExchangesConfig;
-import org.entando.entando.aps.util.crypto.DefaultTextEncryptor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DigitalExchangeConfigXmlConverter {
 
+    private static final String CRYPT_PROPERTIES = "component/plugins/digitalExchange/security.properties";
+
     private final TextEncryptor encryptor;
 
-    @Autowired
-    public DigitalExchangeConfigXmlConverter(DefaultTextEncryptor encryptor) {
-        this.encryptor = encryptor;
+    public DigitalExchangeConfigXmlConverter() {
+        this.encryptor = new DefaultTextEncryptor(new ClassPathResource(CRYPT_PROPERTIES));
     }
 
     public String marshal(DigitalExchangesConfig config) {

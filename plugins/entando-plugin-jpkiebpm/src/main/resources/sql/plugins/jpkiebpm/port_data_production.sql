@@ -9,7 +9,7 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('production', 'jpki
             <id>1</id>
             <name>default</name>
             <username>krisv</username>
-            <password>jvK4iusIxd7iqfDVu/CuvC5Q6gfR1cTS9wexnoVwk+aGKsLS6asGWA==</password>
+            <password>hgpmhf2K6JX9u0NJ1P5aAvBCTjY6ixEmrGGEr8nZidQ4fJ9JaVIBTNHsD6oo</password>
             <hostname>localhost</hostname>
             <schema>http</schema>
             <port>8080</port>

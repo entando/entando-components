@@ -5,7 +5,7 @@
     <name>DigitalExchange 1</name>
     <url>https://de1.entando.com/</url>
     <key>client-key</key>
-    <secret>RgSYKg/KCgElATb35ge57E8Cwrr0daZ/+TmqsbCn5ewnQWiMcyd9hA==</secret>
+    <secret>W+A5w/MYOrhxJNfPR2iurimenb5N4B0NzOm6DQYliD8o1R0CgeiKXx9emCES62RrbapmR/U=</secret>
     <timeout>1000</timeout>
     <active>true</active>
     <publicKey>-----BEGIN RSA PUBLIC KEY-----
@@ -24,7 +24,7 @@ gjJXX1fBJpHAzp9Yy1RqkXBH4zZ5OmBxUJ2XwnqeVTWDT1ZPOjvRCyTN6v13mh0G
     <name>DigitalExchange 2</name>
     <url>https://de2.entando.com/</url>
     <key>client-key</key>
-    <secret>RgSYKg/KCgElATb35ge57E8Cwrr0daZ/+TmqsbCn5ewnQWiMcyd9hA==</secret>
+    <secret>W+A5w/MYOrhxJNfPR2iurimenb5N4B0NzOm6DQYliD8o1R0CgeiKXx9emCES62RrbapmR/U=</secret>
     <timeout>1000</timeout>
     <active>true</active>
     <publicKey>-----BEGIN RSA PUBLIC KEY-----

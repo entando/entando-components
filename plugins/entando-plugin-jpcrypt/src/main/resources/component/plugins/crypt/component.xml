@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component>
+    <code>jpcrypt</code>
+    <description>Entando Cryptography Plugin</description>
+    <installation>
+        <tableMapping>
+            <datasource name="portDataSource">
+            </datasource>
+            <datasource name="servDataSource">
+            </datasource>
+        </tableMapping>
+        <environment code="production">
+            <defaultSqlResources>
+                <datasource name="portDataSource">
+                </datasource>
+            </defaultSqlResources>
+        </environment>
+        <environment code="test">
+            <defaultSqlResources>
+                <datasource name="portDataSource">
+                </datasource>
+            </defaultSqlResources>
+        </environment>
+    </installation>
+    <uninstallation>
+        <sqlResources>
+            <datasource name="portDataSource">
+            </datasource>
+        </sqlResources>
+    </uninstallation>
+</component>

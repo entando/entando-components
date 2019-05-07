@@ -1381,6 +1381,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
         return xmlConverter;
     }
 
+    @Override
     public void setXmlConverter(KieBpmConfigXMLConverter xmlConverter) {
         this.xmlConverter = xmlConverter;
     }

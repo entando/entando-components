@@ -18,7 +18,6 @@ import java.util.List;
 import org.entando.entando.aps.system.DigitalExchangeConstants;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangeOAuth2RestTemplateFactory;
 import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExchange;
-import org.entando.entando.aps.util.crypto.DefaultTextEncryptor;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsResourceDetails;
 import org.junit.Before;
@@ -39,11 +38,9 @@ import static org.entando.entando.aps.system.services.digitalexchange.DigitalExc
 @RunWith(MockitoJUnitRunner.class)
 public class DigitalExchangesManagerTest {
 
-    private static final String KEY = "test-key";
     private static final String SECRET = "client-secret";
-    private static final DefaultTextEncryptor ENCRYPTOR = new DefaultTextEncryptor(KEY);
     private static final DigitalExchangeConfigXmlConverter XML_CONVERTER
-            = new DigitalExchangeConfigXmlConverter(ENCRYPTOR);
+            = new DigitalExchangeConfigXmlConverter();
 
     @Mock
     private ConfigInterface configManager;
@@ -120,7 +117,7 @@ public class DigitalExchangesManagerTest {
     public void shouldAddDigitalExchange() {
 
         DigitalExchange digitalExchange = manager.create(getNewDE());
-        
+
         assertThat(digitalExchange)
                 .isNotNull()
                 .extracting(DigitalExchange::getId, DigitalExchange::getName)
@@ -136,7 +133,7 @@ public class DigitalExchangesManagerTest {
         digitalExchange.setActive(false);
 
         digitalExchange = manager.create(digitalExchange);
-        
+
         assertThat(digitalExchange).isNotNull();
         assertTrue(manager.findById(digitalExchange.getId()).isPresent());
         assertThat(manager.getRestTemplate(digitalExchange.getId())).isNull();
@@ -204,7 +201,7 @@ public class DigitalExchangesManagerTest {
                         + "    <name>" + DE_1_NAME + "</name>"
                         + "    <url>" + DE_URL + "</url>"
                         + "    <key>client-id</key>"
-                        + "    <secret>" + ENCRYPTOR.encrypt(SECRET) + "</secret>"
+                        + "    <secret>W+A5w/MYOrhxJNfPR2iurimenb5N4B0NzOm6DQYliD8o1R0CgeiKXx9emCES62RrbapmR/U=</secret>"
                         + "    <timeout>5000</timeout>"
                         + "    <active>true</active>"
                         + "    <publicKey>" + getTestPublicKey() + "</publicKey>"

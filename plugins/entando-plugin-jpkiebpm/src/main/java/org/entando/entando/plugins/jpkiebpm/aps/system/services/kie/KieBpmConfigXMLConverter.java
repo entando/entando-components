@@ -23,21 +23,26 @@
  */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 
-import org.entando.entando.aps.util.crypto.CryptoException;
+import org.entando.entando.crypt.DefaultTextEncryptor;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfigFactory;
 import org.entando.entando.plugins.jprestapi.aps.core.helper.JAXBHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
 
+@PropertySource("classpath:component/plugins/jpkiebpm/security.properties")
 public class KieBpmConfigXMLConverter {
 
     private static final Logger logger = LoggerFactory.getLogger(KieBpmConfigXMLConverter.class);
-
+    
+    private static final String CRYPT_PROPERTIES = "component/plugins/jpkiebpm/security.properties";
+    
     private final TextEncryptor textEncryptor;
 
-    public KieBpmConfigXMLConverter(TextEncryptor textEncryptor) {
-        this.textEncryptor = textEncryptor;
+    public KieBpmConfigXMLConverter() {
+        this.textEncryptor = new DefaultTextEncryptor(new ClassPathResource(CRYPT_PROPERTIES));
     }
 
     public String marshal(KieBpmConfigFactory configFactory) throws Throwable {
