@@ -1,12 +1,12 @@
-import React from "react";
-import PropTypes from "prop-types";
-import {Col, ControlLabel} from "patternfly-react";
-import {formattedText} from "@entando/utils";
-import {uniqueId} from "lodash";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Col, ControlLabel } from 'patternfly-react';
+import { formattedText } from '@entando/utils';
+import { uniqueId } from 'lodash';
 
 const RenderSelectInput = ({
   input,
-  meta: {touched, error},
+  meta: { touched, error },
   labelSize,
   alignClass,
   label,
@@ -18,22 +18,22 @@ const RenderSelectInput = ({
   optionDisplayName,
   size,
   inputSize,
-  disabled
+  disabled,
 }) => {
   const containerClasses =
-    touched && error ? "form-group has-error" : "form-group";
+    touched && error ? 'form-group has-error' : 'form-group';
 
   const defaultOption = defaultOptionId ? (
     <option value="">{formattedText(defaultOptionId)}</option>
   ) : null;
 
-  const optionsList = optionReducer
-    ? optionReducer(options)
-    : options.map(item => (
-        <option key={uniqueId("option_")} value={item[optionValue]}>
-          {item[optionDisplayName]}
-        </option>
-      ));
+  const optionsList = optionReducer ?
+    optionReducer(options) :
+    options.map(item => (
+      <option key={uniqueId('option_')} value={item[optionValue]}>
+        {item[optionDisplayName]}
+      </option>
+    ));
 
   const errorBox =
     touched && error ? <span className="help-block">{error}</span> : null;
@@ -65,15 +65,13 @@ RenderSelectInput.propTypes = {
   input: PropTypes.shape({}),
   meta: PropTypes.shape({
     touched: PropTypes.bool,
-    error: PropTypes.shape({})
+    error: PropTypes.shape({}),
   }),
   defaultOptionId: PropTypes.string,
-  options: PropTypes.arrayOf(
-    PropTypes.shape({
-      value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-      text: PropTypes.string
-    })
-  ),
+  options: PropTypes.arrayOf(PropTypes.shape({
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    text: PropTypes.string,
+  })),
   label: PropTypes.node,
   labelSize: PropTypes.number,
   alignClass: PropTypes.string,
@@ -83,26 +81,26 @@ RenderSelectInput.propTypes = {
   optionDisplayName: PropTypes.string,
   size: PropTypes.number,
   inputSize: PropTypes.number,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
 };
 
 RenderSelectInput.defaultProps = {
   input: {},
   meta: {
     touched: false,
-    error: {}
+    error: {},
   },
-  defaultOptionId: "",
+  defaultOptionId: '',
   options: [],
   label: null,
   labelSize: 2,
-  alignClass: "text-right",
+  alignClass: 'text-right',
   help: null,
   optionReducer: null,
-  optionValue: "value",
-  optionDisplayName: "text",
+  optionValue: 'value',
+  optionDisplayName: 'text',
   size: null,
   inputSize: null,
-  disabled: false
+  disabled: false,
 };
 export default RenderSelectInput;

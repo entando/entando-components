@@ -1,16 +1,18 @@
-import React from "react";
-import PropTypes from "prop-types";
-import {Field} from "redux-form";
-import {required} from "@entando/utils";
-import {InputGroup} from "patternfly-react";
-import RenderSelectInput from "ui/common/form/RenderSelectInput";
-import RenderTextInput from "ui/common/form/RenderTextInput";
-import FormLabel from "ui/common/form/FormLabel";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Field } from 'redux-form';
+import { required } from '@entando/utils';
+import { InputGroup } from 'patternfly-react';
+import RenderSelectInput from 'ui/common/form/RenderSelectInput';
+import RenderTextInput from 'ui/common/form/RenderTextInput';
+import FormLabel from 'ui/common/form/FormLabel';
 
-const FieldArrayDatasource = ({fields, datasources, onChange, className}) => {
+const FieldArrayDatasource = ({
+  fields, datasources, onChange, className,
+}) => {
   const selectOptionsDatasource = datasources.map(m => ({
     value: m.id,
-    text: m.datasource
+    text: m.datasource,
   }));
   return (
     <div className={`FieldArrayDatasource ${className}`}>
@@ -18,7 +20,7 @@ const FieldArrayDatasource = ({fields, datasources, onChange, className}) => {
         <Field
           component={RenderSelectInput}
           onChange={(ev, value) => onChange(value)}
-          disabled={datasources.length === 0 ? true : false}
+          disabled={datasources.length === 0}
           options={selectOptionsDatasource}
           defaultOptionId="plugin.chooseAnOptionDatasource"
           label={
@@ -56,7 +58,7 @@ const FieldArrayDatasource = ({fields, datasources, onChange, className}) => {
 
 FieldArrayDatasource.propTypes = {
   fields: PropTypes.shape({}).isRequired,
-  datasources: PropTypes.arrayOf(PropTypes.shape({})).isRequired
+  datasources: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
 };
 
 export default FieldArrayDatasource;

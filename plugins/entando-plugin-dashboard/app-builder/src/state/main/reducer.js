@@ -1,4 +1,4 @@
-import {combineReducers} from "redux";
+import { combineReducers } from 'redux';
 
 import {
   SET_INFO_PAGE,
@@ -14,12 +14,11 @@ import {
   SET_DATASOURCE_DATA,
   SET_SELECTED_DATASOURCE,
   CLEAR_SELECTED_DATASOURCE,
-  SET_INTERNAL_ROUTE
-} from "./types";
+  SET_INTERNAL_ROUTE,
+  SET_CHECK_SERVER,
+} from './types';
 
-const reduxStatus = () => "works";
-
-const internalRoute = (state = "", action = {}) => {
+const internalRoute = (state = '', action = {}) => {
   switch (action.type) {
     case SET_INTERNAL_ROUTE:
       return action.payload.route;
@@ -65,7 +64,7 @@ const servers = (state = [], action = {}) => {
       return [...state, action.payload.server];
 
     case UPDATE_SERVER_CONFIG: {
-      const {server} = action.payload;
+      const { server } = action.payload;
       const newState = state.filter(f => f.id !== server.id);
       return [...newState, server];
     }
@@ -74,6 +73,18 @@ const servers = (state = [], action = {}) => {
       return state.filter(config => config.id !== action.payload.configId);
     default:
       return state;
+  }
+};
+
+const serverCheck = (state = {}, action = {}) => {
+  switch (action.type) {
+    case SET_CHECK_SERVER: {
+      const { serverId, status } = action.payload;
+      const newState = { ...state };
+      newState[serverId] = status;
+      return newState;
+    }
+    default: return state;
   }
 };
 
@@ -86,12 +97,12 @@ const datasourceList = (state = [], action = {}) => {
   }
 };
 
-const datasourceSelected = (state = "", action = {}) => {
+const datasourceSelected = (state = '', action = {}) => {
   switch (action.type) {
     case SET_SELECTED_DATASOURCE:
       return action.payload.datasourceId;
     case CLEAR_SELECTED_DATASOURCE:
-      return "";
+      return '';
 
     default:
       return state;
@@ -118,20 +129,20 @@ const datasourceData = (state = [], action = {}) => {
 };
 
 export default combineReducers({
-  reduxStatus,
   internalRoute,
   appBuilder: combineReducers({
     infoPage,
-    languages
+    languages,
   }),
   dashboardConfig: combineReducers({
     serverType,
     servers,
+    serverCheck,
     datasourceList,
     datasource: combineReducers({
       selected: datasourceSelected,
       columns: datasourceColumns,
-      data: datasourceData
-    })
-  })
+      data: datasourceData,
+    }),
+  }),
 });

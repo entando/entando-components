@@ -1,26 +1,27 @@
-import React from "react";
-import "test/enzyme-init";
-import {shallow} from "enzyme";
-import {FieldArray} from "redux-form";
+import React from 'react';
+import 'test/enzyme-init';
+import { shallow } from 'enzyme';
+import { FieldArray } from 'redux-form';
 
-import SettingsChartDonut from "ui/widgets/charts/donut-chart/components/SettingsChartDonut";
+import SettingsChartDonut from 'ui/widgets/charts/donut-chart/components/SettingsChartDonut';
 
 const props = {
   optionColumns: [],
-  optionColumnXSelected: []
+  optionColumnXSelected: [],
+  datasourceSelected: '',
 };
 
-describe("SettingsChartDonut", () => {
+describe('SettingsChartDonut', () => {
   let component;
   beforeEach(() => {
     component = shallow(<SettingsChartDonut {...props} />);
   });
 
-  it("renders without crashing", () => {
+  it('renders without crashing', () => {
     expect(component.exists()).toBe(true);
   });
 
-  it("have FieldArray", () => {
+  it('have FieldArray', () => {
     expect(component.find(FieldArray)).toHaveLength(1);
   });
 });

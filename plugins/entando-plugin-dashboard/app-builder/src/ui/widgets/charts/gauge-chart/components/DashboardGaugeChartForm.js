@@ -1,17 +1,17 @@
-import React, {Component} from "react";
-import PropTypes from "prop-types";
-import {reduxForm} from "redux-form";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { reduxForm } from 'redux-form';
 
-import Stepper from "ui/widgets/common/components/Stepper";
-import ChartFirstStepContent from "ui/widgets/charts/common/components/ChartFirstStepContent";
-import ChartSecondStepContent from "ui/widgets/charts/common/components/ChartSecondStepContent";
-import ChartThirdStepContent from "ui/widgets/charts/common/components/ChartThirdStepContent";
+import Stepper from 'ui/widgets/common/components/Stepper';
+import ChartFirstStepContent from 'ui/widgets/charts/common/components/ChartFirstStepContent';
+import ChartSecondStepContent from 'ui/widgets/charts/common/components/ChartSecondStepContent';
+import ChartThirdStepContent from 'ui/widgets/charts/common/components/ChartThirdStepContent';
 
-const data = {columns: [["data", 91.4]]};
+const data = { columns: [['data', 91.4]] };
 
-const FORM_NAME = "form-dashboard-gauge-chart";
-const TYPE_CHART = "GAUGE_CHART";
-const CHART_PREVIEW = "Gauge Chart";
+const FORM_NAME = 'form-dashboard-gauge-chart';
+const TYPE_CHART = 'GAUGE_CHART';
+const CHART_PREVIEW = 'Gauge Chart';
 
 export class DashboardGaugeChartFormBody extends Component {
   componentWillMount() {
@@ -19,7 +19,7 @@ export class DashboardGaugeChartFormBody extends Component {
   }
 
   render() {
-    const {formSyncErrors, chart} = this.props;
+    const { formSyncErrors, chart } = this.props;
     const validateSteps = [false, false, false];
     if (
       !formSyncErrors.title &&
@@ -61,11 +61,17 @@ export class DashboardGaugeChartFormBody extends Component {
 DashboardGaugeChartFormBody.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   onWillMount: PropTypes.func.isRequired,
-  onCancel: PropTypes.func.isRequired
+  onCancel: PropTypes.func.isRequired,
+  chart: PropTypes.string.isRequired,
+  formSyncErrors: PropTypes.shape({}),
+};
+
+DashboardGaugeChartFormBody.defaultProps = {
+  formSyncErrors: {},
 };
 
 const DashboardGaugeChartForm = reduxForm({
-  form: FORM_NAME
+  form: FORM_NAME,
 })(DashboardGaugeChartFormBody);
 
 export default DashboardGaugeChartForm;

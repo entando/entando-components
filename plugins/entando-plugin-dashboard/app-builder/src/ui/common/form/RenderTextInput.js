@@ -1,6 +1,6 @@
-import React from "react";
-import PropTypes from "prop-types";
-import {Col, ControlLabel} from "patternfly-react";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Col, ControlLabel } from 'patternfly-react';
 
 const RenderTextInput = ({
   input,
@@ -9,13 +9,13 @@ const RenderTextInput = ({
   labelSize,
   alignClass,
   placeholder,
-  meta: {touched, error},
+  meta: { touched, error },
   help,
   disabled,
-  type
+  type,
 }) => {
   const containerClasses =
-    touched && error ? "form-group has-error" : "form-group";
+    touched && error ? 'form-group has-error' : 'form-group';
 
   return (
     <div className={containerClasses}>
@@ -33,7 +33,7 @@ const RenderTextInput = ({
           placeholder={placeholder}
           className="form-control RenderTextInput"
           disabled={disabled}
-        />{" "}
+        />{' '}
         {append && <span className="AppendedLabel">{append}</span>}
         {touched && (error && <span className="help-block">{error}</span>)}
       </Col>
@@ -51,19 +51,19 @@ RenderTextInput.propTypes = {
   type: PropTypes.string,
   labelSize: PropTypes.number,
   append: PropTypes.string,
-  alignClass: PropTypes.string
+  alignClass: PropTypes.string,
 };
 
 RenderTextInput.defaultProps = {
   input: {},
-  label: "",
-  placeholder: "",
+  label: '',
+  placeholder: '',
   meta: {},
   help: null,
   disabled: false,
-  type: "text",
+  type: 'text',
   labelSize: 2,
-  append: "",
-  alignClass: "text-right"
+  append: '',
+  alignClass: 'text-right',
 };
 export default RenderTextInput;

@@ -1,25 +1,25 @@
-import React, {Component} from "react";
-import PropTypes from "prop-types";
-import {Field, FormSection} from "redux-form";
-import {maxLength} from "@entando/utils";
-import FormattedMessage from "ui/i18n/FormattedMessage";
-import {OverlayTrigger, Tooltip} from "patternfly-react";
-import {get} from "lodash";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Field, FormSection } from 'redux-form';
+import { maxLength } from '@entando/utils';
+import FormattedMessage from 'ui/i18n/FormattedMessage';
+import { OverlayTrigger, Tooltip } from 'patternfly-react';
+import { get } from 'lodash';
 
 import {
   SortableContainer,
   SortableElement,
   sortableHandle,
-  arrayMove
-} from "react-sortable-hoc";
+  arrayMove,
+} from 'react-sortable-hoc';
 
 const maxLength15 = maxLength(15);
 
-const renderField = ({input, meta: {touched, error}}) => {
+const renderField = ({ input, meta: { touched, error } }) => {
   const classContainer =
-    touched && error
-      ? "DashboardTableColumns__container-input--error"
-      : "DashboardTableColumns__container-input";
+    touched && error ?
+      'DashboardTableColumns__container-input--error' :
+      'DashboardTableColumns__container-input';
 
   return (
     <div className={classContainer}>
@@ -33,7 +33,7 @@ const DragHandle = sortableHandle(() => (
   <div className="DashboardTableColumns__th-editable-label-dnd" />
 ));
 
-const SortableItem = SortableElement(({item, fieldColumnData}) => (
+const SortableItem = SortableElement(({ item, fieldColumnData }) => (
   <th className="DashboardTableColumns__th-editable-label">
     <div className="DashboardTableColumns__th-editable-label-container">
       <DragHandle />
@@ -46,7 +46,7 @@ const SortableItem = SortableElement(({item, fieldColumnData}) => (
         <OverlayTrigger
           overlay={
             <Tooltip id={`${item.key}-overlay`}>
-              {get(get(fieldColumnData, item.key), "hidden") ? (
+              {get(get(fieldColumnData, item.key), 'hidden') ? (
                 <FormattedMessage id="plugin.table.column.tooltip.show" />
               ) : (
                 <FormattedMessage id="plugin.table.column.tooltip.hidden" />
@@ -54,7 +54,7 @@ const SortableItem = SortableElement(({item, fieldColumnData}) => (
             </Tooltip>
           }
           placement="top"
-          trigger={["hover"]}
+          trigger={['hover']}
           rootClose={false}
         >
           <Field
@@ -81,52 +81,50 @@ const SortableItem = SortableElement(({item, fieldColumnData}) => (
   </th>
 ));
 
-const SortableList = SortableContainer(({items, fieldColumnData}) => {
-  return (
-    <FormSection name="columns">
-      <div className="DashboardTableColumns__container-columns">
-        <label>
-          {items.length > 0 ? (
-            <FormattedMessage id={"plugin.table.column.default.label"} />
+const SortableList = SortableContainer(({ items, fieldColumnData }) => (
+  <FormSection name="columns">
+    <div className="DashboardTableColumns__container-columns">
+      <label htmlFor="label">
+        {items.length > 0 ? (
+          <FormattedMessage id="plugin.table.column.default.label" />
           ) : null}
-        </label>
-        <table className="DashboardTableColumns__table table table-striped table-bordered">
-          <thead>
-            <tr>
-              {items.map((item, index) => (
-                <th
-                  key={`item-${index}`}
-                  className="DashboardTableColumns__th-default-label"
-                >
-                  {item.key}
-                </th>
+      </label>
+      <table className="DashboardTableColumns__table table table-striped table-bordered">
+        <thead>
+          <tr>
+            {items.map(item => (
+              <th
+                key={`item-${item.key}`}
+                className="DashboardTableColumns__th-default-label"
+              >
+                {item.key}
+              </th>
               ))}
-            </tr>
-          </thead>
-        </table>
-        <label>
-          {items.length > 0 ? (
-            <FormattedMessage id={"plugin.table.column.customizable.label"} />
+          </tr>
+        </thead>
+      </table>
+      <label htmlFor="label">
+        {items.length > 0 ? (
+          <FormattedMessage id="plugin.table.column.customizable.label" />
           ) : null}
-        </label>
-        <table className="DashboardTableColumns__table table table-striped table-bordered">
-          <thead>
-            <tr>
-              {items.map((item, index) => (
-                <SortableItem
-                  key={`item-${index}`}
-                  index={index}
-                  item={item}
-                  fieldColumnData={fieldColumnData}
-                />
+      </label>
+      <table className="DashboardTableColumns__table table table-striped table-bordered">
+        <thead>
+          <tr>
+            {items.map((item, index) => (
+              <SortableItem
+                key={`item-${item.key}`}
+                index={index}
+                item={item}
+                fieldColumnData={fieldColumnData}
+              />
               ))}
-            </tr>
-          </thead>
-        </table>
-      </div>
-    </FormSection>
-  );
-});
+          </tr>
+        </thead>
+      </table>
+    </div>
+  </FormSection>
+));
 
 class DashboardTableColumns extends Component {
   constructor(props) {
@@ -134,8 +132,8 @@ class DashboardTableColumns extends Component {
     this.onMoveHandler = this.onMoveHandler.bind(this);
   }
 
-  onMoveHandler({oldIndex, newIndex}) {
-    const {onMoveColumn, columns} = this.props;
+  onMoveHandler({ oldIndex, newIndex }) {
+    const { onMoveColumn, columns } = this.props;
     onMoveColumn(arrayMove(columns, oldIndex, newIndex));
   }
 
@@ -145,7 +143,7 @@ class DashboardTableColumns extends Component {
         <SortableList
           items={this.props.columns}
           fieldColumnData={this.props.fieldColumnData}
-          showColumnHandler={this.props.onShowHideColumn}
+          // showColumnHandler={this.props.onShowHideColumn}
           lockAxis="x"
           axis="x"
           pressDelay={200}
@@ -158,18 +156,23 @@ class DashboardTableColumns extends Component {
 
 const COLUMN_TYPE = {
   key: PropTypes.string,
-  hidden: PropTypes.bool
+  hidden: PropTypes.bool,
 };
 
 DashboardTableColumns.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.shape(COLUMN_TYPE)),
   fieldColumnData: PropTypes.shape({}),
-  onMoveColumn: PropTypes.func.isRequired
+  onMoveColumn: PropTypes.func.isRequired,
 };
 
 DashboardTableColumns.defaultProps = {
   columns: [],
-  fieldColumnData: undefined
+  fieldColumnData: undefined,
+};
+
+renderField.propTypes = {
+  input: PropTypes.shape({}).isRequired,
+  meta: PropTypes.shape({}).isRequired,
 };
 
 export default DashboardTableColumns;

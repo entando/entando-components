@@ -1,9 +1,9 @@
-import React, {Component} from "react";
-import PropTypes from "prop-types";
-import {Grid, Row, Col, Button} from "patternfly-react";
-import FormattedMessage from "ui/i18n/FormattedMessage";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Grid, Row, Col, Button } from 'patternfly-react';
+import FormattedMessage from 'ui/i18n/FormattedMessage';
 
-import DatasourceLayer from "./DatasourceLayer";
+import DatasourceLayer from './DatasourceLayer';
 
 class FieldArrayDatasourceLayer extends Component {
   constructor(props) {
@@ -17,13 +17,13 @@ class FieldArrayDatasourceLayer extends Component {
       label,
       datasourceSelected,
       optionColumns,
-      optionColumnSelected
+      optionColumnSelected,
     } = this.props;
     const datasource = {
       label,
       datasource: datasourceSelected,
       optionColumns,
-      optionColumnSelected
+      optionColumnSelected,
     };
     fields.push(datasource);
     this.props.clearInputDatasourceData();
@@ -31,7 +31,7 @@ class FieldArrayDatasourceLayer extends Component {
 
   render() {
     const {
-      fields: {name, remove},
+      fields: { name, remove },
       label,
       formName,
       datasourceSelected,
@@ -39,22 +39,20 @@ class FieldArrayDatasourceLayer extends Component {
       optionColumnSelected,
       datasourcesValue,
       addColumnOptionSelected,
-      removeColumnOptionSelected
+      removeColumnOptionSelected,
     } = this.props;
 
     const disabledAddButton =
-      label === "" ||
+      !!(label === '' ||
       optionColumns.length === 0 ||
-      optionColumnSelected.length === 0
-        ? true
-        : false;
+      optionColumnSelected.length === 0);
 
     return (
       <Grid className="FieldArrayDatasource">
         <Row>
           {datasourcesValue.map((m, index) => (
             <div
-              key={index}
+              key={m.datasource}
               className="FieldArrayDatasource__data-array-container"
             >
               <div className="FieldArrayDatasource__data-array-item">
@@ -73,6 +71,9 @@ class FieldArrayDatasourceLayer extends Component {
                 <i
                   className="fa fa-trash fa-2x"
                   onClick={() => remove(index)}
+                  onKeyPress={() => remove(index)}
+                  role="button"
+                  tabIndex={0}
                 />
               </div>
             </div>
@@ -101,7 +102,7 @@ class FieldArrayDatasourceLayer extends Component {
   }
 }
 FieldArrayDatasourceLayer.propTypes = {
-  name: PropTypes.string,
+  // name: PropTypes.string,
   label: PropTypes.string,
   formName: PropTypes.string.isRequired,
   clearInputDatasourceData: PropTypes.func.isRequired,
@@ -110,14 +111,16 @@ FieldArrayDatasourceLayer.propTypes = {
   datasourceSelected: PropTypes.string,
   datasourcesValue: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   optionColumns: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  optionColumnSelected: PropTypes.arrayOf(PropTypes.shape({}))
+  optionColumnSelected: PropTypes.arrayOf(PropTypes.shape({})),
+  fields: PropTypes.shape({}),
 };
 FieldArrayDatasourceLayer.defaultProps = {
-  name: null,
-  label: "",
-  datasourceSelected: "",
-  datasourcesValue: [],
-  optionColumnSelected: []
+  fields: {},
+  // name: null,
+  label: '',
+  datasourceSelected: '',
+  // datasourcesValue: [],
+  optionColumnSelected: [],
 };
 
 export default FieldArrayDatasourceLayer;

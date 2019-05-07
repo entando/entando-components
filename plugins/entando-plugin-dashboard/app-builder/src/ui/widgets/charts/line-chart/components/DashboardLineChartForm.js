@@ -1,17 +1,17 @@
-import React, {Component} from "react";
-import PropTypes from "prop-types";
-import {reduxForm} from "redux-form";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { reduxForm } from 'redux-form';
 
-import Stepper from "ui/widgets/common/components/Stepper";
-import ChartFirstStepContent from "ui/widgets/charts/common/components/ChartFirstStepContent";
-import ChartSecondStepContent from "ui/widgets/charts/common/components/ChartSecondStepContent";
-import ChartThirdStepContent from "ui/widgets/charts/common/components/ChartThirdStepContent";
+import Stepper from 'ui/widgets/common/components/Stepper';
+import ChartFirstStepContent from 'ui/widgets/charts/common/components/ChartFirstStepContent';
+import ChartSecondStepContent from 'ui/widgets/charts/common/components/ChartSecondStepContent';
+import ChartThirdStepContent from 'ui/widgets/charts/common/components/ChartThirdStepContent';
 
-const data = {columns: [["data1", 10, 30, 10, 20, 40, 50]]};
+const data = { columns: [['data1', 10, 30, 10, 20, 40, 50]] };
 
-const FORM_NAME = "form-dashboard-line-chart";
-let TYPE_CHART = "LINE_CHART";
-const CHART_PREVIEW = "Line Chart";
+const FORM_NAME = 'form-dashboard-line-chart';
+let TYPE_CHART = 'LINE_CHART';
+const CHART_PREVIEW = 'Line Chart';
 
 export class DashboardLineChartFormBody extends Component {
   componentWillMount() {
@@ -21,10 +21,11 @@ export class DashboardLineChartFormBody extends Component {
   render() {
     const {
       formSyncErrors,
-      axis: {rotated},
+      axis: { rotated },
       spline,
-      columns
+      columns,
     } = this.props;
+
 
     const validateSteps = [false, false, false];
     if (
@@ -56,7 +57,12 @@ export class DashboardLineChartFormBody extends Component {
       }
     }
 
-    spline ? (TYPE_CHART = "SPLINE_CHART") : (TYPE_CHART = "LINE_CHART");
+    if (spline) {
+      TYPE_CHART = 'SPLINE_CHART';
+    } else {
+      TYPE_CHART = 'LINE_CHART';
+    }
+
     return (
       <Stepper
         handleSubmit={this.props.handleSubmit}
@@ -91,16 +97,18 @@ DashboardLineChartFormBody.propTypes = {
   onCancel: PropTypes.func.isRequired,
   spline: PropTypes.bool,
   axis: PropTypes.shape({
-    rotated: PropTypes.bool
+    rotated: PropTypes.bool,
   }).isRequired,
-  formSyncErrors: PropTypes.shape({}).isRequired
+  formSyncErrors: PropTypes.shape({}).isRequired,
+  columns: PropTypes.shape({}),
 };
 
 DashboardLineChartFormBody.defaultProps = {
-  spline: false
+  spline: false,
+  columns: {},
 };
 const DashboardLineChartForm = reduxForm({
-  form: FORM_NAME
+  form: FORM_NAME,
 })(DashboardLineChartFormBody);
 
 export default DashboardLineChartForm;

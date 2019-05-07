@@ -1,9 +1,9 @@
-import React from "react";
-import PropTypes from "prop-types";
-import {Grid, Row, Col} from "patternfly-react";
-import FormattedMessage from "ui/i18n/FormattedMessage";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Grid, Row, Col } from 'patternfly-react';
+import FormattedMessage from 'ui/i18n/FormattedMessage';
 
-import Chart from "ui/widgets/charts/common/components/Chart";
+import Chart from 'ui/widgets/charts/common/components/Chart';
 
 const PreviewChartSelected = ({
   type,
@@ -13,7 +13,7 @@ const PreviewChartSelected = ({
   axisRotated,
   heightChart,
   widthChart,
-  columnSize
+  columnSize,
 }) => (
   <Grid fluid className="PreviewChartSelected">
     <Row className="PreviewChartSelected__row-preview-text-chart">
@@ -25,7 +25,7 @@ const PreviewChartSelected = ({
         <span className="PreviewChartSelected__preview-text-type-chart">
           <FormattedMessage
             id="plugin.charts.previewChart.label.chartType"
-            values={{chart: labelChartPreview}}
+            values={{ chart: labelChartPreview }}
           />
         </span>
       </Col>
@@ -37,8 +37,8 @@ const PreviewChartSelected = ({
           type={type}
           columns={data}
           config={{
-            axis: {rotated: axisRotated},
-            size: {height: heightChart, width: widthChart}
+            axis: { rotated: axisRotated },
+            size: { height: heightChart, width: widthChart },
           }}
         />
       </Col>
@@ -47,21 +47,25 @@ const PreviewChartSelected = ({
 );
 
 PreviewChartSelected.propTypes = {
+  idChart: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   labelChartPreview: PropTypes.string.isRequired,
-  data: PropTypes.arrayOf(
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number]))
-  ).isRequired,
+  data: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]))),
   axisRotated: PropTypes.bool,
   heightChart: PropTypes.number,
-  columnSize: PropTypes.number
+  widthChart: PropTypes.number,
+  columnSize: PropTypes.number,
 };
 
 PreviewChartSelected.defaultProps = {
   axisRotated: false,
   heightChart: 250,
   widthChart: undefined,
-  columnSize: 12
+  columnSize: 12,
+  data: [],
 };
 
 export default PreviewChartSelected;

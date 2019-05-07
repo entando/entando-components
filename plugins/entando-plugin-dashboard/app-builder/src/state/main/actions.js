@@ -1,10 +1,10 @@
-import {getRoute, getParams, getSearchParams, gotoRoute} from "@entando/router";
-import {addToast, addErrors, TOAST_ERROR} from "@entando/messages";
-import {formattedText} from "@entando/utils";
-import {formValueSelector, initialize, change, arrayPush} from "redux-form";
-import {get} from "lodash";
+import { getRoute, getParams, getSearchParams, gotoRoute } from '@entando/router';
+import { addToast, addErrors, TOAST_ERROR } from '@entando/messages';
+import { formattedText } from '@entando/utils';
+import { formValueSelector, initialize, change, arrayPush } from 'redux-form';
+import { get } from 'lodash';
 
-import {getLanguages} from "api/appBuilder";
+import { getLanguages } from 'api/appBuilder';
 
 import {
   getServerType,
@@ -12,12 +12,15 @@ import {
   deleteServerConfig,
   postServerConfig,
   putServerConfig,
+  pingServerConfig,
   getDatasources,
   getDatasourceColumns,
-  putDatasourceColumn
-} from "api/dashboardConfig";
+  putDatasourceColumn,
+} from 'api/dashboardConfig';
 
-import {getWidgetConfigSelector} from "state/app-builder/selectors";
+import { getWidgetConfigSelector } from 'state/app-builder/selectors';
+
+import { getServerConfigList } from 'state/main/selectors';
 
 import {
   SET_INFO_PAGE,
@@ -27,109 +30,109 @@ import {
   ADD_SERVER_CONFIG,
   UPDATE_SERVER_CONFIG,
   REMOVE_SERVER_CONFIG,
+  SET_CHECK_SERVER,
   SET_DATASOURCE_LIST,
   SET_DATASOURCE_DATA,
   SET_DATASOURCE_COLUMNS,
   CLEAR_DATASOURCE_COLUMNS,
   SET_SELECTED_DATASOURCE,
   CLEAR_SELECTED_DATASOURCE,
-  SET_INTERNAL_ROUTE
-} from "./types";
-
-// Use for TEST
-// const CONFIG_CHART = {
-//   config:
-//     '{"chart":"donut","axis":{"rotated":false,"x":{"type":"indexed"},"y2":{"show":false}},"size":{"width":300,"height":500},"padding":{"top":50,"right":50,"bottom":50,"left":50},"donut":{"min":0,"max":"1000", "width":"10"},"legend":{"position":"bottom"},"title":{"en":"Gauge"},"serverName":"2","datasource":"temperature","columns":{"x":[{"id":1,"key":"temperature1","value":"temperature1","selected":true},{"id":0,"key":"temperature","value":"temperature","selected":true}]},"data":{"type":"gauge","json":[],"keys":{"value":["temperature1","temperature"]}}}'
-// };
+  SET_INTERNAL_ROUTE,
+} from './types';
 
 export const setInfoPage = info => ({
   type: SET_INFO_PAGE,
   payload: {
-    info
-  }
+    info,
+  },
 });
 
 export const setLanguages = languages => ({
   type: SET_LANGUAGES,
   payload: {
-    languages
-  }
+    languages,
+  },
 });
 
 export const setServerType = serverTypeList => ({
   type: SET_SERVER_TYPE,
   payload: {
-    serverTypeList
-  }
+    serverTypeList,
+  },
 });
 
 export const setServerConfigList = serverList => ({
   type: SET_SERVER_CONFIG_LIST,
   payload: {
-    serverList
-  }
+    serverList,
+  },
 });
 
 export const addServerConfig = server => ({
   type: ADD_SERVER_CONFIG,
   payload: {
-    server
-  }
+    server,
+  },
+});
+
+export const setCheckServer = (serverId, status) => ({
+  type: SET_CHECK_SERVER,
+  payload: { serverId, status },
 });
 
 export const updateServerConfigAction = server => ({
   type: UPDATE_SERVER_CONFIG,
   payload: {
-    server
-  }
+    server,
+  },
 });
 
 export const removeServerConfigSync = configId => ({
   type: REMOVE_SERVER_CONFIG,
   payload: {
-    configId
-  }
+    configId,
+  },
 });
 
 export const setDatasourceList = datasourceList => ({
   type: SET_DATASOURCE_LIST,
   payload: {
-    datasourceList
-  }
+    datasourceList,
+  },
 });
 
 export const setDatasourceColumns = columns => ({
   type: SET_DATASOURCE_COLUMNS,
   payload: {
-    columns
-  }
+    columns,
+  },
 });
 
 export const clearDatasourceColumns = () => ({
-  type: CLEAR_DATASOURCE_COLUMNS
+  type: CLEAR_DATASOURCE_COLUMNS,
 });
 
 export const setDatasourceData = data => ({
   type: SET_DATASOURCE_DATA,
   payload: {
-    data
-  }
+    data,
+  },
 });
 
 export const setSelectedDatasource = datasourceId => ({
   type: SET_SELECTED_DATASOURCE,
   payload: {
-    datasourceId
-  }
+    datasourceId,
+  },
 });
 
 export const clearSelectedDatasource = () => ({
-  type: CLEAR_SELECTED_DATASOURCE
+  type: CLEAR_SELECTED_DATASOURCE,
 });
 
 export const setInternalRoute = route => ({
   type: SET_INTERNAL_ROUTE,
-  payload: {route}
+  payload: { route },
 });
 
 // thunk
@@ -147,94 +150,24 @@ export const gotoPluginPage = pluginPage => (dispatch, getState) => {
 
   const searchParams = getSearchParams(state);
   try {
-    gotoRoute(route, params, {...searchParams, pluginPage});
+    gotoRoute(route, params, { ...searchParams, pluginPage });
   } catch (error) {
-    console.error("error", error);
+    console.error('error', error);
     dispatch(setInternalRoute(pluginPage));
   }
 };
 
-// used for widget table
-export const getWidgetConfig = formName => (dispatch, getState) => {
-  const state = getState();
-  const config = getWidgetConfigSelector(state);
-  if (config) {
-    const json = JSON.parse(config.config);
-    const columns = Object.keys(json.columns).reduce((acc, key) => {
-      const obj = {
-        key,
-        value: get(json.columns, `${key}.label`),
-        hidden: get(json.columns, `${key}.hidden`, false)
-      };
-      acc.push(obj);
-      return acc;
-    }, []);
-    dispatch(fecthDatasourceList(json.serverName));
-    dispatch(setDatasourceColumns(columns));
-    dispatch(initialize(formName, json));
-  }
-};
-//used for widgets chart
-export const getWidgetConfigChart = formName => (dispatch, getState) => {
-  const state = getState();
-  const config = getWidgetConfigSelector(state); // || CONFIG_CHART;
-  if (config) {
-    const configJson = JSON.parse(config.config);
-    console.log("config", configJson);
-    dispatch(fecthDatasourceList(configJson.serverName));
-    getDatasourceColumns(configJson.serverName, configJson.datasource).then(
-      response => {
-        response.json().then(json => {
-          if (response.ok) {
-            dispatch(initialize(formName, configJson));
-            dispatch(clearSelectedDatasource());
-            dispatch(setSelectedDatasource(configJson.datasource));
-            const {mappings} = json.payload;
-            dispatch(
-              setDatasourceColumns(
-                mappings.map(m => ({
-                  key: m.sourceName,
-                  value: m.destinationName
-                }))
-              )
-            );
-
-            configJson.columns.x &&
-              configJson.columns.x.forEach((item, index) => {
-                dispatch(arrayPush(formName, "columns.x", item));
-              });
-
-            configJson.columns.y &&
-              configJson.columns.y.forEach(item => {
-                dispatch(arrayPush(formName, "columns.y", item));
-              });
-            configJson.columns.y2 &&
-              configJson.columns.y2.forEach(item => {
-                dispatch(arrayPush(formName, "columns.y2", item));
-              });
-          } else {
-            dispatch(addErrors(json.errors.map(e => e.message)));
-            dispatch(
-              addToast(formattedText("plugin.alert.error"), TOAST_ERROR)
-            );
-          }
-        });
-      }
-    );
-  }
-};
-
 export const fetchLanguages = () => dispatch =>
-  new Promise(resolve => {
-    getLanguages().then(response => {
-      response.json().then(json => {
+  new Promise((resolve) => {
+    getLanguages().then((response) => {
+      response.json().then((json) => {
         if (response.ok) {
           const languages = json.payload.filter(f => f.isActive);
           dispatch(setLanguages(languages));
           resolve();
         } else {
           dispatch(addErrors(json.errors.map(e => e.message)));
-          dispatch(addToast(formattedText("plugin.alert.error"), TOAST_ERROR));
+          dispatch(addToast(formattedText('plugin.alert.error'), TOAST_ERROR));
           resolve();
         }
       });
@@ -242,15 +175,15 @@ export const fetchLanguages = () => dispatch =>
   });
 
 export const fetchServerType = () => dispatch =>
-  new Promise(resolve => {
-    getServerType().then(response => {
-      response.json().then(json => {
+  new Promise((resolve) => {
+    getServerType().then((response) => {
+      response.json().then((json) => {
         if (response.ok) {
           dispatch(setServerType(json.payload));
           resolve();
         } else {
           dispatch(addErrors(json.errors.map(e => e.message)));
-          dispatch(addToast(formattedText("plugin.alert.error"), TOAST_ERROR));
+          dispatch(addToast(formattedText('plugin.alert.error'), TOAST_ERROR));
           resolve();
         }
       });
@@ -258,18 +191,18 @@ export const fetchServerType = () => dispatch =>
   }).catch(() => {});
 
 export const fetchServerConfigList = configItem => dispatch =>
-  new Promise(resolve => {
-    getServerConfig(configItem).then(response => {
-      response.json().then(json => {
+  new Promise((resolve) => {
+    getServerConfig(configItem).then((response) => {
+      response.json().then((json) => {
         if (response.ok) {
           dispatch(setServerConfigList(json.payload));
           if (configItem) {
-            dispatch(setInternalRoute("edit"));
+            dispatch(setInternalRoute('edit'));
           }
           resolve();
         } else {
           dispatch(addErrors(json.errors.map(e => e.message)));
-          dispatch(addToast(formattedText("plugin.alert.error"), TOAST_ERROR));
+          dispatch(addToast(formattedText('plugin.alert.error'), TOAST_ERROR));
           resolve();
         }
       });
@@ -277,18 +210,18 @@ export const fetchServerConfigList = configItem => dispatch =>
   }).catch(() => {});
 
 export const editServerConfig = (formName, configItem) => dispatch =>
-  new Promise(resolve => {
-    getDatasources(configItem.id).then(response => {
-      response.json().then(json => {
+  new Promise((resolve) => {
+    getDatasources(configItem.id).then((response) => {
+      response.json().then((json) => {
         if (response.ok) {
-          dispatch(setInternalRoute("edit"));
+          dispatch(setInternalRoute('edit'));
           const config = configItem;
           config.datasources = [...json.payload];
           dispatch(initialize(formName, config));
           resolve();
         } else {
           dispatch(addErrors(json.errors.map(e => e.message)));
-          dispatch(addToast(formattedText("plugin.alert.error"), TOAST_ERROR));
+          dispatch(addToast(formattedText('plugin.alert.error'), TOAST_ERROR));
           resolve();
         }
       });
@@ -296,29 +229,29 @@ export const editServerConfig = (formName, configItem) => dispatch =>
   });
 
 export const removeServerConfig = id => dispatch =>
-  new Promise(resolve => {
-    deleteServerConfig(id).then(response => {
+  new Promise((resolve) => {
+    deleteServerConfig(id).then((response) => {
       if (response.ok) {
         dispatch(removeServerConfigSync(id));
         resolve();
       } else {
-        dispatch(addToast(formattedText("plugin.alert.error"), TOAST_ERROR));
+        dispatch(addToast(formattedText('plugin.alert.error'), TOAST_ERROR));
         resolve();
       }
     });
   });
 
 export const createServerConfig = serverConfig => dispatch =>
-  new Promise(resolve => {
-    postServerConfig(serverConfig).then(response => {
-      response.json().then(json => {
+  new Promise((resolve) => {
+    postServerConfig(serverConfig).then((response) => {
+      response.json().then((json) => {
         if (response.ok) {
-          dispatch(setInternalRoute("home"));
+          dispatch(setInternalRoute('home'));
           dispatch(addServerConfig(json.payload));
           resolve();
         } else {
           dispatch(addErrors(json.errors.map(e => e.message)));
-          dispatch(addToast(formattedText("plugin.alert.error"), TOAST_ERROR));
+          dispatch(addToast(formattedText('plugin.alert.error'), TOAST_ERROR));
           resolve();
         }
       });
@@ -326,35 +259,56 @@ export const createServerConfig = serverConfig => dispatch =>
   });
 
 export const updateServerConfig = serverConfig => dispatch =>
-  new Promise(resolve => {
-    putServerConfig(serverConfig).then(response => {
-      response.json().then(json => {
+  new Promise((resolve) => {
+    putServerConfig(serverConfig).then((response) => {
+      response.json().then((json) => {
         if (response.ok) {
-          dispatch(setInternalRoute("home"));
+          dispatch(setInternalRoute('home'));
           dispatch(updateServerConfigAction(json.payload));
           resolve();
         } else {
           dispatch(addErrors(json.errors.map(e => e.message)));
-          dispatch(addToast(formattedText("plugin.alert.error"), TOAST_ERROR));
+          dispatch(addToast(formattedText('plugin.alert.error'), TOAST_ERROR));
           resolve();
         }
       });
     });
   });
 
+export const checkServerConfig = serverId => (dispatch, getState) => new Promise((resolve) => {
+  const state = getState();
+  const serverList = getServerConfigList(state);
+  if (serverId) {
+    pingServerConfig(serverId).then((response) => {
+      response.json().then((json) => {
+        if (response.ok) {
+          dispatch(setCheckServer(serverId, { status: 'online' }));
+          resolve();
+        } else {
+          dispatch(setCheckServer(serverId, { status: 'offline' }));
+          dispatch(addErrors(json.errors.map(e => e.message)));
+          dispatch(addToast(formattedText('plugin.alert.error'), TOAST_ERROR));
+          resolve();
+        }
+      });
+    });
+  } else {
+    serverList.map(server => dispatch(checkServerConfig(server.id)));
+  }
+});
+
+
 export const fecthDatasourceList = serverId => dispatch =>
-  new Promise(resolve => {
+  new Promise((resolve) => {
     if (serverId) {
-      getDatasources(serverId).then(response => {
-        response.json().then(json => {
+      getDatasources(serverId).then((response) => {
+        response.json().then((json) => {
           if (response.ok) {
             dispatch(setDatasourceList(json.payload));
             resolve();
           } else {
             dispatch(addErrors(json.errors.map(e => e.message)));
-            dispatch(
-              addToast(formattedText("plugin.alert.error"), TOAST_ERROR)
-            );
+            dispatch(addToast(formattedText('plugin.alert.error'), TOAST_ERROR));
             resolve();
           }
         });
@@ -367,87 +321,58 @@ export const fecthDatasourceList = serverId => dispatch =>
 
 export const fetchDatasourceColumns = (formName, field, datasourceId) => (
   dispatch,
-  getState
+  getState,
 ) =>
-  new Promise(resolve => {
+  new Promise((resolve) => {
     const state = getState();
     const selector = formValueSelector(formName);
     const serverId = selector(state, field);
     dispatch(clearSelectedDatasource());
     dispatch(setSelectedDatasource(datasourceId));
-    getDatasourceColumns(serverId, datasourceId).then(response => {
-      response.json().then(json => {
+    getDatasourceColumns(serverId, datasourceId).then((response) => {
+      response.json().then((json) => {
         if (response.ok) {
           console.log(json);
-          const {mappings} = json.payload;
+          const { mappings } = json.payload;
           const columns = mappings.reduce((acc, item) => {
             acc.push({
               key: item.sourceName,
-              value: item.destinationName
+              value: item.destinationName,
             });
             return acc;
           }, []);
           dispatch(setDatasourceColumns(columns));
           // set values in input field
-          columns.forEach(item => {
+          columns.forEach((item) => {
             dispatch(change(formName, `columns.${item.key}.label`, item.value));
           });
           resolve();
         } else {
           dispatch(addErrors(json.errors.map(e => e.message)));
-          dispatch(addToast(formattedText("plugin.alert.error"), TOAST_ERROR));
+          dispatch(addToast(formattedText('plugin.alert.error'), TOAST_ERROR));
           resolve();
         }
       });
     });
   });
 
-// const wrapApiCallFetchDatasource = (apiCall, actionCreator) => (
-//   ...args
-// ) => dispatch =>
-//   new Promise(resolve => {
-//     apiCall(...args).then(response => {
-//       response.json().then(json => {
-//         if (response.ok) {
-//           console.log("json", json.payload);
-//           console.log("actionCreator", actionCreator);
-//           dispatch(actionCreator(json.payload));
-//           resolve(json.payload);
-//         } else {
-//           dispatch(addErrors(json.errors.map(e => e.message)));
-//           dispatch(addToast(formattedText("plugin.alert.error"), TOAST_ERROR));
-//           resolve();
-//         }
-//       });
-//     });
-//   });
-
-// export const fetchDatasourceData = (configId, datasourceId) => dispatch =>
-//   dispatch(
-//     wrapApiCallFetchDatasource(getDatasourceData, setDatasourceData)(
-//       configId,
-//       datasourceId,
-//       DATASOURCE_PROPERTY_DATA
-//     )
-//   );
-
 export const updateDatasourceColumns = (formName, columns) => (
   dispatch,
-  getState
+  getState,
 ) =>
-  new Promise(resolve => {
+  new Promise((resolve) => {
     const state = getState();
     const selector = formValueSelector(formName);
-    const configId = selector(state, "serverName");
-    const datasourceId = selector(state, "datasource");
-    putDatasourceColumn(configId, datasourceId, columns).then(response => {
-      response.json().then(json => {
+    const configId = selector(state, 'serverName');
+    const datasourceId = selector(state, 'datasource');
+    putDatasourceColumn(configId, datasourceId, columns).then((response) => {
+      response.json().then((json) => {
         if (response.ok) {
           dispatch(setDatasourceColumns(columns));
           resolve();
         } else {
           dispatch(addErrors(json.errors.map(e => e.message)));
-          dispatch(addToast(formattedText("plugin.alert.error"), TOAST_ERROR));
+          dispatch(addToast(formattedText('plugin.alert.error'), TOAST_ERROR));
           resolve();
         }
       });
@@ -457,3 +382,64 @@ export const updateDatasourceColumns = (formName, columns) => (
 /*
  Widget Chart thunk
 */
+
+// used for widget table
+export const getWidgetConfig = formName => (dispatch, getState) => {
+  const state = getState();
+  const config = getWidgetConfigSelector(state);
+  if (config) {
+    const json = JSON.parse(config.config);
+    const columns = Object.keys(json.columns).reduce((acc, key) => {
+      const obj = {
+        key,
+        value: get(json.columns, `${key}.label`),
+        hidden: get(json.columns, `${key}.hidden`, false),
+      };
+      acc.push(obj);
+      return acc;
+    }, []);
+    dispatch(fecthDatasourceList(json.serverName));
+    dispatch(setDatasourceColumns(columns));
+    dispatch(initialize(formName, json));
+  }
+};
+// used for widgets chart
+export const getWidgetConfigChart = formName => (dispatch, getState) => {
+  const state = getState();
+  const config = getWidgetConfigSelector(state); // || CONFIG_CHART;
+  if (config) {
+    const configJson = JSON.parse(config.config);
+    console.log('config', configJson);
+    dispatch(fecthDatasourceList(configJson.serverName));
+    getDatasourceColumns(configJson.serverName, configJson.datasource).then((response) => {
+      response.json().then((json) => {
+        if (response.ok) {
+          dispatch(initialize(formName, configJson));
+          dispatch(clearSelectedDatasource());
+          dispatch(setSelectedDatasource(configJson.datasource));
+          const { mappings } = json.payload;
+          dispatch(setDatasourceColumns(mappings.map(m => ({
+            key: m.sourceName,
+            value: m.destinationName,
+          }))));
+
+          if (configJson.columns.x.lenth > 0) {
+            configJson.columns.x.map(item =>
+              dispatch(arrayPush(formName, 'columns.x', item)));
+          }
+          if (configJson.columns.y.length > 0) {
+            configJson.columns.y.map(item =>
+              dispatch(arrayPush(formName, 'columns.y', item)));
+          }
+          if (configJson.columns.y2.length > 0) {
+            configJson.columns.y2.map(item =>
+              dispatch(arrayPush(formName, 'columns.y2', item)));
+          }
+        } else {
+          dispatch(addErrors(json.errors.map(e => e.message)));
+          dispatch(addToast(formattedText('plugin.alert.error'), TOAST_ERROR));
+        }
+      });
+    });
+  }
+};

@@ -1,14 +1,14 @@
-import React, {Component} from "react";
+import React, { Component } from 'react';
 
 class ColumnTokenArray extends Component {
   componentWillMount() {
-    const {columns, fields} = this.props;
+    const { columns, fields } = this.props;
     if (columns.length > 0) {
       fields.push(columns);
     }
   }
   componentWillReceiveProps(nextProps) {
-    const {columns, fields} = nextProps;
+    const { columns, fields } = nextProps;
     if (columns.length !== fields.length) {
       fields.removeAll();
       columns.forEach(item => fields.push(item));
@@ -16,7 +16,7 @@ class ColumnTokenArray extends Component {
   }
 
   render() {
-    const {columns, className} = this.props;
+    const { columns, className } = this.props;
     const classNames = `ColumnToken  ${className}`;
     return (
       <div className={classNames}>

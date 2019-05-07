@@ -1,22 +1,25 @@
-import React, {Component} from "react";
-import PropTypes from "prop-types";
-import {Row, Col, Grid, CardGrid, Button} from "patternfly-react";
-import FormattedMessageLocal from "ui/i18n/FormattedMessage";
-import PageTitle from "ui/PageTitle";
-import ServerConfigCard from "ui/dashboard-config/list/components/ServerConfigCard";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Row, Col, Grid, CardGrid, Button } from 'patternfly-react';
+import FormattedMessageLocal from 'ui/i18n/FormattedMessage';
+import PageTitle from 'ui/PageTitle';
+import ServerConfigCard from 'ui/dashboard-config/list/components/ServerConfigCard';
+
 class DashboardConfigPage extends Component {
   componentWillMount() {
-    this.props.onWillMount();
+    const { onWillMount } = this.props;
+    onWillMount();
   }
+
   render() {
     const {
       serverList,
       removeConfigItem,
       testConfigItem,
       testAllConfigItems,
-      connectionOutcomes,
+      serverCheck,
       gotoPluginPage,
-      editConfigItem
+      editConfigItem,
     } = this.props;
     return (
       <Grid fluid className="DashboardConfigPage">
@@ -31,14 +34,14 @@ class DashboardConfigPage extends Component {
               bsStyle="warning"
               className="DashboardConfigPage__btn-tests pull-right"
               onClick={testAllConfigItems}
-              disabled
+
             >
               <FormattedMessageLocal id="plugin.config.testServers" />
             </Button>
             <Button
               bsStyle="primary"
               className="DashboardConfigPage__btn-add pull-right"
-              onClick={() => gotoPluginPage("add")}
+              onClick={() => gotoPluginPage('add')}
             >
               <FormattedMessageLocal id="plugin.config.addServer" />
             </Button>
@@ -46,16 +49,16 @@ class DashboardConfigPage extends Component {
         </Row>
         <div className="cards-pf">
           <CardGrid matchHeight>
-            <Row style={{marginBottom: "20px", marginTop: "20px"}}>
+            <Row style={{ marginBottom: '20px', marginTop: '20px' }}>
               {serverList.map(configItem => (
                 <ServerConfigCard
                   key={configItem.id}
                   configItem={configItem}
-                  testConnectionOutcome={connectionOutcomes[configItem.id]}
+                  testConnectionOutcome={serverCheck[configItem.id]}
                   onClickRemove={() => removeConfigItem(configItem.id)}
-                  onClickTest={() => testConfigItem(configItem)}
+                  onClickTest={() => testConfigItem(configItem.id)}
                   onClickEdit={() =>
-                    editConfigItem("dashboard-config-form", configItem)
+                    editConfigItem('dashboard-config-form', configItem)
                   }
                 />
               ))}
@@ -74,9 +77,12 @@ DashboardConfigPage.propTypes = {
   editConfigItem: PropTypes.func.isRequired,
   gotoPluginPage: PropTypes.func.isRequired,
   serverList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  connectionOutcomes: PropTypes.objectOf(PropTypes.string).isRequired
+  serverCheck: PropTypes.shape({}),
 };
+
 DashboardConfigPage.defaultProps = {
-  connectionOutcomes: {}
+  serverCheck: {},
 };
+
+
 export default DashboardConfigPage;

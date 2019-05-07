@@ -1,22 +1,22 @@
-import {createStore, compose, applyMiddleware, combineReducers} from "redux";
-import {reducer as formReducer} from "redux-form";
+import { createStore, compose, applyMiddleware, combineReducers } from 'redux';
+import { reducer as formReducer } from 'redux-form';
 
-import thunk from "redux-thunk";
-import rootReducer from "state/main/reducer";
+import thunk from 'redux-thunk';
+import rootReducer from 'state/main/reducer';
 
-import {config, api, currentUser} from "@entando/apimanager";
+import { config, api, currentUser } from '@entando/apimanager';
 
-import {name} from "../../package.json";
+import { name } from '../../package.json';
 
 const wrappedReducer = combineReducers({
-  [name]: rootReducer
+  [name]: rootReducer,
 });
 
 const pluginsReducer = combineReducers({
   plugins: wrappedReducer,
   currentUser,
   api,
-  form: formReducer
+  form: formReducer,
 });
 
 const store = createStore(
@@ -26,7 +26,7 @@ const store = createStore(
     applyMiddleware(thunk),
     // eslint-disable-next-line
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-  )
+  ),
 );
 
 config(store);

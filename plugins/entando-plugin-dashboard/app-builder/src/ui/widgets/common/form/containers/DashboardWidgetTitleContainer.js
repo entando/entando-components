@@ -1,23 +1,23 @@
-import {connect} from "react-redux";
+import { connect } from 'react-redux';
 
-import {fetchLanguages} from "state/main/actions";
+import { fetchLanguages } from 'state/main/actions';
 
-import {getLanguages} from "state/main/selectors";
+import { getLanguages } from 'state/main/selectors';
 
-import DashboardWidgetTitle from "ui/widgets/common/form/components/DashboardWidgetTitle";
+import DashboardWidgetTitle from 'ui/widgets/common/form/components/DashboardWidgetTitle';
 
 const mapStateToProps = state => ({
-  languages: getLanguages(state)
+  languages: getLanguages(state),
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = dispatch => ({
   onWillMount: () => {
     dispatch(fetchLanguages());
-  }
+  },
 });
 
 const DashboardWidgetTitleContainer = connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(DashboardWidgetTitle);
 export default DashboardWidgetTitleContainer;

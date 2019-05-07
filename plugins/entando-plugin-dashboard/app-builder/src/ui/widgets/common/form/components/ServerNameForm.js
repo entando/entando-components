@@ -1,15 +1,15 @@
-import React from "react";
-import PropTypes from "prop-types";
-import {Field} from "redux-form";
-import {required} from "@entando/utils";
-import {InputGroup} from "patternfly-react";
-import RenderSelectInput from "ui/common/form/RenderSelectInput";
-import FormLabel from "ui/common/form/FormLabel";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Field } from 'redux-form';
+import { required } from '@entando/utils';
+import { InputGroup } from 'patternfly-react';
+import RenderSelectInput from 'ui/common/form/RenderSelectInput';
+import FormLabel from 'ui/common/form/FormLabel';
 
-const ServerNameForm = ({serverNames, onChange, labelSize}) => {
+const ServerNameForm = ({ serverNames, onChange, labelSize }) => {
   const selectOptionsServerName = serverNames.map(m => ({
     value: m.id,
-    text: m.serverDescription
+    text: m.serverDescription,
   }));
   return (
     <InputGroup className="ServerNameForm__input-group">
@@ -35,18 +35,16 @@ const ServerNameForm = ({serverNames, onChange, labelSize}) => {
 };
 
 ServerNameForm.propTypes = {
-  serverNames: PropTypes.arrayOf(
-    PropTypes.shape({
-      text: PropTypes.string,
-      value: PropTypes.string
-    })
-  ).isRequired,
+  serverNames: PropTypes.arrayOf(PropTypes.shape({
+    text: PropTypes.string,
+    value: PropTypes.string,
+  })).isRequired,
   onChange: PropTypes.func.isRequired,
-  labelSize: PropTypes.number
+  labelSize: PropTypes.number,
 };
 
 ServerNameForm.defaultProps = {
-  labelSize: 4
+  labelSize: 4,
 };
 
 export default ServerNameForm;

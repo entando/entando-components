@@ -1,18 +1,18 @@
-import React from "react";
-import PropTypes from "prop-types";
-import {Switch} from "patternfly-react";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Switch } from 'patternfly-react';
 
 const SwitchRenderer = ({
   input,
   trueValue,
   falseValue,
   disabled,
-  className
+  className,
 }) => {
   const switchValue =
-    input.value === "true" || input.value === true || input.value === trueValue;
+    input.value === 'true' || input.value === true || input.value === trueValue;
 
-  let wrapperClass = "wrapper";
+  let wrapperClass = 'wrapper';
   if (className) {
     wrapperClass = `${wrapperClass} ${className}`;
   }
@@ -35,13 +35,17 @@ SwitchRenderer.propTypes = {
   /* eslint-enable react/forbid-prop-types */
   input: PropTypes.shape({
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
-    onChange: PropTypes.func.isRequired
-  }).isRequired
+    onChange: PropTypes.func.isRequired,
+  }).isRequired,
+  disabled: PropTypes.bool,
+  className: PropTypes.string,
 };
 
 SwitchRenderer.defaultProps = {
   trueValue: true,
-  falseValue: false
+  falseValue: false,
+  disabled: false,
+  className: '',
 };
 
 export default SwitchRenderer;
