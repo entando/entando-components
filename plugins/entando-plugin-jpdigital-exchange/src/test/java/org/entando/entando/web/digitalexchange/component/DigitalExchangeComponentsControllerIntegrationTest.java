@@ -32,6 +32,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.entando.entando.aps.system.services.digitalexchange.DigitalExchangeTestUtils.*;
+import org.entando.entando.crypt.DefaultTextEncryptor;
+import org.springframework.security.crypto.encrypt.TextEncryptor;
 
 @ActiveProfiles("DEcomponentsTest")
 public class DigitalExchangeComponentsControllerIntegrationTest extends AbstractControllerIntegrationTest {
@@ -55,6 +57,12 @@ public class DigitalExchangeComponentsControllerIntegrationTest extends Abstract
                     .addDigitalExchange(DE_1_ID, DigitalExchangeComponentsMocker.mock(COMPONENTS_1))
                     .addDigitalExchange(DE_2_ID, DigitalExchangeComponentsMocker.mock(COMPONENTS_2))
                     .initMocks();
+        }
+        
+        @Bean
+        @Primary
+        public TextEncryptor getDigitalExchangeTextEncryptor() {
+            return new DefaultTextEncryptor("changeit");
         }
     }
 

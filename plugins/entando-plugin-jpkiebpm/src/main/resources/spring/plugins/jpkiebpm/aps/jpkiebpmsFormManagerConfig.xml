@@ -5,6 +5,9 @@
     
     <bean id="kieBpmConfigXMLConverter"
           class="org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieBpmConfigXMLConverter">
+        <property name="keyFile">
+            <value>/WEB-INF/plugins/jpkiebpm/apsadmin/security.properties</value>
+        </property>
     </bean>
     
     <bean id="jpkiebpmsManager"

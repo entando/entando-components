@@ -16,6 +16,7 @@ package org.entando.entando.web.digitalexchange.job;
 import org.entando.entando.aps.system.jpa.servdb.DigitalExchangeJob;
 import org.entando.entando.aps.system.jpa.servdb.repo.DigitalExchangeJobRepository;
 import org.entando.entando.aps.system.services.digitalexchange.job.JobType;
+import org.entando.entando.crypt.DefaultTextEncryptor;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.junit.After;
 import org.junit.Test;
@@ -24,15 +25,33 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.encrypt.TextEncryptor;
+import org.springframework.test.context.ActiveProfiles;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@ActiveProfiles("DEJobResourceControllerTest")
 public class DigitalExchangeJobResourceControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     @Autowired
     private DigitalExchangeJobRepository repo;
+
+    @Configuration
+    @Profile("DEJobResourceControllerTest")
+    public static class TestConfig {
+
+        @Bean
+        @Primary
+        public TextEncryptor getDigitalExchangeTextEncryptor() {
+            return new DefaultTextEncryptor("changeit");
+        }
+    }
 
     @Override
     public void setUp() throws Exception {

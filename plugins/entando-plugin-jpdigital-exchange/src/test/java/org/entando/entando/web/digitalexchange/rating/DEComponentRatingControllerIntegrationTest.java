@@ -30,6 +30,8 @@ import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.entando.entando.aps.system.services.digitalexchange.DigitalExchangeTestUtils.*;
+import org.entando.entando.crypt.DefaultTextEncryptor;
+import org.springframework.security.crypto.encrypt.TextEncryptor;
 
 @ActiveProfiles("DERatingTest")
 public class DEComponentRatingControllerIntegrationTest extends AbstractControllerIntegrationTest {
@@ -50,6 +52,12 @@ public class DEComponentRatingControllerIntegrationTest extends AbstractControll
             return new DigitalExchangesMocker()
                     .addDigitalExchange(DE_1_ID, getFakeResponse())
                     .initMocks();
+        }
+        
+        @Bean
+        @Primary
+        public TextEncryptor getDigitalExchangeTextEncryptor() {
+            return new DefaultTextEncryptor("changeit");
         }
     }
 

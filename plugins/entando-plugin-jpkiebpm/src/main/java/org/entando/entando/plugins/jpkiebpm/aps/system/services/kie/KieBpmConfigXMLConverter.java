@@ -23,34 +23,30 @@
  */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie;
 
+import javax.servlet.ServletContext;
 import org.entando.entando.crypt.DefaultTextEncryptor;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfigFactory;
 import org.entando.entando.plugins.jprestapi.aps.core.helper.JAXBHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
+import org.springframework.web.context.ServletContextAware;
+import org.springframework.web.context.support.ServletContextResource;
 
-@PropertySource("classpath:component/plugins/jpkiebpm/security.properties")
-public class KieBpmConfigXMLConverter {
+public class KieBpmConfigXMLConverter implements ServletContextAware {
 
     private static final Logger logger = LoggerFactory.getLogger(KieBpmConfigXMLConverter.class);
-    
-    private static final String CRYPT_PROPERTIES = "component/plugins/jpkiebpm/security.properties";
-    
-    private final TextEncryptor textEncryptor;
 
-    public KieBpmConfigXMLConverter() {
-        this.textEncryptor = new DefaultTextEncryptor(new ClassPathResource(CRYPT_PROPERTIES));
-    }
+    private ServletContext servletContext;
+    private String keyFile;
 
     public String marshal(KieBpmConfigFactory configFactory) throws Throwable {
         KieBpmConfigFactory copiedConfigFactory = new KieBpmConfigFactory(configFactory);
 
         copiedConfigFactory.getKieBpmConfigMap().values().forEach(config -> {
             if (config.getPassword() != null) {
-                config.setPassword(textEncryptor.encrypt(config.getPassword()));
+                config.setPassword(getTextEncryptor().encrypt(config.getPassword()));
             }
         });
 
@@ -64,7 +60,7 @@ public class KieBpmConfigXMLConverter {
             if (config.getPassword() != null) {
                 String password = config.getPassword();
                 try {
-                    password = textEncryptor.decrypt(config.getPassword());
+                    password = getTextEncryptor().decrypt(config.getPassword());
                 } catch (Throwable ex) {
                     logger.warn("Unable to decrypt BPM password " + password);
                 }
@@ -73,5 +69,24 @@ public class KieBpmConfigXMLConverter {
         });
 
         return configFactory;
+    }
+
+    @Override
+    public void setServletContext(ServletContext servletContext) {
+        this.servletContext = servletContext;
+    }
+
+    public void setKeyFile(String keyFile) {
+        this.keyFile = keyFile;
+    }
+
+    private TextEncryptor textEncryptor;
+
+    private TextEncryptor getTextEncryptor() {
+        if (textEncryptor == null) {
+            Resource resource = new ServletContextResource(servletContext, keyFile);
+            this.textEncryptor = new DefaultTextEncryptor(resource);
+        }
+        return textEncryptor;
     }
 }

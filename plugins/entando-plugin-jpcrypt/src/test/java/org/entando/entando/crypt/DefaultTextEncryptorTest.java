@@ -48,4 +48,10 @@ public class DefaultTextEncryptorTest {
         String key = null;
         new DefaultTextEncryptor(key);
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testUnexistingResource() {
+        ClassPathResource resource = new ClassPathResource("foo");
+        new DefaultTextEncryptor(resource);
+    }
 }

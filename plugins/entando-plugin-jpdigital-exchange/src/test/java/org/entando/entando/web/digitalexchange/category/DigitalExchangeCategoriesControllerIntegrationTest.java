@@ -18,6 +18,7 @@ import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExc
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangesMocker;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.common.model.SimpleRestResponse;
+import org.entando.entando.crypt.DefaultTextEncryptor;
 import org.junit.Test;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +26,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.security.crypto.encrypt.TextEncryptor;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -49,6 +51,12 @@ public class DigitalExchangeCategoriesControllerIntegrationTest extends Abstract
                     .addDigitalExchange(DE_1_ID, new SimpleRestResponse<>(Arrays.asList("pageModel", "fragment", "unsupportedType1")))
                     .addDigitalExchange(DE_2_ID, new SimpleRestResponse<>(Arrays.asList("pageModel", "widget", "unsupportedType2")))
                     .initMocks();
+        }
+        
+        @Bean
+        @Primary
+        public TextEncryptor getDigitalExchangeTextEncryptor() {
+            return new DefaultTextEncryptor("changeit");
         }
     }
 

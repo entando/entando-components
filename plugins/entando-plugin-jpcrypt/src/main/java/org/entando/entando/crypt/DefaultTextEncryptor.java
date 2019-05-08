@@ -51,6 +51,9 @@ public class DefaultTextEncryptor implements TextEncryptor {
     }
 
     private static String getKeyFromResource(Resource resource) {
+        if (!resource.exists()) {
+            throw new IllegalArgumentException("Resource " + resource.getFilename() + " doesn't exists");
+        }
         try {
             Properties properties = PropertiesLoaderUtils.loadProperties(resource);
             return properties.getProperty("key");

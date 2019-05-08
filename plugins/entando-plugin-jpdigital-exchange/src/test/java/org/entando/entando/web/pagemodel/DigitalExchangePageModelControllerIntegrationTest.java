@@ -38,8 +38,10 @@ import org.springframework.web.client.ResourceAccessException;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.entando.entando.aps.system.services.digitalexchange.DigitalExchangeTestUtils.*;
+import org.entando.entando.crypt.DefaultTextEncryptor;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.empty;
+import org.springframework.security.crypto.encrypt.TextEncryptor;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @ActiveProfiles("DEPageModelsTest")
@@ -69,6 +71,12 @@ public class DigitalExchangePageModelControllerIntegrationTest extends AbstractC
                         throw new ResourceAccessException("Connection Refused");
                     })
                     .initMocks();
+        }
+        
+        @Bean
+        @Primary
+        public TextEncryptor getDigitalExchangeTextEncryptor() {
+            return new DefaultTextEncryptor("changeit");
         }
     }
 

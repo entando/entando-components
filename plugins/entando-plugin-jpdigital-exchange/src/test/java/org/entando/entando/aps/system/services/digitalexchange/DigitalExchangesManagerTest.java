@@ -15,6 +15,7 @@ package org.entando.entando.aps.system.services.digitalexchange;
 
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import java.util.List;
+import org.entando.entando.crypt.DefaultTextEncryptor;
 import org.entando.entando.aps.system.DigitalExchangeConstants;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangeOAuth2RestTemplateFactory;
 import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExchange;
@@ -40,7 +41,7 @@ public class DigitalExchangesManagerTest {
 
     private static final String SECRET = "client-secret";
     private static final DigitalExchangeConfigXmlConverter XML_CONVERTER
-            = new DigitalExchangeConfigXmlConverter();
+            = new DigitalExchangeConfigXmlConverter(new DefaultTextEncryptor("changeit"));
 
     @Mock
     private ConfigInterface configManager;

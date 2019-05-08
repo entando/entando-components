@@ -25,4 +25,10 @@
         <constructor-arg name="dtoBuilder" ref="DigitalExchangePageModelDtoBuilder"/>
     </bean>
     
+    <bean id="digitalExchangeTextEncryptor" class="org.entando.entando.aps.system.services.digitalexchange.DigitalExchangeTextEncryptor">
+        <property name="keyFile">
+            <value>/WEB-INF/plugins/jpdigital-exchange/apsadmin/security.properties</value>
+        </property>
+    </bean>
+    
 </beans>
