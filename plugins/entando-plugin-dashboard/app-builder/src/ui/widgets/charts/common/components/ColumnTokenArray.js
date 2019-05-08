@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class ColumnTokenArray extends Component {
   componentWillMount() {
@@ -20,8 +21,8 @@ class ColumnTokenArray extends Component {
     const classNames = `ColumnToken  ${className}`;
     return (
       <div className={classNames}>
-        {columns.map((item, index) => (
-          <div className="ColumnToken__column" key={index}>
+        {columns.map(item => (
+          <div className="ColumnToken__column" key={`col-${item.label}`}>
             <span className="label label-info">{item.label}</span>
           </div>
         ))}
@@ -29,5 +30,17 @@ class ColumnTokenArray extends Component {
     );
   }
 }
+
+ColumnTokenArray.propTypes = {
+  className: PropTypes.string,
+  fields: PropTypes.shape({}),
+  columns: PropTypes.arrayOf(PropTypes.shape({})),
+};
+
+ColumnTokenArray.defaultProps = {
+  className: '',
+  fields: {},
+  columns: [],
+};
 
 export default ColumnTokenArray;
