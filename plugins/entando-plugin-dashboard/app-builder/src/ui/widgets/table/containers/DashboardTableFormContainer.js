@@ -7,6 +7,8 @@ import {
   gotoConfigurationPage,
 } from 'state/main/actions';
 
+import { getDatasourceColumns } from 'state/main/selectors';
+
 import DashboardTableForm from 'ui/widgets/table/components/DashboardTableForm';
 
 const selector = formValueSelector('form-dashboard-table');
@@ -20,6 +22,7 @@ export const mapStateToProps = state => ({
     },
   },
   datasource: selector(state, 'datasource'),
+  columns: getDatasourceColumns(state),
 });
 
 export const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -34,9 +37,25 @@ export const mapDispatchToProps = (dispatch, ownProps) => ({
   onCancel: () => dispatch(gotoConfigurationPage()),
 });
 
+// salvataggio delle colonne con l'ordinamento
+const mergeProps = (stateProps, dispatchProps) => ({
+  ...stateProps,
+  ...dispatchProps,
+  onSubmit: (data) => {
+    const { columns } = data;
+    stateProps.columns.forEach((col, index) => {
+      const { key } = col;
+      columns[key].order = index;
+    });
+    const obj = { ...data, columns };
+    dispatchProps.onSubmit(obj);
+  },
+});
+
 const DashboardTableFormContainer = connect(
   mapStateToProps,
   mapDispatchToProps,
+  mergeProps,
 )(DashboardTableForm);
 
 export default DashboardTableFormContainer;

@@ -16,7 +16,6 @@ import {
   pingDatasource,
   getDatasources,
   getDatasourceColumns,
-  putDatasourceColumn,
 } from 'api/dashboardConfig';
 
 import { getWidgetConfigSelector } from 'state/app-builder/selectors';
@@ -369,7 +368,7 @@ export const fetchDatasourceColumns = (formName, field, datasourceId) => (
     getDatasourceColumns(serverId, datasourceId).then((response) => {
       response.json().then((json) => {
         if (response.ok) {
-          console.log(json);
+          console.log('fetchDatasourceColumns ', json);
           const { mappings } = json.payload;
           const columns = mappings.reduce((acc, item) => {
             acc.push({
@@ -393,28 +392,9 @@ export const fetchDatasourceColumns = (formName, field, datasourceId) => (
     });
   });
 
-export const updateDatasourceColumns = (formName, columns) => (
-  dispatch,
-  getState,
-) =>
-  new Promise((resolve) => {
-    const state = getState();
-    const selector = formValueSelector(formName);
-    const configId = selector(state, 'serverName');
-    const datasourceId = selector(state, 'datasource');
-    putDatasourceColumn(configId, datasourceId, columns).then((response) => {
-      response.json().then((json) => {
-        if (response.ok) {
-          dispatch(setDatasourceColumns(columns));
-          resolve();
-        } else {
-          dispatch(addErrors(json.errors.map(e => e.message)));
-          dispatch(addToast(formattedText('plugin.alert.error'), TOAST_ERROR));
-          resolve();
-        }
-      });
-    });
-  });
+export const updateDatasourceColumns = columns => dispatch =>
+  dispatch(setDatasourceColumns(columns));
+
 
 /*
  Widget Chart thunk
@@ -426,15 +406,17 @@ export const getWidgetConfig = formName => (dispatch, getState) => {
   const config = getWidgetConfigSelector(state);
   if (config) {
     const json = JSON.parse(config.config);
-    const columns = Object.keys(json.columns).reduce((acc, key) => {
-      const obj = {
-        key,
-        value: get(json.columns, `${key}.label`),
-        hidden: get(json.columns, `${key}.hidden`, false),
-      };
-      acc.push(obj);
-      return acc;
-    }, []);
+    const columns = Object.keys(json.columns)
+      .sort((a, b) => json.columns[a].order - json.columns[b].order)
+      .reduce((acc, key) => {
+        const obj = {
+          key,
+          value: get(json.columns, `${key}.label`),
+          hidden: get(json.columns, `${key}.hidden`, false),
+        };
+        acc.push(obj);
+        return acc;
+      }, []);
     dispatch(fecthDatasourceList(json.serverName));
     dispatch(setDatasourceColumns(columns));
     dispatch(initialize(formName, json));

@@ -10,12 +10,13 @@ const DATASOURCE_VALUE = {
   datasourceCode: 'xxx',
   datasource: 'Temperature',
   datasourceURI: '/devices/temperature',
+
 };
 
 describe('DashboardConfigDatasource', () => {
   let component;
   beforeEach(() => {
-    component = shallow(<DashboardConfigDatasource />);
+    component = shallow(<DashboardConfigDatasource datasourceCode="" />);
   });
 
   it('renders without crashing', () => {
@@ -51,7 +52,7 @@ describe('DashboardConfigDatasource', () => {
   });
 
   it('if props datasources is not empty show table ', () => {
-    component = shallow(<DashboardConfigDatasource datasources={DASHBOARD_LIST_DATASOURCE['1']} />);
+    component = shallow(<DashboardConfigDatasource datasources={DASHBOARD_LIST_DATASOURCE['1']} datasourceCode="" />);
     expect(component.find('table')).toHaveLength(1);
     expect(component.find('thead')).toHaveLength(1);
     expect(component.find('tr th')).toHaveLength(5);

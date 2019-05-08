@@ -5,16 +5,16 @@ import {
 
 import { DASHBOARD_CONFIG_LIST } from 'mocks/dashboardConfigs';
 
-import { fetchServerConfigList, checkServerConfig, gotoPluginPage } from 'state/main/actions';
+import { fetchServerConfigList, checkStatusServerConfig, gotoPluginPage } from 'state/main/actions';
 import { getServerConfigList } from 'state/main/selectors';
 
 jest.mock('state/main/actions');
-fetchServerConfigList.mockImplementation(() => Promise.resolve());
-checkServerConfig.mockReturnValue({ 1: { status: 'online' } });
-
 jest.mock('state/main/selectors');
 
-getServerConfigList.mockReturnValue(DASHBOARD_CONFIG_LIST);
+fetchServerConfigList.mockImplementation(() => Promise.resolve());
+checkStatusServerConfig.mockImplementation(() => ({ 1: { status: 'online' } }));
+
+getServerConfigList.mockImplementation(() => DASHBOARD_CONFIG_LIST);
 
 
 const dispatchMock = jest.fn(() => Promise.resolve({}));
