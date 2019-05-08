@@ -152,7 +152,9 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
       conn = this.getConnection();
       conn.setAutoCommit(false);
       this.insertDashboardConfig(dashboardConfig, conn);
-      this.insertDashboardConfigDatasource(dashboardConfig, conn);
+      if(dashboardConfig.getDatasources() != null && dashboardConfig.getDatasources().size() > 0) {
+        this.insertDashboardConfigDatasource(dashboardConfig, conn);
+      }
       conn.commit();
     } catch (Throwable t) {
       this.executeRollback(conn);

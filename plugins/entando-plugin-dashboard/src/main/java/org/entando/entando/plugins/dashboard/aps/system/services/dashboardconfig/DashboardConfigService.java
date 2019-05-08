@@ -130,10 +130,13 @@ public class DashboardConfigService implements IDashboardConfigService {
 
   @Override
   public DashboardConfigDto addDashboardConfig(DashboardConfigRequest dashboardConfigRequest) {
-    dashboardConfigRequest.getDatasources().forEach(d -> {
-      if (this.datasourceExistsByDatasourceName(d.getDatasourceCode())) {
+    if(dashboardConfigRequest.getDatasources() != null && dashboardConfigRequest.getDatasources().size() > 0) {
+      dashboardConfigRequest.getDatasources().forEach(d -> {
+        if (this.datasourceExistsByDatasourceName(d.getDatasourceCode())) {
           throw new InvalidFieldException(d.getDatasourceCode());
-      }});
+        }
+      });
+    }
     try {
       DashboardConfig dashboardConfig = this.createDashboardConfig(dashboardConfigRequest);
       BeanPropertyBindingResult validationResult = this.validateForAdd(dashboardConfig);
