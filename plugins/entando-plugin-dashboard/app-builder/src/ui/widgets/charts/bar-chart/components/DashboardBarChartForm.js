@@ -15,7 +15,8 @@ const CHART_PREVIEW = 'Bar Chart';
 
 export class DashboardBarChartFormBody extends Component {
   componentWillMount() {
-    this.props.onWillMount();
+    const { onWillMount } = this.props;
+    onWillMount();
   }
 
   render() {
