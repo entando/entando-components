@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import { formValueSelector } from 'redux-form';
 import { omit } from 'lodash';
 
+
 import DashboardConfigForm from 'ui/dashboard-config/common/components/DashboardConfigForm';
 
 import {
@@ -9,9 +10,11 @@ import {
   createServerConfig,
   updateServerConfig,
   setInternalRoute,
+  checkStatusDatasource,
+  fetchPreviewDatasource,
 } from 'state/main/actions';
 
-import { getServerType } from 'state/main/selectors';
+import { getServerType, getDatasoucePreview } from 'state/main/selectors';
 
 const selector = formValueSelector('dashboard-config-form');
 
@@ -23,6 +26,7 @@ export const mapStateToProps = state => ({
   datasourceCode: selector(state, 'datasourceCode'),
   datasources: selector(state, 'datasources'),
   serverTypeList: getServerType(state),
+  previewColumns: getDatasoucePreview(state),
 
 });
 
@@ -38,6 +42,10 @@ export const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   gotoHomePage: () => {
     dispatch(setInternalRoute('home'));
+  },
+  testConnection: datasourceId => dispatch(checkStatusDatasource(datasourceId)),
+  previewDatasource: (datasourceId) => {
+    dispatch(fetchPreviewDatasource(datasourceId));
   },
 });
 

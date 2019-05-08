@@ -27,11 +27,11 @@ import 'patternfly/dist/css/patternfly.min.css';
 import 'patternfly/dist/css/patternfly-additions.min.css';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 
-// import DashboardConfigAddPage from 'ui/dashboard-config/add/components/DashboardConfigAddPage';
+import DashboardConfigAddPage from 'ui/dashboard-config/add/components/DashboardConfigAddPage';
 // import DashboardConfigPageContainer
 // from 'ui/dashboard-config/list/containers/DashboardConfigPageContainer';
 
-import DashboardTable from 'ui/widgets/table/components/DashboardTable';
+// import DashboardTable from 'ui/widgets/table/components/DashboardTable';
 // import DashboardLineChart from 'ui/widgets/charts/line-chart/components/DashboardLineChart';
 // import DashboardBarChart from 'ui/widgets/charts/bar-chart/components/DashboardBarChart';
 // import DashboardDonutChart from 'ui/widgets/charts/donut-chart/components/DashboardDonutChart';
@@ -57,7 +57,7 @@ setCurrentLocale(enLocale);
 
 const currentUser = combineReducers({
   username: () => 'admin',
-  token: () => '2c8dfeb875568c303ce84a7e1e8cf606',
+  token: () => '02bf7c4f3baf588e9a21bd3d54e5fb62',
 });
 
 const wrappedReducer = combineReducers({
@@ -94,7 +94,7 @@ export default ReactDOM.render(
       <Grid fluid>
         <Row>
           <Col xs={12}>
-            <DashboardTable onSubmit={() => {}} />
+            <DashboardConfigAddPage />
           </Col>
         </Row>
       </Grid>

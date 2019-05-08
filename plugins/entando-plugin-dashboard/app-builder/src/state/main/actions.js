@@ -16,6 +16,7 @@ import {
   pingDatasource,
   getDatasources,
   getDatasourceColumns,
+  previewDatasource,
 } from 'api/dashboardConfig';
 
 import { getWidgetConfigSelector } from 'state/app-builder/selectors';
@@ -32,6 +33,7 @@ import {
   REMOVE_SERVER_CONFIG,
   SET_CHECK_SERVER,
   SET_CHECK_DATASOURCE,
+  SET_PREVIEW_DATASOURCE,
   SET_DATASOURCE_LIST,
   SET_DATASOURCE_DATA,
   SET_DATASOURCE_COLUMNS,
@@ -84,6 +86,11 @@ export const setCheckServer = (serverId, status) => ({
 export const setCheckDatasource = (datasourceId, status) => ({
   type: SET_CHECK_DATASOURCE,
   payload: { datasourceId, status },
+});
+
+export const setPreviewDatasource = fields => ({
+  type: SET_PREVIEW_DATASOURCE,
+  payload: { fields },
 });
 
 export const updateServerConfigAction = server => ({
@@ -330,6 +337,30 @@ export const checkStatusDatasource = datasourceId => (dispatch, getState) =>
       datasourceList.map(ds => dispatch(checkStatusDatasource(ds.datasourceCode)));
     }
 
+    resolve();
+  });
+
+export const fetchPreviewDatasource = datasourceId => (dispatch, getState) =>
+  new Promise((resolve) => {
+    const state = getState();
+    const selector = formValueSelector('dashboard-config-form');
+    const serverId = selector(state, 'id');
+    if (datasourceId) {
+      if (serverId) {
+        previewDatasource(serverId, datasourceId).then((response) => {
+          response.json().then((json) => {
+            if (response.ok) {
+              dispatch(setPreviewDatasource(json.payload.fields));
+              resolve();
+            } else {
+              dispatch(addErrors(json.errors.map(e => e.message)));
+              dispatch(addToast(formattedText('plugin.alert.error'), TOAST_ERROR));
+              resolve();
+            }
+          });
+        });
+      }
+    }
     resolve();
   });
 

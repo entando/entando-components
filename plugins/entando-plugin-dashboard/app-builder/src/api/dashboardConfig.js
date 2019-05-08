@@ -122,18 +122,20 @@ export const pingDatasource = (serverId, datasourceId) =>
 
 export const previewDatasource = (serverId, datasourceId) =>
   makeRequest({
-    uri: `/plugins/dashboard/dashboardConfigs/server/${serverId}/datasource/${datasourceId}/preview`,
+    uri: `/api/plugins/dashboard/dashboardConfigs/server/${serverId}/datasource/${datasourceId}/preview`,
     method: METHODS.GET,
+    mockResponse: {},
     useAuthentication: true,
   });
 
 export const refreshDatasourceMetadata = (serverId, datasourceCode) =>
   makeRequest({
-    uri: `/plugins/dashboard/dashboardConfigs/server/${serverId}/datasource/${datasourceCode}/refreshMetadata`,
+    uri: `/api/plugins/dashboard/dashboardConfigs/server/${serverId}/datasource/${datasourceCode}/refreshMetadata`,
     method: METHODS.POST,
     body: {
       serverId,
       datasourceCode,
     },
+    mockResponse: {},
     useAuthentication: true,
   });

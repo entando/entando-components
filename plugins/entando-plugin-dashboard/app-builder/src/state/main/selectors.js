@@ -43,6 +43,11 @@ const getDatasouce = createSelector(
   dc => dc.datasource,
 );
 
+export const getDatasoucePreview = createSelector(
+  [getDatasouce],
+  dc => dc.preview,
+);
+
 export const getDatasouceSelected = createSelector(
   [getDatasouce],
   ds => ds.selected,
