@@ -180,8 +180,9 @@ public class DashboardConfigController {
     if (bindingResult.hasErrors()) {
       throw new ValidationConflictException(bindingResult);
     }
-    
-    dashboardConfigRequest = connectorService.setDevicesMetadata(dashboardConfigRequest);
+    if(dashboardConfigRequest.getDatasources()!= null && dashboardConfigRequest.getDatasources().size() > 0) {
+      dashboardConfigRequest = connectorService.setDevicesMetadata(dashboardConfigRequest);
+    }
     DashboardConfigDto dto = this.getDashboardConfigService()
         .addDashboardConfig(dashboardConfigRequest);
     return new ResponseEntity<>(new SimpleRestResponse(dto), HttpStatus.OK);
