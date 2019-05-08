@@ -1,16 +1,16 @@
-import "test/enzyme-init";
-import {shallow} from "enzyme";
+import 'test/enzyme-init';
+import { shallow } from 'enzyme';
 
-import React from "react";
-import SubRouter from "ui/dashboard-config/common/components/SubRouter";
-import ConfigPageContainer from "ui/dashboard-config/list/containers/DashboardConfigPageContainer";
-import DashboardConfigAddPage from "ui/dashboard-config/add/components/DashboardConfigAddPage";
-import DashboardConfigEditPage from "ui/dashboard-config/add/components/DashboardConfigEditPage";
+import React from 'react';
+import SubRouter from 'ui/dashboard-config/common/components/SubRouter';
+import ConfigPageContainer from 'ui/dashboard-config/list/containers/DashboardConfigPageContainer';
+import DashboardConfigAddPage from 'ui/dashboard-config/add/components/DashboardConfigAddPage';
+import DashboardConfigEditPage from 'ui/dashboard-config/add/components/DashboardConfigEditPage';
 
-describe("SubRouter", () => {
+describe('SubRouter', () => {
   let component;
 
-  it("renders default component  ConfigPageContainer", () => {
+  it('renders default component  ConfigPageContainer', () => {
     component = shallow(<SubRouter pluginPage="" />);
     expect(component.find(ConfigPageContainer)).toHaveLength(1);
   });

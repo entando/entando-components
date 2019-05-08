@@ -8,7 +8,7 @@ import RenderTextInput from 'ui/common/form/RenderTextInput';
 import FormLabel from 'ui/common/form/FormLabel';
 
 const FieldArrayDatasource = ({
-  fields, datasources, onChange, className,
+  datasources, onChange, className,
 }) => {
   const selectOptionsDatasource = datasources.map(m => ({
     value: m.id,
@@ -57,8 +57,13 @@ const FieldArrayDatasource = ({
 };
 
 FieldArrayDatasource.propTypes = {
-  fields: PropTypes.shape({}).isRequired,
   datasources: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  onChange: PropTypes.func.isRequired,
+  className: PropTypes.string,
+};
+
+FieldArrayDatasource.defaultProps = {
+  className: '',
 };
 
 export default FieldArrayDatasource;

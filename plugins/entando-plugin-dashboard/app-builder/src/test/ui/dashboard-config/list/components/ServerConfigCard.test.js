@@ -1,70 +1,70 @@
-import "test/enzyme-init";
-import {shallow} from "enzyme";
+import 'test/enzyme-init';
+import { shallow } from 'enzyme';
 
-import React from "react";
+import React from 'react';
 
 import {
   Card,
   CardTitle,
   CardBody,
   DropdownKebab,
-  MenuItem
-} from "patternfly-react";
+  MenuItem,
+} from 'patternfly-react';
 
-import ServerConfigCard from "ui/dashboard-config/list/components/ServerConfigCard";
+import ServerConfigCard from 'ui/dashboard-config/list/components/ServerConfigCard';
 
 const props = {
   configItem: {},
   onClickRemove: jest.fn(),
   onClickTest: jest.fn(),
-  onClickEdit: jest.fn()
+  onClickEdit: jest.fn(),
 };
 
-describe("ServerConfigCard", () => {
+describe('ServerConfigCard', () => {
   let component;
   beforeEach(() => {
     component = shallow(<ServerConfigCard {...props} />);
   });
 
-  it("renders without crashing", () => {
+  it('renders without crashing', () => {
     expect(component.exists()).toBe(true);
   });
 
-  it("contains Card", () => {
+  it('contains Card', () => {
     expect(component.find(Card)).toHaveLength(1);
   });
 
-  it("contains CardTitle", () => {
+  it('contains CardTitle', () => {
     expect(component.find(CardTitle)).toHaveLength(1);
   });
 
-  it("contains CardBody", () => {
+  it('contains CardBody', () => {
     expect(component.find(CardBody)).toHaveLength(1);
   });
 
-  it("contains MenuItem", () => {
+  it('contains MenuItem', () => {
     expect(component.find(MenuItem)).toHaveLength(3);
   });
 
-  it("contains DropdownKebab", () => {
+  it('contains DropdownKebab', () => {
     expect(component.find(DropdownKebab)).toHaveLength(1);
   });
 
-  it("clicking on test MenuItem component calls onClickTest", () => {
-    const event = component.find(".ServerConfigCard__menu-item-test");
-    event.simulate("click");
+  it('clicking on test MenuItem component calls onClickTest', () => {
+    const event = component.find('.ServerConfigCard__menu-item-test');
+    event.simulate('click');
     expect(props.onClickTest).toHaveBeenCalled();
   });
 
-  it("clicking on test MenuItem component calls onClickEdit", () => {
-    const event = component.find(".ServerConfigCard__menu-item-edit");
-    event.simulate("click");
+  it('clicking on test MenuItem component calls onClickEdit', () => {
+    const event = component.find('.ServerConfigCard__menu-item-edit');
+    event.simulate('click');
     expect(props.onClickEdit).toHaveBeenCalled();
   });
 
-  it("clicking on test MenuItem component calls onClickRemove", () => {
-    const event = component.find(".ServerConfigCard__menu-item-remove");
-    event.simulate("click");
+  it('clicking on test MenuItem component calls onClickRemove', () => {
+    const event = component.find('.ServerConfigCard__menu-item-remove');
+    event.simulate('click');
     expect(props.onClickRemove).toHaveBeenCalled();
   });
 });
