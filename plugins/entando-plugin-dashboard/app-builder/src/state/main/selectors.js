@@ -66,6 +66,12 @@ export const getServerCheck = createSelector(
   dc => dc.serverCheck,
 );
 
+export const getDatasourceCheck = createSelector(
+  [getDashboardConfig],
+  dc => dc.datasourceCheck,
+);
+
+
 export const getDatasourceList = createSelector(
   [getDashboardConfig],
   dc => dc.datasourceList,

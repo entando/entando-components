@@ -114,8 +114,9 @@ export const getDatasourceData = (
 
 export const pingDatasource = (serverId, datasourceId) =>
   makeRequest({
-    uri: `/plugins/dashboard/dashboardConfigs/server/${serverId}/datasource/${datasourceId}/ping`,
+    uri: `/api/plugins/dashboard/dashboardConfigs/server/${serverId}/datasource/${datasourceId}/ping`,
     method: METHODS.GET,
+    mockResponse: {},
     useAuthentication: true,
   });
 

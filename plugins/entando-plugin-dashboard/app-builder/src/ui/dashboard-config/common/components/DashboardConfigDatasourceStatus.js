@@ -4,14 +4,19 @@ import { Label, Button } from 'patternfly-react';
 
 import FormattedMessageLocal from 'ui/i18n/FormattedMessage';
 
-const DashboardConfigDatasourceStatus = ({ status, testConnection }) => (
+const DashboardConfigDatasourceStatus = ({ datasourceCode, status, testConnection }) => (
   <div className="DashboardConfigDatasourceStatus">
-    <Label bsStyle="default">{status}</Label>
+    <Label bsStyle={status === 'online' ? 'success' : 'danger'}>
+      {
+        status === 'online' ? (<span className="fa fa-check" />) :
+        <span className="fa fa-times" />
+      }
+    </Label>
     <Button
       className="DashboardConfigDatasourceStatus__test-btn"
       type="button"
       bsStyle="default"
-      onClick={testConnection}
+      onClick={() => testConnection(datasourceCode)}
     >
       <FormattedMessageLocal id="plugin.config.testConnection" />
     </Button>
@@ -21,6 +26,7 @@ const DashboardConfigDatasourceStatus = ({ status, testConnection }) => (
 DashboardConfigDatasourceStatus.propTypes = {
   status: PropType.string,
   testConnection: PropType.func,
+  datasourceCode: PropType.string.isRequired,
 };
 
 DashboardConfigDatasourceStatus.defaultProps = {

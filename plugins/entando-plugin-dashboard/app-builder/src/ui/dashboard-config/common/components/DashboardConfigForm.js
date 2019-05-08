@@ -217,6 +217,7 @@ export class DashboardConfigFormBody extends Component {
               datasourceValue={datasourceValue}
               datasources={datasources}
               datasourceCode={datasourceCode}
+
             />
             <Row>
               <Col xs={12}>
@@ -256,6 +257,7 @@ DashboardConfigFormBody.propTypes = {
   datasources: PropTypes.arrayOf(PropTypes.shape(DATASOURCE_TYPE)),
   datasourceValue: PropTypes.shape(DATASOURCE_TYPE),
   datasourceCode: PropTypes.string,
+
   invalid: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
 };
@@ -266,6 +268,7 @@ DashboardConfigFormBody.defaultProps = {
   },
   datasources: [],
   datasourceCode: '',
+  datasourceCheck: {},
 };
 const DashboardConfigForm = reduxForm({
   form: 'dashboard-config-form',

@@ -97,8 +97,6 @@ export class DashboardTableFormBody extends Component {
 
   render() {
     const { handleSubmit, invalid, submitting } = this.props;
-
-
     return (
       <form
         onSubmit={handleSubmit}

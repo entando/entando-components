@@ -23,6 +23,7 @@ export const mapStateToProps = state => ({
   datasourceCode: selector(state, 'datasourceCode'),
   datasources: selector(state, 'datasources'),
   serverTypeList: getServerType(state),
+
 });
 
 export const mapDispatchToProps = (dispatch, ownProps) => ({

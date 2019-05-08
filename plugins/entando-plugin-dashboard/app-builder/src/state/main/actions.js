@@ -13,6 +13,7 @@ import {
   postServerConfig,
   putServerConfig,
   pingServerConfig,
+  pingDatasource,
   getDatasources,
   getDatasourceColumns,
   putDatasourceColumn,
@@ -31,6 +32,7 @@ import {
   UPDATE_SERVER_CONFIG,
   REMOVE_SERVER_CONFIG,
   SET_CHECK_SERVER,
+  SET_CHECK_DATASOURCE,
   SET_DATASOURCE_LIST,
   SET_DATASOURCE_DATA,
   SET_DATASOURCE_COLUMNS,
@@ -78,6 +80,11 @@ export const addServerConfig = server => ({
 export const setCheckServer = (serverId, status) => ({
   type: SET_CHECK_SERVER,
   payload: { serverId, status },
+});
+
+export const setCheckDatasource = (datasourceId, status) => ({
+  type: SET_CHECK_DATASOURCE,
+  payload: { datasourceId, status },
 });
 
 export const updateServerConfigAction = server => ({
@@ -275,27 +282,57 @@ export const updateServerConfig = serverConfig => dispatch =>
     });
   });
 
-export const checkServerConfig = serverId => (dispatch, getState) => new Promise((resolve) => {
-  const state = getState();
-  const serverList = getServerConfigList(state);
-  if (serverId) {
-    pingServerConfig(serverId).then((response) => {
-      response.json().then((json) => {
-        if (response.ok) {
-          dispatch(setCheckServer(serverId, { status: 'online' }));
-          resolve();
-        } else {
-          dispatch(setCheckServer(serverId, { status: 'offline' }));
-          dispatch(addErrors(json.errors.map(e => e.message)));
-          dispatch(addToast(formattedText('plugin.alert.error'), TOAST_ERROR));
-          resolve();
-        }
+export const checkStatusServerConfig = serverId => (dispatch, getState) =>
+  new Promise((resolve) => {
+    const state = getState();
+    const serverList = getServerConfigList(state);
+    if (serverId) {
+      pingServerConfig(serverId).then((response) => {
+        response.json().then((json) => {
+          if (response.ok) {
+            dispatch(setCheckServer(serverId, { status: 'online' }));
+            resolve();
+          } else {
+            dispatch(setCheckServer(serverId, { status: 'offline' }));
+            dispatch(addErrors(json.errors.map(e => e.message)));
+            dispatch(addToast(formattedText('plugin.alert.error'), TOAST_ERROR));
+            resolve();
+          }
+        });
       });
-    });
-  } else {
-    serverList.map(server => dispatch(checkServerConfig(server.id)));
-  }
-});
+    } else {
+      serverList.map(server => dispatch(checkStatusServerConfig(server.id)));
+    }
+  });
+
+export const checkStatusDatasource = datasourceId => (dispatch, getState) =>
+  new Promise((resolve) => {
+    const state = getState();
+    const selector = formValueSelector('dashboard-config-form');
+    const serverId = selector(state, 'id');
+    if (datasourceId) {
+      if (serverId) {
+        pingDatasource(serverId, datasourceId).then((response) => {
+          response.json().then((json) => {
+            if (response.ok) {
+              dispatch(setCheckDatasource(datasourceId, { status: 'online' }));
+              resolve();
+            } else {
+              dispatch(setCheckDatasource(datasourceId, { status: 'offline' }));
+              dispatch(addErrors(json.errors.map(e => e.message)));
+              dispatch(addToast(formattedText('plugin.alert.error'), TOAST_ERROR));
+              resolve();
+            }
+          });
+        });
+      }
+    } else {
+      const datasourceList = selector(state, 'datasources');
+      datasourceList.map(ds => dispatch(checkStatusDatasource(ds.datasourceCode)));
+    }
+
+    resolve();
+  });
 
 
 export const fecthDatasourceList = serverId => dispatch =>

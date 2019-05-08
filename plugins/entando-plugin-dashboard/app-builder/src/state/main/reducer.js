@@ -16,6 +16,7 @@ import {
   CLEAR_SELECTED_DATASOURCE,
   SET_INTERNAL_ROUTE,
   SET_CHECK_SERVER,
+  SET_CHECK_DATASOURCE,
 } from './types';
 
 const internalRoute = (state = '', action = {}) => {
@@ -87,6 +88,17 @@ const serverCheck = (state = {}, action = {}) => {
     default: return state;
   }
 };
+const datasourceCheck = (state = {}, action = {}) => {
+  switch (action.type) {
+    case SET_CHECK_DATASOURCE: {
+      const { datasourceId, status } = action.payload;
+      const newState = { ...state };
+      newState[datasourceId] = status;
+      return newState;
+    }
+    default: return state;
+  }
+};
 
 const datasourceList = (state = [], action = {}) => {
   switch (action.type) {
@@ -138,6 +150,7 @@ export default combineReducers({
     serverType,
     servers,
     serverCheck,
+    datasourceCheck,
     datasourceList,
     datasource: combineReducers({
       selected: datasourceSelected,
