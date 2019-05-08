@@ -50,6 +50,7 @@ const mappedMessages = Object.keys(enLocale.messages).reduce((acc, key) => {
   return acc;
 }, {});
 
+
 setCurrentLocale(enLocale);
 
 /* Dichiarazione dello store. E' stato inserito qui per forzare il currentUser */
