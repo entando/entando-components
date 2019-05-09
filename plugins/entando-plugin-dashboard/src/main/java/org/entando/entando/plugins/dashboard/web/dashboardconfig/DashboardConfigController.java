@@ -30,6 +30,7 @@ import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.ServerType;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.exception.ApiResourceNotAvailableException;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.exception.InvalidFieldException;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DatasourceStatus;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementColumn;
@@ -64,6 +65,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import static org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils.isValidResponse;
+import static org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils.throwApiResourceUnavailableEx;
 import static org.entando.entando.web.entity.validator.EntityValidator.ERRCODE_ENTITY_DOES_NOT_EXIST;
 
 @RestController
@@ -246,9 +249,8 @@ public class DashboardConfigController {
 
     DashboardConfigDto dto = IoTUtils
         .checkServerAndDatasource(serverId, datasourceCode, dashboardConfigService);
-
-    MeasurementTemplate template = connectorService
-        .getDeviceMeasurementSchema(dto, datasourceCode);
+    new MeasurementTemplate();
+    MeasurementTemplate template = connectorService.getDeviceMeasurementSchema(dto, datasourceCode);
     return new ResponseEntity<>(new SimpleRestResponse(template), HttpStatus.OK);
   }
 

@@ -170,6 +170,7 @@ public class TestDashboardConfigController extends AbstractControllerTest {
     UserDetails user = new OAuth2TestUtils.UserBuilder("admin", "adminadmin").grantedToRoleAdmin().build();
     String accessToken = mockOAuthInterceptor(user);
 
+    dashboardConfigDto.getDatasources().forEach(d -> d.setStatus(DatasourceStatus.ONLINE));
     when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
     when(dashboardConfigService.getDashboardConfig(dashboardId)).thenReturn(dashboardConfigDto);
     when(connectorService.pingDevice(dashboardConfigDto, datasourceCode)).thenReturn(
@@ -236,7 +237,7 @@ public class TestDashboardConfigController extends AbstractControllerTest {
   public void testPingDatasourceFalse() throws Exception {
     UserDetails user = new OAuth2TestUtils.UserBuilder("admin", "adminadmin").grantedToRoleAdmin().build();
     String accessToken = mockOAuthInterceptor(user);
-
+    dashboardConfigDto.getDatasources().forEach(d -> d.setStatus(DatasourceStatus.OFFLINE));
     when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
     when(dashboardConfigService.getDashboardConfig(dashboardId)).thenReturn(dashboardConfigDto);
     when(connectorService.pingDevice(Mockito.any(), Mockito.any())).thenReturn(dashboardConfigDto);

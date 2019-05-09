@@ -31,6 +31,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.ws.rs.BadRequestException;
+
 import static org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.JsonUtils.getMapFromJson;
 
 public class IoTUtils {
@@ -83,8 +85,8 @@ public class IoTUtils {
     try {
       return restTemplate.exchange(url, HttpMethod.GET, httpEntity, String.class);
     }
-    catch (ResourceAccessException | IllegalArgumentException e){
-      return new ResponseEntity(e, HttpStatus.REQUEST_TIMEOUT);
+    catch (Throwable t){
+      return new ResponseEntity(t, HttpStatus.REQUEST_TIMEOUT);
     }
   }
 

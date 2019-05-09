@@ -81,12 +81,7 @@ public class DatasourcesConfigDto {
     }
 
     public void setStatus(DatasourceStatus status) {
-      if(status == DatasourceStatus.ONLINE) {
-        this.status = "online";
-      }
-      else {
-        this.status = "offline";
-      }
+      this.status = status.toString();
     }
 
   public int getFk_dashboard_config() {
