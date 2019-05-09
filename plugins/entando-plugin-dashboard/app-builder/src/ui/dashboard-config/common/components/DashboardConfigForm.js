@@ -186,9 +186,9 @@ export class DashboardConfigFormBody extends Component {
                   'datasourceCode',
                   'plugin.config.datasourceCode',
                   null,
-                  null,
+                  [required],
                   2,
-                  null,
+                  formattedText('common.required'),
                 )}
               </Col>
             </Row>

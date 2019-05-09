@@ -38,7 +38,7 @@ const ServerConfigCard = ({
   }
   return (
     <Col xs={6} sm={4} md={4}>
-      <Card className="card-pf card-pf-view">
+      <Card className="card-pf card-pf-view" matchHeight>
         <CardTitle>
           <DropdownKebab id="myKebab" className="pull-right" pullRight>
             <MenuItem

@@ -5,13 +5,18 @@ import FormattedMessageLocal from 'ui/i18n/FormattedMessage';
 import DashboardConfigDatasourceStatusContainer from 'ui/dashboard-config/common/containers/DashboardConfigDatasourceStatusContainer';
 import DashboardConfigModalPreviewDatasource from 'ui/dashboard-config/common/components/DashboardConfigModalPreviewDatasource';
 
-const addDatasource = (fields, obj) => {
+import { isUndefined } from 'lodash';
+
+const addDatasource = (fields, obj, callback) => {
   const {
     datasourceCode,
     datasourceValue: { datasource, datasourceURI },
   } = obj;
-  if (obj.datasourceValue.datasource !== undefined) {
+  if (!isUndefined(datasourceCode) && !isUndefined(datasource)) {
     fields.push({ datasourceCode, datasource, datasourceURI });
+    if (callback) {
+      callback(datasourceCode);
+    }
   }
 };
 
@@ -60,7 +65,7 @@ class DashboardConfigDatasource extends Component {
                 type="button"
                 bsStyle="default"
                 onClick={() =>
-                addDatasource(fields, { datasourceCode, datasourceValue })
+                addDatasource(fields, { datasourceCode, datasourceValue }, testConnection)
               }
               >
                 <FormattedMessageLocal id="common.add" />

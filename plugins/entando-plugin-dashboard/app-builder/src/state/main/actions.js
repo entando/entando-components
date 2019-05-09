@@ -23,6 +23,8 @@ import { getWidgetConfigSelector } from 'state/app-builder/selectors';
 
 import { getServerConfigList } from 'state/main/selectors';
 
+import { CONFIG_CHART_STRING } from 'mocks/dashboardConfigs';
+
 import {
   SET_INFO_PAGE,
   SET_LANGUAGES,
@@ -42,6 +44,7 @@ import {
   CLEAR_SELECTED_DATASOURCE,
   SET_INTERNAL_ROUTE,
 } from './types';
+
 
 export const setInfoPage = info => ({
   type: SET_INFO_PAGE,
@@ -300,8 +303,9 @@ export const checkStatusServerConfig = serverId => (dispatch, getState) =>
             resolve();
           } else {
             dispatch(setCheckServer(serverId, { status: 'offline' }));
-            dispatch(addErrors(json.errors.map(e => e.message)));
-            dispatch(addToast(formattedText('plugin.alert.error'), TOAST_ERROR));
+            const { errors } = json;
+            dispatch(addErrors(errors.map(e => e.message)));
+            errors.map(e => dispatch(addToast(e.message, TOAST_ERROR)));
             resolve();
           }
         });
@@ -325,8 +329,9 @@ export const checkStatusDatasource = datasourceId => (dispatch, getState) =>
               resolve();
             } else {
               dispatch(setCheckDatasource(datasourceId, { status: 'offline' }));
-              dispatch(addErrors(json.errors.map(e => e.message)));
-              dispatch(addToast(formattedText('plugin.alert.error'), TOAST_ERROR));
+              const { errors } = json;
+              dispatch(addErrors(errors.map(e => e.message)));
+              errors.map(e => dispatch(addToast(e.message, TOAST_ERROR)));
               resolve();
             }
           });
@@ -399,7 +404,6 @@ export const fetchDatasourceColumns = (formName, field, datasourceId) => (
     getDatasourceColumns(serverId, datasourceId).then((response) => {
       response.json().then((json) => {
         if (response.ok) {
-          console.log('fetchDatasourceColumns ', json);
           const { mappings } = json.payload;
           const columns = mappings.reduce((acc, item) => {
             acc.push({
@@ -453,13 +457,13 @@ export const getWidgetConfig = formName => (dispatch, getState) => {
     dispatch(initialize(formName, json));
   }
 };
+
 // used for widgets chart
 export const getWidgetConfigChart = formName => (dispatch, getState) => {
   const state = getState();
-  const config = getWidgetConfigSelector(state); // || CONFIG_CHART;
+  const config = getWidgetConfigSelector(state) || CONFIG_CHART_STRING;
   if (config) {
     const configJson = JSON.parse(config.config);
-    console.log('config', configJson);
     dispatch(fecthDatasourceList(configJson.serverName));
     getDatasourceColumns(configJson.serverName, configJson.datasource).then((response) => {
       response.json().then((json) => {
@@ -473,15 +477,15 @@ export const getWidgetConfigChart = formName => (dispatch, getState) => {
             value: m.destinationName,
           }))));
 
-          if (configJson.columns.x.lenth > 0) {
+          if (configJson.columns && configJson.columns.x.length > 0) {
             configJson.columns.x.map(item =>
               dispatch(arrayPush(formName, 'columns.x', item)));
           }
-          if (configJson.columns.y.length > 0) {
+          if (configJson.columns.y && configJson.columns.y.length > 0) {
             configJson.columns.y.map(item =>
               dispatch(arrayPush(formName, 'columns.y', item)));
           }
-          if (configJson.columns.y2.length > 0) {
+          if (configJson.columns.y2 && configJson.columns.y2.length > 0) {
             configJson.columns.y2.map(item =>
               dispatch(arrayPush(formName, 'columns.y2', item)));
           }

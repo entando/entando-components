@@ -61,7 +61,7 @@ const wrapInputTextField = (name, label, append, disabled = false) => {
 
 const chooseTimeFormat = (
   <div className="SettingsChart__timeformat-container">
-    <div className="radio">
+    <div className="radio-inline">
       <label htmlFor="tick">
         <Field
           name="axis.x.tick.format"
@@ -72,7 +72,7 @@ const chooseTimeFormat = (
         <FormattedMessage id="plugin.chart.timeFormat-Y-M-D" />
       </label>
     </div>
-    <div className="radio">
+    <div className="radio-inline">
       <label htmlFor="tick">
         <Field
           name="axis.x.tick.format"
@@ -83,7 +83,7 @@ const chooseTimeFormat = (
         <FormattedMessage id="plugin.chart.timeFormat-D-M-Y" />
       </label>
     </div>
-    <div className="radio">
+    <div className="radio-inline">
       <label htmlFor="tick">
         <Field
           name="axis.x.tick.format"

@@ -15,8 +15,6 @@ import reducer from 'state/main/reducer';
 import enLocale from 'locales/en';
 import itLocale from 'locales/it';
 
-import 'react-bootstrap-typeahead/css/Typeahead.css';
-
 import { name as id } from '../package.json';
 
 import './sass/index.css';

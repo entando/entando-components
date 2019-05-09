@@ -178,6 +178,8 @@ export const DASHBOARD_LIST_DATASOURCE = {
   2: [DATASOURCE_TEMPERATURE],
 };
 
+export const CONFIG_CHART_STRING = { config: '{"axis":{"chart":"line","rotated":false,"x":{"type":"timeseries","label":"time","tick":{"format":"%m-%d-%Y"}},"y2":{"show":false},"y":{"label":"temp"}},"size":{"width":300,"height":500},"padding":{"top":50,"right":50,"bottom":50,"left":50},"legend":{"position":"bottom"},"title":{"en":"Line"},"serverName":"8","datasource":"ThermometerDevice2","columns":{"x":[{"id":1,"key":"timestamp","value":"timestamp","selected":true}],"y":[{"id":0,"key":"temperature","value":"temperature","selected":true}]},"data":{"type":"line","json":[],"keys":{"value":["timestamp","temperature"],"x":"timestamp"},"xFormat":"%m-%d-%Y"}}' };
+
 export const CONFIG_CHART = {
   config: {
     axis: {
@@ -186,7 +188,7 @@ export const CONFIG_CHART = {
       x: {
         type: 'timeseries',
         label: 'time',
-        tick: { format: '%Y-%m-%d %H:%M:%S' },
+        tick: { format: '%m-%d-%Y' },
       },
       y2: { show: false },
       y: { label: 'temperature' },
@@ -197,8 +199,8 @@ export const CONFIG_CHART = {
     },
     legend: { position: 'bottom' },
     title: { en: 'Line chart' },
-    serverName: '2',
-    datasource: 'temperature',
+    serverName: '8',
+    datasource: 'ThermometerDevice2',
     columns: {
       x: [
         {
@@ -210,7 +212,7 @@ export const CONFIG_CHART = {
       ],
       y: [
         {
-          id: 3,
+          id: 0,
           key: 'temperature',
           value: 'temperature',
           selected: true,
@@ -218,12 +220,13 @@ export const CONFIG_CHART = {
       ],
     },
     data: {
+      type: 'line',
       json: [],
       key: {
         value: ['timestamp', 'temperature'],
         x: 'timestamp',
       },
-      xFormat: '%Y-%m-%d %H:%M:%S',
+      xFormat: '%m-%d-%Y',
     },
   },
 };

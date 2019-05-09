@@ -95,7 +95,7 @@
 
 .DashboardConfig {
   border: 0 solid;
-  padding: 2em; }
+  padding: 2em 6em 2em 2em; }
   .DashboardConfig .form-group .control-label {
     text-align: left; }
   .DashboardConfig__form {
@@ -406,6 +406,11 @@
   .SettingsChart__timeformat-container {
     border: 0 solid;
     padding-left: 1em; }
+    .SettingsChart__timeformat-container .radio-inline {
+      border: 0 solid;
+      margin-left: 10px; }
+    .SettingsChart__timeformat-container .control-label {
+      padding-left: 10px; }
   .SettingsChart__timeformat-container .radio {
     margin-top: 0;
     margin-bottom: 5px; }
