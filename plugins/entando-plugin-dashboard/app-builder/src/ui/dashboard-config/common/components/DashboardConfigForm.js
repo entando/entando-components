@@ -68,6 +68,7 @@ export class DashboardConfigFormBody extends Component {
       testConnection,
       previewDatasource,
       previewColumns,
+      datasourceCheck,
     } = this.props;
 
     const disableSubmit = invalid || submitting || datasources.length === 0;
@@ -223,6 +224,7 @@ export class DashboardConfigFormBody extends Component {
               testConnection={testConnection}
               previewDatasource={previewDatasource}
               previewColumns={previewColumns}
+              datasourceCheck={datasourceCheck}
             />
             <Row>
               <Col xs={12}>
@@ -265,6 +267,7 @@ DashboardConfigFormBody.propTypes = {
   datasources: PropTypes.arrayOf(PropTypes.shape(DATASOURCE_TYPE)),
   datasourceValue: PropTypes.shape(DATASOURCE_TYPE),
   datasourceCode: PropTypes.string,
+  datasourceCheck: PropTypes.shape({}),
 
   invalid: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
@@ -278,6 +281,7 @@ DashboardConfigFormBody.defaultProps = {
   datasourceCode: '',
   datasourceCheck: {},
   previewColumns: [],
+
 };
 const DashboardConfigForm = reduxForm({
   form: 'dashboard-config-form',
