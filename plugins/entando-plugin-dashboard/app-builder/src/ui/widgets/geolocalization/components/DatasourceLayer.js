@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Field, FieldArray } from 'redux-form';
 import { Grid, Row, Col, InputGroup } from 'patternfly-react';
 import DatasourceFormContainer from 'ui/widgets/common/form/containers/DatasourceFormContainer';
-import { formattedText, required, minLength, maxLength } from '@entando/utils';
+import { formattedText, minLength, maxLength } from '@entando/utils';
 
 import RenderTextInput from 'ui/common/form/RenderTextInput';
 import FormLabel from 'ui/common/form/FormLabel';
@@ -53,6 +53,7 @@ const DatasourceLayer = ({
           nameFieldArray={nameFieldArray}
           disabled={disabled}
           labelSize={5}
+          isRequired={false}
         />
       </Col>
       <Col xs={6} className="DatasourceLayer__label">
@@ -65,7 +66,7 @@ const DatasourceLayer = ({
             }
             alignClass="DatasourceLayer__align-class"
             labelSize={2}
-            validate={[required, minLength3, maxLength20]}
+            validate={[minLength3, maxLength20]}
             append={formattedText('plugin.geolocalization.label.requirement')}
           />
         </InputGroup>

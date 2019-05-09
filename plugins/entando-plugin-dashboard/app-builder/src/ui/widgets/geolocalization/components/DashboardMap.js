@@ -11,7 +11,11 @@ const DashboardMap = ({ onSubmit }) => (
 );
 
 DashboardMap.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func,
+};
+
+DashboardMap.defaultProps = {
+  onSubmit: null,
 };
 
 export default DashboardMap;

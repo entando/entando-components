@@ -8,7 +8,7 @@ import DashboardBarChart from 'ui/widgets/charts/bar-chart/components/DashboardB
 import DashboardDonutChart from 'ui/widgets/charts/donut-chart/components/DashboardDonutChart';
 import DashboardGaugeChart from 'ui/widgets/charts/gauge-chart/components/DashboardGaugeChart';
 import DashboardPieChart from 'ui/widgets/charts/pie-chart/components/DashboardPieChart';
-import DashboardMapChart from 'ui/widgets/geolocalization/components/DashboardMap';
+import DashboardMap from 'ui/widgets/geolocalization/components/DashboardMap';
 
 import reducer from 'state/main/reducer';
 
@@ -37,7 +37,7 @@ const plugin = {
     'dashboard-donut-chart': DashboardDonutChart,
     'dashboard-gauge-chart': DashboardGaugeChart,
     'dashboard-pie-chart': DashboardPieChart,
-    'dashboard-map': DashboardMapChart,
+    'dashboard-map': DashboardMap,
   },
 };
 

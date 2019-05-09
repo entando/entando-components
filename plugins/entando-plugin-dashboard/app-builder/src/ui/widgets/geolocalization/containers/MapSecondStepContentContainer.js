@@ -25,7 +25,7 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     formName,
-    datasourcesValue: selector(state, 'datasources'),
+    datasourcesValue: selector(state, 'datasources') || [],
     datasourceSelected: selector(state, 'datasource'),
     optionColumns,
     optionColumnSelected: selector(state, 'datasourceColumns') || [],

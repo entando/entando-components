@@ -12,6 +12,7 @@ const DatasourceForm = ({
   labelSize,
   nameFieldArray,
   disabled,
+  isRequired,
 }) => {
   const selectOptionsDatasource = datasources.map(m => ({
     value: m.datasourceCode || m.datasource,
@@ -40,7 +41,7 @@ const DatasourceForm = ({
         labelSize={labelSize}
         alignClass="text-left DashboardTableForm__no-padding-right"
         name={nameField}
-        validate={[required]}
+        validate={isRequired ? [required] : null}
       />
     </InputGroup>
   );
@@ -52,11 +53,13 @@ DatasourceForm.propTypes = {
   labelSize: PropTypes.number,
   nameFieldArray: PropTypes.string,
   disabled: PropTypes.bool,
+  isRequired: PropTypes.bool,
 };
 
 DatasourceForm.defaultProps = {
   labelSize: 4,
   nameFieldArray: null,
   disabled: false,
+  isRequired: true,
 };
 export default DatasourceForm;
