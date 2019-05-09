@@ -50,5 +50,11 @@ public interface IDashboardConfigManager {
 
   boolean datasourceExistsByDatasourceName(String datasourceName);
 
+  boolean datasourceExistsByDashboardIdAndDatasourceName(int dashboardId, String datasourceName);
+
   boolean datasourceExistsByDatasourceCode(String id_datasource);
+
+  DatasourcesConfigDto getDatasourceByDatasourceName(String datasource);
+
+  void updateDatasource(DatasourcesConfigDto datasource);
 }

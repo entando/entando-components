@@ -28,59 +28,59 @@ import com.google.gson.JsonObject;
 
 public class DatasourcesConfigRequest {
 
-    @Size(max = 30, message = "string.size.invalid")
-    @NotBlank(message = "dashboardConfig.datasource.notBlank")
-    private String datasource;
+  @Size(max = 30, message = "string.size.invalid")
+  @NotBlank(message = "dashboardConfig.datasource.notBlank")
+  private String datasource;
 
-    @Size(max = 100, message = "string.size.invalid")
-    private String datasourceURI;
+  @Size(max = 100, message = "string.size.invalid")
+  private String datasourceURI;
 
-    @Size(max = 100, message = "string.size.invalid")
-    @NotBlank(message = "dashboardConfig.datasourceCode.notBlank")
-    private String datasourceCode;
-    
-	private String status;
-	
-	private Map<String, Object> metadata = new HashMap();
+  @Size(max = 100, message = "string.size.invalid")
+  @NotBlank(message = "dashboardConfig.datasourceCode.notBlank")
+  private String datasourceCode;
 
-    public String getDatasource() {
-        return datasource;
-    }
+  private String status;
 
-    public void setDatasource(String datasource) {
-        this.datasource = datasource;
-    }
+  private Map<String, Object> metadata = new HashMap();
+  
+  public String getDatasource() {
+    return datasource;
+  }
 
-    public String getDatasourceURI() {
-        return datasourceURI;
-    }
+  public void setDatasource(String datasource) {
+    this.datasource = datasource;
+  }
 
-    public void setDatasourceURI(String datasourceURI) {
-        this.datasourceURI = datasourceURI;
-    }
+  public String getDatasourceURI() {
+    return datasourceURI;
+  }
 
-    public String getStatus() {
-        return status;
-    }
+  public void setDatasourceURI(String datasourceURI) {
+    this.datasourceURI = datasourceURI;
+  }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-    
-    public String getDatasourceCode() {
-  		return datasourceCode;
-  	}
+  public String getStatus() {
+    return status;
+  }
 
-  	public void setDatasourceCode(String datasourceCode) {
-  		this.datasourceCode = datasourceCode;
-  	}
+  public void setStatus(String status) {
+    this.status = status;
+  }
 
-	public Map<String, Object> getMetadata() {
-		return metadata;
-	}
+  public String getDatasourceCode() {
+    return datasourceCode;
+  }
 
-	public void setMetadata(Map<String, Object> metadata) {
-		this.metadata = metadata;
-	}
+  public void setDatasourceCode(String datasourceCode) {
+    this.datasourceCode = datasourceCode;
+  }
+
+  public Map<String, Object> getMetadata() {
+    return metadata;
+  }
+
+  public void setMetadata(Map<String, Object> metadata) {
+    this.metadata = metadata;
+  }
 
 }

@@ -20,6 +20,8 @@ import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.exception.ApsSystemException;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.DtoBuilder;
@@ -27,6 +29,7 @@ import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.exception.InvalidFieldException;
+import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigBuilder;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigRequest;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DatasourcesConfigRequest;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.validator.DashboardConfigValidator;
@@ -38,9 +41,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.ObjectError;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 public class DashboardConfigService implements IDashboardConfigService {
@@ -84,16 +89,19 @@ public class DashboardConfigService implements IDashboardConfigService {
   @Override
   public PagedMetadata<DashboardConfigDto> getDashboardConfigs(RestListRequest requestList) {
     try {
-      List<FieldSearchFilter> filters = new ArrayList<FieldSearchFilter>(requestList.buildFieldSearchFilters());
+      List<FieldSearchFilter> filters = new ArrayList<FieldSearchFilter>(
+          requestList.buildFieldSearchFilters());
       filters
           .stream()
           .filter(i -> i.getKey() != null)
           .forEach(i -> i.setKey(DashboardConfigDto.getEntityFieldName(i.getKey())));
 
-      SearcherDaoPaginatedResult<DashboardConfig> dashboardConfigs = this.getDashboardConfigManager().getDashboardConfigs(filters);
+      SearcherDaoPaginatedResult<DashboardConfig> dashboardConfigs = this
+          .getDashboardConfigManager().getDashboardConfigs(filters);
       List<DashboardConfigDto> dtoList = dtoBuilder.convert(dashboardConfigs.getList());
 
-      PagedMetadata<DashboardConfigDto> pagedMetadata = new PagedMetadata<>(requestList, dashboardConfigs);
+      PagedMetadata<DashboardConfigDto> pagedMetadata = new PagedMetadata<>(requestList,
+          dashboardConfigs);
       pagedMetadata.setBody(dtoList);
 
       return pagedMetadata;
@@ -106,15 +114,16 @@ public class DashboardConfigService implements IDashboardConfigService {
   @Override
   public DashboardConfigDto updateDashboardConfig(DashboardConfigRequest dashboardConfigRequest) {
     try {
-      DashboardConfig dashboardConfig = this.getDashboardConfigManager().getDashboardConfig(dashboardConfigRequest.getId());
+      DashboardConfig dashboardConfig = this.getDashboardConfigManager()
+          .getDashboardConfig(dashboardConfigRequest.getId());
+      
       if (null == dashboardConfig) {
-        throw new ResourceNotFoundException(DashboardConfigValidator.ERRCODE_DASHBOARDCONFIG_NOT_FOUND, "dashboardConfig", String.valueOf(dashboardConfigRequest.getId()));
+        throw new ResourceNotFoundException(
+            DashboardConfigValidator.ERRCODE_DASHBOARDCONFIG_NOT_FOUND, "dashboardConfig",
+            String.valueOf(dashboardConfigRequest.getId()));
       }
-      BeanUtils.copyProperties(dashboardConfigRequest, dashboardConfig);
 
-      List<DatasourcesConfigDto> datasources = convertDatasourceRequestToDto(dashboardConfigRequest);
-      dashboardConfig.setDatasources(datasources);
-
+      dashboardConfig = DashboardConfigBuilder.fromRequestToEntity(dashboardConfigRequest);
 
       BeanPropertyBindingResult validationResult = this.validateForUpdate(dashboardConfig);
       if (validationResult.hasErrors()) {
@@ -122,21 +131,17 @@ public class DashboardConfigService implements IDashboardConfigService {
       }
       this.getDashboardConfigManager().updateDashboardConfig(dashboardConfig);
       return this.getDtoBuilder().convert(dashboardConfig);
-    } catch (ApsSystemException e) {
-      logger.error("Error updating dashboardConfig {}", dashboardConfigRequest.getId(), e);
-      throw new RestServerError("error in update dashboardConfig", e);
     }
+   catch(ApsSystemException e)
+  {
+    logger.error("Error updating dashboardConfig {}", dashboardConfigRequest.getId(), e);
+    throw new RestServerError("error in update dashboardConfig", e);
   }
+
+}
 
   @Override
   public DashboardConfigDto addDashboardConfig(DashboardConfigRequest dashboardConfigRequest) {
-    if(dashboardConfigRequest.getDatasources() != null && dashboardConfigRequest.getDatasources().size() > 0) {
-      dashboardConfigRequest.getDatasources().forEach(d -> {
-        if (this.datasourceExistsByDatasourceName(d.getDatasourceCode())) {
-          throw new InvalidFieldException(d.getDatasourceCode());
-        }
-      });
-    }
     try {
       DashboardConfig dashboardConfig = this.createDashboardConfig(dashboardConfigRequest);
       BeanPropertyBindingResult validationResult = this.validateForAdd(dashboardConfig);
@@ -153,7 +158,7 @@ public class DashboardConfigService implements IDashboardConfigService {
   }
 
   @Override
-  public void removeDashboardConfig(int  id) {
+  public void removeDashboardConfig(int id) {
     try {
       DashboardConfig dashboardConfig = this.getDashboardConfigManager().getDashboardConfig(id);
       if (null == dashboardConfig) {
@@ -172,12 +177,14 @@ public class DashboardConfigService implements IDashboardConfigService {
   }
 
   @Override
-  public DashboardConfigDto getDashboardConfig(int  id) {
+  public DashboardConfigDto getDashboardConfig(int id) {
     try {
       DashboardConfig dashboardConfig = this.getDashboardConfigManager().getDashboardConfig(id);
       if (null == dashboardConfig) {
         logger.warn("no dashboardConfig found with code {}", id);
-        throw new ResourceNotFoundException(DashboardConfigValidator.ERRCODE_DASHBOARDCONFIG_NOT_FOUND, "dashboardConfig", String.valueOf(id));
+        throw new ResourceNotFoundException(
+            DashboardConfigValidator.ERRCODE_DASHBOARDCONFIG_NOT_FOUND, "dashboardConfig",
+            String.valueOf(id));
       }
       DashboardConfigDto dto = this.getDtoBuilder().convert(dashboardConfig);
       return dto;
@@ -203,8 +210,20 @@ public class DashboardConfigService implements IDashboardConfigService {
   }
 
   @Override
+  public boolean datasourceExistsByDashboardIdAndDatasourceName(int dashboardId,
+      String datasourceName) {
+    return this.getDashboardConfigManager()
+        .datasourceExistsByDashboardIdAndDatasourceName(dashboardId, datasourceName);
+  }
+
+  @Override
   public boolean datasourceExistsByDatasourceCode(String datasourceCode) {
     return this.getDashboardConfigManager().datasourceExistsByDatasourceCode(datasourceCode);
+  }
+
+  @Override
+  public void updateDatasource(DatasourcesConfigDto datasource) {
+    this.getDashboardConfigManager().updateDatasource(datasource);
   }
 
 
@@ -216,10 +235,11 @@ public class DashboardConfigService implements IDashboardConfigService {
     return dashboardConfig;
   }
 
-  private  List<DatasourcesConfigDto> convertDatasourceRequestToDto (final DashboardConfigRequest dashboardConfigRequest) {
+  private List<DatasourcesConfigDto> convertDatasourceRequestToDto(
+      final DashboardConfigRequest dashboardConfigRequest) {
     List<DatasourcesConfigDto> datasources = new ArrayList<>();
-    if(dashboardConfigRequest.getDatasources()!= null) {
-      for (DatasourcesConfigRequest datasource: dashboardConfigRequest.getDatasources()) {
+    if (dashboardConfigRequest.getDatasources() != null) {
+      for (DatasourcesConfigRequest datasource : dashboardConfigRequest.getDatasources()) {
         DatasourcesConfigDto ds = new DatasourcesConfigDto();
         ds.setDatasource(datasource.getDatasource());
         ds.setDatasourceCode(datasource.getDatasourceCode());
@@ -234,17 +254,47 @@ public class DashboardConfigService implements IDashboardConfigService {
   }
 
   protected BeanPropertyBindingResult validateForAdd(DashboardConfig dashboardConfig) {
-    BeanPropertyBindingResult errors = new BeanPropertyBindingResult(dashboardConfig, "dashboardConfig");
+    BeanPropertyBindingResult errors = new BeanPropertyBindingResult(dashboardConfig,
+        "dashboardConfig");
+    if (dashboardConfig.getDatasources() != null
+        && dashboardConfig.getDatasources().size() > 0) {
+      dashboardConfig.getDatasources().forEach(d -> {
+        if (this.datasourceExistsByDatasourceName(d.getDatasourceCode())) {
+          errors.addError(new ObjectError("dashboardConfig.datasources",String.format("Already Exists field with name %s", d.getDatasource())));
+        }
+      });
+    }
     return errors;
   }
 
   protected BeanPropertyBindingResult validateForDelete(DashboardConfig dashboardConfig) {
-    BeanPropertyBindingResult errors = new BeanPropertyBindingResult(dashboardConfig, "dashboardConfig");
+    BeanPropertyBindingResult errors = new BeanPropertyBindingResult(dashboardConfig,
+        "dashboardConfig");
     return errors;
   }
 
   protected BeanPropertyBindingResult validateForUpdate(DashboardConfig dashboardConfig) {
-    BeanPropertyBindingResult errors = new BeanPropertyBindingResult(dashboardConfig, "dashboardConfig");
+    BeanPropertyBindingResult errors = new BeanPropertyBindingResult(dashboardConfig,
+        "dashboardConfig");
+    if (dashboardConfig.getDatasources() != null && dashboardConfig.getDatasources().size() > 0) {
+      dashboardConfig.getDatasources().forEach(d -> {
+        DatasourcesConfigDto matchedByName = dashboardConfigManager
+            .getDatasourceByDatasourceName(d.getDatasource());
+//        if (matchedByName.size() > 2) {
+//          throw new InvalidFieldException("Exception");
+//        }
+        if (matchedByName != null && !matchedByName.equals(new DatasourcesConfigDto())) {
+          if (matchedByName.getFk_dashboard_config() != dashboardConfig.getId()) {
+             errors.addError(new ObjectError("dashboardConfig.datasources",String.format("Already Exists field with name %s", d.getDatasource())));
+          }
+          else {
+            if(dashboardConfig.getDatasources().stream().filter(data -> matchedByName.getDatasource().equals(data.getDatasource())).count() > 1) {
+              errors.addError(new ObjectError("dashboardConfig.datasources",String.format("Already Exists field with name %s", d.getDatasource())));
+            }
+          }
+        }
+      });
+    }
     return errors;
   }
 

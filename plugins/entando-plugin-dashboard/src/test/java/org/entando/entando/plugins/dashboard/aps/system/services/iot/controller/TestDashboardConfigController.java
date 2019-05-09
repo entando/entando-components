@@ -11,6 +11,7 @@ import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.TestUtils;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.exception.ApiResourceNotAvailableException;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DatasourceStatus;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementMapping;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
@@ -171,7 +172,8 @@ public class TestDashboardConfigController extends AbstractControllerTest {
 
     when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
     when(dashboardConfigService.getDashboardConfig(dashboardId)).thenReturn(dashboardConfigDto);
-    when(connectorService.pingDevice(dashboardConfigDto, datasourceCode)).thenReturn(true);
+    when(connectorService.pingDevice(dashboardConfigDto, datasourceCode)).thenReturn(
+        dashboardConfigDto);
 
     ResultActions result = mockMvc.perform(
         get(BASE_PATH + "server/" + dashboardId +"/datasource/"+ datasourceCode +"/ping")
@@ -237,7 +239,7 @@ public class TestDashboardConfigController extends AbstractControllerTest {
 
     when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
     when(dashboardConfigService.getDashboardConfig(dashboardId)).thenReturn(dashboardConfigDto);
-    when(connectorService.pingDevice(Mockito.any(), Mockito.any())).thenReturn(false);
+    when(connectorService.pingDevice(Mockito.any(), Mockito.any())).thenReturn(dashboardConfigDto);
 
     ResultActions result = mockMvc.perform(
         get(BASE_PATH + "server/" + dashboardId +"/datasource/"+ datasourceCode +"/ping")

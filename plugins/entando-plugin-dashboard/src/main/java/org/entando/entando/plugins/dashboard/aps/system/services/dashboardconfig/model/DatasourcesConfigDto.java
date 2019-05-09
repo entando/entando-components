@@ -17,12 +17,16 @@
 
 package org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model;
 
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DatasourceStatus;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 public class DatasourcesConfigDto {
 
+    private int fk_dashboard_config;
+  
     private String name;
     
     private String datasourceCode;
@@ -76,7 +80,24 @@ public class DatasourcesConfigDto {
         this.status = status;
     }
 
-    public String getDatasourceCode() {
+    public void setStatus(DatasourceStatus status) {
+      if(status == DatasourceStatus.ONLINE) {
+        this.status = "online";
+      }
+      else {
+        this.status = "offline";
+      }
+    }
+
+  public int getFk_dashboard_config() {
+    return fk_dashboard_config;
+  }
+
+  public void setFk_dashboard_config(int fk_dashboard_config) {
+    this.fk_dashboard_config = fk_dashboard_config;
+  }
+
+  public String getDatasourceCode() {
         return datasourceCode;
     }
 

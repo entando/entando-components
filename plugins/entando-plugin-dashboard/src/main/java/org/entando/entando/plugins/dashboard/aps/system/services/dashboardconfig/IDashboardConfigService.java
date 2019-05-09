@@ -18,6 +18,7 @@
 package org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig;
 
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigRequest;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
@@ -42,6 +43,10 @@ public interface IDashboardConfigService {
   
   boolean datasourceExistsByDatasourceName(String datasourceName);
 
+  boolean datasourceExistsByDashboardIdAndDatasourceName(int dashboardId, String datasourceName);
+
   boolean datasourceExistsByDatasourceCode(String id_datasource);
+
+  void updateDatasource(DatasourcesConfigDto datasource);
 }
 

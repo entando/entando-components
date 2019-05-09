@@ -30,6 +30,8 @@ import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.ServerType;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.exception.InvalidFieldException;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DatasourceStatus;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementColumn;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
@@ -160,7 +162,7 @@ public class DashboardConfigController {
       throw new ValidationGenericException(bindingResult);
     }
 
-    connectorService.setDevicesMetadata(dashboardConfigRequest);
+//    connectorService.setDevicesMetadata(dashboardConfigRequest);
     DashboardConfigDto dashboardConfig = this.getDashboardConfigService()
         .updateDashboardConfig(dashboardConfigRequest);
     return new ResponseEntity<>(new SimpleRestResponse(dashboardConfig), HttpStatus.OK);
@@ -180,9 +182,9 @@ public class DashboardConfigController {
     if (bindingResult.hasErrors()) {
       throw new ValidationConflictException(bindingResult);
     }
-    if(dashboardConfigRequest.getDatasources()!= null && dashboardConfigRequest.getDatasources().size() > 0) {
-      dashboardConfigRequest = connectorService.setDevicesMetadata(dashboardConfigRequest);
-    }
+//    if(dashboardConfigRequest.getDatasources()!= null && dashboardConfigRequest.getDatasources().size() > 0) {
+//      dashboardConfigRequest = connectorService.setDevicesMetadata(dashboardConfigRequest);
+//    }
     DashboardConfigDto dto = this.getDashboardConfigService()
         .addDashboardConfig(dashboardConfigRequest);
     return new ResponseEntity<>(new SimpleRestResponse(dto), HttpStatus.OK);
@@ -219,13 +221,22 @@ public class DashboardConfigController {
   @RestAccessControl(permission = "superuser")
   @RequestMapping(value = "/server/{serverId}/datasource/{datasourceCode}/ping", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SimpleRestResponse<Boolean>> pingDatasource(
-      @PathVariable int serverId, @PathVariable String datasourceCode) throws IOException {
+      @PathVariable int serverId, @PathVariable String datasourceCode)
+      throws IOException, ApsSystemException {
 
     DashboardConfigDto dto = IoTUtils
         .checkServerAndDatasource(serverId, datasourceCode, dashboardConfigService);
 
-    boolean pingResult = connectorService.pingDevice(dto, datasourceCode);
-    return new ResponseEntity<>(new SimpleRestResponse<>(pingResult), HttpStatus.OK);
+    DashboardConfigDto pingResult = connectorService
+        .pingDevice(dto, datasourceCode);
+    DatasourcesConfigDto datasource = pingResult.getDatasources().stream()
+        .filter(d -> d.getDatasourceCode().equals(datasourceCode)).findFirst().get();
+
+    if(datasource.getFk_dashboard_config() != serverId) {
+      throw new InvalidFieldException("datasource_FK MUST match serverId");
+    }
+    dashboardConfigService.updateDatasource(datasource);
+    return new ResponseEntity<>(new SimpleRestResponse<>(datasource.getStatus().equals(DatasourceStatus.ONLINE.toString())), HttpStatus.OK);
   }
 
   @RestAccessControl(permission = "superuser")
@@ -274,6 +285,19 @@ public class DashboardConfigController {
       @PathVariable String datasourceCode) throws ApsSystemException {
     DashboardConfigDto dto = IoTUtils
         .checkServerAndDatasource(serverId, datasourceCode, dashboardConfigService);
+    DashboardConfigDto dashboard = updateDashboardWithDatasourceMetadata(serverId, datasourceCode,
+        dto);
+
+    DashboardConfigRequest request = DashboardConfigBuilder.fromDtoToRequest(dashboard);
+    dashboardConfigService.updateDashboardConfig(request);
+    return new ResponseEntity(HttpStatus.OK);
+  }
+
+  private DashboardConfigDto updateDashboardWithDatasourceMetadata(
+      int serverId,
+      String datasourceCode,
+      DashboardConfigDto dto) throws ApsSystemException {
+
     dto = connectorService.refreshMetadata(dto, datasourceCode);
 
     DashboardConfigDto dashboard = getDashboardConfigService().getDashboardConfig(serverId);
@@ -284,10 +308,7 @@ public class DashboardConfigController {
     dashboard.getDatasources().add(
         dto.getDatasources().stream().filter(d -> d.getDatasourceCode().equals(datasourceCode))
             .findFirst().get());
-
-    DashboardConfigRequest request = DashboardConfigBuilder.fromDtoToRequest(dashboard);
-    dashboardConfigService.updateDashboardConfig(request);
-    return new ResponseEntity(HttpStatus.OK);
+    return dashboard;
   }
 
 }

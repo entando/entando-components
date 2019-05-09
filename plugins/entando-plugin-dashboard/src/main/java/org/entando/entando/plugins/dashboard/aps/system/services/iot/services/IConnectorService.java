@@ -23,7 +23,8 @@ public interface IConnectorService {
 
 	LinkedHashMap<String, String> getConnectorTypes() throws IOException;
 
-	boolean pingDevice(DashboardConfigDto device, String datasourceCode) throws IOException;
+	DashboardConfigDto pingDevice(DashboardConfigDto device, String datasourceCode)
+      throws IOException, ApsSystemException;
 
 	<T extends DashboardConfigDto> boolean pingServer(T dashboardConfigDto) throws IOException;
 

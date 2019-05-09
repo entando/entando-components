@@ -20,13 +20,14 @@ package org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfi
 import com.agiletec.aps.system.common.FieldSearchFilter;
 
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
-import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DatasourcesConfigRequest;
 
 import java.util.List;
 
 public interface IDashboardConfigDAO {
 
   int countDatasourceByName(String datasourceName);
+
+  int countDatasourceByDashboardIdAndName(int dashboardId, String datasourceName);
 
   int countDatasourceByCode(String datasourceCode);
 
@@ -35,6 +36,10 @@ public interface IDashboardConfigDAO {
   DashboardConfig loadDashboardConfig(int id);
 
   List<Integer> loadDashboardConfigs();
+
+  void updateDatasource(DatasourcesConfigDto d);
+
+  void removeDashboardConfigDatasources(List<DatasourcesConfigDto> datasources);
 
   void removeDashboardConfig(int id);
 
@@ -45,4 +50,6 @@ public interface IDashboardConfigDAO {
   int countDashboardConfigs(FieldSearchFilter[] filters);
 
   DatasourcesConfigDto loadDatasourceConfigByDatasourceCodeAndDashboardConfig(int dashboardId, String datasourceCode);
+
+  DatasourcesConfigDto getDatasourceByDatasourceId(String datasourceName);
 }

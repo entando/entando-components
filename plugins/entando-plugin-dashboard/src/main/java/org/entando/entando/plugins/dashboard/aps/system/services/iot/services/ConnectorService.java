@@ -33,100 +33,103 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 @Service
 public class ConnectorService extends AbstractConnectorService implements IConnectorService {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+  private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    ConnectorFactory connectorFactory;
+  @Autowired
+  ConnectorFactory connectorFactory;
 
-    protected ConnectorFactory getConnectorFactory() {
-        return connectorFactory;
+  protected ConnectorFactory getConnectorFactory() {
+    return connectorFactory;
+  }
+
+  public void setConnectorFactory(
+      ConnectorFactory connectorFactory) {
+    this.connectorFactory = connectorFactory;
+  }
+
+  @Override
+  public LinkedHashMap<String, String> getConnectorTypes() throws IOException {
+    return null;
+  }
+
+  @Override
+  public DashboardConfigDto pingDevice(DashboardConfigDto dto, String datasourceCode)
+      throws IOException, ApsSystemException {
+    IoTUtils.logStartMethod(String.valueOf(dto.getId()),datasourceCode,this.getClass());
+    DashboardConfigDto result = connectorFactory.getConnector(dto.getType())
+        .pingDevice(dto, datasourceCode);
+    return result;
+  }
+
+  @Override
+  public <T extends DashboardConfigDto> boolean pingServer(T dto)
+      throws IOException {
+    IoTUtils.logStartMethod(String.valueOf(dto.getId()), null ,this.getClass());
+    return super.isServerReacheable(dto);
+  }
+
+  @Override
+  public List<DatasourcesConfigDto> getAllDevices(
+      DashboardConfigDto dto) {
+    IoTUtils.logStartMethod(String.valueOf(dto.getId()),null,this.getClass());
+    return connectorFactory.getConnector(dto.getType()).getAllDevices(dto);
+  }
+
+
+  @Override
+  public PagedMetadata<Map<String, Object>> getMeasurements(RestListRequest requestList) {
+    try {
+      List<FieldSearchFilter> filters = new ArrayList<FieldSearchFilter>(requestList.buildFieldSearchFilters());
+      filters
+          .stream()
+          .filter(i -> i.getKey() != null)
+          .forEach(i -> i.setKey(DashboardConfigDto.getEntityFieldName(i.getKey())));
+
+      List<Map<String, Object>> lista = new ArrayList<Map<String, Object>>();
+
+      Map<String, Object> lisa1 = new HashMap<String, Object>();
+      Map<String, Object> lisa2 = new HashMap<String, Object>();
+      Map<String, Object> lisa3 = new HashMap<String, Object>();
+      lisa1.put("temperature", "5");
+      lisa1.put("timestamp",  System.currentTimeMillis());
+
+      lisa2.put("temperature", "15");
+      lisa2.put("timestamp",  System.currentTimeMillis() + "5000");
+      lisa3.put("temperature", "25");
+      lisa3.put("timestamp", System.currentTimeMillis() + "10000");
+      lista.add(lisa1);
+      lista.add(lisa2);
+      lista.add(lisa3);
+
+      SearcherDaoPaginatedResult<Map<String, Object>> langsResult = new SearcherDaoPaginatedResult<>(lista.size(), lista);
+      langsResult.setCount(lista.size());
+
+
+      PagedMetadata<Map<String, Object>> pagedMetadata = new PagedMetadata<>(requestList, langsResult);
+      pagedMetadata.setBody(lista);
+      return pagedMetadata;
+    } catch (Throwable t) {
+      logger.error("error in search dashboardConfigs", t);
+      throw new RestServerError("error in search dashboardConfigs", t);
     }
-
-    public void setConnectorFactory(
-            ConnectorFactory connectorFactory) {
-        this.connectorFactory = connectorFactory;
-    }
-
-    @Override
-    public LinkedHashMap<String, String> getConnectorTypes() throws IOException {
-        return null;
-    }
-
-    @Override
-    public boolean pingDevice(DashboardConfigDto dto, String datasourceCode) throws IOException {
-      IoTUtils.logStartMethod(String.valueOf(dto.getId()),datasourceCode,this.getClass());
-        return connectorFactory.getConnector(dto.getType()).pingDevice(dto, datasourceCode);
-    }
-
-    @Override
-    public <T extends DashboardConfigDto> boolean pingServer(T dto)
-            throws IOException {
-      IoTUtils.logStartMethod(String.valueOf(dto.getId()), null ,this.getClass());
-        return super.isServerReacheable(dto);
-    }
-
-    @Override
-    public List<DatasourcesConfigDto> getAllDevices(
-            DashboardConfigDto dto) {
-      IoTUtils.logStartMethod(String.valueOf(dto.getId()),null,this.getClass());
-        return connectorFactory.getConnector(dto.getType()).getAllDevices(dto);
-    }
+  }
 
 
-    @Override
-    public PagedMetadata<Map<String, Object>> getMeasurements(RestListRequest requestList) {
-        try {
-            List<FieldSearchFilter> filters = new ArrayList<FieldSearchFilter>(requestList.buildFieldSearchFilters());
-            filters
-                    .stream()
-                    .filter(i -> i.getKey() != null)
-                    .forEach(i -> i.setKey(DashboardConfigDto.getEntityFieldName(i.getKey())));
+  @Override
+  public void setDeviceMeasurementSchema(
+      DashboardConfigDto dto, String datasourceCode) throws ApsSystemException {
+    IoTUtils.logStartMethod(String.valueOf(dto.getId()),datasourceCode,this.getClass());
+    connectorFactory.getConnector(dto.getType()).saveMeasurementTemplate(dto, datasourceCode);
+    ;
+  }
 
-            List<Map<String, Object>> lista = new ArrayList<Map<String, Object>>();
-
-            Map<String, Object> lisa1 = new HashMap<String, Object>();
-            Map<String, Object> lisa2 = new HashMap<String, Object>();
-            Map<String, Object> lisa3 = new HashMap<String, Object>();
-            lisa1.put("temperature", "5");
-            lisa1.put("timestamp",  System.currentTimeMillis());
-
-            lisa2.put("temperature", "15");
-            lisa2.put("timestamp",  System.currentTimeMillis() + "5000");
-            lisa3.put("temperature", "25");
-            lisa3.put("timestamp", System.currentTimeMillis() + "10000");
-            lista.add(lisa1);
-            lista.add(lisa2);
-            lista.add(lisa3);
-
-            SearcherDaoPaginatedResult<Map<String, Object>> langsResult = new SearcherDaoPaginatedResult<>(lista.size(), lista);
-            langsResult.setCount(lista.size());
-
-
-            PagedMetadata<Map<String, Object>> pagedMetadata = new PagedMetadata<>(requestList, langsResult);
-            pagedMetadata.setBody(lista);
-            return pagedMetadata;
-        } catch (Throwable t) {
-            logger.error("error in search dashboardConfigs", t);
-            throw new RestServerError("error in search dashboardConfigs", t);
-        }
-    }
-
-
-    @Override
-    public void setDeviceMeasurementSchema(
-            DashboardConfigDto dto, String datasourceCode) throws ApsSystemException {
-      IoTUtils.logStartMethod(String.valueOf(dto.getId()),datasourceCode,this.getClass());
-        connectorFactory.getConnector(dto.getType()).saveMeasurementTemplate(dto, datasourceCode);
-        ;
-    }
-
-    @Override
-    public void saveDeviceMeasurement(
-        DashboardConfigDto dto, String datasourceCode,
-        String measurementBody){
-      IoTUtils.logStartMethod(String.valueOf(dto.getId()),datasourceCode,this.getClass());
-        connectorFactory.getConnector(dto.getType()).saveDeviceMeasurement(dto, datasourceCode, measurementBody);
-    }
+  @Override
+  public void saveDeviceMeasurement(
+      DashboardConfigDto dto, String datasourceCode,
+      String measurementBody){
+    IoTUtils.logStartMethod(String.valueOf(dto.getId()),datasourceCode,this.getClass());
+    connectorFactory.getConnector(dto.getType()).saveDeviceMeasurement(dto, datasourceCode, measurementBody);
+  }
 
   @Override
   public List<Map<String, Object>> getDeviceMeasurements(DashboardConfigDto dto,
@@ -136,30 +139,30 @@ public class ConnectorService extends AbstractConnectorService implements IConne
     return connectorFactory.getConnector(dto.getType()).getMeasurements(dto, datasourceCode, startDate, endDate, restListRequest);
   }
 
-    @Override
-    public MeasurementConfig getMeasurementsConfig(DashboardConfigDto dto,
-        String datasourceCode) {
-      IoTUtils.logStartMethod(String.valueOf(dto.getId()),datasourceCode,this.getClass());
-      return connectorFactory.getConnector(dto.getType()).getMeasurementConfig(dto, datasourceCode);
-    }
+  @Override
+  public MeasurementConfig getMeasurementsConfig(DashboardConfigDto dto,
+      String datasourceCode) {
+    IoTUtils.logStartMethod(String.valueOf(dto.getId()),datasourceCode,this.getClass());
+    return connectorFactory.getConnector(dto.getType()).getMeasurementConfig(dto, datasourceCode);
+  }
 
-    @Override
-    public MeasurementTemplate getDeviceMeasurementSchema(DashboardConfigDto dto,
-        String datasourceCode) {
-      IoTUtils.logStartMethod(String.valueOf(dto.getId()),datasourceCode,this.getClass());
-        return connectorFactory.getConnector(dto.getType()).getDeviceMeasurementSchema(dto, datasourceCode);
-    }
+  @Override
+  public MeasurementTemplate getDeviceMeasurementSchema(DashboardConfigDto dto,
+      String datasourceCode) {
+    IoTUtils.logStartMethod(String.valueOf(dto.getId()),datasourceCode,this.getClass());
+    return connectorFactory.getConnector(dto.getType()).getDeviceMeasurementSchema(dto, datasourceCode);
+  }
 
-    @Override
-    public List<ServerType> getDashboardTypes() {
-        return connectorFactory.getServerType();
-    }
+  @Override
+  public List<ServerType> getDashboardTypes() {
+    return connectorFactory.getServerType();
+  }
 
-	@Override
-	public DashboardConfigRequest setDevicesMetadata(DashboardConfigRequest dashboardConfigRequest)
+  @Override
+  public DashboardConfigRequest setDevicesMetadata(DashboardConfigRequest dashboardConfigRequest)
       throws ApsSystemException {
-		return connectorFactory.getConnector(dashboardConfigRequest.getType()).setDevicesMetadata(dashboardConfigRequest);
-	}
+    return connectorFactory.getConnector(dashboardConfigRequest.getType()).setDevicesMetadata(dashboardConfigRequest);
+  }
 
   @Override
   public DashboardConfigDto refreshMetadata(DashboardConfigDto dto,
@@ -174,6 +177,6 @@ public class ConnectorService extends AbstractConnectorService implements IConne
 
   @Override
   public DeviceLocations getDeviceLocations(DashboardConfigDto dto, String datasourceCode) {
-      return connectorFactory.getConnector(dto.getType()).getDeviceLocations(dto,datasourceCode);
+    return connectorFactory.getConnector(dto.getType()).getDeviceLocations(dto,datasourceCode);
   }
 }

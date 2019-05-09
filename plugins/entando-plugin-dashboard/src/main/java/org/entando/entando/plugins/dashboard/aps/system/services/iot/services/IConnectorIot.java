@@ -25,7 +25,7 @@ public interface IConnectorIot {
    */
   boolean supports(String connectorType);
 
-  boolean pingDevice(DashboardConfigDto dashboardDatasourceDto, String datasourceCode) throws IOException;
+  DashboardConfigDto pingDevice(DashboardConfigDto dashboardDatasourceDto, String datasourceCode) throws IOException;
 
   List<DatasourcesConfigDto> getAllDevices(DashboardConfigDto dashboardConfigDto) throws ApiResourceNotAvailableException;
 

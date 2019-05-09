@@ -60,7 +60,7 @@ public class IoTExceptionHandler  extends  RestExceptionHandler{
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   @Produces("application/json")
   @ResponseBody
-  public ErrorRestResponse processApiResourceNotAvailableException(ApsSystemException ex) {
+  public ErrorRestResponse processApsSystemException(ApsSystemException ex) {
     logger.debug("Handling {} error", ex.getClass().getSimpleName());
     RestError error = new RestError("500", ex.getMessage());
     return new ErrorRestResponse(error);
