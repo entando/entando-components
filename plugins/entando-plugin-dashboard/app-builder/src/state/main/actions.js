@@ -16,7 +16,7 @@ import {
   pingDatasource,
   getDatasources,
   getDatasourceColumns,
-  putDatasourceColumn,
+  previewDatasource,
 } from 'api/dashboardConfig';
 
 import { getWidgetConfigSelector } from 'state/app-builder/selectors';
@@ -33,6 +33,7 @@ import {
   REMOVE_SERVER_CONFIG,
   SET_CHECK_SERVER,
   SET_CHECK_DATASOURCE,
+  SET_PREVIEW_DATASOURCE,
   SET_DATASOURCE_LIST,
   SET_DATASOURCE_DATA,
   SET_DATASOURCE_COLUMNS,
@@ -85,6 +86,11 @@ export const setCheckServer = (serverId, status) => ({
 export const setCheckDatasource = (datasourceId, status) => ({
   type: SET_CHECK_DATASOURCE,
   payload: { datasourceId, status },
+});
+
+export const setPreviewDatasource = fields => ({
+  type: SET_PREVIEW_DATASOURCE,
+  payload: { fields },
 });
 
 export const updateServerConfigAction = server => ({
@@ -334,6 +340,30 @@ export const checkStatusDatasource = datasourceId => (dispatch, getState) =>
     resolve();
   });
 
+export const fetchPreviewDatasource = datasourceId => (dispatch, getState) =>
+  new Promise((resolve) => {
+    const state = getState();
+    const selector = formValueSelector('dashboard-config-form');
+    const serverId = selector(state, 'id');
+    if (datasourceId) {
+      if (serverId) {
+        previewDatasource(serverId, datasourceId).then((response) => {
+          response.json().then((json) => {
+            if (response.ok) {
+              dispatch(setPreviewDatasource(json.payload.fields));
+              resolve();
+            } else {
+              dispatch(addErrors(json.errors.map(e => e.message)));
+              dispatch(addToast(formattedText('plugin.alert.error'), TOAST_ERROR));
+              resolve();
+            }
+          });
+        });
+      }
+    }
+    resolve();
+  });
+
 
 export const fecthDatasourceList = serverId => dispatch =>
   new Promise((resolve) => {
@@ -369,7 +399,7 @@ export const fetchDatasourceColumns = (formName, field, datasourceId) => (
     getDatasourceColumns(serverId, datasourceId).then((response) => {
       response.json().then((json) => {
         if (response.ok) {
-          console.log(json);
+          console.log('fetchDatasourceColumns ', json);
           const { mappings } = json.payload;
           const columns = mappings.reduce((acc, item) => {
             acc.push({
@@ -393,28 +423,9 @@ export const fetchDatasourceColumns = (formName, field, datasourceId) => (
     });
   });
 
-export const updateDatasourceColumns = (formName, columns) => (
-  dispatch,
-  getState,
-) =>
-  new Promise((resolve) => {
-    const state = getState();
-    const selector = formValueSelector(formName);
-    const configId = selector(state, 'serverName');
-    const datasourceId = selector(state, 'datasource');
-    putDatasourceColumn(configId, datasourceId, columns).then((response) => {
-      response.json().then((json) => {
-        if (response.ok) {
-          dispatch(setDatasourceColumns(columns));
-          resolve();
-        } else {
-          dispatch(addErrors(json.errors.map(e => e.message)));
-          dispatch(addToast(formattedText('plugin.alert.error'), TOAST_ERROR));
-          resolve();
-        }
-      });
-    });
-  });
+export const updateDatasourceColumns = columns => dispatch =>
+  dispatch(setDatasourceColumns(columns));
+
 
 /*
  Widget Chart thunk
@@ -426,15 +437,17 @@ export const getWidgetConfig = formName => (dispatch, getState) => {
   const config = getWidgetConfigSelector(state);
   if (config) {
     const json = JSON.parse(config.config);
-    const columns = Object.keys(json.columns).reduce((acc, key) => {
-      const obj = {
-        key,
-        value: get(json.columns, `${key}.label`),
-        hidden: get(json.columns, `${key}.hidden`, false),
-      };
-      acc.push(obj);
-      return acc;
-    }, []);
+    const columns = Object.keys(json.columns)
+      .sort((a, b) => json.columns[a].order - json.columns[b].order)
+      .reduce((acc, key) => {
+        const obj = {
+          key,
+          value: get(json.columns, `${key}.label`),
+          hidden: get(json.columns, `${key}.hidden`, false),
+        };
+        acc.push(obj);
+        return acc;
+      }, []);
     dispatch(fecthDatasourceList(json.serverName));
     dispatch(setDatasourceColumns(columns));
     dispatch(initialize(formName, json));

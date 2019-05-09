@@ -6,16 +6,23 @@ import DashboardConfigDatasource from 'ui/dashboard-config/common/components/Das
 import { Button } from 'patternfly-react';
 import { DASHBOARD_LIST_DATASOURCE } from 'mocks/dashboardConfigs';
 
+const PROPS = {
+  datasourceCode: '',
+  testConnection: jest.fn(),
+  previewDatasource: jest.fn(),
+};
+
 const DATASOURCE_VALUE = {
   datasourceCode: 'xxx',
   datasource: 'Temperature',
   datasourceURI: '/devices/temperature',
+
 };
 
 describe('DashboardConfigDatasource', () => {
   let component;
   beforeEach(() => {
-    component = shallow(<DashboardConfigDatasource />);
+    component = shallow(<DashboardConfigDatasource {...PROPS} />);
   });
 
   it('renders without crashing', () => {
@@ -28,6 +35,7 @@ describe('DashboardConfigDatasource', () => {
 
   it('if props datasourceValue.datadaousrce and datasourceCode are not empty button add is not diabled', () => {
     component = shallow(<DashboardConfigDatasource
+      {...PROPS}
       datasourceValue={DATASOURCE_VALUE}
       datasourceCode="111222"
     />);
@@ -43,7 +51,7 @@ describe('DashboardConfigDatasource', () => {
       datasourceValue: DATASOURCE_VALUE,
       datasourceCode: 'xxx',
     };
-    component = shallow(<DashboardConfigDatasource {...props} />);
+    component = shallow(<DashboardConfigDatasource {...PROPS} {...props} />);
     const event = component.find(Button);
     expect(component.find(Button).prop('disabled')).toBeFalsy();
     event.simulate('click');
@@ -51,7 +59,7 @@ describe('DashboardConfigDatasource', () => {
   });
 
   it('if props datasources is not empty show table ', () => {
-    component = shallow(<DashboardConfigDatasource datasources={DASHBOARD_LIST_DATASOURCE['1']} />);
+    component = shallow(<DashboardConfigDatasource {...PROPS} datasources={DASHBOARD_LIST_DATASOURCE['1']} datasourceCode="" />);
     expect(component.find('table')).toHaveLength(1);
     expect(component.find('thead')).toHaveLength(1);
     expect(component.find('tr th')).toHaveLength(5);

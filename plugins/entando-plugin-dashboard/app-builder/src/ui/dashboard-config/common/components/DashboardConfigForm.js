@@ -65,6 +65,9 @@ export class DashboardConfigFormBody extends Component {
       datasourceValue,
       gotoHomePage,
       datasourceCode,
+      testConnection,
+      previewDatasource,
+      previewColumns,
     } = this.props;
 
     const disableSubmit = invalid || submitting || datasources.length === 0;
@@ -120,7 +123,7 @@ export class DashboardConfigFormBody extends Component {
                     2,
                     formattedText('plugin.table.requirement'),
                   )}
-                </Col>
+                </Col>serverTypeList
                 <Col xs={6}>
                   {renderField(
                     'serverURI',
@@ -217,7 +220,9 @@ export class DashboardConfigFormBody extends Component {
               datasourceValue={datasourceValue}
               datasources={datasources}
               datasourceCode={datasourceCode}
-
+              testConnection={testConnection}
+              previewDatasource={previewDatasource}
+              previewColumns={previewColumns}
             />
             <Row>
               <Col xs={12}>
@@ -253,7 +258,10 @@ DashboardConfigFormBody.propTypes = {
   onWillMount: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   gotoHomePage: PropTypes.func.isRequired,
+  testConnection: PropTypes.func.isRequired,
+  previewDatasource: PropTypes.func.isRequired,
   serverTypeList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  previewColumns: PropTypes.arrayOf(PropTypes.shape({})),
   datasources: PropTypes.arrayOf(PropTypes.shape(DATASOURCE_TYPE)),
   datasourceValue: PropTypes.shape(DATASOURCE_TYPE),
   datasourceCode: PropTypes.string,
@@ -269,6 +277,7 @@ DashboardConfigFormBody.defaultProps = {
   datasources: [],
   datasourceCode: '',
   datasourceCheck: {},
+  previewColumns: [],
 };
 const DashboardConfigForm = reduxForm({
   form: 'dashboard-config-form',

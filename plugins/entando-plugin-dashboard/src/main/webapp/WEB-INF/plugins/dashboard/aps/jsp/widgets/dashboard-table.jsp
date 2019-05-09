@@ -33,13 +33,19 @@
     const lang = '<wp:info key="currentLang" />';
     console.log('config : ', config);
     const { title, columns, options } = config;
+    const orderedColumns = {};
+    Object.keys(columns)
+      .sort((a,b)=> columns[a].order - columns[b].order)
+      .forEach((colName)=>{
+        orderedColumns[colName] = columns[colName]
+      });
     $('#title-table').html(title.en);
     const CONFIG_TABLE = {
       serverName: config.serverName,
       datasource: config.datasource,
       accessToken: '<c:out value="${sessionScope.currentUser.accessToken}"/>',
       options,
-      columns,
+      columns : orderedColumns,
       lang
     };
     console.log('CONFIG_TABLE: ', CONFIG_TABLE);

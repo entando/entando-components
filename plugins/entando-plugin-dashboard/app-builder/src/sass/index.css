@@ -122,7 +122,9 @@
     margin-bottom: 0px; }
 
 .DashboardConfigDatasourceStatus {
-  border: 0px solid; }
+  border: 0 solid;
+  text-align: center;
+  padding: 3px; }
   .DashboardConfigDatasourceStatus__test-btn {
     margin-left: 1em; }
 

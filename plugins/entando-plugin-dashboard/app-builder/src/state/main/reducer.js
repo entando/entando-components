@@ -17,6 +17,7 @@ import {
   SET_INTERNAL_ROUTE,
   SET_CHECK_SERVER,
   SET_CHECK_DATASOURCE,
+  SET_PREVIEW_DATASOURCE,
 } from './types';
 
 const internalRoute = (state = '', action = {}) => {
@@ -140,6 +141,14 @@ const datasourceData = (state = [], action = {}) => {
   }
 };
 
+const preview = (state = [], action = {}) => {
+  switch (action.type) {
+    case SET_PREVIEW_DATASOURCE:
+      return action.payload.fields;
+    default: return state;
+  }
+};
+
 export default combineReducers({
   internalRoute,
   appBuilder: combineReducers({
@@ -153,6 +162,7 @@ export default combineReducers({
     datasourceCheck,
     datasourceList,
     datasource: combineReducers({
+      preview,
       selected: datasourceSelected,
       columns: datasourceColumns,
       data: datasourceData,
