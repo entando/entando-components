@@ -12,7 +12,6 @@ import {
   putServerConfig,
   getDatasources,
   getDatasourceColumns,
-  putDatasourceColumn,
 } from 'api/dashboardConfig';
 
 import {
@@ -396,33 +395,13 @@ describe('state/main/actions', () => {
     });
 
     describe('updateDatasourceColumns', () => {
-      beforeEach(() => {
-        putDatasourceColumn
-          .mockImplementation(mockApi({ payload: DATASOURCE_TEMPERATURE_DATA.columns }));
-      });
       it('if response OK dispatch clearSelectedDatasource, setSelectedDatasource', (done) => {
         store
-          .dispatch(updateDatasourceColumns('form-table', 'columns', 'temperature'))
-          .then(() => {
-            actions = store.getActions();
-            expect(store.getActions()).toHaveLength(1);
-            expect(actions[0]).toHaveProperty('type', SET_DATASOURCE_COLUMNS);
-            done();
-          })
-          .catch(done.fail);
-      });
-
-      it('if API response is not ok, dispatch ADD_ERRORS', (done) => {
-        putDatasourceColumn.mockImplementation(mockApi({ errors: true }));
-        store
-          .dispatch(updateDatasourceColumns('form-table', 'columns', 'temperature'))
-          .then(() => {
-            expect(store.getActions()).toHaveLength(2);
-            expect(store.getActions()[0]).toHaveProperty('type', ADD_ERRORS);
-            expect(store.getActions()[1]).toHaveProperty('type', ADD_TOAST);
-            done();
-          })
-          .catch(done.fail);
+          .dispatch(updateDatasourceColumns('columns', 'temperature'));
+        actions = store.getActions();
+        expect(store.getActions()).toHaveLength(1);
+        expect(actions[0]).toHaveProperty('type', SET_DATASOURCE_COLUMNS);
+        done();
       });
     });
 

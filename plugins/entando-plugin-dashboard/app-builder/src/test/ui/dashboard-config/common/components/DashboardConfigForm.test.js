@@ -10,6 +10,7 @@ const props = {
   handleSubmit: jest.fn(),
   gotoHomePage: jest.fn(),
   testConnection: jest.fn(),
+  previewDatasource: jest.fn(),
   serverTypeList: [],
   datasources: [],
   invalid: false,

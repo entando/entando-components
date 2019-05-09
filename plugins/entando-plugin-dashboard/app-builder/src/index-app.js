@@ -31,7 +31,7 @@ import DashboardConfigAddPage from 'ui/dashboard-config/add/components/Dashboard
 // import DashboardConfigPageContainer
 // from 'ui/dashboard-config/list/containers/DashboardConfigPageContainer';
 
-import DashboardTable from 'ui/widgets/table/components/DashboardTable';
+// import DashboardTable from 'ui/widgets/table/components/DashboardTable';
 // import DashboardLineChart from 'ui/widgets/charts/line-chart/components/DashboardLineChart';
 // import DashboardBarChart from 'ui/widgets/charts/bar-chart/components/DashboardBarChart';
 // import DashboardDonutChart from 'ui/widgets/charts/donut-chart/components/DashboardDonutChart';
@@ -57,7 +57,7 @@ setCurrentLocale(enLocale);
 
 const currentUser = combineReducers({
   username: () => 'admin',
-  token: () => '65eab135b8791766cb7b29232f2b6fc8',
+  token: () => '02bf7c4f3baf588e9a21bd3d54e5fb62',
 });
 
 const wrappedReducer = combineReducers({
@@ -94,7 +94,6 @@ export default ReactDOM.render(
       <Grid fluid>
         <Row>
           <Col xs={12}>
-            <DashboardTable onSubmit={() => {}} />
             <DashboardConfigAddPage />
           </Col>
         </Row>

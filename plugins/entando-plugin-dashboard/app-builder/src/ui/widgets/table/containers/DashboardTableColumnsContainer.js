@@ -16,7 +16,7 @@ export const mapStateToProps = state => ({
 
 export const mapDispatchToProps = dispatch => ({
   onMoveColumn: columns =>
-    dispatch(updateDatasourceColumns('form-dashboard-table', columns)),
+    dispatch(updateDatasourceColumns(columns)),
 });
 const DashboardTableColumnsContainer = connect(
   mapStateToProps,

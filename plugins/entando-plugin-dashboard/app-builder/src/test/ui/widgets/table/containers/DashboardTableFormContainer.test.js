@@ -25,6 +25,8 @@ const FORM_DATA = {
 
 jest.mock('state/main/actions');
 
+jest.mock('state/main/selectors');
+
 // jest.mock("state/main/actions", () => ({
 //   fetchServerConfigList: jest.fn(),
 //   getWidgetConfig: jest.fn()
