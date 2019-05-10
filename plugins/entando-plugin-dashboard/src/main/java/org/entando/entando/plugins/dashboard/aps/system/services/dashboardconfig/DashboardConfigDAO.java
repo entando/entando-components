@@ -190,64 +190,6 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
     }
   }
 
-  //region deletabili
-/*
-//  private void insertDashboardConfigDatasource(DatasourcesConfigDto datasource,
-//      int dashboardConfigId,
-//      final Connection conn)
-//      throws SQLException {
-//    final PreparedStatement stat = conn.prepareStatement(ADD_DATASOURCE);
-//    try {
-//      int index = 1;
-//      stat.setInt(index++, dashboardConfigId);
-//      stat.setString(index++, datasource.getDatasourceCode());
-//      stat.setString(index++, datasource.getDatasource());
-//      if (StringUtils.isNotBlank(datasource.getDatasourceURI())) {
-//        stat.setString(index++, datasource.getDatasourceURI());
-//      } else {
-//        stat.setNull(index++, Types.VARCHAR);
-//      }
-//      if (StringUtils.isNotBlank(datasource.getStatus())) {
-//        stat.setString(index++, datasource.getStatus());
-//      } else {
-//        stat.setNull(index++, Types.VARCHAR);
-//      }
-//      if (StringUtils.isNotBlank(datasource.getName())) {
-//        stat.setString(index++, datasource.getName());
-//      } else {
-//        stat.setNull(index++, Types.VARCHAR);
-//      }
-//      String metadata = new Gson().toJson(datasource.getMetadata());
-//      if (datasource.getMetadata() != null && StringUtils.isNotBlank(metadata)) {
-//        stat.setString(index++, metadata);
-//      } else {
-//        stat.setNull(index++, Types.VARCHAR);
-//      }
-//      stat.executeUpdate();
-//    } catch (Throwable t) {
-//      logger.error("Error on insert dashboardConfig Datasource", t);
-//      throw new RuntimeException("Error on insert dashboardConfig DataSource", t);
-//    }
-//  }
-//
-//  private void insertDashboardConfigDatasource(DashboardConfig dashboardConfig)
-//      throws SQLException {
-//    Connection conn = null;
-//    try {
-//      conn = this.getConnection();
-//      insertDashboardConfigDatasource(dashboardConfig, conn);
-//    } catch (Throwable t) {
-//      logger.error("Error on insert dashboardConfig Datasource", t);
-//      throw new RuntimeException("Error on insert dashboardConfig DataSource", t);
-//    }
-//    finally {
-//      this.closeDaoResources(null, null, conn);
-//    }
-//  }
-//  
-*/
-//endregion
-
   private void insertDashboardConfigDatasource(DatasourcesConfigDto datasource)
       throws SQLException {
     Connection conn = null;
@@ -264,8 +206,9 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
 
   private void insertDashboardConfigDatasource(DatasourcesConfigDto datasourcesConfigDto,
       Connection conn) {
+    PreparedStatement stat =null;
     try {
-      final PreparedStatement stat = conn.prepareStatement(ADD_DATASOURCE);
+      stat = conn.prepareStatement(ADD_DATASOURCE);
       int index = 1;
       stat.setInt(index++, datasourcesConfigDto.getFk_dashboard_config());
       stat.setString(index++, datasourcesConfigDto.getDatasourceCode());
@@ -295,13 +238,16 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
     } catch (Throwable t) {
       logger.error("Error on insert dashboardConfig Datasource", t);
       throw new RuntimeException("Error on insert dashboardConfig DataSource", t);
+    }finally {
+      this.closeDaoResources(null,stat);
     }
   }
 
   private void insertDashboardConfigDatasource(DashboardConfig dashboardConfig, Connection conn) {
     dashboardConfig.getDatasources().forEach(c -> {
+      final PreparedStatement stat = null;
       try {
-        final PreparedStatement stat = conn.prepareStatement(ADD_DATASOURCE);
+        conn.prepareStatement(ADD_DATASOURCE);
         int index = 1;
         stat.setInt(index++, dashboardConfig.getId());
         stat.setString(index++, c.getDatasourceCode());
@@ -331,6 +277,9 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
       } catch (Throwable t) {
         logger.error("Error on insert dashboardConfig Datasource", t);
         throw new RuntimeException("Error on insert dashboardConfig DataSource", t);
+      }
+      finally {
+        this.closeDaoResources(null,stat);
       }
     });
   }
@@ -371,11 +320,13 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
       logger.error("Error on insert dashboardConfig", t);
       throw new RuntimeException("Error on insert dashboardConfig", t);
     }
+    finally {
+      this.closeDaoResources(null,stat);
+    }
   }
 
   @Override
   public void updateDashboardConfig(DashboardConfig dashboardConfig) {
-    PreparedStatement stat = null;
     Connection conn = null;
     try {
       conn = this.getConnection();
@@ -388,13 +339,13 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
       logger.error("Error updating dashboardConfig {}", dashboardConfig.getId(), t);
       throw new RuntimeException("Error updating dashboardConfig", t);
     } finally {
-      this.closeDaoResources(null, stat, conn);
+      closeDaoResources(null, null, conn);
     }
   }
 
   private void updateDashboardConfigDatasource(final DashboardConfig dashboardConfig, final Connection conn) {
     DashboardConfig dashboardFromDB = this
-        .loadDashboardConfig(dashboardConfig.getId());
+        .loadDashboardConfig(dashboardConfig.getId(),conn);
     
     dashboardConfig.getDatasources().forEach(d -> {
       d.setFk_dashboard_config(dashboardConfig.getId());
@@ -446,39 +397,48 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
   }
 
   private void updateDatasource(DatasourcesConfigDto d,
-      Connection conn)
-      throws SQLException {
-    PreparedStatement stat = conn.prepareStatement(UPDATE_DATASOURCE);
-    int index = 1;
-    stat.setInt(index++, d.getFk_dashboard_config());
-    if (StringUtils.isNotBlank(d.getDatasourceCode())) {
-      stat.setString(index++, d.getDatasourceCode());
-    } else {
-      stat.setNull(index++, Types.VARCHAR);
+      Connection conn){
+    PreparedStatement stat = null;
+    try {
+      stat = conn.prepareStatement(UPDATE_DATASOURCE);
+      int index = 1;
+      stat.setInt(index++, d.getFk_dashboard_config());
+      if (StringUtils.isNotBlank(d.getDatasourceCode())) {
+        stat.setString(index++, d.getDatasourceCode());
+      } else {
+        stat.setNull(index++, Types.VARCHAR);
+      }
+      if (StringUtils.isNotBlank(d.getDatasourceURI())) {
+        stat.setString(index++, d.getDatasourceURI());
+      } else {
+        stat.setNull(index++, Types.VARCHAR);
+      }
+      if (StringUtils.isNotBlank(d.getStatus())) {
+        stat.setString(index++, d.getStatus());
+      } else {
+        stat.setNull(index++, Types.VARCHAR);
+      }
+      if (StringUtils.isNotBlank(d.getName())) {
+        stat.setString(index++, d.getName());
+      } else {
+        stat.setNull(index++, Types.VARCHAR);
+      }
+      String metadata = new Gson().toJson(d.getMetadata());
+      if (d.getMetadata() != null && StringUtils.isNotBlank(metadata)) {
+        stat.setString(index++, metadata);
+      } else {
+        stat.setNull(index++, Types.VARCHAR);
+      }
+      stat.setString(index++, d.getDatasource());
+      stat.executeUpdate();
     }
-    if (StringUtils.isNotBlank(d.getDatasourceURI())) {
-      stat.setString(index++, d.getDatasourceURI());
-    } else {
-      stat.setNull(index++, Types.VARCHAR);
+    catch(Throwable t) {
+      logger.error("Error updating datasources {}", d, t);
+      throw new RuntimeException("Error updating datasource", t);
     }
-    if (StringUtils.isNotBlank(d.getStatus())) {
-      stat.setString(index++, d.getStatus());
-    } else {
-      stat.setNull(index++, Types.VARCHAR);
+    finally {
+      this.closeDaoResources(null,stat);
     }
-    if (StringUtils.isNotBlank(d.getName())) {
-      stat.setString(index++, d.getName());
-    } else {
-      stat.setNull(index++, Types.VARCHAR);
-    }
-    String metadata = new Gson().toJson(d.getMetadata());
-    if (d.getMetadata() != null && StringUtils.isNotBlank(metadata)) {
-      stat.setString(index++, metadata);
-    } else {
-      stat.setNull(index++, Types.VARCHAR);
-    }
-    stat.setString(index++, d.getDatasource());
-    stat.executeUpdate();
   }
 
   @Override
@@ -498,8 +458,7 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
   private void removeDashboardConfigDatasources(List<DatasourcesConfigDto> datasource,
       final Connection conn) {
     datasource.forEach(d -> {
-      try {
-        PreparedStatement stat = null;
+      PreparedStatement stat = null;
         try {
           stat = conn.prepareStatement(DELETE_DATASOURCE_BY_ID);
           int index = 1;
@@ -508,14 +467,12 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
         } catch (Throwable t) {
           logger.error("Error removing datasource {}", d.getDatasource(), t);
           throw new RuntimeException("Error updating datasource", t);
-        }
-      } catch (Throwable t) {
-        logger.error("Error removing datasource {}", d.getDatasource(), t);
-        throw new RuntimeException("Error removing datasource", t);
+      }
+      finally {
+        this.closeDaoResources(null,stat);
       }
     });
   }
-
 
   private void updateDashboardConfig(DashboardConfig dashboardConfig, Connection conn) {
     PreparedStatement stat = null;
@@ -554,6 +511,9 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
       logger.error("Error updating dashboardConfig {}", dashboardConfig.getId(), t);
       throw new RuntimeException("Error updating dashboardConfig", t);
     }
+    finally {
+      this.closeDaoResources(null,stat);
+    }
   }
 
   @Override
@@ -585,6 +545,9 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
       logger.error("Error deleting dashboardConfig Datasource{}", id, t);
       throw new RuntimeException("Error deleting dashboardConfig Datasource", t);
     }
+    finally {
+      this.closeDaoResources(null,stat);
+    }
   }
 
   private void removeDashboardConfig(int id, Connection conn) {
@@ -598,13 +561,14 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
       logger.error("Error deleting dashboardConfig {}", id, t);
       throw new RuntimeException("Error deleting dashboardConfig", t);
     }
+    finally {
+      this.closeDaoResources(null,stat);
+    }
   }
 
   public DashboardConfig loadDashboardConfig(int id) {
     DashboardConfig dashboardConfig = null;
     Connection conn = null;
-    PreparedStatement stat = null;
-    ResultSet res = null;
     try {
       conn = this.getConnection();
       dashboardConfig = this.loadDashboardConfig(id, conn);
@@ -612,7 +576,7 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
       logger.error("Error loading dashboardConfig with id {}", id, t);
       throw new RuntimeException("Error loading dashboardConfig with id " + id, t);
     } finally {
-      closeDaoResources(res, stat, conn);
+      closeDaoResources(null, null, conn);
     }
     return dashboardConfig;
   }
@@ -622,9 +586,9 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
       int dashboardId,
       String datasourceCode) {
     Connection conn = null;
-    DatasourcesConfigDto datasource = new DatasourcesConfigDto();
     PreparedStatement stat = null;
     ResultSet res = null;
+    DatasourcesConfigDto datasource = new DatasourcesConfigDto();
     try {
       conn = this.getConnection();
       stat = conn.prepareStatement(LOAD_DATASOURCE_BY_DASHBOARD_AND_DATASOURCECODE);
@@ -641,7 +605,7 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
       throw new RuntimeException("Error loading dashboardConfig with dashboardId " + dashboardId,
           t);
     } finally {
-      closeDaoResources(null, null, conn);
+      closeDaoResources(res, stat, conn);
     }
     return datasource;
   }
@@ -672,7 +636,7 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
       logger.error("Error loading datasource with id {}", datasourceId, t);
       throw new RuntimeException("Error loading datasource with id " + datasourceId, t);
     } finally {
-      closeDaoResources(null, null, conn);
+      closeDaoResources(res, stat, conn);
     }
     return datasource;
   }
@@ -686,9 +650,22 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
       stat.setInt(1, id);
       res = stat.executeQuery();
       if (res.next()) {
-        dashboardConfig = this.buildDashboardConfigFromRes(res);
+        dashboardConfig = new DashboardConfig();
+        dashboardConfig.setId(res.getInt("id"));
+        dashboardConfig.setServerDescription(res.getString("serverdescription"));
+        dashboardConfig.setServerURI(res.getString("serveruri"));
+        dashboardConfig.setUsername(res.getString("username"));
+        dashboardConfig.setPassword(res.getString("password"));
+        dashboardConfig.setToken(res.getString("token"));
+        dashboardConfig.setTimeConnection(res.getInt("timeconnection"));
+        dashboardConfig.setActive(res.getBoolean("active"));
+        dashboardConfig.setDebug(res.getBoolean("debug"));
+        dashboardConfig.setType(res.getString("type"));
       }
-      closeDaoResources(res, stat);
+      res.close();
+      stat.close();
+      res = null;
+      stat = null;
       stat = conn.prepareStatement(LOAD_DATASOURCE);
       stat.setInt(1, id);
       res = stat.executeQuery();
@@ -709,25 +686,8 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
       logger.error("Error loading dashboardConfig with id {}", id, t);
       throw new RuntimeException("Error loading dashboardConfig with id " + id, t);
     }
-    return dashboardConfig;
-  }
-
-  private DashboardConfig buildDashboardConfigFromRes(ResultSet res) {
-    DashboardConfig dashboardConfig = null;
-    try {
-      dashboardConfig = new DashboardConfig();
-      dashboardConfig.setId(res.getInt("id"));
-      dashboardConfig.setServerDescription(res.getString("serverdescription"));
-      dashboardConfig.setServerURI(res.getString("serveruri"));
-      dashboardConfig.setUsername(res.getString("username"));
-      dashboardConfig.setPassword(res.getString("password"));
-      dashboardConfig.setToken(res.getString("token"));
-      dashboardConfig.setTimeConnection(res.getInt("timeconnection"));
-      dashboardConfig.setActive(res.getBoolean("active"));
-      dashboardConfig.setDebug(res.getBoolean("debug"));
-      dashboardConfig.setType(res.getString("type"));
-    } catch (Throwable t) {
-      logger.error("Error in buildDashboardConfigFromRes", t);
+    finally {
+      this.closeDaoResources(res,stat);
     }
     return dashboardConfig;
   }
