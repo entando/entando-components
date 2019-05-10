@@ -14,7 +14,6 @@
 package org.entando.entando.aps.system.services.digitalexchange.client;
 
 import java.io.InputStream;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
