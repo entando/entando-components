@@ -8,8 +8,10 @@ import itLocale from 'locales/it';
 
 import BpmChannelForm from 'ui/widgets/BpmChannelForm';
 import BpmCaseInstanceFormContainer from 'ui/widgets/BpmCaseInstanceFormContainer';
-import BpmCaseProgressStatusFormContainer from 'ui/widgets/BpmCaseProgressStatusFormContainer';
+import BpmCaseProgressStatusForm from 'ui/widgets/BpmCaseProgressStatusForm';
 import BpmDatatableTaskListFormContainer from 'ui/widgets/BpmDatatableTaskListFormContainer';
+import BpmFormByDatatypeContainer from 'ui/widgets/BpmFormByDatatypeContainer';
+
 
 import { name as id } from '../package.json';
 
@@ -34,9 +36,9 @@ const plugin = {
     'bpm-case-roles': BpmChannelForm,
     'bpm-process-diagram': BpmChannelForm,
     'bpm-case-instance-selector': BpmCaseInstanceFormContainer,
-    'bpm-case-progress-status': BpmCaseProgressStatusFormContainer,
+    'bpm-case-progress-status': BpmCaseProgressStatusForm,
     'bpm-datatable-task-list': BpmDatatableTaskListFormContainer,
-    'bpm-datatype-form': BpmDatatableTaskListFormContainer,
+    'bpm-datatype-form': BpmFormByDatatypeContainer,
   },
 };
 

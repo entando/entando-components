@@ -267,7 +267,7 @@ public abstract class BpmDatatableWidgetAction extends BpmFormWidgetAction imple
         return fd;
     }
 
-    //This method is used in the ubclasses to add other custom properties
+    //This method is used in the subclasses to add other custom properties
     //Here must return a new empty ApsProperties() object;
     protected ApsProperties addAdditionalPropertiesIntoWidgetInfo() {
         return new ApsProperties();        

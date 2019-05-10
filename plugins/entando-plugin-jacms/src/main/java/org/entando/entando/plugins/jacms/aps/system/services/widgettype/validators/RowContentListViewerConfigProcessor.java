@@ -40,7 +40,7 @@ public class RowContentListViewerConfigProcessor implements WidgetConfigurationP
 
     @SuppressWarnings("unchecked")
     @Override
-    public Object buildConfiguration(WidgetConfigurationRequest widget) {
+    public Object buildConfiguration(WidgetConfigurationRequest widget, Map<String, Object> parameters) {
         ApsProperties properties = new ApsProperties();
         List<RowContentListConfigurationEntry> entryList = (List<RowContentListConfigurationEntry>) widget.getProcessInfo().get(WidgetConfigurationValidator.PROCESS_INFO_CONFIG);
         if (null != entryList && !entryList.isEmpty()) {
