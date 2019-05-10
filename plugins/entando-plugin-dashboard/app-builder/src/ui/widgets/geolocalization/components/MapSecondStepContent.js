@@ -35,14 +35,16 @@ MapSecondStepContent.propTypes = {
   optionColumnSelected: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   addColumnOptionSelected: PropTypes.func.isRequired,
   removeColumnOptionSelected: PropTypes.func.isRequired,
-  datasourceSelected: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
-  datasourcesValue: PropTypes.string.isRequired,
+  datasourceSelected: PropTypes.string,
+  label: PropTypes.string,
+  datasourcesValue: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   clearInputDatasourceData: PropTypes.func.isRequired,
 
 };
 
 MapSecondStepContent.defaultProps = {
   formName: '',
+  datasourceSelected: '',
+  label: '',
 };
 export default MapSecondStepContent;

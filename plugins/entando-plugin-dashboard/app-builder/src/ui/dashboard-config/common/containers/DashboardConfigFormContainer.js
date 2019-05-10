@@ -14,7 +14,7 @@ import {
   fetchPreviewDatasource,
 } from 'state/main/actions';
 
-import { getServerType, getDatasoucePreview } from 'state/main/selectors';
+import { getServerType, getDatasoucePreview, getDatasourceCheck } from 'state/main/selectors';
 
 const selector = formValueSelector('dashboard-config-form');
 
@@ -27,6 +27,7 @@ export const mapStateToProps = state => ({
   datasources: selector(state, 'datasources'),
   serverTypeList: getServerType(state),
   previewColumns: getDatasoucePreview(state),
+  datasourceCheck: getDatasourceCheck(state),
 
 });
 

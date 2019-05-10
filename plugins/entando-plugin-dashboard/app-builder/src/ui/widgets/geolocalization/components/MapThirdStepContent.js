@@ -198,9 +198,13 @@ renderField.propTypes = {
   min: PropTypes.string.isRequired,
   max: PropTypes.string.isRequired,
   direction: PropTypes.string.isRequired,
-  disabled: PropTypes.bool.isRequired,
+  disabled: PropTypes.bool,
   className: PropTypes.string.isRequired,
   meta: PropTypes.shape({}).isRequired,
+};
+
+renderField.defaultProps = {
+  disabled: false,
 };
 
 export default MapThirdStepContent;

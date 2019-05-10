@@ -23,7 +23,7 @@ import { getWidgetConfigSelector } from 'state/app-builder/selectors';
 
 import { getServerConfigList } from 'state/main/selectors';
 
-import { CONFIG_CHART_STRING } from 'mocks/dashboardConfigs';
+// import { CONFIG_CHART_STRING } from 'mocks/dashboardConfigs';
 
 import {
   SET_INFO_PAGE,
@@ -461,7 +461,7 @@ export const getWidgetConfig = formName => (dispatch, getState) => {
 // used for widgets chart
 export const getWidgetConfigChart = formName => (dispatch, getState) => {
   const state = getState();
-  const config = getWidgetConfigSelector(state) || CONFIG_CHART_STRING;
+  const config = getWidgetConfigSelector(state); // || CONFIG_CHART_STRING;
   if (config) {
     const configJson = JSON.parse(config.config);
     dispatch(fecthDatasourceList(configJson.serverName));

@@ -5,9 +5,9 @@ import { Label } from 'patternfly-react';
 
 const DashboardConfigDatasourceStatus = ({ status }) => (
   <div className="DashboardConfigDatasourceStatus">
-    <Label bsStyle={status === 'online' ? 'success' : 'danger'}>
+    <Label bsStyle={status && status.status === 'online' ? 'success' : 'danger'}>
       {
-        status === 'online' ? (<span className="fa fa-check" />) :
+        status && status.status === 'online' ? (<span className="fa fa-check" />) :
         <span className="fa fa-times" />
       }
     </Label>

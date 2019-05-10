@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { formValueSelector, getFormSyncErrors } from 'redux-form';
 import { pick, omit } from 'lodash';
 
-import { fetchServerConfigList } from 'state/main/actions';
+import { fetchServerConfigList, gotoConfigurationPage } from 'state/main/actions';
 
 import DashboardMapForm from 'ui/widgets/geolocalization/components/DashboardMapForm';
 
@@ -14,13 +14,26 @@ const mapStateToProps = state => ({
   formSyncErrors: getFormSyncErrors('form-dashboard-map')(state),
   initialValues: {
     icon: { marker: 'fa-map-marker' },
+    responsiveSize: {
+      width: 300,
+      height: 500,
+      top: 50,
+      right: 50,
+      bottom: 50,
+      left: 50,
+    },
+    legend: {
+      position: 'bottom',
+    },
   },
+
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   onWillMount: () => {
     dispatch(fetchServerConfigList());
   },
+  onCancel: () => dispatch(gotoConfigurationPage()),
   onSubmit: (data) => {
     const transformData = {
       ...pick(data, ['datasource', 'title', 'serverName']),
@@ -29,8 +42,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       ...omit(data, ['datasource', 'title', 'serverName']),
     };
     console.log('Submit data ', transformData);
-    ownProps.onSubmit();
+    ownProps.onSubmit({ config: JSON.stringify(transformData) });
   },
+
 });
 
 const DashboardMapFormContainer = connect(

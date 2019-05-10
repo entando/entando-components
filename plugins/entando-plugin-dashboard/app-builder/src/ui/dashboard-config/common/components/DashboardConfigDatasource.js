@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Row, Col, Button, DropdownKebab, MenuItem } from 'patternfly-react';
 import FormattedMessageLocal from 'ui/i18n/FormattedMessage';
-import DashboardConfigDatasourceStatusContainer from 'ui/dashboard-config/common/containers/DashboardConfigDatasourceStatusContainer';
+import DashboardConfigDatasourceStatus from 'ui/dashboard-config/common/components/DashboardConfigDatasourceStatus';
 import DashboardConfigModalPreviewDatasource from 'ui/dashboard-config/common/components/DashboardConfigModalPreviewDatasource';
 
-import { isUndefined } from 'lodash';
+import { isUndefined, get } from 'lodash';
 
 const addDatasource = (fields, obj, callback) => {
   const {
@@ -50,6 +50,7 @@ class DashboardConfigDatasource extends Component {
       testConnection,
       previewDatasource,
       previewColumns,
+      datasourceCheck,
     } = this.props;
     return (
       <div className="DashboardConfigDatasource">
@@ -101,8 +102,8 @@ class DashboardConfigDatasource extends Component {
                       <td>{ds.datasource}</td>
                       <td>{ds.datasourceURI}</td>
                       <td>
-                        <DashboardConfigDatasourceStatusContainer
-                          datasourceCode={ds.datasourceCode}
+                        <DashboardConfigDatasourceStatus
+                          status={datasourceCheck[ds.datasourceCode]}
                         />
                       </td>
                       <td className="text-center">
@@ -116,6 +117,7 @@ class DashboardConfigDatasource extends Component {
                           <MenuItem
                             className="DashboardConfigDatasource__menu-item-preview"
                             onClick={() => this.handleModal(ds.datasourceCode)}
+                            disabled={get(datasourceCheck[ds.datasourceCode], 'status') === 'offline'}
                           >
                             <FormattedMessageLocal id="common.preview" />
                           </MenuItem>
@@ -160,6 +162,7 @@ DashboardConfigDatasource.propTypes = {
   testConnection: PropTypes.func.isRequired,
   previewDatasource: PropTypes.func.isRequired,
   previewColumns: PropTypes.arrayOf(PropTypes.shape({})),
+  datasourceCheck: PropTypes.shape({}),
 };
 DashboardConfigDatasource.defaultProps = {
   datasourceValue: {
@@ -169,5 +172,6 @@ DashboardConfigDatasource.defaultProps = {
   datasources: [],
   fields: {},
   previewColumns: [],
+  datasourceCheck: {},
 };
 export default DashboardConfigDatasource;

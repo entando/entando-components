@@ -27,7 +27,8 @@ class DashboardMapFormBody extends Component {
 
     return (
       <Stepper
-        handleSubmit={this.props.onSubmit}
+        handleSubmit={this.props.handleSubmit}
+        onCancel={this.props.onCancel}
         validateSteps={validateSteps}
         step1={<MapFirstStepContent />}
         step2={<MapSecondStepContentContainer formName={FORM_NAME} />}
@@ -37,8 +38,9 @@ class DashboardMapFormBody extends Component {
   }
 }
 DashboardMapFormBody.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
   onWillMount: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
   formSyncErrors: PropTypes.shape({}),
   datasources: PropTypes.arrayOf(PropTypes.shape({})),
 };
