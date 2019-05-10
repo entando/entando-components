@@ -20,15 +20,12 @@ import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.exception.ApsSystemException;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.DtoBuilder;
 import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.exception.InvalidFieldException;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigBuilder;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigRequest;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DatasourcesConfigRequest;
@@ -45,8 +42,13 @@ import org.springframework.validation.ObjectError;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
+
+import static org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfigExceptionMessages.DASHBOARD_CONFIGS_ERROR_SEARCHING;
+import static org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfigExceptionMessages.DASHBOARD_CONFIG_ERROR_DELETING_S;
+import static org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfigExceptionMessages.DASHBOARD_CONFIG_ERROR_LOADING__WITH_ID_S;
+import static org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfigExceptionMessages.DASHBOARD_CONFIG_ERROR_ON_INSERT;
+import static org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfigExceptionMessages.DASHBOARD_CONFIG_ERROR_UPDATING_S;
 
 public class DashboardConfigService implements IDashboardConfigService {
 
@@ -106,8 +108,8 @@ public class DashboardConfigService implements IDashboardConfigService {
 
       return pagedMetadata;
     } catch (Throwable t) {
-      logger.error("error in search dashboardConfigs", t);
-      throw new RestServerError("error in search dashboardConfigs", t);
+      logger.error(DASHBOARD_CONFIGS_ERROR_SEARCHING, t);
+      throw new RestServerError(DASHBOARD_CONFIGS_ERROR_SEARCHING, t);
     }
   }
 
@@ -134,8 +136,8 @@ public class DashboardConfigService implements IDashboardConfigService {
     }
    catch(ApsSystemException e)
   {
-    logger.error("Error updating dashboardConfig {}", dashboardConfigRequest.getId(), e);
-    throw new RestServerError("error in update dashboardConfig", e);
+    logger.error(DASHBOARD_CONFIG_ERROR_UPDATING_S, dashboardConfigRequest.getId(), e);
+    throw new RestServerError(DASHBOARD_CONFIG_ERROR_UPDATING_S, e);
   }
 
 }
@@ -152,8 +154,8 @@ public class DashboardConfigService implements IDashboardConfigService {
       DashboardConfigDto dto = this.getDtoBuilder().convert(dashboardConfig);
       return dto;
     } catch (ApsSystemException e) {
-      logger.error("Error adding a dashboardConfig", e);
-      throw new RestServerError("error in add dashboardConfig", e);
+      logger.error(DASHBOARD_CONFIG_ERROR_ON_INSERT, e);
+      throw new RestServerError(DASHBOARD_CONFIG_ERROR_ON_INSERT, e);
     }
   }
 
@@ -171,8 +173,8 @@ public class DashboardConfigService implements IDashboardConfigService {
       }
       this.getDashboardConfigManager().deleteDashboardConfig(id);
     } catch (ApsSystemException e) {
-      logger.error("Error in delete dashboardConfig {}", id, e);
-      throw new RestServerError("error in delete dashboardConfig", e);
+      logger.error(String.format(DASHBOARD_CONFIG_ERROR_DELETING_S, id), e);
+      throw new RestServerError(String.format(DASHBOARD_CONFIG_ERROR_DELETING_S, id), e);
     }
   }
 
@@ -181,7 +183,8 @@ public class DashboardConfigService implements IDashboardConfigService {
     try {
       DashboardConfig dashboardConfig = this.getDashboardConfigManager().getDashboardConfig(id);
       if (null == dashboardConfig) {
-        logger.warn("no dashboardConfig found with code {}", id);
+        logger.warn(String.format(
+            DashboardConfigExceptionMessages.DASHBOARD_CONFIG_NOT_FOUND_WITH_CODE_S, id));
         throw new ResourceNotFoundException(
             DashboardConfigValidator.ERRCODE_DASHBOARDCONFIG_NOT_FOUND, "dashboardConfig",
             String.valueOf(id));
@@ -189,8 +192,8 @@ public class DashboardConfigService implements IDashboardConfigService {
       DashboardConfigDto dto = this.getDtoBuilder().convert(dashboardConfig);
       return dto;
     } catch (ApsSystemException e) {
-      logger.error("Error loading dashboardConfig {}", id, e);
-      throw new RestServerError("error in loading dashboardConfig", e);
+      logger.error(String.format(DASHBOARD_CONFIG_ERROR_LOADING__WITH_ID_S, id), e);
+      throw new RestServerError(String.format(DASHBOARD_CONFIG_ERROR_LOADING__WITH_ID_S, id), e);
     }
   }
 
@@ -250,7 +253,6 @@ public class DashboardConfigService implements IDashboardConfigService {
       }
     }
     return datasources;
-
   }
 
   protected BeanPropertyBindingResult validateForAdd(DashboardConfig dashboardConfig) {
@@ -260,7 +262,8 @@ public class DashboardConfigService implements IDashboardConfigService {
         && dashboardConfig.getDatasources().size() > 0) {
       dashboardConfig.getDatasources().forEach(d -> {
         if (this.datasourceExistsByDatasourceName(d.getDatasourceCode())) {
-          errors.addError(new ObjectError("dashboardConfig.datasources",String.format("Already Exists field with name %s", d.getDatasource())));
+          errors.addError(new ObjectError("dashboardConfig.datasources",String.format(
+              DashboardConfigExceptionMessages.DATASOURCE_ALREADY_EXISTS_FIELD_WITH_NAME_S, d.getDatasource())));
         }
       });
     }
@@ -280,16 +283,15 @@ public class DashboardConfigService implements IDashboardConfigService {
       dashboardConfig.getDatasources().forEach(d -> {
         DatasourcesConfigDto matchedByName = dashboardConfigManager
             .getDatasourceByDatasourceName(d.getDatasource());
-//        if (matchedByName.size() > 2) {
-//          throw new InvalidFieldException("Exception");
-//        }
         if (matchedByName != null && !matchedByName.equals(new DatasourcesConfigDto())) {
           if (matchedByName.getFk_dashboard_config() != dashboardConfig.getId()) {
-             errors.addError(new ObjectError("dashboardConfig.datasources",String.format("Already Exists field with name %s", d.getDatasource())));
+             errors.addError(new ObjectError("dashboardConfig.datasources",String.format(
+                 DashboardConfigExceptionMessages.DATASOURCE_ALREADY_EXISTS_FIELD_WITH_NAME_S, d.getDatasource())));
           }
           else {
             if(dashboardConfig.getDatasources().stream().filter(data -> matchedByName.getDatasource().equals(data.getDatasource())).count() > 1) {
-              errors.addError(new ObjectError("dashboardConfig.datasources",String.format("Already Exists field with name %s", d.getDatasource())));
+              errors.addError(new ObjectError("dashboardConfig.datasources",String.format(
+                  DashboardConfigExceptionMessages.DATASOURCE_ALREADY_EXISTS_FIELD_WITH_NAME_S, d.getDatasource())));
             }
           }
         }
