@@ -14,7 +14,6 @@
 package org.entando.entando.aps.system.services.digitalexchange.client;
 
 import java.io.InputStream;
-import java.net.URL;
 
 import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExchange;
 import org.entando.entando.web.common.model.RestResponse;

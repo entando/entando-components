@@ -13,6 +13,7 @@
  */
 package org.entando.entando.aps.system.services.digitalexchange.rating;
 
+import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangesClient;
 import org.entando.entando.aps.system.services.digitalexchange.client.SimpleDigitalExchangeCall;
 import org.entando.entando.web.common.model.SimpleRestResponse;
@@ -24,6 +25,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.RestClientResponseException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -36,8 +41,12 @@ import static org.mockito.Mockito.when;
 public class DERatingServiceTest {
 
     private static final String COMPONENT_ID = "component_id";
-    private static final double RATING = 4.5;
+    private static final double AVERAGE_RATING = 4.5;
     private static final int NUMBER_OF_RATINGS = 2;
+
+    private static final String EXCHANGE_ID = "exchangeId";
+    private static final String REVIEWER_ID = "reviewerId";
+    private static final int RATING = 5;
 
     @Mock
     private DigitalExchangesClient client;
@@ -48,27 +57,19 @@ public class DERatingServiceTest {
     @Test
     public void shouldRateComponent() {
 
-        String exchangeId = "exchangeId";
-        String reviewerId = "reviewerId";
-        int rating = 5;
-
         SimpleRestResponse<DERatingsSummary> response = getFakeResponse();
-        when(client.getSingleResponse(eq(exchangeId), any())).thenReturn(response);
+        when(client.getSingleResponse(eq(EXCHANGE_ID), any())).thenReturn(response);
 
-        DEComponentRatingRequest ratingRequest = new DEComponentRatingRequest();
-        ratingRequest.setComponentId(COMPONENT_ID);
-        ratingRequest.setExchangeId(exchangeId);
-        ratingRequest.setReviewerId(reviewerId);
-        ratingRequest.setRating(rating);
+        DEComponentRatingRequest ratingRequest = getComponentRatingRequest();
 
         DEComponentRatingResult expectedResult = new DEComponentRatingResult();
         expectedResult.setRatingsSummary(response.getPayload());
 
-        assertThat(ratingService.rateComponent(ratingRequest)).isEqualTo(expectedResult);
+        assertThat(ratingService.rateComponent(EXCHANGE_ID, ratingRequest)).isEqualTo(expectedResult);
 
         ArgumentCaptor<SimpleDigitalExchangeCall<?>> callCaptor
                 = ArgumentCaptor.forClass(SimpleDigitalExchangeCall.class);
-        verify(client, times(1)).getSingleResponse(eq(exchangeId), callCaptor.capture());
+        verify(client, times(1)).getSingleResponse(eq(EXCHANGE_ID), callCaptor.capture());
         HttpEntity<?> entity = callCaptor.getValue().getEntity();
         assertThat(entity).isNotNull();
         assertThat(entity.getBody()).isEqualTo(ratingRequest);
@@ -78,8 +79,43 @@ public class DERatingServiceTest {
         DERatingsSummary ratingsSummary = new DERatingsSummary();
         ratingsSummary.setComponentId(COMPONENT_ID);
         ratingsSummary.setNumberOfRatings(NUMBER_OF_RATINGS);
-        ratingsSummary.setRating(RATING);
+        ratingsSummary.setRating(AVERAGE_RATING);
 
         return new SimpleRestResponse<>(ratingsSummary);
+    }
+
+    @Test
+    public void testRatingNotSupported() {
+
+        when(client.getSingleResponse(eq(EXCHANGE_ID), any())).thenAnswer(invocation -> {
+            SimpleDigitalExchangeCall<?> call = invocation.getArgument(1);
+            RestClientResponseException ex = new HttpServerErrorException(HttpStatus.METHOD_NOT_ALLOWED);
+            ReflectionTestUtils.invokeMethod(call, "handleErrorResponse", ex);
+            return new SimpleRestResponse<>(null);
+        });
+
+        DEComponentRatingResult result = ratingService.rateComponent(EXCHANGE_ID, getComponentRatingRequest());
+        assertThat(result.isRatingSupported()).isEqualTo(false);
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void testComponentNotFound() {
+
+        when(client.getSingleResponse(eq(EXCHANGE_ID), any())).thenAnswer(invocation -> {
+            SimpleDigitalExchangeCall<?> call = invocation.getArgument(1);
+            RestClientResponseException ex = new HttpServerErrorException(HttpStatus.NOT_FOUND);
+            ReflectionTestUtils.invokeMethod(call, "handleErrorResponse", ex);
+            return new SimpleRestResponse<>(null);
+        });
+
+        ratingService.rateComponent(EXCHANGE_ID, getComponentRatingRequest());
+    }
+
+    private DEComponentRatingRequest getComponentRatingRequest() {
+        DEComponentRatingRequest ratingRequest = new DEComponentRatingRequest();
+        ratingRequest.setComponentId(COMPONENT_ID);
+        ratingRequest.setReviewerId(REVIEWER_ID);
+        ratingRequest.setRating(RATING);
+        return ratingRequest;
     }
 }
