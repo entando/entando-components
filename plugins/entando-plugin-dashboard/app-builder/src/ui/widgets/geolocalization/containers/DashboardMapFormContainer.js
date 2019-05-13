@@ -23,7 +23,7 @@ const mapStateToProps = state => ({
       left: 50,
     },
     legend: {
-      position: 'bottom',
+      position: 'topright',
     },
   },
 

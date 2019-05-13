@@ -78,7 +78,7 @@ export const mapDispatchToProps = (dispatch, ownProps) => ({
       },
     };
     transformData.columns = pick(transformData.columns, ['x']);
-    console.log('Submit data ', { config: transformData });
+    // console.log('Submit data ', { config: transformData });
     ownProps.onSubmit({ config: JSON.stringify(transformData) });
   },
 });

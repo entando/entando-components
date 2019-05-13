@@ -404,11 +404,7 @@
     margin-bottom: 3px;
     min-height: 35px; }
   .SettingsChart__timeformat-container {
-    border: 0 solid;
-    padding-left: 1em; }
-    .SettingsChart__timeformat-container .radio-inline {
-      border: 0 solid;
-      margin-left: 10px; }
+    border: 0 solid; }
     .SettingsChart__timeformat-container .control-label {
       padding-left: 10px; }
   .SettingsChart__timeformat-container .radio {
