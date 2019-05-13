@@ -97,7 +97,16 @@
   "jest": {
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,mjs}",
-      "!src/*.js"
+      "!src/*.js",
+      "!src/api/appBuilder.js",
+      "!src/state/store.js",
+      "!src/state/app-builder/**/*.js",
+      "!src/locales/**/*.js",
+      "!src/ui/i18n/**/*.js",
+      "!src/ui/common/form/**/*.js",
+      "!src/test/enzyme-init.js",
+      "!src/test/testUtils.js"
+
     ],
     "setupFiles": [
       "<rootDir>/config/polyfills.js"
