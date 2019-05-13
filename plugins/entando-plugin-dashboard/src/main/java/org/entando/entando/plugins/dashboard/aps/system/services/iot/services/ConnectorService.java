@@ -30,6 +30,8 @@ import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.exception.ApsSystemException;
 
+import static org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils.logStartMethod;
+
 @Service
 public class ConnectorService extends AbstractConnectorService implements IConnectorService {
 
@@ -55,7 +57,7 @@ public class ConnectorService extends AbstractConnectorService implements IConne
   @Override
   public DashboardConfigDto pingDevice(DashboardConfigDto dto, String datasourceCode)
       throws IOException, ApsSystemException {
-    IoTUtils.logStartMethod(String.valueOf(dto.getId()),datasourceCode,this.getClass());
+    logStartMethod(dto.getId(),datasourceCode,this.getClass());
     DashboardConfigDto result = connectorFactory.getConnector(dto.getType())
         .pingDevice(dto, datasourceCode);
     return result;
@@ -64,14 +66,14 @@ public class ConnectorService extends AbstractConnectorService implements IConne
   @Override
   public <T extends DashboardConfigDto> boolean pingServer(T dto)
       throws IOException {
-    IoTUtils.logStartMethod(String.valueOf(dto.getId()), null ,this.getClass());
+    logStartMethod(dto.getId(), null ,this.getClass());
     return super.isServerReacheable(dto);
   }
 
   @Override
   public List<DatasourcesConfigDto> getAllDevices(
       DashboardConfigDto dto) {
-    IoTUtils.logStartMethod(String.valueOf(dto.getId()),null,this.getClass());
+    logStartMethod(dto.getId(),null,this.getClass());
     return connectorFactory.getConnector(dto.getType()).getAllDevices(dto);
   }
 
@@ -118,7 +120,7 @@ public class ConnectorService extends AbstractConnectorService implements IConne
   @Override
   public void setDeviceMeasurementSchema(
       DashboardConfigDto dto, String datasourceCode) throws ApsSystemException {
-    IoTUtils.logStartMethod(String.valueOf(dto.getId()),datasourceCode,this.getClass());
+    logStartMethod(dto.getId(),datasourceCode,this.getClass());
     connectorFactory.getConnector(dto.getType()).saveMeasurementTemplate(dto, datasourceCode);
     ;
   }
@@ -127,7 +129,7 @@ public class ConnectorService extends AbstractConnectorService implements IConne
   public void saveDeviceMeasurement(
       DashboardConfigDto dto, String datasourceCode,
       String measurementBody){
-    IoTUtils.logStartMethod(String.valueOf(dto.getId()),datasourceCode,this.getClass());
+    logStartMethod(dto.getId(),datasourceCode,this.getClass());
     connectorFactory.getConnector(dto.getType()).saveDeviceMeasurement(dto, datasourceCode, measurementBody);
   }
 
@@ -135,21 +137,21 @@ public class ConnectorService extends AbstractConnectorService implements IConne
   public List<Map<String, Object>> getDeviceMeasurements(DashboardConfigDto dto,
       String datasourceCode, Date startDate, Date endDate,
       RestListRequest restListRequest) {
-    IoTUtils.logStartMethod(String.valueOf(dto.getId()),datasourceCode,this.getClass());
+    logStartMethod(dto.getId(),datasourceCode,this.getClass());
     return connectorFactory.getConnector(dto.getType()).getMeasurements(dto, datasourceCode, startDate, endDate, restListRequest);
   }
 
   @Override
   public MeasurementConfig getMeasurementsConfig(DashboardConfigDto dto,
       String datasourceCode) {
-    IoTUtils.logStartMethod(String.valueOf(dto.getId()),datasourceCode,this.getClass());
+    logStartMethod(dto.getId(),datasourceCode,this.getClass());
     return connectorFactory.getConnector(dto.getType()).getMeasurementConfig(dto, datasourceCode);
   }
 
   @Override
   public MeasurementTemplate getDeviceMeasurementSchema(DashboardConfigDto dto,
       String datasourceCode) {
-    IoTUtils.logStartMethod(String.valueOf(dto.getId()),datasourceCode,this.getClass());
+    logStartMethod(dto.getId(),datasourceCode,this.getClass());
     return connectorFactory.getConnector(dto.getType()).getDeviceMeasurementSchema(dto, datasourceCode);
   }
 

@@ -147,6 +147,11 @@ public class IoTUtils {
         dashboard, datasource, result);
   }
 
+  public static void logEndMethod(int dashboardId, String datasource, boolean result, Class aClass) {
+    logEndMethod(String.valueOf(dashboardId),datasource,result,aClass);
+    
+  }
+
   public static void logStartMethod(String dashboard, String datasource, Class aClass) {
     final Logger logger = LoggerFactory.getLogger(aClass);
     String message = "{} method {} dashboard: {} datasource: {}";
@@ -158,7 +163,13 @@ public class IoTUtils {
         dashboard, datasource);
   }
 
-  public static DashboardConfigDto checkServerAndDatasource(int serverId, String datasourceCode, IDashboardConfigService dashboardConfigService) {
+  public static void logStartMethod(int dashboardId, String datasource, Class aClass) {
+    logStartMethod(String.valueOf(dashboardId),datasource,aClass);
+  }
+
+
+
+    public static DashboardConfigDto checkServerAndDatasource(int serverId, String datasourceCode, IDashboardConfigService dashboardConfigService) {
     if (!dashboardConfigService.existsByIdAndIsActive(serverId)) {
       throw new ResourceNotFoundException(EntityValidator.ERRCODE_ENTITY_DOES_NOT_EXIST, "Server", String.valueOf(serverId));
     }
