@@ -166,7 +166,7 @@ public class BpmTypeFormAction extends AbstractApsEntityAction {
             args.add(procId);
             args.add(processId.substring(processId.lastIndexOf(".") + 1));
             this.setDataObjectOnSession(null);
-            this.addActionMessage(this.getText("message.success"));
+            this.addActionMessage(this.getText("message.success",args));
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "save");
             return FAILURE;
