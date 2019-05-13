@@ -61,7 +61,7 @@ const wrapInputTextField = (name, label, append, disabled = false) => {
 
 const chooseTimeFormat = (
   <div className="SettingsChart__timeformat-container">
-    <div className="radio-inline">
+    <div className="radio">
       <label htmlFor="tick">
         <Field
           name="axis.x.tick.format"
@@ -72,7 +72,7 @@ const chooseTimeFormat = (
         <FormattedMessage id="plugin.chart.timeFormat-Y-M-D" />
       </label>
     </div>
-    <div className="radio-inline">
+    <div className="radio">
       <label htmlFor="tick">
         <Field
           name="axis.x.tick.format"
@@ -83,7 +83,7 @@ const chooseTimeFormat = (
         <FormattedMessage id="plugin.chart.timeFormat-D-M-Y" />
       </label>
     </div>
-    <div className="radio-inline">
+    <div className="radio">
       <label htmlFor="tick">
         <Field
           name="axis.x.tick.format"
@@ -94,15 +94,17 @@ const chooseTimeFormat = (
         <FormattedMessage id="plugin.chart.timeFormat-M-D-Y" />
       </label>
     </div>
-    <div className="radio">
+    <div className="checkbox">
       <FormGroup>
-        <ControlLabel>
-          <FormattedMessage id="plugin.chart.timeFormatCustom" />
-              &nbsp;
-          <Field name="axis.x.tick.format" component="input" type="text" />
-          <br />
-          <FormattedMessage id="plugin.chart.timeFormatCustom.help" />
-        </ControlLabel>
+        <label htmlFor="tick-time">
+          <Field
+            id="axis.x.tick.hours.format"
+            name="axis.x.tick.hours.format"
+            component="input"
+            type="checkbox"
+          />{' '}
+          <FormattedMessage id="plugin.chart.timeFormatAddTime" />
+        </label>
       </FormGroup>
     </div>
   </div>

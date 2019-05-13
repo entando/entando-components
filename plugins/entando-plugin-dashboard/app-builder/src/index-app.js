@@ -31,12 +31,12 @@ import 'patternfly/dist/css/patternfly-additions.min.css';
 // from 'ui/dashboard-config/list/containers/DashboardConfigPageContainer';
 
 // import DashboardTable from 'ui/widgets/table/components/DashboardTable';
-// import DashboardLineChart from 'ui/widgets/charts/line-chart/components/DashboardLineChart';
+import DashboardLineChart from 'ui/widgets/charts/line-chart/components/DashboardLineChart';
 // import DashboardBarChart from 'ui/widgets/charts/bar-chart/components/DashboardBarChart';
 // import DashboardDonutChart from 'ui/widgets/charts/donut-chart/components/DashboardDonutChart';
 // import DashboardGaugeChart from 'ui/widgets/charts/gauge-chart/components/DashboardGaugeChart';
 // import DashboardPieChart from 'ui/widgets/charts/pie-chart/components/DashboardPieChart';
-import DashboardMap from 'ui/widgets/geolocalization/components/DashboardMap';
+// import DashboardMap from 'ui/widgets/geolocalization/components/DashboardMap';
 
 
 import plugin from 'index';
@@ -56,7 +56,7 @@ setCurrentLocale(enLocale);
 
 const currentUser = combineReducers({
   username: () => 'admin',
-  token: () => '1457093e503d4af01906e18706b711fd',
+  token: () => 'c2d2d4af888340a8651d66286a3747dc',
 });
 
 const wrappedReducer = combineReducers({
@@ -93,7 +93,7 @@ export default ReactDOM.render(
       <Grid fluid>
         <Row>
           <Col xs={12}>
-            <DashboardMap />
+            <DashboardLineChart />
           </Col>
         </Row>
       </Grid>

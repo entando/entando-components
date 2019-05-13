@@ -93,11 +93,14 @@ export const mapDispatchToProps = (dispatch, ownProps) => ({
 
     if (get(data, 'axis.x.type') === 'timeseries') {
       set(transformData, 'axis.x.type', 'timeseries');
-      transformData.data.xFormat = get(data, 'axis.x.tick.format');
+      const hours = get(data, 'axis.x.tick.hours.format');
+      if (hours === true) {
+        transformData.axis.x.tick.format = `${transformData.axis.x.tick.format} %H:%M:%S`;
+      }
     }
 
     transformData.columns = pick(transformData.columns, ['x', 'y']);
-    console.log('Submit data ', { config: transformData });
+    // console.log('Submit data ', { config: transformData });
     ownProps.onSubmit({ config: JSON.stringify(transformData) });
   },
 });

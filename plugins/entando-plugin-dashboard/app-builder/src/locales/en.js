@@ -114,9 +114,7 @@ export default {
     'plugin.chart.timeFormat-Y-M-D': 'year-month-day',
     'plugin.chart.timeFormat-D-M-Y': 'day-month-year',
     'plugin.chart.timeFormat-M-D-Y': 'month-day-year',
-    'plugin.chart.timeFormatCustom': 'Custom format',
-    'plugin.chart.timeFormatCustom.help':
-      'Set a format to parse string specified. see D3.js / Time Formatting',
+    'plugin.chart.timeFormatAddTime': 'Add time (hours-minutes-seconds)',
     'plugin.chart.dropDownMulti.titleHelper': 'Item',
     'plugin.chart.dropDownMulti.title': 'Select Item',
     'plugin.chart.generalSettings': 'General Settings',
