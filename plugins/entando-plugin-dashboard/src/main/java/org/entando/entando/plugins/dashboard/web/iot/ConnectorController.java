@@ -33,63 +33,66 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 @Profile("!mock")
 public class ConnectorController {
 
-	@Autowired
-	IDashboardConfigService dashboardConfigService;
+  @Autowired
+  IDashboardConfigService dashboardConfigService;
 
-	@Autowired
-	IConnectorService connectorService;
+  @Autowired
+  IConnectorService connectorService;
 
-	protected IConnectorService getConnectorService() {
-		return connectorService;
-	}
+  protected IConnectorService getConnectorService() {
+    return connectorService;
+  }
 
-	public void setConnectorService(IConnectorService connectorService) {
-		this.connectorService = connectorService;
-	}
+  public void setConnectorService(IConnectorService connectorService) {
+    this.connectorService = connectorService;
+  }
 
   @RequestMapping(value = "/server/{serverId}/datasource/{datasourceCode}", method = RequestMethod.POST)
   public ResponseEntity<?> saveMeasurement(@PathVariable int serverId,
       @PathVariable String datasourceCode,
       @RequestBody String measure) {
-
-    DashboardConfigDto dto = IoTUtils.checkServerAndDatasource(serverId, datasourceCode, dashboardConfigService);
-    connectorService.saveDeviceMeasurement(dto, datasourceCode, measure);
-    return new ResponseEntity(HttpStatus.OK);
+    try {
+      DashboardConfigDto dto = IoTUtils
+          .checkServerAndDatasource(serverId, datasourceCode, dashboardConfigService);
+      connectorService.saveDeviceMeasurement(dto, datasourceCode, measure);
+      return new ResponseEntity(HttpStatus.OK);
+    }
+    catch (Throwable t) {
+      return new ResponseEntity(t.getStackTrace() , HttpStatus.OK);
+    }
   }
-  
-	@RequestMapping(value = "/server/{serverId}/datasource/{datasourceCode}/data", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<PagedRestResponse<MeasurementPayload>> getMeasurement(
-			@PathVariable int serverId,
-			@PathVariable String datasourceCode,
-			@RequestParam(value = "startDate", required = false) Instant startDate,
-			@RequestParam(value = "endDate", required = false) Instant endDate,
-			RestListRequest requestList) {
+
+  @RequestMapping(value = "/server/{serverId}/datasource/{datasourceCode}/data", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<PagedRestResponse<MeasurementPayload>> getMeasurement(
+      @PathVariable int serverId,
+      @PathVariable String datasourceCode,
+      @RequestParam(value = "startDate", required = false) Instant startDate,
+      @RequestParam(value = "endDate", required = false) Instant endDate,
+      RestListRequest requestList) {
     DashboardConfigDto dto = IoTUtils.checkServerAndDatasource(serverId, datasourceCode, dashboardConfigService);
-		Date start = null;
-		Date end = null;
-		if(startDate != null) {
-			start = Date.from(startDate);
-		}
-		if(endDate != null) {
-			end = Date.from(endDate);
-		}
+    Date start = null;
+    Date end = null;
+    if(startDate != null) {
+      start = Date.from(startDate);
+    }
+    if(endDate != null) {
+      end = Date.from(endDate);
+    }
 
-		try {
-			List<Map<String, Object>> payloads = this.connectorService
-					.getDeviceMeasurements(dto, datasourceCode, start, end, requestList);
+    try {
+      List<Map<String, Object>> payloads = this.connectorService
+          .getDeviceMeasurements(dto, datasourceCode, start, end, requestList);
 
-			SearcherDaoPaginatedResult<Map<String, Object>> pagedMeasurements = new SearcherDaoPaginatedResult(
-					payloads);
-			PagedMetadata<Map<String, Object>> pagedMetadata = new PagedMetadata(requestList,pagedMeasurements);
-			pagedMetadata.setBody(payloads);
+      SearcherDaoPaginatedResult<Map<String, Object>> pagedMeasurements = new SearcherDaoPaginatedResult(
+          payloads);
+      PagedMetadata<Map<String, Object>> pagedMetadata = new PagedMetadata(requestList,pagedMeasurements);
+      pagedMetadata.setBody(payloads);
 
-			return new ResponseEntity(new PagedRestResponse(pagedMetadata), HttpStatus.OK);
-		} catch (Exception e) {
-
-			e.printStackTrace();
-		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-	}
+      return new ResponseEntity(new PagedRestResponse(pagedMetadata), HttpStatus.OK);
+    } catch (Throwable t) {
+      return new ResponseEntity(t.getStackTrace() , HttpStatus.OK);
+    }
+  }
 
   @RequestMapping(value = "/setTemplate/server/{serverId}/datasource/{datasourceCode}", method = RequestMethod.POST)
   public ResponseEntity<?> setMeasurementTemplate(@PathVariable int serverId,
@@ -101,5 +104,5 @@ public class ConnectorController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
-  
+
 }
