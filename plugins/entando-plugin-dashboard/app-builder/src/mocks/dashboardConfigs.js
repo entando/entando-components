@@ -178,7 +178,8 @@ export const DASHBOARD_LIST_DATASOURCE = {
   2: [DATASOURCE_TEMPERATURE],
 };
 
-export const CONFIG_CHART_STRING = { config: '{"axis":{"chart":"line","rotated":false,"x":{"type":"timeseries","label":"time","tick":{"format":"%m-%d-%Y"}},"y2":{"show":false},"y":{"label":"temp"}},"size":{"width":300,"height":500},"padding":{"top":50,"right":50,"bottom":50,"left":50},"legend":{"position":"bottom"},"title":{"en":"Line"},"serverName":"8","datasource":"ThermometerDevice2","columns":{"x":[{"id":1,"key":"timestamp","value":"timestamp","selected":true}],"y":[{"id":0,"key":"temperature","value":"temperature","selected":true}]},"data":{"type":"line","json":[],"keys":{"value":["timestamp","temperature"],"x":"timestamp"},"xFormat":"%m-%d-%Y"}}' };
+export const CONFIG_CHART_STRING = { config: '{"axis":{"chart":"line","rotated":false,"x":{"type":"timeseries","label":"time","tick":{"format":"%d-%m-%Y %H:%M:%S","hours":true}},"y2":{"show":false},"y":{"label":"temp"}},"size":{"width":300,"height":500},"padding":{"top":50,"right":50,"bottom":50,"left":50},"legend":{"position":"bottom"},"title":{"en":"Line"},"serverName":"8","datasource":"termometro","columns":{"x":[{"id":1,"key":"timestamp","value":"timestamp","selected":true}],"y":[{"id":0,"key":"temperature","value":"temperature","selected":true}]},"data":{"type":"line","json":[],"keys":{"value":["timestamp","temperature"],"x":"timestamp"}}}' };
+
 
 export const CONFIG_CHART = {
   config: {

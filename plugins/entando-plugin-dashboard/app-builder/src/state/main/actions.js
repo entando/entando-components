@@ -468,6 +468,10 @@ export const getWidgetConfigChart = formName => (dispatch, getState) => {
     getDatasourceColumns(configJson.serverName, configJson.datasource).then((response) => {
       response.json().then((json) => {
         if (response.ok) {
+          if (get(configJson, 'axis.x.tick.hours')) {
+            configJson.axis.x.tick.format = get(configJson, 'axis.x.tick.format').substring(0, 8).trim();
+          }
+
           dispatch(initialize(formName, configJson));
           dispatch(clearSelectedDatasource());
           dispatch(setSelectedDatasource(configJson.datasource));

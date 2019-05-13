@@ -93,7 +93,7 @@ export const mapDispatchToProps = (dispatch, ownProps) => ({
 
     if (get(data, 'axis.x.type') === 'timeseries') {
       set(transformData, 'axis.x.type', 'timeseries');
-      const hours = get(data, 'axis.x.tick.hours.format');
+      const hours = get(data, 'axis.x.tick.hours');
       if (hours === true) {
         transformData.axis.x.tick.format = `${transformData.axis.x.tick.format} %H:%M:%S`;
       }

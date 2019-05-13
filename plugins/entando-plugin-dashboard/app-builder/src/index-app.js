@@ -56,7 +56,7 @@ setCurrentLocale(enLocale);
 
 const currentUser = combineReducers({
   username: () => 'admin',
-  token: () => 'c2d2d4af888340a8651d66286a3747dc',
+  token: () => 'd2899dccfdf21a3212c43b4e093197bc',
 });
 
 const wrappedReducer = combineReducers({

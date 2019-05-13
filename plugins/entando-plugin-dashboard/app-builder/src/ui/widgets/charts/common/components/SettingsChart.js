@@ -98,8 +98,8 @@ const chooseTimeFormat = (
       <FormGroup>
         <label htmlFor="tick-time">
           <Field
-            id="axis.x.tick.hours.format"
-            name="axis.x.tick.hours.format"
+            id="axis.x.tick.hours"
+            name="axis.x.tick.hours"
             component="input"
             type="checkbox"
           />{' '}
