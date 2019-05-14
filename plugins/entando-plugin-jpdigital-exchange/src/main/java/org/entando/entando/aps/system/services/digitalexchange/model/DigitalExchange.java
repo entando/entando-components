@@ -24,10 +24,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 
 import org.apache.commons.lang3.StringUtils;
-import org.entando.entando.aps.system.services.digitalexchange.signature.SignatureUtil;
 import org.springframework.validation.annotation.Validated;
-
-import java.security.PublicKey;
 
 @Validated
 @ApiModel
@@ -68,7 +65,11 @@ public class DigitalExchange {
     @JsonProperty(value = "secret", access = JsonProperty.Access.WRITE_ONLY)
     @XmlElement(name = "secret")
     private String clientSecret;
-    
+
+    @JsonProperty("publicKey")
+    @XmlElement(name = "publicKey")
+    private String publicKey;
+
     public DigitalExchange() {
     }
 
@@ -80,11 +81,8 @@ public class DigitalExchange {
         this.active = other.active;
         this.clientKey = other.clientKey;
         this.clientSecret = other.clientSecret;
+        this.publicKey = other.publicKey;
     }
-
-    @JsonProperty("publicKey")
-    @XmlElement(name = "publicKey")
-    private String publicKey;
 
     public String getId() {
         return id;
