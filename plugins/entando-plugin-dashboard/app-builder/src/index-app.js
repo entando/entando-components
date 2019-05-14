@@ -7,7 +7,11 @@ import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 import rootReducer from 'state/main/reducer';
 
-import { config, api, setApi } from '@entando/apimanager';
+import {
+  config,
+  api,
+  // , setApi
+} from '@entando/apimanager';
 
 import { Grid, Row, Col } from 'patternfly-react';
 
@@ -81,10 +85,10 @@ const store = createStore(
 );
 config(store);
 
-store.dispatch(setApi({
-  domain: '//localhost:8080/entando-iot',
-  useMocks: false,
-}));
+// store.dispatch(setApi({
+//   domain: '//localhost:8080/entando-iot',
+//   useMocks: false,
+// }));
 
 // exporting for tests
 export default ReactDOM.render(
