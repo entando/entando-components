@@ -101,6 +101,18 @@ public class IoTUtils {
       return new ResponseEntity(e, HttpStatus.REQUEST_TIMEOUT);
     }
   }
+  
+  public static ResponseEntity<String> postRequestMethod(String url, HttpHeaders headers, String body) {
+    HttpEntity<?> httpEntity = new HttpEntity<Object>(body, headers);
+    
+    RestTemplate restTemplate = new RestTemplate();
+    try {
+      return restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
+    }
+    catch (ResourceAccessException | IllegalArgumentException e){
+      return new ResponseEntity(e, HttpStatus.REQUEST_TIMEOUT);
+    }
+  }
 
 	public static boolean isValidResponse(ResponseEntity<String> response) {
 		if(response.getStatusCode().is2xxSuccessful()) {
