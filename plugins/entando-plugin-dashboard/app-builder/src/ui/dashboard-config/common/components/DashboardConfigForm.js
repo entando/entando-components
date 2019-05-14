@@ -29,7 +29,7 @@ const renderField = (
 ) => {
   let requiredLabel = false;
   if (validate) {
-    requiredLabel = validate.includes('required');
+    requiredLabel = !!validate.find(f => f.name === 'required');
   }
   let pholder = '';
   if (placeholder) {
@@ -37,6 +37,7 @@ const renderField = (
   } else {
     pholder = labelId;
   }
+
   return (
     <Field
       component={RenderTextInput}
@@ -72,7 +73,6 @@ export class DashboardConfigFormBody extends Component {
     } = this.props;
 
     const disableSubmit = invalid || submitting || datasources.length === 0;
-
     const optionServerTypeList = serverTypeList.map(m => ({
       value: m.code,
       text: m.description,
@@ -183,14 +183,23 @@ export class DashboardConfigFormBody extends Component {
           <fieldset>
             <Row>
               <Col xs={6}>
-                {renderField(
-                  'datasourceCode',
-                  'plugin.config.datasourceCode',
-                  null,
-                  [required],
-                  2,
-                  formattedText('common.required'),
-                )}
+                {
+                //   renderField(
+                //   'datasourceCode',
+                //   'plugin.config.datasourceCode',
+                //   null,
+                //   null,
+                //   2,
+                //   formattedText('common.required'),
+                // )
+              }
+                <Field
+                  component={RenderTextInput}
+                  name="datasourceCode"
+                  label={<FormLabel labelId="plugin.config.datasourceCode" required />}
+                  placeholder={formattedText('plugin.config.datasourceCode')}
+                  alignClass="text-left"
+                />
               </Col>
             </Row>
             <Row>

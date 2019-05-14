@@ -299,7 +299,8 @@ export const checkStatusServerConfig = serverId => (dispatch, getState) =>
       pingServerConfig(serverId).then((response) => {
         response.json().then((json) => {
           if (response.ok) {
-            dispatch(setCheckServer(serverId, { status: 'online' }));
+            const status = json.payload ? 'online' : 'offline';
+            dispatch(setCheckServer(serverId, { status }));
             resolve();
           } else {
             dispatch(setCheckServer(serverId, { status: 'offline' }));
@@ -325,7 +326,8 @@ export const checkStatusDatasource = datasourceId => (dispatch, getState) =>
         pingDatasource(serverId, datasourceId).then((response) => {
           response.json().then((json) => {
             if (response.ok) {
-              dispatch(setCheckDatasource(datasourceId, { status: 'online' }));
+              const status = json.payload ? 'online' : 'offline';
+              dispatch(setCheckDatasource(datasourceId, { status }));
               resolve();
             } else {
               dispatch(setCheckDatasource(datasourceId, { status: 'offline' }));
@@ -341,7 +343,6 @@ export const checkStatusDatasource = datasourceId => (dispatch, getState) =>
       const datasourceList = selector(state, 'datasources');
       datasourceList.map(ds => dispatch(checkStatusDatasource(ds.datasourceCode)));
     }
-
     resolve();
   });
 

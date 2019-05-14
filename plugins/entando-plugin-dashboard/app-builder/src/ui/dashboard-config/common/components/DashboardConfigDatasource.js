@@ -12,7 +12,8 @@ const addDatasource = (fields, obj, callback) => {
     datasourceCode,
     datasourceValue: { datasource, datasourceURI },
   } = obj;
-  if (!isUndefined(datasourceCode) && !isUndefined(datasource)) {
+
+  if ((!isUndefined(datasourceCode) && !isUndefined(datasource)) || fields.length > 0) {
     fields.push({ datasourceCode, datasource, datasourceURI });
     if (callback) {
       callback(datasourceCode);
