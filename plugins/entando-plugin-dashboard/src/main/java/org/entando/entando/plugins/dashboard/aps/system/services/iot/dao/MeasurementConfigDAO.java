@@ -23,7 +23,7 @@ public class MeasurementConfigDAO extends AbstractSearcherDAO implements IMeasur
 
   private static final String COUNT_MEASUREMENT_CONFIG_BY_DASHBOARDID_AND_DATASOURCE = "SELECT COUNT(*) FROM measurement_config WHERE dashboard_id = ? AND datasource_code = ?";
 
-  private static final Logger logger = LoggerFactory.getLogger(MeasurementTemplateDAO.class);
+  private static final Logger logger = LoggerFactory.getLogger(MeasurementConfigDAO.class);
 
   @Override
   protected String getTableFieldName(String metadataFieldKey) {
@@ -54,7 +54,7 @@ public class MeasurementConfigDAO extends AbstractSearcherDAO implements IMeasur
       logger.error("Error loading MeasurementTemplate with id {}", measurementConfigId, t);
       throw new RuntimeException(String.format("Error loading MeasurementTemplate with id {} ", measurementConfigId), t);
     } finally {
-      closeDaoResources(res, stat, null);
+      closeDaoResources(res, stat, conn);
     }
     return measurementConfig;
   }
@@ -95,7 +95,7 @@ public class MeasurementConfigDAO extends AbstractSearcherDAO implements IMeasur
       logger.error("Error loading MeasurementTemplate By Dashboard Datasource, MeasurementTemplate with ids {},{},{}", dashboardId,datasourceCode,measurementTemplate, t);
       throw new RuntimeException(String.format("Error loading MeasurementTemplate By Dashboard Datasource, MeasurementTemplate with ids {},{},{}", dashboardId,datasourceCode,measurementTemplate), t);
     } finally {
-      closeDaoResources(res, stat, null);
+      closeDaoResources(res, stat, conn);
     }
     return measurementConfig;
   }

@@ -40,7 +40,7 @@ public class MeasurementTemplateDAO extends AbstractSearcherDAO implements IMeas
       logger.error("Error loading MeasurementTemplate with ids {} {} ", dashboardId, datasourceCode, t);
       throw new RuntimeException(String.format("Error loading MeasurementTemplate with ids {} {} ", dashboardId, datasourceCode), t);
     } finally {
-      closeDaoResources(res, stat, null);
+      closeDaoResources(res, stat, conn);
     }
     return measurementTemplate;
   }
@@ -81,7 +81,7 @@ public class MeasurementTemplateDAO extends AbstractSearcherDAO implements IMeas
       logger.error("Error loading MeasurementTemplate with id {}", id, t);
       throw new RuntimeException(String.format("Error loading MeasurementTemplate with id {} ", id), t);
     } finally {
-      closeDaoResources(res, stat, null);
+      closeDaoResources(res, stat, conn);
     }
     return measurementTemplate;
   }
