@@ -18,7 +18,7 @@ const DashboardConfigModalPreviewDatasource = ({
     <Modal.Header closeButton>
       <Modal.Title>
         <FormattedMessageLocal id="plugin.config.previewDatasource" />
-        <Label>{datasourceCode || null}</Label>
+        <strong>{datasourceCode || null}</strong>
       </Modal.Title>
     </Modal.Header>
     <Modal.Body>

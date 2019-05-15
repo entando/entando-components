@@ -183,16 +183,6 @@ export class DashboardConfigFormBody extends Component {
           <fieldset>
             <Row>
               <Col xs={6}>
-                {
-                //   renderField(
-                //   'datasourceCode',
-                //   'plugin.config.datasourceCode',
-                //   null,
-                //   null,
-                //   2,
-                //   formattedText('common.required'),
-                // )
-              }
                 <Field
                   component={RenderTextInput}
                   name="datasourceCode"
