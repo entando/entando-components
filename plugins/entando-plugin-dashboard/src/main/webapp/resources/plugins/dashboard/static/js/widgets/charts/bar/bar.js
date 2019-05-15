@@ -30,7 +30,7 @@ org.entando.dashboard.BarChart = class {
       length: 0
     };
     console.log("obj", obj);
-    if (obj.json.lenght > 0) {
+    if (obj.json.length > 0) {
       this.chart.flow(obj);
     }
   }
