@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Label, Modal } from 'patternfly-react';
+import { Modal } from 'patternfly-react';
 
 import FormattedMessageLocal from 'ui/i18n/FormattedMessage';
 
