@@ -184,7 +184,7 @@ public class KieVersionTransformer {
         PamModel model = pamSeven.getModel();
         String modelName = model.getName();
         String modelerType = "dataModelerEntry";
-        ;
+
         String modelClassName = model.getClassName();
 
         //Make sure the model name is the first "dataModelerEntry" if a subfield is first it breaks bindings later on.
@@ -248,9 +248,6 @@ public class KieVersionTransformer {
             List<String> options = field.getListOfValues();
 
             Map<String, String> columnsMeta = new HashMap<>();
-
-            //MultipleSubForm Fields
-
 
             //RadioGroup properties
             Boolean inline = field.isInline();

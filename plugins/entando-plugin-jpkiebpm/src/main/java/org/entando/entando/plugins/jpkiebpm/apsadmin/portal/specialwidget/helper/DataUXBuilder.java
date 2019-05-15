@@ -304,9 +304,6 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
             fieldSpanInt = Integer.parseInt(fieldSpan);
         }
 
-
-
-
         String fieldValue = (null != fieldValueExpr) ? String.format(fieldValueExpr, fieldName) : "";
         //fieldValue is the Velocity String
         fieldValue = fieldValue.replaceAll(" ", "_");
@@ -325,7 +322,8 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         boolean openRow=false;
         boolean closeRow=false;
 
-
+        // Check if the field span count is equal to 12 and close the current row and open a new one.
+        // This is based on the bootstrap 3 grid system of 12 columns per row
         if (fieldSpanInt==12) {
             openRow = true;
             closeRow = true;
