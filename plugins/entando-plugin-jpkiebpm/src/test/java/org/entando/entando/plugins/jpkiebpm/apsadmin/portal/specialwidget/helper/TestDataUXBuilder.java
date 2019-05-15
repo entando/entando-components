@@ -11,10 +11,12 @@ import org.entando.entando.plugins.jprestapi.aps.core.helper.JAXBHelper;
 import java.nio.file.*;
 import java.util.Arrays;
 import java.util.List;
+
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverride;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.DefaultValueOverride;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.PlaceHolderOverride;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -165,5 +167,52 @@ public class TestDataUXBuilder extends TestCase {
             e.printStackTrace();
         }
     }
+
+
+    public void testFormsWithMultipleSubForm() throws Throwable {
+
+        DataUXBuilder dataUXBuilder = getDataUXBuilder();
+
+        String filePath = "src/test/resources/examples/xml/pam-7-test-process-multiplesubform-1.xml";
+
+        String pam7businessProcessForm = new String(Files.readAllBytes(Paths.get(filePath)));
+
+        PamProcessQueryFormResult pamResult = (PamProcessQueryFormResult) JAXBHelper
+                .unmarshall(pam7businessProcessForm, PamProcessQueryFormResult.class, true, false);
+        assertNotNull(pamResult);
+        KieProcessFormQueryResult kpfqr = KieVersionTransformer.pamSevenFormToPamSix(pamResult);
+        String htmlForm = dataUXBuilder.createDataUx(kpfqr, 0, CONTAINER_ID, PROCESS_ID, TITLE);
+
+        assertTrue(htmlForm.contains("<label id=\"JPKIE_nestedForm_multiple1\" for=\"jpkieformparam_nestedForm_multiple1\" class=\"editLabel\">"));
+        assertTrue(htmlForm.contains("$i18n.getLabel(\"JPKIE_nestedForm_multiple1\")"));
+        assertTrue(htmlForm.contains("</label>"));
+        assertTrue(htmlForm.contains("<table id=\"JPKIE_field_4156\"  class=\"display\" width=\"100%\"></table>"));
+        assertTrue(htmlForm.contains("</div><script type=\"text/javascript\">"));
+        assertTrue(htmlForm.contains("function pam2DataTable (array) {"));
+        assertTrue(htmlForm.contains("if (array) {"));
+        assertTrue(htmlForm.contains("return array.map(function(item) {"));
+        assertTrue(htmlForm.contains("const fields = item[Object.keys(item)[0]];"));
+        assertTrue(htmlForm.contains("const values = Object.values(fields);"));
+        assertTrue(htmlForm.contains("return values;"));
+        assertTrue(htmlForm.contains(""));
+        assertTrue(htmlForm.contains("return values;"));
+        assertTrue(htmlForm.contains("else return new Array();"));
+        assertTrue(htmlForm.contains("var dataSet = pam2DataTable($data.nestedForm_multiple1.text);"));
+        assertTrue(htmlForm.contains("var config = {"));
+        assertTrue(htmlForm.contains("destroy: true,"));
+        assertTrue(htmlForm.contains("responsive: true,"));
+        assertTrue(htmlForm.contains("processing: true,"));
+        assertTrue(htmlForm.contains("data: dataSet,"));
+        assertTrue(htmlForm.contains("columns: [{\"title\":\"val2\"},{\"title\":\"val1\"}],"));
+        assertTrue(htmlForm.contains("scrollX: true,"));
+        assertTrue(htmlForm.contains(""));
+        assertTrue(htmlForm.contains("dom: 'lfrtBip'"));
+        assertTrue(htmlForm.contains("};"));
+        assertTrue(htmlForm.contains("$('#JPKIE_field_4156').DataTable(config);"));
+        assertTrue(htmlForm.contains("</script>"));
+        assertTrue(htmlForm.contains("</fieldset>"));
+        assertTrue(htmlForm.contains("<h3 class=\"control-label editLabel\" id=\"JPKIE_TITLE_Title\">$i18n.getLabel(\"JPKIE_TITLE_Title\")</h3>\n"));
+    }
+
 
 }

@@ -15,8 +15,6 @@
             return array.map(function(item) {
                 const fields = item[Object.keys(item)[0]];
                 const values = Object.values(fields);
-                //alert("fields "+ fields);
-                //alert("values "+ values);
                 return values;
             });
         }
