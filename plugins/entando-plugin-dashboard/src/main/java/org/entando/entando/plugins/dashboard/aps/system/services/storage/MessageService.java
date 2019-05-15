@@ -34,7 +34,6 @@ public class MessageService extends AbstractService implements IMessageService {
 		this.messageRepository = messageRepository;
 	}
 
-
 	@Autowired
 	public MessageService(MessageRepository messageRepository) {
 		this.messageRepository = messageRepository;
@@ -105,8 +104,24 @@ public class MessageService extends AbstractService implements IMessageService {
 	public List<MeasurementPayload> findMeasurementsByServerConfiguration(int dashboardId, String datasourceCode) {
 		Gson gson = new Gson();
 		List<IotMessage> measurementJson = this.messageRepository.findContentMeasurementByServerIdAndDashboardCode(dashboardId, datasourceCode);
-		List<MeasurementPayload> payloads = new ArrayList<>();
-		measurementJson.forEach(j -> payloads.add(gson.fromJson(j.getContent().toJson(), MeasurementPayload.class)));
+    List<MeasurementPayload> payloads = new ArrayList<>();
+    if(measurementJson != null && measurementJson.size() > 0) {
+      measurementJson.forEach(
+          j -> payloads.add(gson.fromJson(j.getContent().toJson(), MeasurementPayload.class)));
+    }
 		return payloads;
 	}
+
+  @Override
+  public MeasurementPayload findMeasurementsByServerConfigurationAndHighestDate(int dashboardId,
+      String datasourceCode) {
+    Gson gson = new Gson();
+    IotMessage measurementJson = this.messageRepository.findFirstByServerIdAndDashboardCodeOrderByCreatedAtDesc(dashboardId, datasourceCode);
+    MeasurementPayload payload = new MeasurementPayload();
+    if(measurementJson != null) {
+      payload = gson
+          .fromJson(measurementJson.getContent().toJson(), MeasurementPayload.class);
+    }
+    return payload;
+  }
 }

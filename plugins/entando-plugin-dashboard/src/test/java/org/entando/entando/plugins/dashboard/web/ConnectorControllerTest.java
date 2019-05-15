@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DatasourceType;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IConnectorService;
 import org.entando.entando.plugins.dashboard.web.iot.ConnectorController;
 import org.entando.entando.web.AbstractControllerTest;
@@ -98,7 +99,8 @@ public class ConnectorControllerTest extends AbstractControllerTest {
     DashboardConfigDto dto = new DashboardConfigDto();
     String datasourceCode = "";
     when(this.dashboardConfigService.existsById(Mockito.anyInt())).thenReturn(true);
-    when(connectorService.getDeviceMeasurements(dto, datasourceCode, null,null, requestList)).thenReturn(lista);
+    when(connectorService.getDeviceMeasurements(dto, datasourceCode, null,null, requestList,
+        DatasourceType.GENERIC)).thenReturn(lista);
 
     String accessToken = "token";
     ResultActions result =mockMvc.perform(get("/plugins/dashboard/server/2/datasource/3/data")

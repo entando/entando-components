@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DatasourceType;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementPayload;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IConnectorService;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils;
@@ -27,6 +28,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.exception.ApsSystemException;
+
+import static org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTConstants.DATASOURCE_TYPE_GENERIC;
 
 @RestController
 @RequestMapping(value = "/plugins/dashboard")
@@ -64,8 +67,9 @@ public class ConnectorController {
 
   @RequestMapping(value = "/server/{serverId}/datasource/{datasourceCode}/data", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<PagedRestResponse<MeasurementPayload>> getMeasurement(
-      @PathVariable int serverId,
-      @PathVariable String datasourceCode,
+      @PathVariable (value = "serverId")int serverId,
+      @PathVariable (value = "datasourceCode")String datasourceCode,
+      @RequestParam (value = "type", required = false, defaultValue = DATASOURCE_TYPE_GENERIC) DatasourceType type,
       @RequestParam(value = "startDate", required = false) Instant startDate,
       @RequestParam(value = "endDate", required = false) Instant endDate,
       RestListRequest requestList) {
@@ -79,19 +83,15 @@ public class ConnectorController {
       end = Date.from(endDate);
     }
 
-    try {
-      List<Map<String, Object>> payloads = this.connectorService
-          .getDeviceMeasurements(dto, datasourceCode, start, end, requestList);
+    List<Map<String, Object>> payloads = this.connectorService
+        .getDeviceMeasurements(dto, datasourceCode, start, end, requestList, type);
 
-      SearcherDaoPaginatedResult<Map<String, Object>> pagedMeasurements = new SearcherDaoPaginatedResult(
-          payloads);
-      PagedMetadata<Map<String, Object>> pagedMetadata = new PagedMetadata(requestList,pagedMeasurements);
-      pagedMetadata.setBody(payloads);
+    SearcherDaoPaginatedResult<Map<String, Object>> pagedMeasurements = new SearcherDaoPaginatedResult(
+        payloads);
+    PagedMetadata<Map<String, Object>> pagedMetadata = new PagedMetadata(requestList,pagedMeasurements);
+    pagedMetadata.setBody(payloads);
 
-      return new ResponseEntity(new PagedRestResponse(pagedMetadata), HttpStatus.OK);
-    } catch (Throwable t) {
-      return new ResponseEntity(t.getStackTrace() , HttpStatus.OK);
-    }
+    return new ResponseEntity(new PagedRestResponse(pagedMetadata), HttpStatus.OK);
   }
 
   @RequestMapping(value = "/setTemplate/server/{serverId}/datasource/{datasourceCode}", method = RequestMethod.POST)

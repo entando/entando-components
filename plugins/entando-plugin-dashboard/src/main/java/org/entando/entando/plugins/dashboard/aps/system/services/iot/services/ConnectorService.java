@@ -15,6 +15,7 @@ import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.dto.DeviceLocations;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.dto.ParkingStatuses;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.factory.ConnectorFactory;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DatasourceType;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils;
@@ -136,9 +137,9 @@ public class ConnectorService extends AbstractConnectorService implements IConne
   @Override
   public List<Map<String, Object>> getDeviceMeasurements(DashboardConfigDto dto,
       String datasourceCode, Date startDate, Date endDate,
-      RestListRequest restListRequest) {
+      RestListRequest restListRequest, DatasourceType type) {
     logStartMethod(dto.getId(),datasourceCode,this.getClass());
-    return connectorFactory.getConnector(dto.getType()).getMeasurements(dto, datasourceCode, startDate, endDate, restListRequest);
+    return connectorFactory.getConnector(dto.getType()).getMeasurements(dto, datasourceCode, startDate, endDate, restListRequest, type);
   }
 
   @Override

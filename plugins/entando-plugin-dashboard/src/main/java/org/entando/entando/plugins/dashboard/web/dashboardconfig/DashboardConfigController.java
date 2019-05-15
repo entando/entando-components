@@ -17,22 +17,15 @@
 
 package org.entando.entando.plugins.dashboard.web.dashboardconfig;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.validation.Valid;
-import javax.ws.rs.BadRequestException;
+import com.agiletec.aps.system.exception.ApsSystemException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.ServerType;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.exception.ApiResourceNotAvailableException;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.exception.InvalidFieldException;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DatasourceStatus;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementColumn;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
@@ -62,11 +55,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.validation.Valid;
 
-import static org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils.isValidResponse;
-import static org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils.throwApiResourceUnavailableEx;
+import static org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTConstants.DATASOURCE_STATUS_ONLINE;
 import static org.entando.entando.web.entity.validator.EntityValidator.ERRCODE_ENTITY_DOES_NOT_EXIST;
 
 @RestController
@@ -239,7 +234,7 @@ public class DashboardConfigController {
       throw new InvalidFieldException("datasource_FK MUST match serverId");
     }
     dashboardConfigService.updateDatasource(datasource);
-    return new ResponseEntity<>(new SimpleRestResponse<>(datasource.getStatus().equals(DatasourceStatus.ONLINE.toString())), HttpStatus.OK);
+    return new ResponseEntity<>(new SimpleRestResponse<>(datasource.getStatus().equals(DATASOURCE_STATUS_ONLINE)), HttpStatus.OK);
   }
 
   @RestAccessControl(permission = "superuser")

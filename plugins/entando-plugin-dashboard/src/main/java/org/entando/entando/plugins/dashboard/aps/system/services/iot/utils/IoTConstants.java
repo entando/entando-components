@@ -21,4 +21,8 @@ public class IoTConstants {
   public static final String UNABLE_TO_PARSE_DASHBOARD = "unable to parse dashboard";
   public static final String UNABLE_TO_PARSE_DATASOURCE = "unable to parse datasource";
   public static final String EX_INACTIVE_SERVER = "Server %s is not active";
+  public static final String DATASOURCE_TYPE_GENERIC = "GENERIC";
+  public static final String DATASOURCE_TYPE_GEODATA = "GEODATA";
+  public static final String DATASOURCE_STATUS_ONLINE = "online";
+  public static final String DATASOURCE_STATUS_OFFLINE = "offline";
 }

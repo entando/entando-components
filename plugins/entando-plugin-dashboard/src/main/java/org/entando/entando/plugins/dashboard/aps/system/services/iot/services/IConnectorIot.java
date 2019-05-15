@@ -11,6 +11,7 @@ import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.dto.DeviceLocations;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.dto.ParkingStatuses;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.exception.ApiResourceNotAvailableException;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DatasourceType;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigRequest;
@@ -36,9 +37,10 @@ public interface IConnectorIot {
   void saveDeviceMeasurement(DashboardConfigDto dashboardDatasourceDto,
       String datasourceCode, String measurementBody);
 
-  List<Map<String, Object>> getMeasurements(DashboardConfigDto dashboardSitewhereDatasourceDto,
-      String datasourceCode, Date startDate, Date endDate,
-      RestListRequest restListRequest) throws RuntimeException;
+  List<Map<String, Object>> getMeasurements(
+      DashboardConfigDto dto, String datasourceCode, Date startDate,
+      Date endDate, RestListRequest restListRequest, DatasourceType type)
+      throws RuntimeException;
 
   MeasurementConfig getMeasurementConfig(DashboardConfigDto dto, String datasourceCode);
 

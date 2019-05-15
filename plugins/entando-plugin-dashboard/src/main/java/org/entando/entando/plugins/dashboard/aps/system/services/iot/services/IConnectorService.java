@@ -7,6 +7,7 @@ import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.ServerType;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.dto.DeviceLocations;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.dto.ParkingStatuses;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DatasourceType;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigRequest;
@@ -44,7 +45,7 @@ public interface IConnectorService {
 
 	List<Map<String, Object>> getDeviceMeasurements(DashboardConfigDto dto,
       String datasourceCode, Date startDate, Date endDate,
-      RestListRequest restListRequest);
+      RestListRequest restListRequest, DatasourceType type);
 
 	MeasurementConfig getMeasurementsConfig(DashboardConfigDto dto, String datasourceCode);
 

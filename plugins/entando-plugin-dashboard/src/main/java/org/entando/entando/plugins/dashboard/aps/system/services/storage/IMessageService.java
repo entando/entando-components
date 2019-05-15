@@ -32,4 +32,6 @@ public interface IMessageService {
 	
 	List<MeasurementPayload> findMeasurementsByServerConfiguration(int dashboardId, String datasourceCode);
 	
+	MeasurementPayload findMeasurementsByServerConfigurationAndHighestDate(int dashboardId, String datasourceCode);
+	
 }
