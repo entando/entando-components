@@ -24,13 +24,11 @@ package com.agiletec.plugins.jpldap.aps.system.services.user;
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.user.UserDetails;
-import com.agiletec.aps.util.IApsEncrypter;
 import com.agiletec.plugins.jpldap.aps.system.LdapSystemConstants;
 import com.agiletec.plugins.jpldap.aps.system.services.user.tls.MyTLSHostnameVerifier;
 import com.agiletec.plugins.jpldap.aps.system.services.user.tls.MyX509TrustManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.misc.BASE64Encoder;
 
 import javax.naming.*;
 import javax.naming.directory.*;
@@ -45,8 +43,10 @@ import java.security.KeyManagementException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Hashtable;
 import java.util.List;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * The Data Access Object for LdapUser.
@@ -55,7 +55,9 @@ import java.util.List;
  */
 public class LdapUserDAO implements ILdapUserDAO {
 
-    private static final Logger _logger = LoggerFactory.getLogger(LdapUserDAO.class);
+    private ConfigInterface configManager;
+
+    private static final Logger logger = LoggerFactory.getLogger(LdapUserDAO.class);
 
     @Override
     public void addUser(UserDetails user) {
@@ -66,11 +68,11 @@ public class LdapUserDAO implements ILdapUserDAO {
             Attributes attrs = this.createNewEntry(user);
             dirCtx.createSubcontext(this.getEntryName(user), attrs);
         } catch (ConnectException e) {
-            _logger.error("Error while adding user '{}' : Directory not available", user.getUsername(), e);
+            logger.error("Error while adding user '{}' : Directory not available", user.getUsername(), e);
         } catch (CommunicationException e) {
-            _logger.error("Error while adding user '{}' : Directory not available", user.getUsername(), e);
+            logger.error("Error while adding user '{}' : Directory not available", user.getUsername(), e);
         } catch (PartialResultException e) {
-            _logger.error("Error while adding user '{}' : Directory not available", user.getUsername(), e);
+            logger.error("Error while adding user '{}' : Directory not available", user.getUsername(), e);
         } catch (Throwable t) {
             throw new RuntimeException("Error while adding user '" + user.getUsername() + "'", t);
         } finally {
@@ -100,13 +102,13 @@ public class LdapUserDAO implements ILdapUserDAO {
             attrs.put(objclass);
             result = dirCtx.createSubcontext(this.getBaseDn(), attrs);
         } catch (ConnectException e) {
-            _logger.error("Error while adding new OU : Directory not available", e);
+            logger.error("Error while adding new OU : Directory not available", e);
         } catch (CommunicationException e) {
-            _logger.error("Error while adding new OU : Directory not available", e);
+            logger.error("Error while adding new OU : Directory not available", e);
         } catch (PartialResultException e) {
-            _logger.error("Error while adding new OU : Directory not available", e);
+            logger.error("Error while adding new OU : Directory not available", e);
         } catch (Throwable t) {
-            _logger.error("Error while adding new OU.", t);
+            logger.error("Error while adding new OU.", t);
             throw new RuntimeException("Error while adding new OU ", t);
         } finally {
             if (null != result) {
@@ -149,10 +151,10 @@ public class LdapUserDAO implements ILdapUserDAO {
                 try {
                     MessageDigest md = MessageDigest.getInstance(algorithm);
                     md.update(password.getBytes("UTF-8"));
-                    sEncrypted = "{" + algorithm + "}" + (new BASE64Encoder()).encode(md.digest());
+                    sEncrypted = "{" + algorithm + "}" + Base64.getEncoder().encodeToString(md.digest());
                 } catch (Exception e) {
                     sEncrypted = password;
-                    _logger.error("Error while encrypting Ldap Password", e);
+                    logger.error("Error while encrypting Ldap Password", e);
                 }
             }
         }
@@ -188,13 +190,13 @@ public class LdapUserDAO implements ILdapUserDAO {
             dirCtx = this.getDirContext();
             dirCtx.destroySubcontext(uid);
         } catch (ConnectException e) {
-            _logger.error("Error while deleting user '{}' : Directory not available", uid, e);
+            logger.error("Error while deleting user '{}' : Directory not available", uid, e);
         } catch (CommunicationException e) {
-            _logger.error("Error while deleting user '{}' : Directory not available", uid, e);
+            logger.error("Error while deleting user '{}' : Directory not available", uid, e);
         } catch (PartialResultException e) {
-            _logger.error("Error while deleting user '{}' : Directory not available", uid, e);
+            logger.error("Error while deleting user '{}' : Directory not available", uid, e);
         } catch (Throwable t) {
-            _logger.error("Error while deleting user '{}'", t);
+            logger.error("Error while deleting user '{}'", t);
             throw new RuntimeException("Error while deleting user '" + uid + "'", t);
         } finally {
             closeDirContext(dirCtx);
@@ -228,11 +230,11 @@ public class LdapUserDAO implements ILdapUserDAO {
             dirCtx = this.getDirContext();
             dirCtx.modifyAttributes(uid, mods);
         } catch (ConnectException e) {
-            _logger.error("Error while editing user '{}' : Directory not available", uid, e);
+            logger.error("Error while editing user '{}' : Directory not available", uid, e);
         } catch (CommunicationException e) {
-            _logger.error("Error while editing user '{}' : Directory not available", uid, e);
+            logger.error("Error while editing user '{}' : Directory not available", uid, e);
         } catch (PartialResultException e) {
-            _logger.error("Error while editing user '{}' : Directory not available", uid, e);
+            logger.error("Error while editing user '{}' : Directory not available", uid, e);
         } catch (Throwable t) {
             throw new RuntimeException("Error while editing user '" + uid + "'", t);
         } finally {
@@ -267,7 +269,7 @@ public class LdapUserDAO implements ILdapUserDAO {
             Attributes attrs = sr.getAttributes();
             user = this.createUserFromAttributes(attrs);
         } catch (Throwable t) {
-            _logger.error("Error loading user {}", username, t);
+            logger.error("Error loading user {}", username, t);
             throw new RuntimeException("Error loading user " + username, t);
         }
         return user;
@@ -290,11 +292,11 @@ public class LdapUserDAO implements ILdapUserDAO {
                 res = answer.next();
             }
         } catch (ConnectException e) {
-            _logger.error("Extracting SearchResult : Directory not available", e);
+            logger.error("Extracting SearchResult : Directory not available", e);
         } catch (CommunicationException e) {
-            _logger.error("Extracting SearchResult : Directory not available", e);
+            logger.error("Extracting SearchResult : Directory not available", e);
         } catch (PartialResultException e) {
-            _logger.error("Extracting SearchResult : Directory not available", e);
+            logger.error("Extracting SearchResult : Directory not available", e);
         } catch (Throwable t) {
             throw new RuntimeException("Error extracting serach result ", t);
         } finally {
@@ -337,13 +339,13 @@ public class LdapUserDAO implements ILdapUserDAO {
             }
             answer.close();
         } catch (ConnectException e) {
-            _logger.error("Directory not available", e);
+            logger.error("Directory not available", e);
         } catch (CommunicationException e) {
-            _logger.error("Directory not available", e);
+            logger.error("Directory not available", e);
         } catch (NamingException e) {
-            _logger.error("user authentication '{}' : Directory not available", username, e);
+            logger.error("user authentication '{}' : Directory not available", username, e);
         } catch (Throwable t) {
-            _logger.error("Error verifying user authentication {}", username, t);
+            logger.error("Error verifying user authentication {}", username, t);
             throw new RuntimeException("Error verifying user authentication " + username, t);
         } finally {
             this.closeDirContext(dirCtx);
@@ -422,13 +424,13 @@ public class LdapUserDAO implements ILdapUserDAO {
                 usernames.add((String) attrs.get(this.getUserIdAttributeName()).get(0));
             }
         } catch (ConnectException e) {
-            _logger.error("Error loading users : Directory not available", e);
+            logger.error("Error loading users : Directory not available", e);
         } catch (CommunicationException e) {
-            _logger.error("Error loading users : Directory not available", e);
+            logger.error("Error loading users : Directory not available", e);
         } catch (NamingException e) {
-            _logger.error("Error loading users : Directory not available", e);
+            logger.error("Error loading users : Directory not available", e);
         } catch (Throwable t) {
-            _logger.error("Error loading users", t);
+            logger.error("Error loading users", t);
             throw new RuntimeException("Error loading users", t);
         } finally {
             this.closeDirContext(dirCtx);
@@ -456,13 +458,13 @@ public class LdapUserDAO implements ILdapUserDAO {
                 users.add(user);
             }
         } catch (ConnectException e) {
-            _logger.error("Error loading users : Directory not available", e);
+            logger.error("Error loading users : Directory not available", e);
         } catch (CommunicationException e) {
-            _logger.error("Error loading users : Directory not available", e);
+            logger.error("Error loading users : Directory not available", e);
         } catch (NamingException e) {
-            _logger.error("Error loading users : Directory not available", e);
+            logger.error("Error loading users : Directory not available", e);
         } catch (Throwable t) {
-            _logger.error("Error loading users ", t);
+            logger.error("Error loading users ", t);
             throw new RuntimeException("Error loading users", t);
         } finally {
             this.closeDirContext(dirCtx);
@@ -486,9 +488,9 @@ public class LdapUserDAO implements ILdapUserDAO {
                         sslC.init(null, tm, null);
                         sslsf = sslC.getSocketFactory();
                     } catch (NoSuchAlgorithmException nSAE) {
-                        _logger.error("error Hier: {}", nSAE.getMessage(), nSAE);
+                        logger.error("error Hier: {}", nSAE.getMessage(), nSAE);
                     } catch (KeyManagementException kME) {
-                        _logger.error("error Hier: {}", kME.getMessage(), kME);
+                        logger.error("error Hier: {}", kME.getMessage(), kME);
                     }
                     tls.negotiate(sslsf);
                 } else {
@@ -503,7 +505,7 @@ public class LdapUserDAO implements ILdapUserDAO {
                 dirCtx = new InitialDirContext(this.getParams(false));
             }
         } catch (IOException ex) {
-            _logger.error("error in getDirContext", ex);
+            logger.error("error in getDirContext", ex);
         } catch (NamingException e) {
             throw e;
         }
@@ -520,9 +522,9 @@ public class LdapUserDAO implements ILdapUserDAO {
             }
             dirCtx.close();
         } catch (IOException ex) {
-            _logger.error("Error closing DirContext", ex);
+            logger.error("Error closing DirContext", ex);
         } catch (NamingException e) {
-            _logger.error("Error closing DirContext", e);
+            logger.error("Error closing DirContext", e);
             throw new RuntimeException("Error closing DirContext", e);
         }
     }
@@ -677,18 +679,16 @@ public class LdapUserDAO implements ILdapUserDAO {
     }
 
     @Override
-    public IApsEncrypter getEncrypter() {
+    public PasswordEncoder getPasswordEncoder() {
         throw new UnsupportedOperationException("Not supported.");
     }
 
     protected ConfigInterface getConfigManager() {
-        return _configManager;
+        return configManager;
     }
 
     public void setConfigManager(ConfigInterface configManager) {
-        this._configManager = configManager;
+        this.configManager = configManager;
     }
-
-    private ConfigInterface _configManager;
 
 }

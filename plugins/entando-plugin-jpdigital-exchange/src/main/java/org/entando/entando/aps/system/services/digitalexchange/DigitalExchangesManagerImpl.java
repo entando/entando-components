@@ -15,8 +15,6 @@ package org.entando.entando.aps.system.services.digitalexchange;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -26,7 +24,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.IntStream;
 import javax.annotation.PostConstruct;
 import javax.xml.bind.DataBindingException;
-import javax.xml.bind.JAXB;
 import org.apache.commons.lang.RandomStringUtils;
 import org.entando.entando.aps.system.DigitalExchangeConstants;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangeOAuth2RestTemplateFactory;
@@ -47,14 +44,18 @@ public class DigitalExchangesManagerImpl implements DigitalExchangesManager {
 
     private final ConfigInterface configManager;
     private final DigitalExchangeOAuth2RestTemplateFactory restTemplateFactory;
+    private final DigitalExchangeConfigXmlConverter xmlConverter;
 
     private final List<DigitalExchange> exchanges = new CopyOnWriteArrayList<>();
     private final Map<String, OAuth2RestTemplate> templates = new ConcurrentHashMap<>();
 
     @Autowired
-    public DigitalExchangesManagerImpl(ConfigInterface configManager, DigitalExchangeOAuth2RestTemplateFactory restTemplateFactory) {
+    public DigitalExchangesManagerImpl(ConfigInterface configManager,
+            DigitalExchangeOAuth2RestTemplateFactory restTemplateFactory,
+            DigitalExchangeConfigXmlConverter xmlConverter) {
         this.configManager = configManager;
         this.restTemplateFactory = restTemplateFactory;
+        this.xmlConverter = xmlConverter;
     }
 
     @PostConstruct
@@ -145,7 +146,7 @@ public class DigitalExchangesManagerImpl implements DigitalExchangesManager {
         }
 
         try {
-            DigitalExchangesConfig config = JAXB.unmarshal(new StringReader(digitalExchangesConfig), DigitalExchangesConfig.class);
+            DigitalExchangesConfig config = xmlConverter.unmarshal(digitalExchangesConfig);
             exchanges.addAll(config.getDigitalExchanges());
         } catch (DataBindingException ex) {
             logger.error("Unable to parse DigitalExchanges XML configuration", ex);
@@ -167,9 +168,8 @@ public class DigitalExchangesManagerImpl implements DigitalExchangesManager {
     private void updateDigitalExchangesConfig() {
         DigitalExchangesConfig config = new DigitalExchangesConfig();
         config.setDigitalExchanges(exchanges);
-        StringWriter sw = new StringWriter();
-        JAXB.marshal(config, sw);
-        String configString = sw.toString();
+
+        String configString = xmlConverter.marshal(config);
 
         try {
             configManager.updateConfigItem(DigitalExchangeConstants.CONFIG_ITEM_DIGITAL_EXCHANGES, configString);

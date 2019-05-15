@@ -28,9 +28,6 @@ import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helpe
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.slf4j.*;
 
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.CaseProgressWidgetHelpers.getProcessIdFromProcessInstanceJson;
-import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.CaseProgressWidgetHelpers.getProcessInstanceIdFromProcessInstanceJson;
-
 public class BpmProcessDiagramAction extends BpmCaseInstanceActionBase {
 
     private static final Logger logger = LoggerFactory.getLogger(BpmCaseInstanceChartAction.class);

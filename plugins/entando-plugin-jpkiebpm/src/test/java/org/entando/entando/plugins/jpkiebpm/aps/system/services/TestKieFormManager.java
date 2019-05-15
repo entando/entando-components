@@ -36,6 +36,7 @@ import org.entando.entando.plugins.jprestapi.aps.core.helper.JAXBHelper;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.EnvironmentBasedConfigHelper.*;
@@ -147,7 +148,7 @@ public class TestKieFormManager extends ApsPluginBaseTestCase  implements KieTes
         try {
 
             formManager.addConfig(cfg);
-            HashMap<String, KieBpmConfig> configs = formManager.getKieServerConfigurations();
+            Map<String, KieBpmConfig> configs = formManager.getKieServerConfigurations();
             Optional<KieBpmConfig> first = configs.values().stream().filter((found) -> found.getHostname().equals(cfg.getHostname())).findFirst();
             assertTrue(first.isPresent());
             KieBpmConfig config=first.get();
@@ -175,7 +176,7 @@ public class TestKieFormManager extends ApsPluginBaseTestCase  implements KieTes
         try {
 
             formManager.addConfig(cfg);
-            HashMap<String, KieBpmConfig> configs = formManager.getKieServerConfigurations();
+            Map<String, KieBpmConfig> configs = formManager.getKieServerConfigurations();
             Optional<KieBpmConfig> first = configs.values().stream().filter((found) -> found.getHostname().equals(cfg.getHostname())).findFirst();
             assertTrue(first.isPresent());
             KieBpmConfig config=first.get();

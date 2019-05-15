@@ -24,48 +24,50 @@
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model;
 
 import java.util.HashMap;
+import java.util.Map;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-/**
- *
- * @author own_strong
- */
-@XmlRootElement
+@XmlRootElement(name = "kiaBpmConfigFactory")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class KiaBpmConfigFactory {
-    
+public class KieBpmConfigFactory {
+
     @XmlElement(name = "kieBpmConfigeMap")
-    private HashMap<String, KieBpmConfig> kieBpmConfigeMap = new HashMap();
-    
-    public KieBpmConfig getKiaBpmConfig(String hostname) {
-        KieBpmConfig kieBpmConfig = this.getKieBpmConfigeMap().get(hostname);
+    private Map<String, KieBpmConfig> kieBpmConfigMap = new HashMap<>();
+
+    public KieBpmConfig getKieBpmConfig(String hostname) {
+        KieBpmConfig kieBpmConfig = this.getKieBpmConfigMap().get(hostname);
         return kieBpmConfig;
     }
-    
-    public void addKiaBpmConfig(KieBpmConfig kieBpmConfig) {
-        
-        this.getKieBpmConfigeMap().put(kieBpmConfig.getId(), kieBpmConfig);
-        
+
+    public KieBpmConfigFactory() {
     }
-    
-    public void removeKiaBpmConfig(String kieId) {
-        
-        this.getKieBpmConfigeMap().remove(kieId);
+
+    public KieBpmConfigFactory(KieBpmConfigFactory other) {
+        other.kieBpmConfigMap.entrySet().forEach(entry -> {
+            this.kieBpmConfigMap.put(entry.getKey(), new KieBpmConfig(entry.getValue()));
+        });
     }
-    
-    public KieBpmConfig getFirstKiaBpmConfig() {
-        return this.getKieBpmConfigeMap().entrySet().iterator().next().getValue();
+
+    public void addKieBpmConfig(KieBpmConfig kieBpmConfig) {
+        this.getKieBpmConfigMap().put(kieBpmConfig.getId(), kieBpmConfig);
     }
-    
-    public HashMap<String, KieBpmConfig> getKieBpmConfigeMap() {
-        return kieBpmConfigeMap;
+
+    public void removeKieBpmConfig(String kieId) {
+        this.getKieBpmConfigMap().remove(kieId);
     }
-    
-    public void setKieBpmConfigeMap(HashMap<String, KieBpmConfig> _kieBpmConfigeMap) {
-        this.kieBpmConfigeMap = _kieBpmConfigeMap;
+
+    public KieBpmConfig getFirstKieBpmConfig() {
+        return this.getKieBpmConfigMap().entrySet().iterator().next().getValue();
     }
-    
+
+    public Map<String, KieBpmConfig> getKieBpmConfigMap() {
+        return kieBpmConfigMap;
+    }
+
+    public void setKieBpmConfigMap(Map<String, KieBpmConfig> kieBpmConfigMap) {
+        this.kieBpmConfigMap = kieBpmConfigMap;
+    }
 }

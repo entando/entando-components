@@ -28,6 +28,13 @@ public class DigitalExchangesConfig {
         this.digitalExchanges = new ArrayList<>();
     }
 
+    public DigitalExchangesConfig(DigitalExchangesConfig other) {
+        this();
+        other.digitalExchanges.forEach(exchange -> {
+            this.digitalExchanges.add(new DigitalExchange(exchange));
+        });
+    }
+
     @XmlElements({
         @XmlElement(name = "digitalExchange")
     })

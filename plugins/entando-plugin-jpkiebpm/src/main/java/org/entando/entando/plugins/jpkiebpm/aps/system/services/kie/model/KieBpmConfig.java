@@ -32,131 +32,141 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class KieBpmConfig {
 
-    @Override
-    public KieBpmConfig clone() {
-        KieBpmConfig cfg = new KieBpmConfig();
+    @XmlElement(name = "active")
+    private Boolean active;
 
-        cfg.setActive(this.getActive());
-        cfg.setHostname(this.getHostname());
-        cfg.setPassword(this.getPassword());
-        cfg.setPort(this.getPort());
-        cfg.setSchema(this.getSchema());
-        cfg.setUsername(this.getUsername());
-        cfg.setWebapp(this.getWebapp());
-        cfg.setTimeoutMsec(this.getTimeoutMsec());
-        cfg.setDebug(this.getDebug());
+    @XmlElement(name = "id")
+    private String id;
 
-        return cfg;
+    @XmlElement(name = "name")
+    private String name;
+
+    @XmlElement(name = "username")
+    private String username;
+
+    @XmlElement(name = "password")
+    private String password;
+
+    @XmlElement(name = "hostname")
+    private String hostname;
+
+    @XmlElement(name = "schema")
+    private String schema;
+
+    @XmlElement(name = "port")
+    private Integer port;
+
+    @XmlElement(name = "webapp")
+    private String webapp;
+
+    @XmlElement(name = "timeout")
+    private Integer timeoutMsec;
+
+    @XmlElement(name = "debug")
+    private Boolean debug;
+
+    public KieBpmConfig() {
+    }
+
+    public KieBpmConfig(KieBpmConfig other) {
+        this.active = other.active;
+        this.id = other.id;
+        this.name = other.name;
+        this.username = other.username;
+        this.password = other.password;
+        this.hostname = other.hostname;
+        this.schema = other.schema;
+        this.port = other.port;
+        this.webapp = other.webapp;
+        this.timeoutMsec = other.timeoutMsec;
+        this.debug = other.debug;
     }
 
     public Boolean getActive() {
-        return (null != _active ? _active : false);
+        return (null != active ? active : false);
     }
 
     public void setActive(Boolean active) {
-        this._active = active;
+        this.active = active;
     }
 
     public String getId() {
-        return _id;
+        return id;
     }
 
-    public void setId(String _id) {
-        this._id = _id;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
-        return _name;
+        return name;
     }
 
-    public void setName(String _name) {
-        this._name = _name;
+    public void setName(String name) {
+        this.name = name;
     }
-    
+
     public String getUsername() {
-        return _username;
+        return username;
     }
 
     public void setUsername(String username) {
-        this._username = username;
+        this.username = username;
     }
 
     public String getPassword() {
-        return _password;
+        return password;
     }
 
     public void setPassword(String password) {
-        this._password = password;
+        this.password = password;
     }
 
     public String getHostname() {
-        return _hostname;
+        return hostname;
     }
 
     public void setHostname(String hostname) {
-        this._hostname = hostname;
+        this.hostname = hostname;
     }
 
     public String getSchema() {
-        return _schema;
+        return schema;
     }
 
     public void setSchema(String schema) {
-        this._schema = schema;
+        this.schema = schema;
     }
 
     public Integer getPort() {
-        return _port;
+        return port;
     }
 
     public void setPort(Integer port) {
-        this._port = port;
+        this.port = port;
     }
 
     public String getWebapp() {
-        return _webapp;
+        return webapp;
     }
 
     public void setWebapp(String webapp) {
-        this._webapp = webapp;
+        this.webapp = webapp;
     }
 
     public Integer getTimeoutMsec() {
-        return _timeoutMsec;
+        return timeoutMsec;
     }
 
     public void setTimeoutMsec(Integer timeoutMsec) {
-        this._timeoutMsec = timeoutMsec;
+        this.timeoutMsec = timeoutMsec;
     }
 
     public Boolean getDebug() {
-        return (null != _debug ? _debug : false);
+        return (null != debug ? debug : false);
     }
 
     public void setDebug(Boolean debug) {
-        this._debug = debug;
+        this.debug = debug;
     }
-
-    @XmlElement(name = "active")
-    private Boolean _active;
-    @XmlElement(name = "id")
-    private String _id;
-    @XmlElement(name = "name")
-    private String _name;
-    @XmlElement(name = "username")
-    private String _username;
-    @XmlElement(name = "password")
-    private String _password;
-    @XmlElement(name = "hostname")
-    private String _hostname;
-    @XmlElement(name = "schema")
-    private String _schema;
-    @XmlElement(name = "port")
-    private Integer _port;
-    @XmlElement(name = "webapp")
-    private String _webapp;
-    @XmlElement(name = "timeout")
-    private Integer _timeoutMsec;
-    @XmlElement(name = "debug")
-    private Boolean _debug;
 }
