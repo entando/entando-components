@@ -124,7 +124,7 @@ export class DashboardConfigFormBody extends Component {
                     2,
                     formattedText('plugin.table.requirement'),
                   )}
-                </Col>serverTypeList
+                </Col>
                 <Col xs={6}>
                   {renderField(
                     'serverURI',
@@ -189,6 +189,7 @@ export class DashboardConfigFormBody extends Component {
                   label={<FormLabel labelId="plugin.config.datasourceCode" required />}
                   placeholder={formattedText('plugin.config.datasourceCode')}
                   alignClass="text-left"
+                  labelSize={3}
                 />
               </Col>
             </Row>
@@ -199,7 +200,7 @@ export class DashboardConfigFormBody extends Component {
                   'plugin.config.datasource',
                   null,
                   [minLength3, maxLength30],
-                  2,
+                  3,
                   formattedText('plugin.table.requirement'),
                 )}
               </Col>
