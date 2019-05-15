@@ -20,4 +20,5 @@ public class DeviceLocations {
   public void setLongitude(Double longitude) {
     this.longitude = longitude;
   }
+  
 }
