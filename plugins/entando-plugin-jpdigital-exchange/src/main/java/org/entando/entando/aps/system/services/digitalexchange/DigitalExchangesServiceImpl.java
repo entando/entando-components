@@ -152,7 +152,7 @@ public class DigitalExchangesServiceImpl implements DigitalExchangesService {
         try {
             updateWithRemotePublicKey(digitalExchange);
         } catch (Exception ex) {
-            logger.error("An error occurred while downloading public key for digital exchange " + digitalExchange.getId());
+            logger.error("An error occurred while downloading public key for digital exchange {}", digitalExchange.getId());
             digitalExchange.invalidate();
         }
     }

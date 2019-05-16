@@ -19,10 +19,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.services.digitalexchange.client.DigitalExchangesClient;
 import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExchange;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -33,12 +35,14 @@ import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.entando.entando.web.common.model.RestError;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import static org.assertj.core.api.Assertions.assertThat;
-import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import static org.entando.entando.aps.system.services.digitalexchange.DigitalExchangeTestUtils.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 public class DigitalExchangesServiceTest {
 
@@ -83,19 +87,46 @@ public class DigitalExchangesServiceTest {
     @Test
     public void shouldReturnInactiveDigitalExchangeForUnavailablePublicKey() {
         Mockito.reset(client);
-        when(manager.create(any(DigitalExchange.class))) .thenReturn(getDEWithoutPublicKey(DE_2_NAME));
-        when(client.getSingleResponse(any(DigitalExchange.class), any())) .thenReturn( new SimpleRestResponse<>(null) );
+        when(manager.create(any(DigitalExchange.class))).thenReturn(getDEWithoutPublicKey(DE_2_NAME));
+        when(client.getSingleResponse(any(DigitalExchange.class), any())).thenReturn(new SimpleRestResponse<>(null));
 
         DigitalExchange storedDE = service.create(getDEWithoutPublicKey(DE_2_NAME));
         assertThat(storedDE.isActive()).isFalse();
         assertThat(storedDE.hasNoPublicKey()).isTrue();
-
     }
 
+    @Test
+    public void shouldRetrievePublicKey() {
+        Mockito.reset(client);
+        String publicKey = "key";
+        when(manager.create(any(DigitalExchange.class))).thenReturn(getDEWithoutPublicKey(DE_2_NAME));
+        when(client.getSingleResponse(any(DigitalExchange.class), any())).thenReturn(new SimpleRestResponse<>(publicKey));
+
+        DigitalExchange storedDE = service.create(getDEWithoutPublicKey(DE_2_NAME));
+        assertThat(storedDE.isActive()).isTrue();
+        assertThat(storedDE.hasNoPublicKey()).isFalse();
+        assertThat(storedDE.getPublicKey()).isEqualTo(publicKey);
+        
+        verify(manager, times(1)).update(any());
+    }
+    
     @Test
     public void shouldUpdateDigitalExchange() {
         when(manager.update(any(DigitalExchange.class))).thenReturn(getDE1());
         service.update(getDE1());
+        verify(manager, times(1)).update(any());
+    }
+    
+    @Test
+    public void shouldUpdateDigitalExchangeWithRename() {
+        when(manager.update(any(DigitalExchange.class))).thenReturn(getDE1());
+        String newName = "New name";
+        DigitalExchange de = getDigitalExchange(DE_1_ID, newName);
+        service.update(de);
+
+        ArgumentCaptor<DigitalExchange> deCaptor = ArgumentCaptor.forClass(DigitalExchange.class);
+        verify(manager, times(1)).update(deCaptor.capture());
+        assertThat(deCaptor.getValue().getName()).isEqualTo(newName);
     }
 
     @Test(expected = ResourceNotFoundException.class)
@@ -106,6 +137,7 @@ public class DigitalExchangesServiceTest {
     @Test
     public void shouldDeleteDigitalExchange() {
         service.delete(DE_1_ID);
+        verify(manager, times(1)).delete(eq(DE_1_ID));
     }
 
     @Test(expected = ResourceNotFoundException.class)

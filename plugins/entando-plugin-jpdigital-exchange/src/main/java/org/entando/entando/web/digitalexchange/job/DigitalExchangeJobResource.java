@@ -30,7 +30,7 @@ public interface DigitalExchangeJobResource {
     @ApiOperation(value = "Get a Digital Exchange job by id")
     @ApiResponses({
             @ApiResponse(code = 200, message = "OK"),
-            @ApiResponse(code = 404, message = "Not FOund")
+            @ApiResponse(code = 404, message = "Not Found")
     })
     @RestAccessControl(permission = Permission.SUPERUSER)
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
