@@ -7,7 +7,6 @@ org.entando.dashboard.LineChart = class {
   constructor(id, config) {
     console.log("Line Chart - config", config);
     const {axis, size, padding, legend, data} = config;
-
     this.configuration = {
       bindto: id,
       axis,
@@ -18,6 +17,7 @@ org.entando.dashboard.LineChart = class {
     };
     console.log("configuration : ", this.configuration);
     this.chart = c3.generate(this.configuration);
+    this.chart.resize();
   }
 
   update(json) {
@@ -28,6 +28,8 @@ org.entando.dashboard.LineChart = class {
       length: 0
     };
     console.log("obj", obj);
-    this.chart.flow(obj);
+    if (obj.json.length > 0) {
+      this.chart.flow(obj);
+    }
   }
 };

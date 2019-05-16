@@ -343,7 +343,6 @@ export const checkStatusDatasource = datasourceId => (dispatch, getState) =>
       const datasourceList = selector(state, 'datasources');
       datasourceList.map(ds => dispatch(checkStatusDatasource(ds.datasourceCode)));
     }
-    resolve();
   });
 
 export const fetchPreviewDatasource = datasourceId => (dispatch, getState) =>

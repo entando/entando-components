@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Label, Modal } from 'patternfly-react';
+import { Modal } from 'patternfly-react';
 
 import FormattedMessageLocal from 'ui/i18n/FormattedMessage';
 
@@ -18,7 +18,7 @@ const DashboardConfigModalPreviewDatasource = ({
     <Modal.Header closeButton>
       <Modal.Title>
         <FormattedMessageLocal id="plugin.config.previewDatasource" />
-        <Label>{datasourceCode || null}</Label>
+        <strong>{datasourceCode || null}</strong>
       </Modal.Title>
     </Modal.Header>
     <Modal.Body>
