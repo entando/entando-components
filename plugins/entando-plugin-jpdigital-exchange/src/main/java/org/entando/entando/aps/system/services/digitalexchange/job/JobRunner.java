@@ -40,7 +40,7 @@ public abstract class JobRunner {
             } catch (Throwable ex) {
                 logger.error("Error while executing job " + job.getId(), ex);
                 job.setStatus(JobStatus.ERROR);
-                job.setErrorMessage(ex.getMessage());
+                job.setErrorMessage(ex.getMessage().getBytes());
                 job.setEnded(new Date());
                 jobService.save(job);
             }

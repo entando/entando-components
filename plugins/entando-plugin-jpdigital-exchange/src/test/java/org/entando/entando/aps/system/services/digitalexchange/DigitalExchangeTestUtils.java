@@ -15,15 +15,9 @@ package org.entando.entando.aps.system.services.digitalexchange;
 
 import org.apache.logging.log4j.util.Strings;
 import org.entando.entando.aps.system.services.digitalexchange.model.DigitalExchange;
-import org.entando.entando.aps.system.services.digitalexchange.signature.SignatureUtil;
-
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.KeyPair;
 
 public final class DigitalExchangeTestUtils {
 

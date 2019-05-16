@@ -113,6 +113,8 @@ public class DigitalExchangeJobResourceControllerIntegrationTest extends Abstrac
     public void shouldReturnSingleJob() throws Exception {
 
         DigitalExchangeJob job1 = new DigitalExchangeJob();
+        String errorMsg = "error";
+        job1.setErrorMessage(errorMsg.getBytes());
         String jobId = repo.save(job1).getId();
 
         ResultActions result = createAuthRequest(get("/digitalExchange/jobs/{jobId}", jobId)).execute();
@@ -121,7 +123,8 @@ public class DigitalExchangeJobResourceControllerIntegrationTest extends Abstrac
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.errors").isEmpty())
                 .andExpect(jsonPath("$.metaData").isEmpty())
-                .andExpect(jsonPath("$.payload.id", is(jobId)));
+                .andExpect(jsonPath("$.payload.id", is(jobId)))
+                .andExpect(jsonPath("$.payload.errorMessage", is(errorMsg)));
     }
 
     @Test
