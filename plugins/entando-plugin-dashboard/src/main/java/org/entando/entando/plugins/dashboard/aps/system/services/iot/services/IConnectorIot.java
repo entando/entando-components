@@ -9,7 +9,6 @@ import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.ServerType;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.dto.DeviceLocations;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.dto.ParkingStatuses;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.exception.ApiResourceNotAvailableException;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DatasourceType;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
@@ -18,6 +17,7 @@ import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.Dashboard
 import org.entando.entando.web.common.model.RestListRequest;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.google.gson.JsonObject;
 
 public interface IConnectorIot {
 
@@ -56,5 +56,5 @@ public interface IConnectorIot {
 
   DeviceLocations getDeviceLocations(DashboardConfigDto dto, String datasourceCode);
 
-  void setDeviceStatuses(DashboardConfigDto dto, String datasourceCode, ParkingStatuses parkingStatuses);
+  void setDeviceStatuses(DashboardConfigDto dto, String datasourceCode, JsonObject body);
 }

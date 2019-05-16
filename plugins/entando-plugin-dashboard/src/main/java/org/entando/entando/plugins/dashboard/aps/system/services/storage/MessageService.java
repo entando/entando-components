@@ -116,7 +116,7 @@ public class MessageService extends AbstractService implements IMessageService {
   public MeasurementPayload findMeasurementsByServerConfigurationAndHighestDate(int dashboardId,
       String datasourceCode) {
     Gson gson = new Gson();
-    IotMessage measurementJson = this.messageRepository.findFirstByServerIdAndDashboardCodeOrderByCreatedAtDesc(dashboardId, datasourceCode);
+    IotMessage measurementJson = this.messageRepository.findFirstByServerIdAndDashboardCodeOrderByCreatedAtAsc(dashboardId, datasourceCode);
     MeasurementPayload payload = new MeasurementPayload();
     if(measurementJson != null) {
       payload = gson

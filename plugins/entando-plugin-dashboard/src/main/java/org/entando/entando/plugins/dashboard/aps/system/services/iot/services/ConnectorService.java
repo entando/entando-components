@@ -13,12 +13,10 @@ import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.ServerType;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.dto.DeviceLocations;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.dto.ParkingStatuses;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.factory.ConnectorFactory;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DatasourceType;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigRequest;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
@@ -30,6 +28,7 @@ import org.springframework.stereotype.Service;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.google.gson.JsonObject;
 
 import static org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils.logStartMethod;
 
@@ -174,8 +173,8 @@ public class ConnectorService extends AbstractConnectorService implements IConne
   }
 
   @Override
-  public void setDeviceStatuses(DashboardConfigDto dto, String datasourceCode, ParkingStatuses parkingStatuses) {
-    connectorFactory.getConnector(dto.getType()).setDeviceStatuses(dto, datasourceCode, parkingStatuses);
+  public void setDeviceStatuses(DashboardConfigDto dto, String datasourceCode, JsonObject body) {
+    connectorFactory.getConnector(dto.getType()).setDeviceStatuses(dto, datasourceCode, body);
   }
 
   @Override
