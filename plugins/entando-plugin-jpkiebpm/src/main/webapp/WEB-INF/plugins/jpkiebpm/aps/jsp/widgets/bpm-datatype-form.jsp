@@ -30,7 +30,7 @@
 <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/dataTables.buttons.js"></script>
 <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/jszip.min.js"></script>
 <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/buttons.html5.min.js"></script>
-<script src="<wp:resourceURL />plugins/jpkiebpm/static/js/buttons.colVis.min.js"></script-->
+<script src="<wp:resourceURL />plugins/jpkiebpm/static/js/buttons.colVis.min.js"></script>
 
 <link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/buttons.dataTables.min.css" media="screen"/>
 <link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/jquery.dataTables.min.css" media="screen"/>

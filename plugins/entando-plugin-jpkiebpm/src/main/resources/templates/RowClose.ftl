@@ -1,1 +1,4 @@
-<#if field.closeRow == true> </div></#if>
+<#if field.closeRow == true>
+</div>
+
+</#if>

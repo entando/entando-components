@@ -173,7 +173,7 @@ public class TestDataUXBuilder extends TestCase {
 
         DataUXBuilder dataUXBuilder = getDataUXBuilder();
 
-        String filePath = "src/test/resources/examples/xml/pam-7-test-process-multiplesubform-1.xml";
+        String filePath = "src/test/resources/examples/xml/pam-7-test-process-multiple-sub-form.xml";
 
         String pam7businessProcessForm = new String(Files.readAllBytes(Paths.get(filePath)));
 
@@ -183,11 +183,12 @@ public class TestDataUXBuilder extends TestCase {
         KieProcessFormQueryResult kpfqr = KieVersionTransformer.pamSevenFormToPamSix(pamResult);
         String htmlForm = dataUXBuilder.createDataUx(kpfqr, 0, CONTAINER_ID, PROCESS_ID, TITLE);
 
+        System.out.println(htmlForm);
         assertTrue(htmlForm.contains("<label id=\"JPKIE_nestedForm_multiple1\" for=\"jpkieformparam_nestedForm_multiple1\" class=\"editLabel\">"));
         assertTrue(htmlForm.contains("$i18n.getLabel(\"JPKIE_nestedForm_multiple1\")"));
         assertTrue(htmlForm.contains("</label>"));
         assertTrue(htmlForm.contains("<table id=\"JPKIE_field_4156\"  class=\"display\" width=\"100%\"></table>"));
-        assertTrue(htmlForm.contains("</div><script type=\"text/javascript\">"));
+        assertTrue(htmlForm.contains("<script type=\"text/javascript\">"));
         assertTrue(htmlForm.contains("function pam2DataTable (array) {"));
         assertTrue(htmlForm.contains("if (array) {"));
         assertTrue(htmlForm.contains("return array.map(function(item) {"));
@@ -212,6 +213,29 @@ public class TestDataUXBuilder extends TestCase {
         assertTrue(htmlForm.contains("</script>"));
         assertTrue(htmlForm.contains("</fieldset>"));
         assertTrue(htmlForm.contains("<h3 class=\"control-label editLabel\" id=\"JPKIE_TITLE_Title\">$i18n.getLabel(\"JPKIE_TITLE_Title\")</h3>\n"));
+    }
+
+
+
+
+
+    public void testFormsWithMultipleColsPerRow() throws Throwable {
+
+        DataUXBuilder dataUXBuilder = getDataUXBuilder();
+
+        String filePath = "src/test/resources/examples/xml/pam-7-test-process-multiple-cols-form.xml";
+
+        String pam7businessProcessForm = new String(Files.readAllBytes(Paths.get(filePath)));
+
+        PamProcessQueryFormResult pamResult = (PamProcessQueryFormResult) JAXBHelper
+                .unmarshall(pam7businessProcessForm, PamProcessQueryFormResult.class, true, false);
+        assertNotNull(pamResult);
+        KieProcessFormQueryResult kpfqr = KieVersionTransformer.pamSevenFormToPamSix(pamResult);
+        String htmlForm = dataUXBuilder.createDataUx(kpfqr, 0, CONTAINER_ID, PROCESS_ID, TITLE);
+
+        assertTrue(htmlForm.contains("<div class=\"col-md-6 col-sm-12\">"));
+        assertTrue(htmlForm.contains("<div class=\"col-md-3 col-sm-12\">"));
+        assertTrue(htmlForm.contains("<div class=\"col-md-12 col-sm-12\">"));
     }
 
 

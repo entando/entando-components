@@ -1,1 +1,4 @@
-<#if field.openRow == true> <div class="row"></#if>
+<#if field.openRow == true>
+
+<div class="row">
+</#if>
