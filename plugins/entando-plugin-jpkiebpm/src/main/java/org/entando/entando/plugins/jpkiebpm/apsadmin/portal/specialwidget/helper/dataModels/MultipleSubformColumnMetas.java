@@ -1,3 +1,4 @@
+
 /*
  * The MIT License
  *
@@ -21,48 +22,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.pamSeven;
+package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+public class MultipleSubformColumnMetas {
 
-@XmlRootElement(name = "properties")
-@XmlAccessorType(XmlAccessType.FIELD)
-public class PamLayoutComponentProperty {
+    private String property;
+    private String label;
 
-    @XmlElement(name = "field_id")
-    String fieldId;
-
-    @XmlElement(name = "form_id")
-    String formId;
-
-    @XmlElement(name = "HTML_CODE")
-    String htmlCode;
-
-
-    public String getFieldId() {
-        return fieldId;
+    public String getProperty() {
+        return property;
     }
 
-    public void setFieldId(String fieldId) {
-        this.fieldId = fieldId;
+    public void setProperty(String property) {
+        this.property = property;
     }
 
-    public String getFormId() {
-        return formId;
+    public String getLabel() {
+        return label;
     }
 
-    public void setFormId(String formId) {
-        this.formId = formId;
-    }
-
-    public String getHtmlCode() {
-        return htmlCode;
-    }
-
-    public void setHtmlCode(String htmlCode) {
-        this.htmlCode = htmlCode;
+    public void setLabel(String label) {
+        this.label = label;
     }
 }
+

@@ -28,41 +28,29 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "properties")
+@XmlRootElement(name = "columnMetas")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class PamLayoutComponentProperty {
+public class PamColumnMetas {
+    @XmlElement
+    private String property;
 
-    @XmlElement(name = "field_id")
-    String fieldId;
+    @XmlElement
+    private String label;
 
-    @XmlElement(name = "form_id")
-    String formId;
-
-    @XmlElement(name = "HTML_CODE")
-    String htmlCode;
-
-
-    public String getFieldId() {
-        return fieldId;
+    public String getProperty() {
+        return property;
     }
 
-    public void setFieldId(String fieldId) {
-        this.fieldId = fieldId;
+    public void setProperty(String property) {
+        this.property = property;
     }
 
-    public String getFormId() {
-        return formId;
+    public String getLabel() {
+        return label;
     }
 
-    public void setFormId(String formId) {
-        this.formId = formId;
-    }
-
-    public String getHtmlCode() {
-        return htmlCode;
-    }
-
-    public void setHtmlCode(String htmlCode) {
-        this.htmlCode = htmlCode;
+    public void setLabel(String label) {
+        this.label = label;
     }
 }
+

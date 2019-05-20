@@ -42,11 +42,9 @@
                     <#include "/InputFieldMultipleSelector.ftl">
                     <#break>
                 <#case "MultipleSubForm">
+                    <#include "/InputFieldMultipleSubForm.ftl">
                     <#break> 
-                <#case "Document">
-                    <#include "/InputFieldTextBox.ftl">
-                    <#break>
-                <#case "Document">
+                 <#case "Document">
                     <#include "/InputFieldTextBox.ftl">
                     <#break>
                 <#default>

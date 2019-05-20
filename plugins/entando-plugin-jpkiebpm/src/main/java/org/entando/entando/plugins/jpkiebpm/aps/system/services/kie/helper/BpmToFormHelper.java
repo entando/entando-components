@@ -362,50 +362,50 @@ public class BpmToFormHelper {
             }
             JSONObject section = (JSONObject) obj;
             String sectionName = dataModeler.getId();
-            List<String> sectionFields = new ArrayList<>();
             // collect field
-            for (KieProcessFormField field : form.getFields()) {
-                String jsonName = FormToBpmHelper.generateFieldNameForInput(field, sectionName);
-                logger.debug("jsonName: {}", jsonName);
-                Object value = null;
-                if (section.has(jsonName)) {
-                    value = section.get(jsonName);
+            if (null!=section) {
+                for (KieProcessFormField field : form.getFields()) {
+                    String jsonName = FormToBpmHelper.generateFieldNameForInput(field, sectionName);
+                    logger.debug("jsonName: {}", jsonName);
+                    Object value = null;
+                    if (section.has(jsonName)) {
+                        value = section.get(jsonName);
+                    }
+                    if (JSONObject.NULL == value) {
+                        logger.debug("JSONObject NULL field.getName: {} value {}", field.getName(), null);
+                        result.put(field.getName(), null);
+
+
+                    } else {
+                        logger.debug("field.getName: {} value {}", field.getName(), value);
+
+                        result.put(field.getName(), value);
+                    }
                 }
-                if (JSONObject.NULL == value) {
-                    logger.debug("JSONObject NULL field.getName: {} value {}", field.getName(), null);
-                    result.put(field.getName(), null);
+                // collect JSON data. Some field might not exist in the form definition!
+                for (String name : JSONObject.getNames(section)) {
+                    final String key = generateFieldNameForOutput(name, sectionName);
+                    final Object value = section.get(name);
+                    logger.debug("name key: {}", key);
 
+                    // skip json objects
+                    if (value instanceof JSONObject) {
+                        logger.debug("continue");
+                        continue;
+                    }
+                    if (JSONObject.NULL == value) {
+                        logger.debug("key: {} value {}", key, null);
 
-                } else {
-                    logger.debug("field.getName: {} value {}", field.getName(), value);
+                        result.put(key, null);
+                    } else {
+                        logger.debug("key: {} value {}", key, value);
 
-                    result.put(field.getName(), value);
+                        result.put(key, value);
+                    }
                 }
+                // to avoid name collisions we delete the section just inspected
+                JsonHelper.replaceKey(data, dataModeler.getValue(), "  ");
             }
-            // collect JSON data. Some field might not exist in the form definition!
-            for (String name : JSONObject.getNames(section)) {
-                final String key = generateFieldNameForOutput(name, sectionName);
-                final Object value = section.get(name);
-                logger.debug("name key: {}", key);
-
-                // skip json objects
-                if (value instanceof JSONObject) {
-                    logger.debug("continue");
-                    continue;
-                }
-                if (JSONObject.NULL == value) {
-                    logger.debug("key: {} value {}", key, null);
-
-                    result.put(key, null);
-                } else {
-                    logger.debug("key: {} value {}", key, value);
-
-                    result.put(key, value);
-                }
-            }
-            // to avoid name collisions we delete the section just inspected
-            JsonHelper.replaceKey(data, dataModeler.getValue(), "  ");
-
         }
     }
 

@@ -13,7 +13,6 @@ public class PamMetaData {
     @XmlElement
     private List<PamEntry> entries;
 
-
     public List<PamEntry> getEntries() {
         return entries;
     }
