@@ -18,8 +18,8 @@ public class IoTConstants {
   public static final String LOG_API_EX_DASHBOARD_DATASOURCE = "{} obtained {} calling dashboard code {}, datasource code {}";
   public static final String API_EX_DASHBOARD= "%s error dashboard id %s, can't communicate to Api Service";
   public static final String LOG_API_EX_DASHBOARD = "{} obtained {} calling dashboard id {}";
-  public static final String UNABLE_TO_PARSE_DASHBOARD = "unable to parse dashboard";
-  public static final String UNABLE_TO_PARSE_DATASOURCE = "unable to parse datasource";
+  public static final String UNABLE_TO_PARSE_DASHBOARD = "unable to getJsonPaths dashboard";
+  public static final String UNABLE_TO_PARSE_DATASOURCE = "unable to getJsonPaths datasource";
   public static final String EX_INACTIVE_SERVER = "Server %s is not active";
   public static final String DATASOURCE_TYPE_GENERIC = "GENERIC";
   public static final String DATASOURCE_TYPE_GEODATA = "GEODATA";

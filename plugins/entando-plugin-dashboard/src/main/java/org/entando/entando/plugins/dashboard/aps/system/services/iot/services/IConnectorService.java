@@ -47,10 +47,10 @@ public interface IConnectorService {
       String datasourceCode, Date startDate, Date endDate,
       RestListRequest restListRequest, DatasourceType type);
 
-	MeasurementConfig getMeasurementsConfig(DashboardConfigDto dto, String datasourceCode);
+	MeasurementConfig getMeasurementsConfig(DashboardConfigDto dto, String datasourceCode, DatasourceType type);
 
 	MeasurementTemplate getDeviceMeasurementSchema(DashboardConfigDto dto,
-      String datasourceCode);
+      String datasourceCode, DatasourceType type);
 
 	List<ServerType> getDashboardTypes();
 

@@ -62,7 +62,7 @@ public class MessageService extends AbstractService implements IMessageService {
 		}
 		
 //		MongoCollection<BasicDBObject> dbCollection = database.getCollection("iot_messages",BasicDBObject.class);          
-//		BasicDBObject document = new BasicDBObject(BasicDBObject.parse(message.getJson()));          
+//		BasicDBObject document = new BasicDBObject(BasicDBObject.getJsonPaths(message.getJson()));          
 //		dbCollection.insertOne(document);
 //		return message;
 		

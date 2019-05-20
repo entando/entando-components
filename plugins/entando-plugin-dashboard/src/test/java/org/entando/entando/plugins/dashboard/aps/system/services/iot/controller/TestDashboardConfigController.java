@@ -265,7 +265,7 @@ public class TestDashboardConfigController extends AbstractControllerTest {
 
     when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
     when(dashboardConfigService.getDashboardConfig(dashboardId)).thenReturn(dashboardConfigDto);
-    when(connectorService.getDeviceMeasurementSchema(Mockito.any(), Mockito.any())).thenReturn(measurementTemplate);
+    when(connectorService.getDeviceMeasurementSchema(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(measurementTemplate);
 
     ResultActions result = mockMvc.perform(
         get(BASE_PATH + "server/" + dashboardId +"/datasource/"+ datasourceCode +"/preview")
@@ -290,7 +290,7 @@ public class TestDashboardConfigController extends AbstractControllerTest {
 
     when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
     when(dashboardConfigService.getDashboardConfig(dashboardId)).thenReturn(dashboardConfigDto);
-    when(connectorService.getDeviceMeasurementSchema(Mockito.any(), Mockito.any())).thenThrow(new ApiResourceNotAvailableException("408", "Sample Message"));
+    when(connectorService.getDeviceMeasurementSchema(Mockito.any(), Mockito.any(), Mockito.any())).thenThrow(new ApiResourceNotAvailableException("408", "Sample Message"));
 
     ResultActions result = mockMvc.perform(
         get(BASE_PATH + "server/" + dashboardId +"/datasource/"+ datasourceCode +"/preview")
@@ -313,7 +313,7 @@ public class TestDashboardConfigController extends AbstractControllerTest {
 
     when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(false);
     when(dashboardConfigService.getDashboardConfig(dashboardId)).thenReturn(dashboardConfigDto);
-    when(connectorService.getDeviceMeasurementSchema(Mockito.any(), Mockito.any())).thenReturn(measurementTemplate);
+    when(connectorService.getDeviceMeasurementSchema(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(measurementTemplate);
 
     ResultActions result = mockMvc.perform(
         get(BASE_PATH + "server/" + dashboardId +"/datasource/"+ datasourceCode +"/preview")
@@ -338,7 +338,7 @@ public class TestDashboardConfigController extends AbstractControllerTest {
 
     when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
     when(dashboardConfigService.getDashboardConfig(dashboardId)).thenReturn(dashboardConfigDto);
-    when(connectorService.getDeviceMeasurementSchema(Mockito.any(), Mockito.any())).thenReturn(measurementTemplate);
+    when(connectorService.getDeviceMeasurementSchema(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(measurementTemplate);
 
     String fakeDatasourceCode = "fakeDatasourceCode";
     ResultActions result = mockMvc.perform(
@@ -365,7 +365,7 @@ public class TestDashboardConfigController extends AbstractControllerTest {
 
     when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
     when(dashboardConfigService.getDashboardConfig(dashboardId)).thenReturn(dashboardConfigDto);
-    when(connectorService.getMeasurementsConfig(Mockito.any(), Mockito.any())).thenReturn(measurementConfig);
+    when(connectorService.getMeasurementsConfig(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(measurementConfig);
 
     ResultActions result = mockMvc.perform(
         get(BASE_PATH + "server/" + dashboardId +"/datasource/"+ datasourceCode +"/columns")
@@ -388,7 +388,7 @@ public class TestDashboardConfigController extends AbstractControllerTest {
 
     when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(false);
     when(dashboardConfigService.getDashboardConfig(dashboardId)).thenReturn(dashboardConfigDto);
-    when(connectorService.getMeasurementsConfig(Mockito.any(), Mockito.any())).thenReturn(measurementConfig);
+    when(connectorService.getMeasurementsConfig(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(measurementConfig);
 
     ResultActions result = mockMvc.perform(
         get(BASE_PATH + "server/" + dashboardId +"/datasource/"+ datasourceCode +"/columns")
@@ -412,7 +412,7 @@ public class TestDashboardConfigController extends AbstractControllerTest {
 
     when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
     when(dashboardConfigService.getDashboardConfig(dashboardId)).thenReturn(dashboardConfigDto);
-    when(connectorService.getMeasurementsConfig(Mockito.any(), Mockito.any())).thenReturn(measurementConfig);
+    when(connectorService.getMeasurementsConfig(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(measurementConfig);
 
     String fakeDatasourceCode = "fakeDatasourceCode";
     ResultActions result = mockMvc.perform(

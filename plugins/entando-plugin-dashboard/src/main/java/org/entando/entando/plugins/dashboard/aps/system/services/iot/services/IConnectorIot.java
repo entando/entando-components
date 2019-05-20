@@ -31,7 +31,7 @@ public interface IConnectorIot {
   List<DatasourcesConfigDto> getAllDevices(DashboardConfigDto dashboardConfigDto) throws ApiResourceNotAvailableException;
 
   void saveMeasurementTemplate(DashboardConfigDto dashboardDatasource,
-      String datasourceCode)
+      String datasourceCode, DatasourceType type)
       throws ApsSystemException;
 
   void saveDeviceMeasurement(DashboardConfigDto dashboardDatasourceDto,
@@ -42,10 +42,10 @@ public interface IConnectorIot {
       Date endDate, RestListRequest restListRequest, DatasourceType type)
       throws RuntimeException;
 
-  MeasurementConfig getMeasurementConfig(DashboardConfigDto dto, String datasourceCode);
+  MeasurementConfig getMeasurementConfig(DashboardConfigDto dto, String datasourceCode, DatasourceType type);
 
   MeasurementTemplate getDeviceMeasurementSchema(DashboardConfigDto dto,
-      String datasourceCode) throws ApiResourceNotAvailableException;
+      String datasourceCode, DatasourceType type) throws ApiResourceNotAvailableException;
 
   ServerType getServerType();
 
