@@ -26,6 +26,7 @@ import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.ServerType;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.exception.InvalidFieldException;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DatasourceType;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementColumn;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
@@ -53,6 +54,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
@@ -80,22 +82,6 @@ public class DashboardConfigController {
   @Autowired
   private IConnectorService connectorService;
 
-  protected IDashboardConfigService getDashboardConfigService() {
-    return dashboardConfigService;
-  }
-
-  public void setDashboardConfigService(IDashboardConfigService dashboardConfigService) {
-    this.dashboardConfigService = dashboardConfigService;
-  }
-
-  protected DashboardConfigValidator getDashboardConfigValidator() {
-    return dashboardConfigValidator;
-  }
-
-  public void setDashboardConfigValidator(DashboardConfigValidator dashboardConfigValidator) {
-    this.dashboardConfigValidator = dashboardConfigValidator;
-  }
-
   protected IConnectorService getConnectorService() {
     return connectorService;
   }
@@ -122,6 +108,22 @@ public class DashboardConfigController {
     this.getDashboardConfigValidator().validateRestListResult(requestList, result);
     logger.debug("Main Response -> {}", result);
     return new ResponseEntity<>(new PagedRestResponse(result), HttpStatus.OK);
+  }
+
+  protected DashboardConfigValidator getDashboardConfigValidator() {
+    return dashboardConfigValidator;
+  }
+
+  protected IDashboardConfigService getDashboardConfigService() {
+    return dashboardConfigService;
+  }
+
+  public void setDashboardConfigService(IDashboardConfigService dashboardConfigService) {
+    this.dashboardConfigService = dashboardConfigService;
+  }
+
+  public void setDashboardConfigValidator(DashboardConfigValidator dashboardConfigValidator) {
+    this.dashboardConfigValidator = dashboardConfigValidator;
   }
 
   @RestAccessControl(permission = "superuser")
@@ -230,34 +232,40 @@ public class DashboardConfigController {
     DatasourcesConfigDto datasource = pingResult.getDatasources().stream()
         .filter(d -> d.getDatasourceCode().equals(datasourceCode)).findFirst().get();
 
-    if(datasource.getFk_dashboard_config() != serverId) {
+    if (datasource.getFk_dashboard_config() != serverId) {
       throw new InvalidFieldException("datasource_FK MUST match serverId");
     }
     dashboardConfigService.updateDatasource(datasource);
-    return new ResponseEntity<>(new SimpleRestResponse<>(datasource.getStatus().equals(DATASOURCE_STATUS_ONLINE)), HttpStatus.OK);
+    return new ResponseEntity<>(
+        new SimpleRestResponse<>(datasource.getStatus().equals(DATASOURCE_STATUS_ONLINE)),
+        HttpStatus.OK);
   }
 
   @RestAccessControl(permission = "superuser")
   @RequestMapping(value = "/server/{serverId}/datasource/{datasourceCode}/preview", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SimpleRestResponse<MeasurementColumn>> getMeasurementPreview(
-      @PathVariable int serverId, @PathVariable String datasourceCode) {
+      @PathVariable int serverId, @PathVariable String datasourceCode,
+  @RequestParam(value = "type", defaultValue = "GENERIC", required = false)
+      DatasourceType type) {
 
     DashboardConfigDto dto = IoTUtils
         .checkServerAndDatasource(serverId, datasourceCode, dashboardConfigService);
     new MeasurementTemplate();
-    MeasurementTemplate template = connectorService.getDeviceMeasurementSchema(dto, datasourceCode);
+    MeasurementTemplate template = connectorService.getDeviceMeasurementSchema(dto, datasourceCode,type);
     return new ResponseEntity<>(new SimpleRestResponse(template), HttpStatus.OK);
   }
 
   @RestAccessControl(permission = "superuser")
   @RequestMapping(value = "/server/{serverId}/datasource/{datasourceCode}/columns", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SimpleRestResponse<MeasurementColumn>> getDatasourceColumns(
-      @PathVariable int serverId, @PathVariable String datasourceCode) {
+      @PathVariable int serverId, @PathVariable String datasourceCode,
+      @RequestParam(value = "type", defaultValue = "GENERIC", required = false)
+          DatasourceType type) {
 
     DashboardConfigDto dto = IoTUtils
         .checkServerAndDatasource(serverId, datasourceCode, dashboardConfigService);
 
-    MeasurementConfig config = connectorService.getMeasurementsConfig(dto, datasourceCode);
+    MeasurementConfig config = connectorService.getMeasurementsConfig(dto, datasourceCode, type);
     return new ResponseEntity<>(new SimpleRestResponse(config), HttpStatus.OK);
   }
 

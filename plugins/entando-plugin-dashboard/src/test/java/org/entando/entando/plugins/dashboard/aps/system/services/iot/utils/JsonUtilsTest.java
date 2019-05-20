@@ -1,5 +1,6 @@
 package org.entando.entando.plugins.dashboard.aps.system.services.iot.utils;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
@@ -12,6 +13,9 @@ import org.springframework.util.ResourceUtils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -72,5 +76,43 @@ public class JsonUtilsTest {
 
     assertEquals(x.get("x"), "y");
     assertEquals(x.get("z"), "w");
+  }
+  
+  
+  @Test
+  public void getPathsFromJson() {
+    JsonObject json = new JsonObject();
+    json.addProperty("a", "aa");
+    json.addProperty("b", "bb");
+    JsonObject nested = new JsonObject();
+    nested.addProperty("cc", "dd");
+    json.add("c", nested);
+
+    HashMap<String, String> out = JsonUtils.getJsonPaths(json, new HashMap<String, String>(),"");
+    out.forEach((r,c) -> System.out.println(r+c));
+  }
+  
+  @Test
+  public void getPathsFromLong() throws IOException {
+    String x = getStringFromFile("classpath:testjson/device.json");
+    JsonElement json = new Gson().fromJson(x, JsonElement.class);
+    HashMap<String, String> out = JsonUtils.getJsonPaths(json, new HashMap<String, String>(),"");
+    out.forEach((r,c) -> System.out.println(r+c));
+  }
+
+  @Test
+  public void getPathsFromList() throws IOException {
+    String x = getStringFromFile("classpath:testjson/device-list.json");
+    JsonElement json = new Gson().fromJson(x, JsonElement.class);
+    HashMap<String, String> out = JsonUtils.getJsonPaths(json, new HashMap<String, String>(),"");
+    out.forEach((r,c) -> System.out.println(r+c));
+  }
+
+
+  private String getStringFromFile(String classpath) throws IOException {
+    final File file = ResourceUtils.getFile(classpath);
+    final FileInputStream fis;
+    fis = new FileInputStream(file);
+    return IOUtils.toString(fis, "UTF-8");
   }
 }

@@ -121,7 +121,7 @@ public class ConnectorService extends AbstractConnectorService implements IConne
   public void setDeviceMeasurementSchema(
       DashboardConfigDto dto, String datasourceCode) throws ApsSystemException {
     logStartMethod(dto.getId(),datasourceCode,this.getClass());
-    connectorFactory.getConnector(dto.getType()).saveMeasurementTemplate(dto, datasourceCode);
+    connectorFactory.getConnector(dto.getType()).saveMeasurementTemplate(dto, datasourceCode, DatasourceType.GENERIC);
     ;
   }
 
@@ -143,16 +143,16 @@ public class ConnectorService extends AbstractConnectorService implements IConne
 
   @Override
   public MeasurementConfig getMeasurementsConfig(DashboardConfigDto dto,
-      String datasourceCode) {
+      String datasourceCode, DatasourceType type) {
     logStartMethod(dto.getId(),datasourceCode,this.getClass());
-    return connectorFactory.getConnector(dto.getType()).getMeasurementConfig(dto, datasourceCode);
+    return connectorFactory.getConnector(dto.getType()).getMeasurementConfig(dto, datasourceCode, type);
   }
 
   @Override
   public MeasurementTemplate getDeviceMeasurementSchema(DashboardConfigDto dto,
-      String datasourceCode) {
+      String datasourceCode, DatasourceType type) {
     logStartMethod(dto.getId(),datasourceCode,this.getClass());
-    return connectorFactory.getConnector(dto.getType()).getDeviceMeasurementSchema(dto, datasourceCode);
+    return connectorFactory.getConnector(dto.getType()).getDeviceMeasurementSchema(dto, datasourceCode, type);
   }
 
   @Override
