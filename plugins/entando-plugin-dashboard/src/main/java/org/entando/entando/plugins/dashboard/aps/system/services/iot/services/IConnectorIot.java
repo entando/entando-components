@@ -56,5 +56,5 @@ public interface IConnectorIot {
 
   DeviceLocations getDeviceLocations(DashboardConfigDto dto, String datasourceCode);
 
-  void setDeviceStatuses(DashboardConfigDto dto, String datasourceCode, JsonObject body);
+  void setGeodataDeviceStatuses(DashboardConfigDto dto, String datasourceCode, JsonObject body);
 }

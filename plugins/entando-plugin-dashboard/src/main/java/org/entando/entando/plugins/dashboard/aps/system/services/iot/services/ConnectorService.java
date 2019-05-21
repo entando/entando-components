@@ -172,9 +172,8 @@ public class ConnectorService extends AbstractConnectorService implements IConne
     return connectorFactory.getConnector(dto.getType()).refreshMetadata(dto,datasourceCode);
   }
 
-  @Override
-  public void setDeviceStatuses(DashboardConfigDto dto, String datasourceCode, JsonObject body) {
-    connectorFactory.getConnector(dto.getType()).setDeviceStatuses(dto, datasourceCode, body);
+  public void setGeodataDeviceStatuses(DashboardConfigDto dto, String datasourceCode, JsonObject body) {
+    connectorFactory.getConnector(dto.getType()).setGeodataDeviceStatuses(dto, datasourceCode, body);
   }
 
   @Override

@@ -59,7 +59,7 @@ public interface IConnectorService {
 
   DashboardConfigDto refreshMetadata(DashboardConfigDto dto, String datasourceCode) throws ApsSystemException;
 
-  void setDeviceStatuses(DashboardConfigDto dto, String datasourceCode,
+  void setGeodataDeviceStatuses(DashboardConfigDto dto, String datasourceCode,
       JsonObject body);
 
   DeviceLocations getDeviceLocations(DashboardConfigDto dto, String datasourceCode);
