@@ -222,6 +222,13 @@ public class DashboardConfigManager extends AbstractService implements IDashboar
     this.getDashboardConfigDAO().updateDatasource(datasource);
   }
 
+  @Override
+  public DatasourcesConfigDto getDatasourceByDatasourceId(String datasource) {
+    DatasourcesConfigDto datasourceByDatasourceId = this.getDashboardConfigDAO()
+        .getDatasourceByDatasourceId(datasource);
+    return datasourceByDatasourceId;
+  }
+
   protected IKeyGeneratorManager getKeyGeneratorManager() {
     return _keyGeneratorManager;
   }

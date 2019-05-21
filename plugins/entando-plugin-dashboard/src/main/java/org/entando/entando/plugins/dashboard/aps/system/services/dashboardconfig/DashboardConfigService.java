@@ -229,6 +229,13 @@ public class DashboardConfigService implements IDashboardConfigService {
     this.getDashboardConfigManager().updateDatasource(datasource);
   }
 
+  @Override
+  public DatasourcesConfigDto getDatasourceById(String datasource) {
+    DatasourcesConfigDto dto = this.getDashboardConfigManager().getDatasourceByDatasourceId(
+        datasource);
+    return dto;
+  }
+
 
   private DashboardConfig createDashboardConfig(DashboardConfigRequest dashboardConfigRequest) {
     DashboardConfig dashboardConfig = new DashboardConfig();
