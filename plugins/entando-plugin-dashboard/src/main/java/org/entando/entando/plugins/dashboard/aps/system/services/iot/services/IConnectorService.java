@@ -3,6 +3,7 @@ package org.entando.entando.plugins.dashboard.aps.system.services.iot.services;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.google.gson.JsonObject;
 
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.ServerType;
@@ -63,4 +64,6 @@ public interface IConnectorService {
       JsonObject body);
 
   DeviceLocations getDeviceLocations(DashboardConfigDto dto, String datasourceCode);
+
+  boolean isParcheggioAvailable(DashboardConfigDto dto, String idDatasource);
 }

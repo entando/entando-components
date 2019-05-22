@@ -57,4 +57,6 @@ public interface IConnectorIot {
   DeviceLocations getDeviceLocations(DashboardConfigDto dto, String datasourceCode);
 
   void setGeodataDeviceStatuses(DashboardConfigDto dto, String datasourceCode, JsonObject body);
+
+  boolean isParcheggioAvailable(DashboardConfigDto dto, String datasourceId);
 }
