@@ -9,7 +9,6 @@ import com.google.gson.reflect.TypeToken;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.TestUtils;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.exception.ApiResourceNotAvailableException;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DatasourceStatus;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
@@ -19,6 +18,7 @@ import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.Measu
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IConnectorService;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.JsonUtils;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.TestUtils;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.DashboardConfigController;
 import org.entando.entando.plugins.dashboard.web.iot.IoTExceptionHandler;
 import org.entando.entando.web.AbstractControllerTest;

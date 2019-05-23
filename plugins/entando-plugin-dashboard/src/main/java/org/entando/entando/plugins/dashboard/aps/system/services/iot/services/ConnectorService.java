@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.entando.entando.aps.system.exception.RestServerError;
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.ServerType;
@@ -172,13 +173,17 @@ public class ConnectorService extends AbstractConnectorService implements IConne
     return connectorFactory.getConnector(dto.getType()).refreshMetadata(dto,datasourceCode);
   }
 
-  @Override
-  public void setDeviceStatuses(DashboardConfigDto dto, String datasourceCode, JsonObject body) {
-    connectorFactory.getConnector(dto.getType()).setDeviceStatuses(dto, datasourceCode, body);
+  public void setGeodataDeviceStatuses(DashboardConfigDto dto, String datasourceCode, JsonObject body) {
+    connectorFactory.getConnector(dto.getType()).setGeodataDeviceStatuses(dto, datasourceCode, body);
   }
 
   @Override
   public DeviceLocations getDeviceLocations(DashboardConfigDto dto, String datasourceCode) {
     return connectorFactory.getConnector(dto.getType()).getDeviceLocations(dto,datasourceCode);
+  }
+
+  @Override
+  public boolean isParcheggioAvailable(DashboardConfigDto dto, String datasourceId) {
+    return connectorFactory.getConnector(dto.getType()).isParcheggioAvailable(dto,datasourceId);
   }
 }

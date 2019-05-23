@@ -48,5 +48,7 @@ public interface IDashboardConfigService {
   boolean datasourceExistsByDatasourceCode(String id_datasource);
 
   void updateDatasource(DatasourcesConfigDto datasource);
+
+  DatasourcesConfigDto getDatasourceById(String datasource);
 }
 

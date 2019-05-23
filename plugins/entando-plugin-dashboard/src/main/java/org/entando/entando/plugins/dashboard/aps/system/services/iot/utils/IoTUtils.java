@@ -155,8 +155,15 @@ public class IoTUtils {
       message = "{} method {} dashboard: {} result {}";
     }
     logger.info(message, aClass.getClass().getSimpleName(),
-        Thread.currentThread().getStackTrace()[2].getMethodName(),
+        Thread.currentThread().getStackTrace()[3].getMethodName(),
         dashboard, datasource, result);
+  }
+  
+  public static void logEndMethod(boolean result, Class aClass) {
+    final Logger logger = LoggerFactory.getLogger(aClass);
+    String message = "{} method {} result {}";
+    logger.info(message, aClass.getSimpleName(),
+        Thread.currentThread().getStackTrace()[3].getMethodName(), result);
   }
 
   public static void logEndMethod(int dashboardId, String datasource, boolean result, Class aClass) {
@@ -170,16 +177,21 @@ public class IoTUtils {
     if(datasource == null) {
       message = "{} method {} dashboard: {}";
     }
-    logger.info(message, aClass.getClass().getSimpleName(),
-        Thread.currentThread().getStackTrace()[2].getMethodName(),
+    logger.info(message, aClass.getSimpleName(),
+        Thread.currentThread().getStackTrace()[3].getMethodName(),
         dashboard, datasource);
+  }
+  
+  public static void logStartMethod(Class aClass) {
+    final Logger logger = LoggerFactory.getLogger(aClass);
+    String message = "{} method {}";
+    logger.info(message, aClass.getSimpleName(),
+        Thread.currentThread().getStackTrace()[3].getMethodName());
   }
 
   public static void logStartMethod(int dashboardId, String datasource, Class aClass) {
     logStartMethod(String.valueOf(dashboardId),datasource,aClass);
   }
-
-
 
     public static DashboardConfigDto checkServerAndDatasource(int serverId, String datasourceCode, IDashboardConfigService dashboardConfigService) {
     if (!dashboardConfigService.existsByIdAndIsActive(serverId)) {

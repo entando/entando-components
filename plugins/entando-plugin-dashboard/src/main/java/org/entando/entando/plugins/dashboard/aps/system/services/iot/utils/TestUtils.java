@@ -1,4 +1,4 @@
-package org.entando.entando.plugins.dashboard.aps.system.services.iot;
+package org.entando.entando.plugins.dashboard.aps.system.services.iot.utils;
 
 import org.entando.entando.plugins.dashboard.web.iot.IoTExceptionHandler;
 import org.springframework.context.support.ResourceBundleMessageSource;

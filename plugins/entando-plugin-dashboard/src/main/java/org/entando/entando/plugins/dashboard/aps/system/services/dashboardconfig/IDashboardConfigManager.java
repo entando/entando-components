@@ -57,4 +57,6 @@ public interface IDashboardConfigManager {
   DatasourcesConfigDto getDatasourceByDatasourceName(String datasource);
 
   void updateDatasource(DatasourcesConfigDto datasource);
+
+  DatasourcesConfigDto getDatasourceByDatasourceId(String id);
 }
