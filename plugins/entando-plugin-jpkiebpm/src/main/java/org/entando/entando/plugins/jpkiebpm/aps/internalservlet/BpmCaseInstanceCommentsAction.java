@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
 
 public class BpmCaseInstanceCommentsAction extends BpmCaseInstanceActionBase {
 
-    private static final Logger logger = LoggerFactory.getLogger(BpmFormAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(BpmCaseInstanceCommentsAction.class);
     private String comments;
     private String commentInput;
     private String caseCommentId;

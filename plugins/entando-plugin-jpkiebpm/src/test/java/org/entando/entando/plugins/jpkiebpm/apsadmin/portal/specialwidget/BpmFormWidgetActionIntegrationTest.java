@@ -68,7 +68,7 @@ public class BpmFormWidgetActionIntegrationTest extends ApsAdminBaseTestCase {
         // Open the widgetConfiguration
         this.initAction("/do/Page/SpecialWidget", "jpkiebpmBpmFormWidgetViewerConfig");
         this.addParameter("pageCode", temporaryPage.getCode());
-        this.addParameter("widgetTypeCode", "bpm-datatype-form");
+        this.addParameter("widgetTypeCode", "bpm-start-new-process-form");
         this.addParameter("frame", "0");
         assertEquals(Action.SUCCESS, this.executeAction());
         assertEquals(2, getAction().getKnowledgeSource().size());
@@ -168,7 +168,7 @@ public class BpmFormWidgetActionIntegrationTest extends ApsAdminBaseTestCase {
         // (here we can't reuse old parameters, because overrides list has changed)
         this.initAction("/do/bpm/Page/SpecialWidget/BpmFormViewer", "save");
         this.addParameter("pageCode", temporaryPage.getCode());
-        this.addParameter("widgetTypeCode", "bpm-datatype-form");
+        this.addParameter("widgetTypeCode", "bpm-start-new-process-form");
         this.addParameter("frame", "0");
         this.addParameter("knowledgeSourcePath", "1");
         this.addParameter("processPath", "process1@container1@1");
@@ -200,7 +200,7 @@ public class BpmFormWidgetActionIntegrationTest extends ApsAdminBaseTestCase {
         // Reopen widget settings and check modifications
         this.initAction("/do/Page/SpecialWidget", "jpkiebpmBpmFormWidgetViewerConfig");
         this.addParameter("pageCode", temporaryPage.getCode());
-        this.addParameter("widgetTypeCode", "bpm-datatype-form");
+        this.addParameter("widgetTypeCode", "bpm-start-new-process-form");
         this.addParameter("frame", "0");
         assertEquals(Action.SUCCESS, this.executeActionWithMockedKieServer());
         assertEquals(widgetInfoId, getWidgetInfoId());
@@ -218,7 +218,7 @@ public class BpmFormWidgetActionIntegrationTest extends ApsAdminBaseTestCase {
         // Save the draft widget modifying the active flag
         this.initAction("/do/bpm/Page/SpecialWidget/BpmFormViewer", "save");
         this.addParameter("pageCode", temporaryPage.getCode());
-        this.addParameter("widgetTypeCode", "bpm-datatype-form");
+        this.addParameter("widgetTypeCode", "bpm-start-new-process-form");
         this.addParameter("frame", "0");
         this.addParameter("knowledgeSourcePath", "1");
         this.addParameter("processPath", "process1@container1@1");

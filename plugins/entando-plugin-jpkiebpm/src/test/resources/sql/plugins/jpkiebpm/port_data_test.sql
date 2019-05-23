@@ -38,10 +38,10 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'jpkiebpm_c
 INSERT INTO widgetcatalog(
             code, titles, parameters, plugincode, parenttypecode, defaultconfig,
             locked, maingroup)
-    VALUES ('bpm-datatype-form', '<?xml version="1.0" encoding="UTF-8"?>
+    VALUES ('bpm-start-new-process-form', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
-<property key="en">PAM-Form by DataType</property>
-<property key="it">PAM-Form by DataType</property>
+<property key="en">PAM-Start new process Form</property>
+<property key="it">PAM-Form di avvio di un nuovo processo</property>
 </properties>', '<config>
 	<parameter name="dataTypeCode">Data Type Code</parameter>
 	<parameter name="dataUxId">Data Ux ID</parameter>

@@ -108,7 +108,7 @@ public class BpmFormWidgetActionTest extends BpmSourceAndProcessSelectorTest<Bpm
 
         Widget widget = new Widget();
         WidgetType widgetType = new WidgetType();
-        widgetType.setCode("bpm-datatype-form");
+        widgetType.setCode("bpm-start-new-process-form");
         widget.setType(widgetType);
 
         ApsProperties widgetConfig = new ApsProperties();

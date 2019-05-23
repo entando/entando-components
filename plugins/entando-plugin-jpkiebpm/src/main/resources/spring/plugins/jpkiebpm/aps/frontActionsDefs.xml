@@ -5,9 +5,8 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
 			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
 
-
-    <bean id="jpkieBpmDataTypeTaskFormFrontAction"
-          class="org.entando.entando.plugins.jpkiebpm.aps.internalservlet.BpmTypeTaskFormAction"
+    <bean id="jpkieBpmBaseFormFrontAction"
+          class="org.entando.entando.plugins.jpkiebpm.aps.internalservlet.BpmFormActionBase"
           parent="abstractBaseAction" scope="prototype" >
         <property name="dataObjectManager" ref="DataObjectManager" />
         <property name="dataObjectDispenser" ref="DataObjectDispenserManager" />
@@ -16,28 +15,18 @@
         <property name="bpmWidgetInfoManager" ref="jpkiebpmBpmWidgetInfoManager"/>
         <property name="i18nManager" ref="I18nManager" />
     </bean>
-    
-    
-        	
-    <bean id="jpkieBpmFormFrontAction"
-          class="org.entando.entando.plugins.jpkiebpm.aps.internalservlet.BpmFormAction"
-          parent="abstractBaseAction" scope="prototype" >
-        <property name="formManager" ref="jpkiebpmsManager" />
-        <property name="i18nManager" ref="I18nManager" />
+
+    <bean id="jpkieBpmStartNewProcessFormFrontAction"
+          class="org.entando.entando.plugins.jpkiebpm.aps.internalservlet.BpmFormStartNewProcessAction"
+          parent="jpkieBpmBaseFormFrontAction" scope="prototype" >
     </bean>
-	
-    <bean id="jpkieBpmDataTypeFormFrontAction"
-          class="org.entando.entando.plugins.jpkiebpm.aps.internalservlet.BpmTypeFormAction"
-          parent="abstractBaseAction" scope="prototype" >
-        <property name="dataObjectManager" ref="DataObjectManager" />
-        <property name="dataObjectDispenser" ref="DataObjectDispenserManager" />
-        <property name="formManager" ref="jpkiebpmsManager" />
-        <property name="formOverrideManager" ref="jpkiebpmFormOverrideManager" />
-	<property name="bpmWidgetInfoManager" ref="jpkiebpmBpmWidgetInfoManager"/>
-        <property name="i18nManager" ref="I18nManager" />
+
+    <bean id="jpkieBpmCompleteTaskFormFrontAction"
+          class="org.entando.entando.plugins.jpkiebpm.aps.internalservlet.BpmFormCompleteTaskAction"
+          parent="jpkieBpmBaseFormFrontAction" scope="prototype" >
     </bean>
-    
-     <bean id="jpkieBpmCaseProgressFrontAction"
+
+    <bean id="jpkieBpmCaseProgressFrontAction"
           class="org.entando.entando.plugins.jpkiebpm.aps.internalservlet.BpmCaseProgressAction"
           parent="abstractBaseAction" scope="prototype" >
         <property name="caseManager" ref="jpkiebpmsCaseManager"/>   
@@ -61,19 +50,18 @@
         <property name="caseManager" ref="jpkiebpmsCaseManager"/>   
     </bean>
         
-     <bean id="jpkieBpmCaseInstanceActionsFrontAction"
+    <bean id="jpkieBpmCaseInstanceActionsFrontAction"
           class="org.entando.entando.plugins.jpkiebpm.aps.internalservlet.BpmCaseInstanceActionsAction"
           parent="abstractBaseAction" scope="prototype" >
         <property name="caseManager" ref="jpkiebpmsCaseManager"/>   
     </bean>	
         
-     <bean id="jpkieBpmCaseInstanceRolesFrontAction"
+    <bean id="jpkieBpmCaseInstanceRolesFrontAction"
           class="org.entando.entando.plugins.jpkiebpm.aps.internalservlet.BpmCaseInstanceRolesAction"
           parent="abstractBaseAction" scope="prototype" >
         <property name="caseManager" ref="jpkiebpmsCaseManager"/>   
     </bean>
     	
-    <!--f-->
     <bean id="jpkieBpmCaseInstanceChartFrontAction"
           class="org.entando.entando.plugins.jpkiebpm.aps.internalservlet.BpmCaseInstanceChartAction"
           parent="abstractBaseAction" scope="prototype" >
@@ -91,19 +79,5 @@
           parent="abstractBaseAction" scope="prototype" >
         <property name="caseManager" ref="jpkiebpmsCaseManager"/>   
     </bean>	
-<!--
-    <bean id="jpkiebpmBpmFormWidgetAction"
-          class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmFormWidgetAction"
-          parent="simpleWidgetAction" scope="prototype" >
-        <property name="formManager" ref="jpkiebpmsManager" />
-    </bean>
-
-    <bean id="jpkiebpmBpmDatatableWidgetAction"
-          class="org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.BpmDatatableWidgetAction"
-          parent="simpleWidgetAction" scope="prototype" >
-        <property name="formManager" ref="jpkiebpmsManager" />
-
-            </bean>
-    -->
 
 </beans>
