@@ -29,7 +29,6 @@ import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigBuilder;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigRequest;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DatasourcesConfigRequest;
-import org.entando.entando.plugins.dashboard.web.dashboardconfig.validator.DashboardConfigValidator;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
@@ -49,6 +48,10 @@ import static org.entando.entando.plugins.dashboard.aps.system.services.dashboar
 import static org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfigExceptionMessages.DASHBOARD_CONFIG_ERROR_LOADING__WITH_ID_S;
 import static org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfigExceptionMessages.DASHBOARD_CONFIG_ERROR_ON_INSERT;
 import static org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfigExceptionMessages.DASHBOARD_CONFIG_ERROR_UPDATING_S;
+import static org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfigExceptionMessages.DATASOURCE_ALREADY_EXISTS_FIELD_WITH_NAME_S;
+import static org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils.logEndMethod;
+import static org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils.logStartMethod;
+import static org.entando.entando.plugins.dashboard.web.dashboardconfig.validator.DashboardConfigValidator.ERRCODE_DASHBOARDCONFIG_NOT_FOUND;
 
 public class DashboardConfigService implements IDashboardConfigService {
 
@@ -90,6 +93,7 @@ public class DashboardConfigService implements IDashboardConfigService {
 
   @Override
   public PagedMetadata<DashboardConfigDto> getDashboardConfigs(RestListRequest requestList) {
+    logStartMethod(getClass());
     try {
       List<FieldSearchFilter> filters = new ArrayList<FieldSearchFilter>(
           requestList.buildFieldSearchFilters());
@@ -105,9 +109,10 @@ public class DashboardConfigService implements IDashboardConfigService {
       PagedMetadata<DashboardConfigDto> pagedMetadata = new PagedMetadata<>(requestList,
           dashboardConfigs);
       pagedMetadata.setBody(dtoList);
-
+      logEndMethod(true, getClass());
       return pagedMetadata;
     } catch (Throwable t) {
+      logEndMethod(false, getClass());
       logger.error(DASHBOARD_CONFIGS_ERROR_SEARCHING, t);
       throw new RestServerError(DASHBOARD_CONFIGS_ERROR_SEARCHING, t);
     }
@@ -115,35 +120,32 @@ public class DashboardConfigService implements IDashboardConfigService {
 
   @Override
   public DashboardConfigDto updateDashboardConfig(DashboardConfigRequest dashboardConfigRequest) {
+    logStartMethod(dashboardConfigRequest.getId(), null, getClass());
     try {
       DashboardConfig dashboardConfig = this.getDashboardConfigManager()
           .getDashboardConfig(dashboardConfigRequest.getId());
-      
-      if (null == dashboardConfig) {
-        throw new ResourceNotFoundException(
-            DashboardConfigValidator.ERRCODE_DASHBOARDCONFIG_NOT_FOUND, "dashboardConfig",
-            String.valueOf(dashboardConfigRequest.getId()));
-      }
 
-      dashboardConfig = DashboardConfigBuilder.fromRequestToEntity(dashboardConfigRequest);
-
-      BeanPropertyBindingResult validationResult = this.validateForUpdate(dashboardConfig);
+      BeanPropertyBindingResult validationResult = this
+          .validateForUpdate(dashboardConfigRequest, dashboardConfig);
       if (validationResult.hasErrors()) {
         throw new ValidationGenericException(validationResult);
       }
-      this.getDashboardConfigManager().updateDashboardConfig(dashboardConfig);
-      return this.getDtoBuilder().convert(dashboardConfig);
-    }
-   catch(ApsSystemException e)
-  {
-    logger.error(DASHBOARD_CONFIG_ERROR_UPDATING_S, dashboardConfigRequest.getId(), e);
-    throw new RestServerError(DASHBOARD_CONFIG_ERROR_UPDATING_S, e);
-  }
 
-}
+      dashboardConfig = DashboardConfigBuilder.fromRequestToEntity(dashboardConfigRequest);
+      this.getDashboardConfigManager().updateDashboardConfig(dashboardConfig);
+      logEndMethod(dashboardConfig.getId(), null, true, getClass());
+      return this.getDtoBuilder().convert(dashboardConfig);
+    } catch (ApsSystemException e) {
+      logEndMethod(dashboardConfigRequest.getId(), null, false, getClass());
+      logger.error(DASHBOARD_CONFIG_ERROR_UPDATING_S, dashboardConfigRequest.getId(), e);
+      throw new RestServerError(DASHBOARD_CONFIG_ERROR_UPDATING_S, e);
+    }
+
+  }
 
   @Override
   public DashboardConfigDto addDashboardConfig(DashboardConfigRequest dashboardConfigRequest) {
+    logStartMethod(getClass());
     try {
       DashboardConfig dashboardConfig = this.createDashboardConfig(dashboardConfigRequest);
       BeanPropertyBindingResult validationResult = this.validateForAdd(dashboardConfig);
@@ -152,8 +154,10 @@ public class DashboardConfigService implements IDashboardConfigService {
       }
       this.getDashboardConfigManager().addDashboardConfig(dashboardConfig);
       DashboardConfigDto dto = this.getDtoBuilder().convert(dashboardConfig);
+      logEndMethod(true, getClass());
       return dto;
     } catch (ApsSystemException e) {
+      logEndMethod(false, getClass());
       logger.error(DASHBOARD_CONFIG_ERROR_ON_INSERT, e);
       throw new RestServerError(DASHBOARD_CONFIG_ERROR_ON_INSERT, e);
     }
@@ -161,6 +165,7 @@ public class DashboardConfigService implements IDashboardConfigService {
 
   @Override
   public void removeDashboardConfig(int id) {
+    logStartMethod(id, null, getClass());
     try {
       DashboardConfig dashboardConfig = this.getDashboardConfigManager().getDashboardConfig(id);
       if (null == dashboardConfig) {
@@ -172,7 +177,9 @@ public class DashboardConfigService implements IDashboardConfigService {
         throw new ValidationGenericException(validationResult);
       }
       this.getDashboardConfigManager().deleteDashboardConfig(id);
+      logEndMethod(id, null, true, getClass());
     } catch (ApsSystemException e) {
+      logEndMethod(id, null, false, getClass());
       logger.error(String.format(DASHBOARD_CONFIG_ERROR_DELETING_S, id), e);
       throw new RestServerError(String.format(DASHBOARD_CONFIG_ERROR_DELETING_S, id), e);
     }
@@ -180,18 +187,21 @@ public class DashboardConfigService implements IDashboardConfigService {
 
   @Override
   public DashboardConfigDto getDashboardConfig(int id) {
+    logStartMethod(id, null, getClass());
     try {
       DashboardConfig dashboardConfig = this.getDashboardConfigManager().getDashboardConfig(id);
       if (null == dashboardConfig) {
         logger.warn(String.format(
             DashboardConfigExceptionMessages.DASHBOARD_CONFIG_NOT_FOUND_WITH_CODE_S, id));
         throw new ResourceNotFoundException(
-            DashboardConfigValidator.ERRCODE_DASHBOARDCONFIG_NOT_FOUND, "dashboardConfig",
+            ERRCODE_DASHBOARDCONFIG_NOT_FOUND, "dashboardConfig",
             String.valueOf(id));
       }
       DashboardConfigDto dto = this.getDtoBuilder().convert(dashboardConfig);
+      logEndMethod(id, null, true, getClass());
       return dto;
     } catch (ApsSystemException e) {
+      logEndMethod(id, null, false, getClass());
       logger.error(String.format(DASHBOARD_CONFIG_ERROR_LOADING__WITH_ID_S, id), e);
       throw new RestServerError(String.format(DASHBOARD_CONFIG_ERROR_LOADING__WITH_ID_S, id), e);
     }
@@ -199,40 +209,59 @@ public class DashboardConfigService implements IDashboardConfigService {
 
   @Override
   public boolean existsById(int id) {
-    return this.getDashboardConfigManager().existsById(id);
+    logStartMethod(id, null, getClass());
+    boolean res = this.getDashboardConfigManager().existsById(id);
+    logEndMethod(id, null, res, getClass());
+    return res;
   }
 
   @Override
   public boolean existsByIdAndIsActive(int id) {
-    return this.getDashboardConfigManager().existsByIdAndActive(id, 1);
+    logStartMethod(id, null, getClass());
+    boolean res = this.getDashboardConfigManager().existsByIdAndActive(id, 1);
+    logEndMethod(id, null, res, getClass());
+    return res;
   }
 
   @Override
   public boolean datasourceExistsByDatasourceName(String datasourceName) {
-    return this.getDashboardConfigManager().datasourceExistsByDatasourceName(datasourceName);
+    logStartMethod(null, datasourceName, getClass());
+    boolean res = this.getDashboardConfigManager().datasourceExistsByDatasourceName(datasourceName);
+    logEndMethod(null, datasourceName, res, getClass());
+    return res;
   }
 
   @Override
   public boolean datasourceExistsByDashboardIdAndDatasourceName(int dashboardId,
       String datasourceName) {
-    return this.getDashboardConfigManager()
+    logStartMethod(dashboardId, datasourceName, getClass());
+    boolean res = this.getDashboardConfigManager()
         .datasourceExistsByDashboardIdAndDatasourceName(dashboardId, datasourceName);
+    logEndMethod(dashboardId, datasourceName, res, getClass());
+    return res;
   }
 
   @Override
   public boolean datasourceExistsByDatasourceCode(String datasourceCode) {
-    return this.getDashboardConfigManager().datasourceExistsByDatasourceCode(datasourceCode);
+    logStartMethod(null, datasourceCode, getClass());
+    boolean res = this.getDashboardConfigManager().datasourceExistsByDatasourceCode(datasourceCode);
+    logEndMethod(null, datasourceCode, res, getClass());
+    return res;
   }
 
   @Override
   public void updateDatasource(DatasourcesConfigDto datasource) {
+    logStartMethod(null, datasource.getDatasourceCode(), getClass());
     this.getDashboardConfigManager().updateDatasource(datasource);
+    logEndMethod(null, datasource.getDatasourceCode(), true, getClass());
   }
 
   @Override
   public DatasourcesConfigDto getDatasourceById(String datasource) {
+    logStartMethod(null, datasource, getClass());
     DatasourcesConfigDto dto = this.getDashboardConfigManager().getDatasourceByDatasourceId(
         datasource);
+    logEndMethod(null, datasource, true, getClass());
     return dto;
   }
 
@@ -269,8 +298,8 @@ public class DashboardConfigService implements IDashboardConfigService {
         && dashboardConfig.getDatasources().size() > 0) {
       dashboardConfig.getDatasources().forEach(d -> {
         if (this.datasourceExistsByDatasourceName(d.getDatasourceCode())) {
-          errors.addError(new ObjectError("dashboardConfig.datasources",String.format(
-              DashboardConfigExceptionMessages.DATASOURCE_ALREADY_EXISTS_FIELD_WITH_NAME_S, d.getDatasource())));
+          errors.addError(new ObjectError("dashboardConfig.datasources", String.format(
+              DATASOURCE_ALREADY_EXISTS_FIELD_WITH_NAME_S, d.getDatasource())));
         }
       });
     }
@@ -283,22 +312,30 @@ public class DashboardConfigService implements IDashboardConfigService {
     return errors;
   }
 
-  protected BeanPropertyBindingResult validateForUpdate(DashboardConfig dashboardConfig) {
-    BeanPropertyBindingResult errors = new BeanPropertyBindingResult(dashboardConfig,
+  protected BeanPropertyBindingResult validateForUpdate(DashboardConfigRequest request,
+      DashboardConfig fromDB) {
+    BeanPropertyBindingResult errors = new BeanPropertyBindingResult(fromDB,
         "dashboardConfig");
-    if (dashboardConfig.getDatasources() != null && dashboardConfig.getDatasources().size() > 0) {
-      dashboardConfig.getDatasources().forEach(d -> {
+
+    if (null == fromDB) {
+      errors.addError(new ObjectError("dashboardConfig.null", DASHBOARD_CONFIGS_ERROR_SEARCHING));
+      return errors;
+    }
+
+    if (request.getDatasources() != null && request.getDatasources().size() > 0) {
+      request.getDatasources().forEach(d -> {
         DatasourcesConfigDto matchedByName = dashboardConfigManager
             .getDatasourceByDatasourceName(d.getDatasource());
         if (matchedByName != null && !matchedByName.equals(new DatasourcesConfigDto())) {
-          if (matchedByName.getFk_dashboard_config() != dashboardConfig.getId()) {
-             errors.addError(new ObjectError("dashboardConfig.datasources",String.format(
-                 DashboardConfigExceptionMessages.DATASOURCE_ALREADY_EXISTS_FIELD_WITH_NAME_S, d.getDatasource())));
-          }
-          else {
-            if(dashboardConfig.getDatasources().stream().filter(data -> matchedByName.getDatasource().equals(data.getDatasource())).count() > 1) {
-              errors.addError(new ObjectError("dashboardConfig.datasources",String.format(
-                  DashboardConfigExceptionMessages.DATASOURCE_ALREADY_EXISTS_FIELD_WITH_NAME_S, d.getDatasource())));
+          if (matchedByName.getFk_dashboard_config() != fromDB.getId()) {
+            errors.addError(new ObjectError("dashboardConfig.datasources", String.format(
+                DATASOURCE_ALREADY_EXISTS_FIELD_WITH_NAME_S, d.getDatasource())));
+          } else {
+            if (request.getDatasources().stream()
+                .filter(data -> matchedByName.getDatasource().equals(data.getDatasource())).count()
+                > 1) {
+              errors.addError(new ObjectError("dashboardConfig.datasources", String.format(
+                  DATASOURCE_ALREADY_EXISTS_FIELD_WITH_NAME_S, d.getDatasource())));
             }
           }
         }

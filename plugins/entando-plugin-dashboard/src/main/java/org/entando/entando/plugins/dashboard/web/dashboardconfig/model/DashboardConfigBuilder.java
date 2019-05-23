@@ -29,6 +29,9 @@ public class DashboardConfigBuilder {
 
   public static DashboardConfigDto fromRequestToDto(DashboardConfigRequest req) {
     DashboardConfigDto dto = new DashboardConfigDto();
+    if(req == null) {
+      return null;
+    }
     BeanUtils.copyProperties(req, dto);
     List<DatasourcesConfigDto> dataDto = new ArrayList<>();
     for (DatasourcesConfigRequest configReq: req.getDatasources()) {
@@ -45,6 +48,9 @@ public class DashboardConfigBuilder {
   }
   public static DashboardConfig fromRequestToEntity(DashboardConfigRequest req) {
     DashboardConfig entity = new DashboardConfig();
+    if(req == null) {
+      return null;
+    }
     BeanUtils.copyProperties(req, entity);
     List<DatasourcesConfigDto> dataDto = new ArrayList<>();
     for (DatasourcesConfigRequest configReq: req.getDatasources()) {

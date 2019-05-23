@@ -54,15 +54,10 @@ public class ConnectorController {
   public ResponseEntity<?> saveMeasurement(@PathVariable int serverId,
       @PathVariable String datasourceCode,
       @RequestBody String measure) {
-    try {
-      DashboardConfigDto dto = IoTUtils
-          .checkServerAndDatasource(serverId, datasourceCode, dashboardConfigService);
-      connectorService.saveDeviceMeasurement(dto, datasourceCode, measure);
-      return new ResponseEntity(HttpStatus.OK);
-    }
-    catch (Throwable t) {
-      return new ResponseEntity(t.getStackTrace() , HttpStatus.OK);
-    }
+    DashboardConfigDto dto = IoTUtils
+        .checkServerAndDatasource(serverId, datasourceCode, dashboardConfigService);
+    connectorService.saveDeviceMeasurement(dto, datasourceCode, measure);
+    return new ResponseEntity(HttpStatus.OK);
   }
 
   @RequestMapping(value = "/server/{serverId}/datasource/{datasourceCode}/data", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
