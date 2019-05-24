@@ -275,9 +275,9 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
 
   private void insertDashboardConfigDatasource(DashboardConfig dashboardConfig, Connection conn) {
     dashboardConfig.getDatasources().forEach(c -> {
-      final PreparedStatement stat = null;
+      PreparedStatement stat = null;
       try {
-        conn.prepareStatement(ADD_DATASOURCE);
+        stat = conn.prepareStatement(ADD_DATASOURCE);
         int index = 1;
         stat.setInt(index++, dashboardConfig.getId());
         stat.setString(index++, c.getDatasourceCode());

@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import static org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTConstants.JSON_FIELD_SEPARATOR;
@@ -101,7 +102,7 @@ public class JsonUtils {
     return gson.fromJson(gson.toJson(payload), HashMap.class);
   }
 
-  public static HashMap<String,String> getJsonPaths(JsonElement json, HashMap<String,String> out, String actualPath) {
+  public static TreeMap<String,String> getJsonPaths(JsonElement json, TreeMap<String,String> out, String actualPath) {
     String escapedDelimiter = "\\.";
     String delimiter = ".";
     if(json.isJsonObject()) {

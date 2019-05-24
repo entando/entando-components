@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -88,7 +89,7 @@ public class JsonUtilsTest {
     nested.addProperty("cc", "dd");
     json.add("c", nested);
 
-    HashMap<String, String> out = JsonUtils.getJsonPaths(json, new HashMap<String, String>(),"");
+    TreeMap<String, String> out = JsonUtils.getJsonPaths(json, new TreeMap<String, String>(),"");
     out.forEach((r,c) -> System.out.println(r+c));
   }
   
@@ -96,7 +97,7 @@ public class JsonUtilsTest {
   public void getPathsFromLong() throws IOException {
     String x = getStringFromFile("classpath:testjson/device.json");
     JsonElement json = new Gson().fromJson(x, JsonElement.class);
-    HashMap<String, String> out = JsonUtils.getJsonPaths(json, new HashMap<String, String>(),"");
+    TreeMap<String, String> out = JsonUtils.getJsonPaths(json, new TreeMap<String, String>(),"");
     out.forEach((r,c) -> System.out.println(r+c));
   }
 
@@ -104,7 +105,7 @@ public class JsonUtilsTest {
   public void getPathsFromList() throws IOException {
     String x = getStringFromFile("classpath:testjson/device-list.json");
     JsonElement json = new Gson().fromJson(x, JsonElement.class);
-    HashMap<String, String> out = JsonUtils.getJsonPaths(json, new HashMap<String, String>(),"");
+    TreeMap<String, String> out = JsonUtils.getJsonPaths(json, new TreeMap<String, String>(),"");
     out.forEach((r,c) -> System.out.println(r+c));
   }
 
