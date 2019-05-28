@@ -23,8 +23,6 @@ import java.util.Map;
 
 public interface IConnectorService {
 
-	LinkedHashMap<String, String> getConnectorTypes() throws IOException;
-
 	DashboardConfigDto pingDevice(DashboardConfigDto device, String datasourceCode)
       throws IOException, ApsSystemException;
 
@@ -32,26 +30,20 @@ public interface IConnectorService {
 
 	List<DatasourcesConfigDto> getAllDevices(DashboardConfigDto dashboardConfigDto);
 
-	/**
-	 * TODO Lista struttura Misura per configurazione tramite interfaccioa web
-	 */
-	//    <T extends DashboardDatasourceDto> MeasurementConfig getDeviceMeasurementSchema(T dashboardDatasourceDto, String loggerId);
-
 	void setDeviceMeasurementSchema(DashboardConfigDto dto, String datasourceCode) throws ApsSystemException;
 
 	void saveDeviceMeasurement(DashboardConfigDto dashboardDatasourceDto,
       String datasourceCode, String measure);
 
-	PagedMetadata<Map<String, Object>> getMeasurements(RestListRequest requestList);
-
 	List<Map<String, Object>> getDeviceMeasurements(DashboardConfigDto dto,
       String datasourceCode, Date startDate, Date endDate,
-      RestListRequest restListRequest, DatasourceType type);
+      RestListRequest restListRequest, DatasourceType type) throws ApsSystemException;
 
-	MeasurementConfig getMeasurementsConfig(DashboardConfigDto dto, String datasourceCode, DatasourceType type);
+	MeasurementConfig getMeasurementsConfig(DashboardConfigDto dto, String datasourceCode, DatasourceType type)
+      throws ApsSystemException;
 
 	MeasurementTemplate getDeviceMeasurementSchema(DashboardConfigDto dto,
-      String datasourceCode, DatasourceType type);
+      String datasourceCode, DatasourceType type) throws ApsSystemException;
 
 	List<ServerType> getDashboardTypes();
 
@@ -61,9 +53,11 @@ public interface IConnectorService {
   DashboardConfigDto refreshMetadata(DashboardConfigDto dto, String datasourceCode) throws ApsSystemException;
 
   void setGeodataDeviceStatuses(DashboardConfigDto dto, String datasourceCode,
-      JsonObject body);
+      JsonObject body) throws ApsSystemException;
 
-  DeviceLocations getDeviceLocations(DashboardConfigDto dto, String datasourceCode);
+  DeviceLocations getDeviceLocations(DashboardConfigDto dto, String datasourceCode)
+      throws ApsSystemException;
 
-  boolean isParcheggioAvailable(DashboardConfigDto dto, String idDatasource);
+  boolean isParcheggioAvailable(DashboardConfigDto dto, String datasourceCode)
+      throws ApsSystemException;
 }

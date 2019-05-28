@@ -67,7 +67,7 @@ public class ConnectorController {
       @RequestParam (value = "type", required = false, defaultValue = DATASOURCE_TYPE_GENERIC) DatasourceType type,
       @RequestParam(value = "startDate", required = false) Instant startDate,
       @RequestParam(value = "endDate", required = false) Instant endDate,
-      RestListRequest requestList) {
+      RestListRequest requestList) throws ApsSystemException {
     DashboardConfigDto dto = IoTUtils.checkServerAndDatasource(serverId, datasourceCode, dashboardConfigService);
     Date start = null;
     Date end = null;

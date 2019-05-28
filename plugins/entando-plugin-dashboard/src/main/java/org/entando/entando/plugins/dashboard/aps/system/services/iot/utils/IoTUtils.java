@@ -11,7 +11,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.IDashboardConfigService;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
+import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.exception.ApiResourceNotAvailableException;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.exception.InvalidFieldException;
 import org.entando.entando.web.entity.validator.EntityValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,9 +22,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Base64;
@@ -30,6 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 
 import javax.ws.rs.BadRequestException;
 
@@ -78,10 +84,10 @@ public class IoTUtils {
 		return query;
 	}
 
-  public static ResponseEntity<String> getRequestMethod(String url, HttpHeaders headers) {
+  public static ResponseEntity<String> getRequestMethod(String url, int requestTimeout, HttpHeaders headers) {
     HttpEntity httpEntity = new HttpEntity(headers);
 
-    RestTemplate restTemplate = new RestTemplate();
+    RestTemplate restTemplate = new RestTemplate(getClientHttpRequestFactory(requestTimeout));
     try {
       return restTemplate.exchange(url, HttpMethod.GET, httpEntity, String.class);
     }
@@ -90,10 +96,18 @@ public class IoTUtils {
     }
   }
 
-  public static ResponseEntity<String> postRequestMethod(String url, HttpHeaders headers, JsonObject body) {
+  private static ClientHttpRequestFactory getClientHttpRequestFactory(int requestTimeout) {
+    int timeout = requestTimeout;
+    HttpComponentsClientHttpRequestFactory clientHttpRequestFactory
+        = new HttpComponentsClientHttpRequestFactory();
+    clientHttpRequestFactory.setConnectTimeout(timeout);
+    return clientHttpRequestFactory;
+  }
+  
+  public static ResponseEntity<String> postRequestMethod(String url, int requestTimeout, HttpHeaders headers, JsonObject body) {
     HttpEntity<?> httpEntity = new HttpEntity<Object>(getMapFromJson(body), headers);
     
-    RestTemplate restTemplate = new RestTemplate();
+    RestTemplate restTemplate = new RestTemplate(getClientHttpRequestFactory(requestTimeout));
     try {
       return restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
     }
@@ -102,10 +116,10 @@ public class IoTUtils {
     }
   }
   
-  public static ResponseEntity<String> postRequestMethod(String url, HttpHeaders headers, String body) {
+  public static ResponseEntity<String> postRequestMethod(String url, int requestTimeout, HttpHeaders headers, String body) {
     HttpEntity<?> httpEntity = new HttpEntity<Object>(body, headers);
     
-    RestTemplate restTemplate = new RestTemplate();
+    RestTemplate restTemplate = new RestTemplate(getClientHttpRequestFactory(requestTimeout));
     try {
       return restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
     }
@@ -115,12 +129,17 @@ public class IoTUtils {
   }
 
 	public static boolean isValidResponse(ResponseEntity<String> response) {
-		if(response.getStatusCode().is2xxSuccessful()) {
-			return true;
-		}
-		return false;
-	}
+    return response.getStatusCode().is2xxSuccessful();
+  }
 
+  public static DatasourcesConfigDto getDatasource(DashboardConfigDto dto,
+      String datasourceCode) {
+    Optional<DatasourcesConfigDto> optDatasource = dto.getDatasources().stream()
+        .filter(d -> d.getDatasourceCode().equals(datasourceCode)).findFirst();
+    return optDatasource.orElseThrow(() -> new InvalidFieldException(
+        String.format("no datasource with code %s", datasourceCode)));
+  }
+  
   public static void throwApiResourceUnavailableEx(ResponseEntity<String> response,
       int dashboardId, String datasourceCode, Class aClass) {
 	  if(datasourceCode != null) {

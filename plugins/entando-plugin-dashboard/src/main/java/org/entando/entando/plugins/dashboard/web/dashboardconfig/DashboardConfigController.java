@@ -235,7 +235,7 @@ public class DashboardConfigController {
     if (datasource.getFk_dashboard_config() != serverId) {
       throw new InvalidFieldException("datasource_FK MUST match serverId");
     }
-    dashboardConfigService.updateDatasource(datasource);
+//    dashboardConfigService.updateDatasource(datasource);
     return new ResponseEntity<>(
         new SimpleRestResponse<>(datasource.getStatus().equals(DATASOURCE_STATUS_ONLINE)),
         HttpStatus.OK);
@@ -246,7 +246,7 @@ public class DashboardConfigController {
   public ResponseEntity<SimpleRestResponse<MeasurementColumn>> getMeasurementPreview(
       @PathVariable int serverId, @PathVariable String datasourceCode,
   @RequestParam(value = "type", defaultValue = "GENERIC", required = false)
-      DatasourceType type) {
+      DatasourceType type) throws ApsSystemException {
 
     DashboardConfigDto dto = IoTUtils
         .checkServerAndDatasource(serverId, datasourceCode, dashboardConfigService);
@@ -260,7 +260,7 @@ public class DashboardConfigController {
   public ResponseEntity<SimpleRestResponse<MeasurementColumn>> getDatasourceColumns(
       @PathVariable int serverId, @PathVariable String datasourceCode,
       @RequestParam(value = "type", defaultValue = "GENERIC", required = false)
-          DatasourceType type) {
+          DatasourceType type) throws ApsSystemException {
 
     DashboardConfigDto dto = IoTUtils
         .checkServerAndDatasource(serverId, datasourceCode, dashboardConfigService);

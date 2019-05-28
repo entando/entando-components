@@ -51,8 +51,7 @@ public class MeasurementTemplateManager extends AbstractService implements IMeas
   }
 
   @Override
-  public void insertMeasurementTemplate(MeasurementTemplate measurementTemplate)
-      throws ApsSystemException {
+  public void insertMeasurementTemplate(MeasurementTemplate measurementTemplate) {
     try {
       String key = String.valueOf(this.getKeyGeneratorManager().getUniqueKeyCurrentValue());
       measurementTemplate.setId(key);
@@ -60,7 +59,7 @@ public class MeasurementTemplateManager extends AbstractService implements IMeas
 //      this.notifyDashboardConfigChangedEvent(dashboardConfig, DashboardConfigChangedEvent.INSERT_OPERATION_CODE);
     } catch (Throwable t) {
       logger.error("Error adding MeasurementTemplate", t);
-      throw new ApsSystemException("Error adding MeasurementTemplate", t);
+//      throw new ApsSystemException("Error adding MeasurementTemplate", t);
     }
   }
   

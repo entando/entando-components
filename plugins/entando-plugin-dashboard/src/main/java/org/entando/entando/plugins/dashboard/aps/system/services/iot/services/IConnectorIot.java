@@ -26,13 +26,12 @@ public interface IConnectorIot {
    */
   boolean supports(String connectorType);
 
-  DashboardConfigDto pingDevice(DashboardConfigDto dashboardDatasourceDto, String datasourceCode) throws IOException;
+  DashboardConfigDto pingDevice(DashboardConfigDto dashboardDatasourceDto, String datasourceCode);
 
   List<DatasourcesConfigDto> getAllDevices(DashboardConfigDto dashboardConfigDto) throws ApiResourceNotAvailableException;
 
   void saveMeasurementTemplate(DashboardConfigDto dashboardDatasource,
-      String datasourceCode, DatasourceType type)
-      throws ApsSystemException;
+      String datasourceCode, DatasourceType type);
 
   void saveDeviceMeasurement(DashboardConfigDto dashboardDatasourceDto,
       String datasourceCode, String measurementBody);
@@ -49,10 +48,9 @@ public interface IConnectorIot {
 
   ServerType getServerType();
 
-  DashboardConfigRequest setDevicesMetadata(DashboardConfigRequest dashboardConfigRequest)
-      throws ApsSystemException;
+  DashboardConfigRequest setDevicesMetadata(DashboardConfigRequest dashboardConfigRequest);
 
-  DashboardConfigDto refreshMetadata(DashboardConfigDto dto, String datasourceCode) throws ApsSystemException;
+  DashboardConfigDto refreshMetadata(DashboardConfigDto dto, String datasourceCode);
 
   DeviceLocations getDeviceLocations(DashboardConfigDto dto, String datasourceCode);
 

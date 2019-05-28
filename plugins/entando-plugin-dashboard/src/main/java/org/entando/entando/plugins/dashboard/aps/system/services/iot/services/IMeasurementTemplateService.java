@@ -6,10 +6,9 @@ import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.Measu
 
 public interface IMeasurementTemplateService {
   
-  void save(MeasurementTemplate measurement) throws ApsSystemException;
+  void save(MeasurementTemplate measurement);
 
-  MeasurementTemplate getById(String id) throws ApsSystemException;
+  MeasurementTemplate getById(String id);
 
-  MeasurementTemplate getByDashboardIdAndDatasourceCode(int dashboardId, String datasourceCode)
-      throws ApsSystemException;
+  MeasurementTemplate getByDashboardIdAndDatasourceCode(int dashboardId, String datasourceCode);
 }
