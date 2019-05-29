@@ -13,7 +13,6 @@ import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.Datas
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DatasourceType;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigRequest;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.slf4j.Logger;
@@ -22,12 +21,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import static org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTConstants.API_EX_DASHBOARD;
 import static org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils.getDatasource;
 import static org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils.logEndMethod;
 import static org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils.logStartMethod;
@@ -60,9 +57,9 @@ public class ConnectorService extends AbstractConnectorService implements IConne
       result = pingDatasource(dto, datasourceCode);
     } catch (ApiResourceNotAvailableException e) {
       setDatasourceStatus(dto, datasourceCode, DatasourceStatus.OFFLINE);
-      throw new ApiResourceNotAvailableException("400",
-          String.format(API_EX_DASHBOARD, getClass().getSimpleName(), dto.getId()));
+      throw e;
     }
+    dashboardConfigService.updateDatasource(getDatasource(dto, datasourceCode));
     logEndMethod(dto.getId(), datasourceCode, true, getClass());
     return result;
   }
@@ -115,8 +112,7 @@ public class ConnectorService extends AbstractConnectorService implements IConne
           restListRequest, type);
     } catch (ApiResourceNotAvailableException e) {
       setDatasourceStatus(dto, datasourceCode, DatasourceStatus.OFFLINE);
-      throw new ApiResourceNotAvailableException("400",
-          String.format(API_EX_DASHBOARD, getClass().getSimpleName(), dto.getId()));
+      throw e;
     }
     setDatasourceStatus(dto, datasourceCode, DatasourceStatus.ONLINE);
     logEndMethod(dto.getId(), datasourceCode, true, getClass());
@@ -132,8 +128,7 @@ public class ConnectorService extends AbstractConnectorService implements IConne
       measurementConfig = getMeasurementConfig(dto, datasourceCode, type);
     } catch (ApiResourceNotAvailableException e) {
       setDatasourceStatus(dto, datasourceCode, DatasourceStatus.OFFLINE);
-      throw new ApiResourceNotAvailableException("400",
-          String.format(API_EX_DASHBOARD, getClass().getSimpleName(), dto.getId()));
+      throw e;
     }
     setDatasourceStatus(dto, datasourceCode, DatasourceStatus.ONLINE);
     logEndMethod(dto.getId(), datasourceCode, true, getClass());
@@ -150,8 +145,7 @@ public class ConnectorService extends AbstractConnectorService implements IConne
           type);
     } catch (ApiResourceNotAvailableException e) {
       setDatasourceStatus(dto, datasourceCode, DatasourceStatus.OFFLINE);
-      throw new ApiResourceNotAvailableException("400",
-          String.format(API_EX_DASHBOARD, getClass().getSimpleName(), dto.getId()));
+      throw e;
     }
     setDatasourceStatus(dto, datasourceCode, DatasourceStatus.ONLINE);
     logEndMethod(dto.getId(), datasourceCode, true, getClass());
@@ -177,8 +171,7 @@ public class ConnectorService extends AbstractConnectorService implements IConne
       dto = connectorFactory.getConnector(dto.getType()).refreshMetadata(dto, datasourceCode);
     } catch (ApiResourceNotAvailableException e) {
       setDatasourceStatus(dto, datasourceCode, DatasourceStatus.OFFLINE);
-      throw new ApiResourceNotAvailableException("400",
-          String.format(API_EX_DASHBOARD, getClass().getSimpleName(), dto.getId()));
+      throw e;
     }
     setDatasourceStatus(dto, datasourceCode, DatasourceStatus.ONLINE);
     DatasourcesConfigDto datasource = getDatasource(dto, datasourceCode);
@@ -195,8 +188,7 @@ public class ConnectorService extends AbstractConnectorService implements IConne
       getGeodataDatasourceStatuses(dto, datasourceCode, body);
     } catch (ApiResourceNotAvailableException e) {
       setDatasourceStatus(dto, datasourceCode, DatasourceStatus.OFFLINE);
-      throw new ApiResourceNotAvailableException("400",
-          String.format(API_EX_DASHBOARD, getClass().getSimpleName(), dto.getId()));
+      throw e;
     }
     setDatasourceStatus(dto, datasourceCode, DatasourceStatus.ONLINE);
     logEndMethod(dto.getId(), datasourceCode, true, getClass());
@@ -210,8 +202,7 @@ public class ConnectorService extends AbstractConnectorService implements IConne
       deviceLocations = getDatasourceLocations(dto, datasourceCode);
     } catch (ApiResourceNotAvailableException e) {
       setDatasourceStatus(dto, datasourceCode, DatasourceStatus.OFFLINE);
-      throw new ApiResourceNotAvailableException("400",
-          String.format(API_EX_DASHBOARD, getClass().getSimpleName(), dto.getId()));
+      throw e;
     }
     setDatasourceStatus(dto, datasourceCode, DatasourceStatus.ONLINE);
     logEndMethod(dto.getId(), datasourceCode, true, getClass());
@@ -226,8 +217,7 @@ public class ConnectorService extends AbstractConnectorService implements IConne
       result = isParcheggioAvaialable(dto, datasourceCode);
     } catch (ApiResourceNotAvailableException e) {
       setDatasourceStatus(dto, datasourceCode, DatasourceStatus.OFFLINE);
-      throw new ApiResourceNotAvailableException("400",
-          String.format(API_EX_DASHBOARD, getClass().getSimpleName(), dto.getId()));
+      throw e;
     }
     setDatasourceStatus(dto, datasourceCode, DatasourceStatus.ONLINE);
     logEndMethod(dto.getId(), datasourceCode, true, getClass());
@@ -247,7 +237,7 @@ public class ConnectorService extends AbstractConnectorService implements IConne
       result = connectorFactory.getConnector(dto.getType())
           .isParcheggioAvailable(dto, datasourceCode);
     } catch (ApiResourceNotAvailableException e) {
-      this.refreshMetadata(dto, datasourceCode);
+      dto = this.refreshMetadata(dto, datasourceCode);
       result = connectorFactory.getConnector(dto.getType())
           .isParcheggioAvailable(dto, datasourceCode);
     }
@@ -260,7 +250,7 @@ public class ConnectorService extends AbstractConnectorService implements IConne
       deviceLocations = connectorFactory.getConnector(dto.getType())
           .getDeviceLocations(dto, datasourceCode);
     } catch (ApiResourceNotAvailableException e) {
-      this.refreshMetadata(dto, datasourceCode);
+      dto = this.refreshMetadata(dto, datasourceCode);
       deviceLocations = connectorFactory.getConnector(dto.getType())
           .getDeviceLocations(dto, datasourceCode);
     }
@@ -273,7 +263,7 @@ public class ConnectorService extends AbstractConnectorService implements IConne
       connectorFactory.getConnector(dto.getType())
           .setGeodataDeviceStatuses(dto, datasourceCode, body);
     } catch (ApiResourceNotAvailableException e) {
-      this.refreshMetadata(dto, datasourceCode);
+      dto = this.refreshMetadata(dto, datasourceCode);
       connectorFactory.getConnector(dto.getType())
           .setGeodataDeviceStatuses(dto, datasourceCode, body);
     }
@@ -286,7 +276,7 @@ public class ConnectorService extends AbstractConnectorService implements IConne
       measurementTemplate = connectorFactory.getConnector(dto.getType())
           .getDeviceMeasurementSchema(dto, datasourceCode, type);
     } catch (ApiResourceNotAvailableException e) {
-      this.refreshMetadata(dto, datasourceCode);
+      dto = this.refreshMetadata(dto, datasourceCode);
       measurementTemplate = connectorFactory.getConnector(dto.getType())
           .getDeviceMeasurementSchema(dto, datasourceCode, type);
     }
@@ -300,7 +290,7 @@ public class ConnectorService extends AbstractConnectorService implements IConne
       measurementConfig = connectorFactory.getConnector(dto.getType())
           .getMeasurementConfig(dto, datasourceCode, type);
     } catch (ApiResourceNotAvailableException e) {
-      this.refreshMetadata(dto, datasourceCode);
+      dto = this.refreshMetadata(dto, datasourceCode);
       measurementConfig = connectorFactory.getConnector(dto.getType())
           .getMeasurementConfig(dto, datasourceCode, type);
     }
@@ -313,9 +303,8 @@ public class ConnectorService extends AbstractConnectorService implements IConne
       result = connectorFactory.getConnector(dto.getType()).pingDevice(dto, datasourceCode);
     } catch (ApiResourceNotAvailableException e) {
       dto = this.refreshMetadata(dto, datasourceCode);
-
       result = connectorFactory.getConnector(dto.getType()).pingDevice(dto, datasourceCode);
-      dashboardConfigService.updateDatasource(IoTUtils.getDatasource(result, datasourceCode));
+      dashboardConfigService.updateDatasource(getDatasource(result, datasourceCode));
     }
     return result;
   }
@@ -323,13 +312,13 @@ public class ConnectorService extends AbstractConnectorService implements IConne
   private List<Map<String, Object>> getDatasourceMeasurements(DashboardConfigDto dto,
       String datasourceCode, Date startDate, Date endDate, RestListRequest restListRequest,
       DatasourceType type) {
-    List<Map<String, Object>> measurements = new ArrayList<>();
+    List<Map<String, Object>> measurements;
     try {
       measurements = connectorFactory.getConnector(dto.getType())
           .getMeasurements(dto, datasourceCode, startDate, endDate, restListRequest, type);
     } catch (ApiResourceNotAvailableException e) {
-      this.refreshMetadata(dto, datasourceCode);
-      connectorFactory.getConnector(dto.getType())
+      dto = this.refreshMetadata(dto, datasourceCode);
+      measurements = connectorFactory.getConnector(dto.getType())
           .getMeasurements(dto, datasourceCode, startDate, endDate, restListRequest, type);
     }
     return measurements;

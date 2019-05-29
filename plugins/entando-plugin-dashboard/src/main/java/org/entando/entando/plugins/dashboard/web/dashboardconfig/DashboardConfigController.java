@@ -182,9 +182,6 @@ public class DashboardConfigController {
     if (bindingResult.hasErrors()) {
       throw new ValidationConflictException(bindingResult);
     }
-//    if(dashboardConfigRequest.getDatasources()!= null && dashboardConfigRequest.getDatasources().size() > 0) {
-//      dashboardConfigRequest = connectorService.setDevicesMetadata(dashboardConfigRequest);
-//    }
     DashboardConfigDto dto = this.getDashboardConfigService()
         .addDashboardConfig(dashboardConfigRequest);
     return new ResponseEntity<>(new SimpleRestResponse(dto), HttpStatus.OK);
@@ -290,30 +287,33 @@ public class DashboardConfigController {
       @PathVariable String datasourceCode) throws ApsSystemException {
     DashboardConfigDto dto = IoTUtils
         .checkServerAndDatasource(serverId, datasourceCode, dashboardConfigService);
-    DashboardConfigDto dashboard = updateDashboardWithDatasourceMetadata(serverId, datasourceCode,
-        dto);
+//    DashboardConfigDto dashboard = updateDashboardWithDatasourceMetadata(serverId, datasourceCode,
+//        dto);
+//
+//    DashboardConfigRequest request = DashboardConfigBuilder.fromDtoToRequest(dashboard);
+//    dashboardConfigService.updateDashboardConfig(request);
 
-    DashboardConfigRequest request = DashboardConfigBuilder.fromDtoToRequest(dashboard);
-    dashboardConfigService.updateDashboardConfig(request);
+    connectorService.refreshMetadata(dto, datasourceCode);
+    
     return new ResponseEntity(HttpStatus.OK);
   }
 
-  private DashboardConfigDto updateDashboardWithDatasourceMetadata(
-      int serverId,
-      String datasourceCode,
-      DashboardConfigDto dto) throws ApsSystemException {
-
-    dto = connectorService.refreshMetadata(dto, datasourceCode);
-
-    DashboardConfigDto dashboard = getDashboardConfigService().getDashboardConfig(serverId);
-
-    DatasourcesConfigDto toRemove = dashboard.getDatasources().stream()
-        .filter(d -> d.getDatasourceCode().equals(datasourceCode)).findFirst().get();
-    dashboard.getDatasources().remove(toRemove);
-    dashboard.getDatasources().add(
-        dto.getDatasources().stream().filter(d -> d.getDatasourceCode().equals(datasourceCode))
-            .findFirst().get());
-    return dashboard;
-  }
+//  private DashboardConfigDto updateDashboardWithDatasourceMetadata(
+//      int serverId,
+//      String datasourceCode,
+//      DashboardConfigDto dto) throws ApsSystemException {
+//
+//    dto = connectorService.refreshMetadata(dto, datasourceCode);
+//
+//    DashboardConfigDto dashboard = getDashboardConfigService().getDashboardConfig(serverId);
+//
+//    DatasourcesConfigDto toRemove = dashboard.getDatasources().stream()
+//        .filter(d -> d.getDatasourceCode().equals(datasourceCode)).findFirst().get();
+//    dashboard.getDatasources().remove(toRemove);
+//    dashboard.getDatasources().add(
+//        dto.getDatasources().stream().filter(d -> d.getDatasourceCode().equals(datasourceCode))
+//            .findFirst().get());
+//    return dashboard;
+//  }
 
 }
