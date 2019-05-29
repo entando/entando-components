@@ -23,34 +23,32 @@ import java.util.Map;
 
 public interface IConnectorService {
 
-	DashboardConfigDto pingDevice(DashboardConfigDto device, String datasourceCode)
-      throws IOException, ApsSystemException;
+	DashboardConfigDto pingDevice(DashboardConfigDto device, String datasourceCode);
 
 	<T extends DashboardConfigDto> boolean pingServer(T dashboardConfigDto) throws IOException;
 
 	List<DatasourcesConfigDto> getAllDevices(DashboardConfigDto dashboardConfigDto);
 
-	void setDeviceMeasurementSchema(DashboardConfigDto dto, String datasourceCode) throws ApsSystemException;
+	void setDeviceMeasurementSchema(DashboardConfigDto dto, String datasourceCode);
 
 	void saveDeviceMeasurement(DashboardConfigDto dashboardDatasourceDto,
       String datasourceCode, String measure);
 
 	List<Map<String, Object>> getDeviceMeasurements(DashboardConfigDto dto,
       String datasourceCode, Date startDate, Date endDate,
-      RestListRequest restListRequest, DatasourceType type) throws ApsSystemException;
+      RestListRequest restListRequest, DatasourceType type);
 
 	MeasurementConfig getMeasurementsConfig(DashboardConfigDto dto, String datasourceCode, DatasourceType type)
       throws ApsSystemException;
 
 	MeasurementTemplate getDeviceMeasurementSchema(DashboardConfigDto dto,
-      String datasourceCode, DatasourceType type) throws ApsSystemException;
+      String datasourceCode, DatasourceType type);
 
 	List<ServerType> getDashboardTypes();
 
-	DashboardConfigRequest setDevicesMetadata(DashboardConfigRequest dashboardConfigRequest)
-      throws ApsSystemException;
+	DashboardConfigRequest setDevicesMetadata(DashboardConfigRequest dashboardConfigRequest);
 
-  DashboardConfigDto refreshMetadata(DashboardConfigDto dto, String datasourceCode) throws ApsSystemException;
+  DashboardConfigDto refreshMetadata(DashboardConfigDto dto, String datasourceCode);
 
   void setGeodataDeviceStatuses(DashboardConfigDto dto, String datasourceCode,
       JsonObject body) throws ApsSystemException;
@@ -58,6 +56,5 @@ public interface IConnectorService {
   DeviceLocations getDeviceLocations(DashboardConfigDto dto, String datasourceCode)
       throws ApsSystemException;
 
-  boolean isParcheggioAvailable(DashboardConfigDto dto, String datasourceCode)
-      throws ApsSystemException;
+  boolean isParcheggioAvailable(DashboardConfigDto dto, String datasourceCode);
 }

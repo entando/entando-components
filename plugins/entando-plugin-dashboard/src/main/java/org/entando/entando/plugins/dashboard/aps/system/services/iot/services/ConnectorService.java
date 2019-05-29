@@ -65,8 +65,7 @@ public class ConnectorService extends AbstractConnectorService implements IConne
   }
 
   @Override
-  public <T extends DashboardConfigDto> boolean pingServer(T dto)
-      throws IOException {
+  public <T extends DashboardConfigDto> boolean pingServer(T dto) throws IOException {
     logStartMethod(dto.getId(), null, this.getClass());
     return super.isServerReacheable(dto);
   }

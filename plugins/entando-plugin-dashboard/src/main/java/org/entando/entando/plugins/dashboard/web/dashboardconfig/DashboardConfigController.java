@@ -64,6 +64,7 @@ import java.util.Map;
 import javax.validation.Valid;
 
 import static org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTConstants.DATASOURCE_STATUS_ONLINE;
+import static org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils.getDatasource;
 import static org.entando.entando.web.entity.validator.EntityValidator.ERRCODE_ENTITY_DOES_NOT_EXIST;
 
 @RestController
@@ -226,8 +227,7 @@ public class DashboardConfigController {
 
     DashboardConfigDto pingResult = connectorService
         .pingDevice(dto, datasourceCode);
-    DatasourcesConfigDto datasource = pingResult.getDatasources().stream()
-        .filter(d -> d.getDatasourceCode().equals(datasourceCode)).findFirst().get();
+    DatasourcesConfigDto datasource = getDatasource(pingResult,datasourceCode);
 
     if (datasource.getFk_dashboard_config() != serverId) {
       throw new InvalidFieldException("datasource_FK MUST match serverId");
