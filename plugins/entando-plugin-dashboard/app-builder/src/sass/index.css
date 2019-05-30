@@ -1,16 +1,3 @@
-.PluginStatus .PluginStatus--list-elem-label {
-  display: inline-block;
-  min-width: 200px; }
-
-.PluginStatus .PluginStatus--css-test {
-  height: 2px !important; }
-
-.PluginStatus .PluginStatus--list-elem__success {
-  color: green; }
-
-.PluginStatus .PluginStatus--list-elem__failure {
-  color: red; }
-
 .Info__container-data {
   border: 0px solid;
   margin-top: 1em;
@@ -733,15 +720,15 @@
 .DatasourceLayer {
   border: 0 solid; }
   .DatasourceLayer__input-group {
-    border: 0px solid red;
+    border: 0 solid red;
     width: 100%;
-    padding: 1em; }
+    padding-top: 1em; }
   .DatasourceLayer__icons-marker-container {
     border: 0 solid red;
     margin-top: 1em;
     margin-bottom: 1em; }
   .DatasourceLayer__icons-marker.col-xs-10 {
-    border: 0px solid blue;
+    border: 0 solid blue;
     padding: 0 20px 0px 10px; }
   .DatasourceLayer__icons-marker div {
     display: flex;
@@ -750,8 +737,6 @@
     align-content: space-between;
     border: 0 solid;
     justify-content: space-between; }
-  .DatasourceLayer__item.col-xs-10 {
-    padding-left: 10px; }
 
 .IconMarker {
   border: 0 solid; }
@@ -868,3 +853,6 @@
   .DropdownMultiple .dd-wrapper-single .dd-list {
     border: 1px solid #ccc;
     border-top: none; }
+
+.no-padding {
+  padding: 0; }

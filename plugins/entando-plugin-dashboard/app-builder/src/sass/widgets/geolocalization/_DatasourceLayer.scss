@@ -2,9 +2,9 @@
   border: 0 solid;
 
   &__input-group {
-    border: 0px solid red;
+    border: 0 solid red;
     width: 100%;
-    padding: 1em;
+    padding-top: 1em;
   }
 
   &__icons-marker-container {
@@ -14,7 +14,7 @@
   }
 
   &__icons-marker.col-xs-10 {
-    border: 0px solid blue;
+    border: 0 solid blue;
     padding: 0 20px 0px 10px;
   }
 
@@ -27,8 +27,4 @@
     justify-content: space-between;
   }
 
-  &__item.col-xs-10 {
-    padding-left: 10px;
-
-  }
 }

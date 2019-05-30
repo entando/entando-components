@@ -18,12 +18,14 @@ class FieldArrayDatasourceLayer extends Component {
       datasourceSelected,
       optionColumns,
       optionColumnSelected,
+      optionColumnsDeviceLocationsSelected,
     } = this.props;
     const datasource = {
       label,
       datasource: datasourceSelected,
       optionColumns,
       optionColumnSelected,
+      optionColumnsDeviceLocationsSelected,
     };
     fields.push(datasource);
     this.props.clearInputDatasourceData();
@@ -37,6 +39,7 @@ class FieldArrayDatasourceLayer extends Component {
       datasourceSelected,
       optionColumns,
       optionColumnSelected,
+      optionColumnsDeviceLocationsSelected,
       datasourcesValue,
       addColumnOptionSelected,
       removeColumnOptionSelected,
@@ -60,6 +63,7 @@ class FieldArrayDatasourceLayer extends Component {
                   formName={formName}
                   optionColumns={m.optionColumns}
                   optionColumnSelected={m.optionColumnSelected}
+                  optionColumnsDeviceLocationsSelected={m.optionColumnsDeviceLocationsSelected}
                   nameFieldArray={`${name}[${index}]`}
                   addColumnOptionSelected={addColumnOptionSelected}
                   removeColumnOptionSelected={removeColumnOptionSelected}
@@ -83,6 +87,7 @@ class FieldArrayDatasourceLayer extends Component {
             formName={formName}
             optionColumns={optionColumns}
             optionColumnSelected={optionColumnSelected}
+            optionColumnsDeviceLocationsSelected={optionColumnsDeviceLocationsSelected}
             datasourceSelected={datasourceSelected}
           />
           <Col xs={12}>
@@ -102,7 +107,6 @@ class FieldArrayDatasourceLayer extends Component {
   }
 }
 FieldArrayDatasourceLayer.propTypes = {
-  // name: PropTypes.string,
   label: PropTypes.string,
   formName: PropTypes.string.isRequired,
   clearInputDatasourceData: PropTypes.func.isRequired,
@@ -112,15 +116,15 @@ FieldArrayDatasourceLayer.propTypes = {
   datasourcesValue: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   optionColumns: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   optionColumnSelected: PropTypes.arrayOf(PropTypes.shape({})),
+  optionColumnsDeviceLocationsSelected: PropTypes.arrayOf(PropTypes.shape({})),
   fields: PropTypes.shape({}),
 };
 FieldArrayDatasourceLayer.defaultProps = {
   fields: {},
-  // name: null,
   label: '',
   datasourceSelected: '',
-  // datasourcesValue: [],
   optionColumnSelected: [],
+  optionColumnsDeviceLocationsSelected: [],
 };
 
 export default FieldArrayDatasourceLayer;

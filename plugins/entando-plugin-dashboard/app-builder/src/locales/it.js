@@ -135,8 +135,9 @@ export default {
     'plugin.chart.max': 'Max',
     'plugin.chart.expand': 'Expand',
     'plugin.chart.spline': 'Change layout to spline',
-    'plugin.geolocalization.label': 'Label',
-    'plugin.geolocalization.item': 'Item',
+    'plugin.geolocalization.label': 'Etichetta',
+    'plugin.geolocalization.item': 'Elementi',
+    'plugin.geolocalization.coordinates': 'Coordinate',
     'plugin.geolocalization.label.requirement':
       'letters, numbers, symbols, min 3 and max 20 characters',
     'plugin.geolocalization.mapSize': 'Map Size',

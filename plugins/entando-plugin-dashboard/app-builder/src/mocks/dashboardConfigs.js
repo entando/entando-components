@@ -1,42 +1,28 @@
-export const DEVICE1 = {
-  status: 'online',
-  inUse: 'On',
-  batteryLevel: '90%',
-  deviceCode: 'xxx-33-444',
-  deviceBrand: 'logitech',
-  expirationGuarantee: '31/12/2017',
-  coordinates: ['39.2153109', '9.1076246'],
-  information: 'Parcheggi Piazza Matteoti',
-};
-export const DEVICE2 = {
-  status: 'offline',
-  inUse: 'Off',
-  batteryLevel: '70%',
-  deviceCode: 'xxx-55-444',
-  deviceBrand: 'logitech',
-  expirationGuarantee: '31/12/2021',
-  coordinates: ['39.2168495', '9.1075549'],
-  information: 'Piazza del Carmine',
-};
-export const DEVICE3 = {
-  status: 'online',
-  inUse: 'On',
-  batteryLevel: 'off',
-  deviceCode: 'xxx-zz-444',
-  deviceBrand: 'asus',
-  expirationGuarantee: '31/12/2018',
-  coordinates: ['39.2136159', '9.115505'],
-  information: 'Via Roma',
-};
-export const DEVICE4 = {
-  status: 'offline',
-  inUse: 'Off',
-  batteryLevel: '',
-  deviceCode: 'xxx-22-444',
-  deviceBrand: 'intel',
-  expirationGuarantee: '',
-  coordinates: ['39.2153109', '9.1076246'],
-  information: 'Parcheggi Piazza Matteoti',
+const PARKING_DATA = {
+  payload: [
+    {
+      DeviceLocations: {
+        latitude: 39.2157421,
+        longitude: 9.1075453,
+      },
+      DeviceInformation: {
+        isBusy: false,
+        isSensorAvailable: false,
+        isActive: true,
+      },
+    },
+  ],
+  metaData: {
+    page: 1,
+    pageSize: 100,
+    lastPage: 1,
+    totalItems: 1,
+    sort: 'code',
+    direction: 'ASC',
+    filters: [],
+    additionalParams: {},
+  },
+  errors: [],
 };
 
 export const DEVICE_TEMPERATURE = {
@@ -83,57 +69,17 @@ export const DATASOURCE_PARKING = {
   datasourceURI: 'parking/devices/',
   status: 'ok',
 };
-export const DATASOURCE_BIKE_SHARING = {
-  id: 'bike',
-  datasource: 'Bike Sharing',
-  datasourceURI: 'bike-sharing/devices/',
-  status: 'ok',
-};
-export const DATASOURCE_BUS_STATION = {
-  id: 'bus',
-  datasource: 'Bus station',
-  datasourceURI: 'bus-station/devices/',
-  status: 'ok',
-};
 
 export const DATASOURCE_PARKING_DATA = {
   id: 'parking',
   payload: {
     mappings: [
-      { sourceName: 'status', destinationName: 'status' },
-      { sourceName: 'inUse', destinationName: 'inUse' },
-      { sourceName: 'batteryLevel', destinationName: 'batteryLevel' },
-      { sourceName: 'deviceCode', destinationName: 'deviceCode' },
-      { sourceName: 'deviceBrand', destinationName: 'deviceBrand' },
-      { sourceName: 'expirationGuarantee', destinationName: 'expiration' },
-      { sourceName: 'coordinates', destinationName: 'coordinates' },
-      { sourceName: 'information', destinationName: 'information' },
-    ],
+      { sourceName: 'DeviceLocations', destinationName: 'DeviceLocations' },
+      { sourceName: 'DeviceInformation', destinationName: 'DeviceInformation' }],
   },
-  data: [DEVICE1, DEVICE2, DEVICE3, DEVICE4],
+  data: PARKING_DATA,
 };
-export const DATASOURCE_BIKE_DATA = {
-  id: 'bike',
-  payload: {
-    mappings: [
-      { sourceName: 'inUse', destinationName: 'inUse' },
-      { sourceName: 'coordinates', destinationName: 'coordinates' },
-      { sourceName: 'information', destinationName: 'information' },
-    ],
-  },
-  data: [DEVICE1, DEVICE2, DEVICE3, DEVICE4],
-};
-export const DATASOURCE_BUS_DATA = {
-  id: 'bus',
-  payload: {
-    mappings: [
-      { sourceName: 'status', destinationName: 'status' },
-      { sourceName: 'coordinates', destinationName: 'coordinates' },
-      { sourceName: 'information', destinationName: 'information' },
-    ],
-  },
-  data: [DEVICE1, DEVICE2, DEVICE3, DEVICE4],
-};
+
 export const DATASOURCE_TEMPERATURE_DATA = {
   id: 'temperature',
   payload: {
@@ -168,13 +114,11 @@ export const DATASOURCE_TEMPERATURE_DATA = {
 
 export const DATASOURCES_DATA = {
   parking: DATASOURCE_PARKING_DATA,
-  bike: DATASOURCE_BIKE_DATA,
-  bus: DATASOURCE_BUS_DATA,
   temperature: DATASOURCE_TEMPERATURE_DATA,
 };
 
 export const DASHBOARD_LIST_DATASOURCE = {
-  1: [DATASOURCE_PARKING, DATASOURCE_BIKE_SHARING, DATASOURCE_BUS_STATION],
+  1: [DATASOURCE_PARKING],
   2: [DATASOURCE_TEMPERATURE],
 };
 

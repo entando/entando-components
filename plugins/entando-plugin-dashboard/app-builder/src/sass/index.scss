@@ -1,5 +1,3 @@
-@import 'PluginStatus/PluginStatus';
-
 @import 'widgets/common/Info';
 @import 'widgets/common/DashboardWidgetTitle';
 @import 'widgets/common/DashboardWidgetConfigPage';
@@ -17,8 +15,6 @@
 
 @import 'widgets/table/DashboardTableForm';
 @import 'widgets/table/DashboardTableColumns';
-
-
 
 @import 'widgets/charts/common/ChartFirstStep';
 @import 'widgets/charts/common/ColumnToken';
@@ -46,3 +42,4 @@
 @import 'widgets/geolocalization/IconMarker';
 
 @import 'common/DropdownMultiple';
+@import 'common/utils';

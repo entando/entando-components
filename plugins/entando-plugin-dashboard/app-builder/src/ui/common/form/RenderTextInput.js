@@ -15,7 +15,7 @@ const RenderTextInput = ({
   type,
 }) => {
   const containerClasses =
-    touched && error ? 'form-group has-error' : 'form-group';
+    touched && error ? 'form-group clearfix has-error' : 'form-group clearfix';
 
   return (
     <div className={containerClasses}>
