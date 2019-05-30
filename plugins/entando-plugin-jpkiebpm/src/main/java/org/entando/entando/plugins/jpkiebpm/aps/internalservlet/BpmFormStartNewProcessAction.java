@@ -132,10 +132,11 @@ public class BpmFormStartNewProcessAction extends BpmFormActionBase{
         return SUCCESS;
     }
 
-    @Override
-    protected void generateForm() throws Exception {
-        setTaskId(null);
-        super.generateForm();
+    private void generateForm() throws Exception {
+        String modelDescription  = "Model for Start process "+ getProcessId() + " of container "+getContainerId() ;
+        String typeDescription = getProcessId() + "_" + getContainerId();
+        String urlParameters = "";
+        super.generateForm(modelDescription, typeDescription, urlParameters);
     }
 
 }

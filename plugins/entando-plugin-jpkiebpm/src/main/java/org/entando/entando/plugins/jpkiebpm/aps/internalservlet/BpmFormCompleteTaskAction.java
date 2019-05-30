@@ -78,7 +78,7 @@ import java.util.stream.Collectors;
 
 public class BpmFormCompleteTaskAction extends BpmFormActionBase {
 
-    private static String FORM_ACTION = "/ExtStr2/do/bpm/FrontEnd/DataTypeTaskForm/save";
+    private static String FORM_ACTION = "/ExtStr2/do/bpm/FrontEnd/CompleteTaskForm/save";
 
     private static final Logger logger = LoggerFactory.getLogger(BpmFormCompleteTaskAction.class);
 
@@ -189,13 +189,15 @@ public class BpmFormCompleteTaskAction extends BpmFormActionBase {
         return SUCCESS;
     }
 
+    //dataObject.setTypeDescription(processId + "_" + containerId + "_" + taskId);
+    //dataModel.setDescription("Model for " + containerId + " and " + taskId);
 
-    @Override
-    protected void generateForm() throws Exception {
-        setTaskId(taskId);
-        super.generateForm();
+    private void generateForm() throws Exception {
+        String modelDescription  = "Model for Complete task "+ taskId + " of container " + getContainerId();
+        String typeDescription = getProcessId() + "_" + getContainerId() + "_" + taskId;
+        String urlParameters = "&configId=" + getConfigId() + "&containerId=" + getContainerId() + "&taskId=" + taskId;
+        super.generateForm(modelDescription, typeDescription, urlParameters);
     }
-
 
     @Override
     protected Map<String, Object> getValuesMap(JSONObject inputData, String parentKey, String oldParentKey, final KieProcessFormQueryResult form) {

@@ -114,7 +114,6 @@ public class BpmFormActionBase extends AbstractApsEntityAction implements BeanFa
 
     private String configId;
 
-    private Long taskId;
     @Autowired
     private DataUXBuilder uXBuilder;
 
@@ -173,7 +172,6 @@ public class BpmFormActionBase extends AbstractApsEntityAction implements BeanFa
     protected EntityWrapper getEntityWrapper(IApsEntity entity) {
         return new DataObjectWrapper((DataObject) entity, beanFactory);
     }
-
 
     @Override
     public String edit() {
@@ -281,6 +279,8 @@ public class BpmFormActionBase extends AbstractApsEntityAction implements BeanFa
         } else {
             this.getRequest().getSession().setAttribute(sessionParamName, dataObject);
         }
+
+        logger.info("********************* setDataObjectOnSession {}",dataObject.toString());
         this.dataObject = dataObject;
     }
 
@@ -436,7 +436,12 @@ public class BpmFormActionBase extends AbstractApsEntityAction implements BeanFa
         this.bpmWidgetInfoManager = bpmWidgetInfoManager;
     }
 
-    protected void generateForm() throws Exception {
+    @Override
+    public boolean isValidLocaleString(String localeStr) {
+        return super.isValidLocaleString(localeStr);
+    }
+
+    protected void generateForm(String modelDescription, String typeDescription, String urlParameters) throws Exception {
         logger.info("generateForm");
 
         String widgetInfoId = this.extractWidgetConfig(KieBpmSystemConstants.WIDGET_PARAM_INFO_ID);
@@ -460,7 +465,9 @@ public class BpmFormActionBase extends AbstractApsEntityAction implements BeanFa
         typeCode = EntityNaming.generateEntityName(types);
         dataObject = (DataObject) this.getDataObjectManager().getEntityClass().newInstance();
         dataObject.setTypeCode(typeCode);
-        dataObject.setTypeDescription(processId + "_" + containerId + "_" + taskId);
+        //dataObject.setTypeDescription(processId + "_" + containerId + "_" + taskId);
+        dataObject.setTypeDescription(typeDescription);
+
 
         this.addAttributesToEntityType(dataObject, kpfr);
 
@@ -479,11 +486,12 @@ public class BpmFormActionBase extends AbstractApsEntityAction implements BeanFa
 
         dataModel = new DataObjectModel();
         dataModel.setDataType(typeCode);
-        dataModel.setDescription("Model for " + containerId + " and " + taskId);
-
+        //dataModel.setDescription("Model for " + containerId + " and " + taskId);
+        dataModel.setDescription(modelDescription);
         this.setDataObjectOnSession(dataObject);
 
-        String urlParameters = "&configId=" + configId + "&containerId=" + containerId + "&taskId=" + taskId;
+        //String urlParameters = "&configId=" + configId + "&containerId=" + containerId + "&taskId=" + taskId;
+
         String dataUx = uXBuilder.createDataUx(kpfr, widgetInfo.getId(), containerId, processId, title, formAction, urlParameters);
 
         dataModel.setShape(dataUx);
@@ -750,14 +758,6 @@ public class BpmFormActionBase extends AbstractApsEntityAction implements BeanFa
 
     public void setConfig(KieBpmConfig config) {
         this.config = config;
-    }
-
-    public Long getTaskId() {
-        return taskId;
-    }
-
-    public void setTaskId(Long taskId) {
-        this.taskId = taskId;
     }
 
     public BeanFactory getBeanFactory() {
