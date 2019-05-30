@@ -97,7 +97,7 @@ public class BaseConnectorIot implements IConnectorIot {
   }
 
   @Override
-  public boolean isParcheggioAvailable(DashboardConfigDto dto, String datasourceId) {
+  public boolean isParcheggioAvailable(DashboardConfigDto dto, String datasourceCode) {
     return false;
   }
 }

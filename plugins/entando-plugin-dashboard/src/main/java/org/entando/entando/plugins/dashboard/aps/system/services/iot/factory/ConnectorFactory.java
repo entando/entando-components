@@ -1,6 +1,7 @@
 package org.entando.entando.plugins.dashboard.aps.system.services.iot.factory;
 
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.ServerType;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.BaseConnectorIot;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IConnectorIot;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -14,27 +15,27 @@ import java.util.Map;
 @Component
 public class ConnectorFactory  implements ApplicationContextAware {
 
-        private ApplicationContext applicationContext;
+  private ApplicationContext applicationContext;
 
-        @Override
-        public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-            this.applicationContext = applicationContext;
-        }
+  @Override
+  public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    this.applicationContext = applicationContext;
+  }
 
-        /**
-         * Returns the proper processor for the given connectorType
-         * @param connectorType
-         * @return
-         */
-        public IConnectorIot getConnector(String connectorType) {
-            Map<String, IConnectorIot> beans = applicationContext.getBeansOfType(IConnectorIot.class);
-            IConnectorIot defName = beans.values().stream()
-                    .filter(service -> service.supports(connectorType))
-                    .findFirst().get();
-//                    .orElseGet(NoOpWidgetConfigurationProcessor::new);
-            return defName;
-        }
-        
+  /**
+   * Returns the proper processor for the given connectorType
+   * @param connectorType
+   * @return
+   */
+  public IConnectorIot getConnector(String connectorType) {
+    Map<String, IConnectorIot> beans = applicationContext.getBeansOfType(IConnectorIot.class);
+    IConnectorIot defName = beans.values().stream()
+        .filter(service -> service.supports(connectorType))
+        .findFirst()
+        .orElseGet(BaseConnectorIot::new);
+    return defName;
+  }
+
   public List<ServerType> getServerType() {
     Map<String, IConnectorIot> beans = applicationContext.getBeansOfType(IConnectorIot.class);
     List<ServerType> serverTypes = new ArrayList<>();
