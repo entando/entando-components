@@ -14,4 +14,7 @@
           class="org.entando.entando.plugins.dashboard.aps.system.services.iot.factory.ConnectorFactory">
     </bean>
 
+    <bean id="datasourceUtilizerFactory"
+          class="org.entando.entando.plugins.dashboard.aps.system.services.iot.factory.DatasourceUtilizerFactory">
+    </bean>
 </beans>

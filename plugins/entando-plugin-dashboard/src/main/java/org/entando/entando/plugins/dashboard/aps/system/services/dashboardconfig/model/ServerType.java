@@ -2,6 +2,8 @@ package org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfi
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Objects;
+
 public class ServerType {
 	
 	@JsonProperty("code")
@@ -38,5 +40,22 @@ public class ServerType {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    ServerType that = (ServerType) o;
+    return Objects.equals(code, that.code) &&
+        Objects.equals(description, that.description);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(code, description);
+  }
 }

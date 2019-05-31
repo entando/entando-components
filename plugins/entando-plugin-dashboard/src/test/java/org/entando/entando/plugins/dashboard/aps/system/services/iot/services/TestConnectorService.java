@@ -65,7 +65,7 @@ public class TestConnectorService {
     dto.getDatasources().get(0).setDatasourceCode(datasourceCode);
     dto.getDatasources().get(0).setStatus(DatasourceStatus.ONLINE);
     when(dashboardConfigService.getDashboardConfig(0)).thenReturn(dto);
-    when(connectorFactory.getConnector(Mockito.any())).thenReturn(baseConnectorIot);
+    when(connectorFactory.getConnector(Mockito.any(), Mockito.any())).thenReturn(baseConnectorIot);
     when(baseConnectorIot.refreshMetadata(Mockito.any(),Mockito.any())).thenReturn(dto);
   }
   
@@ -95,9 +95,9 @@ public class TestConnectorService {
       put("latitude",112.322);
       put("longitude",589.322);
     }});
-    when(baseConnectorIot.getMeasurements(Mockito.any(),Mockito.any(),Mockito.any(),Mockito.any(),Mockito.any(),Mockito.any())).thenThrow(exc).thenReturn(measurements);
+    when(baseConnectorIot.getMeasurements(Mockito.any(),Mockito.any(),Mockito.any(),Mockito.any(),Mockito.any())).thenThrow(exc).thenReturn(measurements);
     List<Map<String, Object>> x = connectorService
-        .getDeviceMeasurements(dto, datasourceCode, null, null, null, DatasourceType.GENERIC);
+        .getDeviceMeasurements(dto, datasourceCode, null, null, null);
     assertEquals(x.get(0),measurements.get(0));
     assertEquals(getDatasource(dto, datasourceCode).getStatus(), DatasourceStatus.ONLINE.toString());
   }
@@ -109,12 +109,12 @@ public class TestConnectorService {
       put("latitude",112.322);
       put("longitude",589.322);
     }});
-    when(baseConnectorIot.getMeasurements(Mockito.any(),Mockito.any(),Mockito.any(),Mockito.any(),Mockito.any(),Mockito.any())).thenThrow(exc);
+    when(baseConnectorIot.getMeasurements(Mockito.any(),Mockito.any(),Mockito.any(),Mockito.any(),Mockito.any())).thenThrow(exc);
     thrown.expect(ApiResourceNotAvailableException.class);
     thrown.expectMessage("ConnectorService error dashboard id " + dto.getId()
         + ", datasource code " + datasourceCode + ", can't communicate to Api Service");
     connectorService
-        .getDeviceMeasurements(dto, datasourceCode, null, null, null, DatasourceType.GENERIC);
+        .getDeviceMeasurements(dto, datasourceCode, null, null, null);
     assertEquals(getDatasource(dto, datasourceCode).getStatus(), DatasourceStatus.OFFLINE.toString());
   }
   
@@ -122,9 +122,9 @@ public class TestConnectorService {
   public void getMeasurementsConfig_FirstNO_SecondOK() {
     MeasurementConfig mockConfig = new MeasurementConfig();
     mockConfig.setMappings(new ArrayList(){{add(new MeasurementMapping("x", "x"));}});
-    when(baseConnectorIot.getMeasurementConfig(Mockito.any(),Mockito.any(), Mockito.any())).thenThrow(exc).thenReturn(mockConfig);
+    when(baseConnectorIot.getMeasurementConfig(Mockito.any(),Mockito.any())).thenThrow(exc).thenReturn(mockConfig);
     MeasurementConfig measurementConfig = connectorService
-        .getMeasurementsConfig(dto, datasourceCode, DatasourceType.GENERIC);
+        .getMeasurementsConfig(dto, datasourceCode);
     assertEquals(mockConfig,measurementConfig);
     assertEquals(getDatasource(dto, datasourceCode).getStatus(), DatasourceStatus.ONLINE.toString());
   }
@@ -133,21 +133,21 @@ public class TestConnectorService {
   public void getMeasurementsConfig_FirstNO_SecondNO() {
     MeasurementConfig mockConfig = new MeasurementConfig();
     mockConfig.setMappings(new ArrayList(){{add(new MeasurementMapping("x", "x"));}});
-    when(baseConnectorIot.getMeasurementConfig(Mockito.any(),Mockito.any(), Mockito.any())).thenThrow(exc);
+    when(baseConnectorIot.getMeasurementConfig(Mockito.any(),Mockito.any())).thenThrow(exc);
     thrown.expect(ApiResourceNotAvailableException.class);
     thrown.expectMessage("ConnectorService error dashboard id " + dto.getId()
         + ", datasource code " + datasourceCode + ", can't communicate to Api Service");
     connectorService
-        .getMeasurementsConfig(dto, datasourceCode, DatasourceType.GENERIC);
+        .getMeasurementsConfig(dto, datasourceCode);
     assertEquals(getDatasource(dto, datasourceCode).getStatus(), DatasourceStatus.OFFLINE.toString());
   }
   
   @Test
   public void getDeviceMeasurementSchema_FirstNO_SecondOK() {
     MeasurementTemplate measurementTemplate = new MeasurementTemplate();
-    when(baseConnectorIot.getDeviceMeasurementSchema(dto,datasourceCode,DatasourceType.GENERIC)).thenThrow(exc).thenReturn(measurementTemplate);
+    when(baseConnectorIot.getDeviceMeasurementSchema(dto,datasourceCode)).thenThrow(exc).thenReturn(measurementTemplate);
     MeasurementTemplate x = connectorService
-        .getDeviceMeasurementSchema(dto, datasourceCode, DatasourceType.GENERIC);
+        .getDeviceMeasurementSchema(dto, datasourceCode);
     assertEquals(x, measurementTemplate);
     assertEquals(getDatasource(dto, datasourceCode).getStatus(), DatasourceStatus.ONLINE.toString());
   }
@@ -155,12 +155,12 @@ public class TestConnectorService {
   @Test
   public void getDeviceMeasurementSchema_FirstNO_SecondNO() {
     MeasurementTemplate measurementTemplate = new MeasurementTemplate();
-    when(baseConnectorIot.getDeviceMeasurementSchema(dto,datasourceCode,DatasourceType.GENERIC)).thenThrow(exc);
+    when(baseConnectorIot.getDeviceMeasurementSchema(dto,datasourceCode)).thenThrow(exc);
     thrown.expect(ApiResourceNotAvailableException.class);
     thrown.expectMessage("ConnectorService error dashboard id " + dto.getId()
         + ", datasource code " + datasourceCode + ", can't communicate to Api Service");
     connectorService
-        .getDeviceMeasurementSchema(dto, datasourceCode, DatasourceType.GENERIC);
+        .getDeviceMeasurementSchema(dto, datasourceCode);
     assertEquals(getDatasource(dto, datasourceCode).getStatus(), DatasourceStatus.OFFLINE.toString());
   }
   

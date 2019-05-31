@@ -26,6 +26,8 @@ import org.entando.entando.aps.system.services.DtoBuilder;
 import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.factory.ConnectorFactory;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.factory.DatasourceUtilizerFactory;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigBuilder;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigRequest;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DatasourcesConfigRequest;
@@ -59,6 +61,10 @@ public class DashboardConfigService implements IDashboardConfigService {
 
   @Autowired
   private IDashboardConfigManager dashboardConfigManager;
+
+  @Autowired
+  DatasourceUtilizerFactory datasourceUtilizerFactory;
+  
   private IDtoBuilder<DashboardConfig, DashboardConfigDto> dtoBuilder;
 
 
@@ -131,6 +137,8 @@ public class DashboardConfigService implements IDashboardConfigService {
         throw new ValidationGenericException(validationResult);
       }
 
+      deleteDatasourceReferencesForUpdate(dashboardConfigRequest, dashboardConfig);
+      
       dashboardConfig = DashboardConfigBuilder.fromRequestToEntity(dashboardConfigRequest);
       this.getDashboardConfigManager().updateDashboardConfig(dashboardConfig);
       logEndMethod(dashboardConfig.getId(), null, true, getClass());
@@ -141,6 +149,15 @@ public class DashboardConfigService implements IDashboardConfigService {
       throw new RestServerError(DASHBOARD_CONFIG_ERROR_UPDATING_S, e);
     }
 
+  }
+
+  private void deleteDatasourceReferencesForUpdate(DashboardConfigRequest request,
+      DashboardConfig fromDB) {
+    for (DatasourcesConfigDto db : fromDB.getDatasources()) {
+      if(request.getDatasources().stream().noneMatch(r -> r.getDatasource().equals(db.getDatasource()))) {
+        datasourceUtilizerFactory.deleteDatasourceUtilizers(db.getDatasource());
+      }
+    }
   }
 
   @Override
@@ -176,6 +193,7 @@ public class DashboardConfigService implements IDashboardConfigService {
       if (validationResult.hasErrors()) {
         throw new ValidationGenericException(validationResult);
       }
+      this.getDashboardConfig(id).getDatasources().forEach(d -> datasourceUtilizerFactory.deleteDatasourceUtilizers(d.getDatasource()));
       this.getDashboardConfigManager().deleteDashboardConfig(id);
       logEndMethod(id, null, true, getClass());
     } catch (ApsSystemException e) {
@@ -341,6 +359,7 @@ public class DashboardConfigService implements IDashboardConfigService {
         }
       });
     }
+
     return errors;
   }
 

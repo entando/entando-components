@@ -22,6 +22,7 @@ import java.util.Map;
 
 import javax.validation.constraints.Size;
 
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DatasourceType;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.google.gson.JsonObject;
@@ -43,6 +44,17 @@ public class DatasourcesConfigRequest {
 
   private Map<String, Object> metadata = new HashMap();
   
+  private DatasourceType type;
+
+  public DatasourceType getType() {
+    return type;
+  }
+
+  public void setType(
+      DatasourceType type) {
+    this.type = type;
+  }
+
   public String getDatasource() {
     return datasource;
   }

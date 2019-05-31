@@ -21,6 +21,8 @@ import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DatasourceType;
+
 @DatabaseTable(tableName = DashboardConfigDatasource.TABLE_NAME)
 public class DashboardConfigDatasource {
 
@@ -47,6 +49,9 @@ public class DashboardConfigDatasource {
 
 	@DatabaseField(columnName = "name", dataType = DataType.STRING, width = 255, canBeNull = true)
 	private String name;
+	
+	@DatabaseField(columnName = "type", dataType = DataType.ENUM_STRING, width = 20, canBeNull = true)
+	private DatasourceType type;
 
 	public static final String TABLE_NAME = "dashboard_config_datasource";
 }

@@ -21,40 +21,32 @@ import com.google.gson.JsonObject;
 
 public interface IConnectorIot {
 
-  /**
-   * Returns true is the implementation of this processor fits the provided widget code
-   */
-  boolean supports(String connectorType);
-
+  boolean supports(String connectorType, DatasourceType datasourceType);
+  
   DashboardConfigDto pingDevice(DashboardConfigDto dashboardDatasourceDto, String datasourceCode);
 
   List<DatasourcesConfigDto> getAllDevices(DashboardConfigDto dashboardConfigDto) throws ApiResourceNotAvailableException;
 
   void saveMeasurementTemplate(DashboardConfigDto dashboardDatasource,
-      String datasourceCode, DatasourceType type);
+      String datasourceCode);
 
   void saveDeviceMeasurement(DashboardConfigDto dashboardDatasourceDto,
       String datasourceCode, String measurementBody);
 
   List<Map<String, Object>> getMeasurements(
       DashboardConfigDto dto, String datasourceCode, Date startDate,
-      Date endDate, RestListRequest restListRequest, DatasourceType type)
+      Date endDate, RestListRequest restListRequest)
       throws RuntimeException;
 
-  MeasurementConfig getMeasurementConfig(DashboardConfigDto dto, String datasourceCode, DatasourceType type);
+  MeasurementConfig getMeasurementConfig(DashboardConfigDto dto, String datasourceCode);
 
   MeasurementTemplate getDeviceMeasurementSchema(DashboardConfigDto dto,
-      String datasourceCode, DatasourceType type) throws ApiResourceNotAvailableException;
+      String datasourceCode) throws ApiResourceNotAvailableException;
 
   ServerType getServerType();
 
   DashboardConfigRequest setDevicesMetadata(DashboardConfigRequest dashboardConfigRequest);
 
   DashboardConfigDto refreshMetadata(DashboardConfigDto dto, String datasourceCode);
-
-  DeviceLocations getDeviceLocations(DashboardConfigDto dto, String datasourceCode);
-
-  void setGeodataDeviceStatuses(DashboardConfigDto dto, String datasourceCode, JsonObject body);
-
-  boolean isParcheggioAvailable(DashboardConfigDto dto, String datasourceCode);
+  
 }

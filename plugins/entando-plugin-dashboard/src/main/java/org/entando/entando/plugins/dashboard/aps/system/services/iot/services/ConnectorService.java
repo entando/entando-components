@@ -74,7 +74,7 @@ public class ConnectorService extends AbstractConnectorService implements IConne
   public List<DatasourcesConfigDto> getAllDevices(
       DashboardConfigDto dto) {
     logStartMethod(dto.getId(), null, this.getClass());
-    List<DatasourcesConfigDto> devices = connectorFactory.getConnector(dto.getType())
+    List<DatasourcesConfigDto> devices = connectorFactory.getConnector(dto.getType(), DatasourceType.GENERIC)
         .getAllDevices(dto);
     logEndMethod(dto.getId(), null, true, getClass());
     return devices;
@@ -84,8 +84,8 @@ public class ConnectorService extends AbstractConnectorService implements IConne
   public void setDeviceMeasurementSchema(
       DashboardConfigDto dto, String datasourceCode) {
     logStartMethod(dto.getId(), datasourceCode, this.getClass());
-    connectorFactory.getConnector(dto.getType())
-        .saveMeasurementTemplate(dto, datasourceCode, DatasourceType.GENERIC);
+    connectorFactory.getConnector(dto.getType(), DatasourceType.GENERIC)
+        .saveMeasurementTemplate(dto, datasourceCode);
     logEndMethod(dto.getId(), datasourceCode, true, getClass());
   }
 
@@ -94,21 +94,21 @@ public class ConnectorService extends AbstractConnectorService implements IConne
       DashboardConfigDto dto, String datasourceCode,
       String measurementBody) {
     logStartMethod(dto.getId(), datasourceCode, this.getClass());
-    connectorFactory.getConnector(dto.getType())
-        .saveDeviceMeasurement(dto, datasourceCode, measurementBody);
+    DatasourceType type = getDatasource(dto, datasourceCode).getType();
+    connectorFactory.getConnector(dto.getType(), type).saveDeviceMeasurement(dto, datasourceCode, measurementBody);
     logEndMethod(dto.getId(), datasourceCode, true, getClass());
   }
 
   @Override
   public List<Map<String, Object>> getDeviceMeasurements(DashboardConfigDto dto,
       String datasourceCode, Date startDate, Date endDate,
-      RestListRequest restListRequest, DatasourceType type) {
+      RestListRequest restListRequest) {
     logStartMethod(dto.getId(), datasourceCode, this.getClass());
     List<Map<String, Object>> measurements;
     try {
       measurements = getDatasourceMeasurements(dto, datasourceCode,
           startDate, endDate,
-          restListRequest, type);
+          restListRequest);
     } catch (ApiResourceNotAvailableException e) {
       setDatasourceStatus(dto, datasourceCode, DatasourceStatus.OFFLINE);
       throw e;
@@ -120,11 +120,11 @@ public class ConnectorService extends AbstractConnectorService implements IConne
 
   @Override
   public MeasurementConfig getMeasurementsConfig(DashboardConfigDto dto,
-      String datasourceCode, DatasourceType type) {
+      String datasourceCode) {
     logStartMethod(dto.getId(), datasourceCode, this.getClass());
     MeasurementConfig measurementConfig = null;
     try {
-      measurementConfig = getMeasurementConfig(dto, datasourceCode, type);
+      measurementConfig = getMeasurementConfig(dto, datasourceCode);
     } catch (ApiResourceNotAvailableException e) {
       setDatasourceStatus(dto, datasourceCode, DatasourceStatus.OFFLINE);
       throw e;
@@ -136,12 +136,11 @@ public class ConnectorService extends AbstractConnectorService implements IConne
 
   @Override
   public MeasurementTemplate getDeviceMeasurementSchema(DashboardConfigDto dto,
-      String datasourceCode, DatasourceType type) {
+      String datasourceCode) {
     logStartMethod(dto.getId(), datasourceCode, this.getClass());
     MeasurementTemplate measurementTemplate = null;
     try {
-      measurementTemplate = getDatasourceMeasurementTemplate(dto, datasourceCode,
-          type);
+      measurementTemplate = getDatasourceMeasurementTemplate(dto, datasourceCode);
     } catch (ApiResourceNotAvailableException e) {
       setDatasourceStatus(dto, datasourceCode, DatasourceStatus.OFFLINE);
       throw e;
@@ -158,7 +157,7 @@ public class ConnectorService extends AbstractConnectorService implements IConne
 
   @Override
   public DashboardConfigRequest setDevicesMetadata(DashboardConfigRequest dashboardConfigRequest) {
-    return connectorFactory.getConnector(dashboardConfigRequest.getType())
+    return connectorFactory.getConnector(dashboardConfigRequest.getType(), DatasourceType.GENERIC)
         .setDevicesMetadata(dashboardConfigRequest);
   }
 
@@ -167,7 +166,8 @@ public class ConnectorService extends AbstractConnectorService implements IConne
       String datasourceCode) {
     logStartMethod(dto.getId(), datasourceCode, getClass());
     try {
-      dto = connectorFactory.getConnector(dto.getType()).refreshMetadata(dto, datasourceCode);
+      DatasourceType datasourceType = getDatasource(dto, datasourceCode).getType();
+      dto = connectorFactory.getConnector(dto.getType(),datasourceType).refreshMetadata(dto, datasourceCode);
     } catch (ApiResourceNotAvailableException e) {
       setDatasourceStatus(dto, datasourceCode, DatasourceStatus.OFFLINE);
       throw e;
@@ -232,25 +232,25 @@ public class ConnectorService extends AbstractConnectorService implements IConne
 
   private boolean isParcheggioAvaialable(DashboardConfigDto dto, String datasourceCode) {
     boolean result;
+    DatasourceType datasourceType = getDatasource(dto, datasourceCode).getType();
     try {
-      result = connectorFactory.getConnector(dto.getType())
-          .isParcheggioAvailable(dto, datasourceCode);
+      result = connectorFactory.getConnector(dto.getType(), datasourceType).isParcheggioAvailable(dto, datasourceCode);
     } catch (ApiResourceNotAvailableException e) {
       dto = this.refreshMetadata(dto, datasourceCode);
-      result = connectorFactory.getConnector(dto.getType())
-          .isParcheggioAvailable(dto, datasourceCode);
+      result = connectorFactory.getConnector(dto.getType(), datasourceType).isParcheggioAvailable(dto, datasourceCode);
     }
     return result;
   }
 
   private DeviceLocations getDatasourceLocations(DashboardConfigDto dto, String datasourceCode) {
     DeviceLocations deviceLocations;
+    DatasourceType datasourceType = getDatasource(dto, datasourceCode).getType();
     try {
-      deviceLocations = connectorFactory.getConnector(dto.getType())
+      deviceLocations = connectorFactory.getConnector(dto.getType(), datasourceType)
           .getDeviceLocations(dto, datasourceCode);
     } catch (ApiResourceNotAvailableException e) {
       dto = this.refreshMetadata(dto, datasourceCode);
-      deviceLocations = connectorFactory.getConnector(dto.getType())
+      deviceLocations = connectorFactory.getConnector(dto.getType(), datasourceType)
           .getDeviceLocations(dto, datasourceCode);
     }
     return deviceLocations;
@@ -258,67 +258,70 @@ public class ConnectorService extends AbstractConnectorService implements IConne
 
   private void getGeodataDatasourceStatuses(DashboardConfigDto dto, String datasourceCode,
       JsonObject body) {
+    DatasourceType datasourceType = getDatasource(dto, datasourceCode).getType();
     try {
-      connectorFactory.getConnector(dto.getType())
+      connectorFactory.getConnector(dto.getType(),datasourceType)
           .setGeodataDeviceStatuses(dto, datasourceCode, body);
     } catch (ApiResourceNotAvailableException e) {
       dto = this.refreshMetadata(dto, datasourceCode);
-      connectorFactory.getConnector(dto.getType())
+      connectorFactory.getConnector(dto.getType(), datasourceType)
           .setGeodataDeviceStatuses(dto, datasourceCode, body);
     }
   }
 
   private MeasurementTemplate getDatasourceMeasurementTemplate(DashboardConfigDto dto,
-      String datasourceCode, DatasourceType type) {
+      String datasourceCode) {
     MeasurementTemplate measurementTemplate = null;
+    DatasourceType datasourceType = getDatasource(dto, datasourceCode).getType();
     try {
-      measurementTemplate = connectorFactory.getConnector(dto.getType())
-          .getDeviceMeasurementSchema(dto, datasourceCode, type);
+      measurementTemplate = connectorFactory.getConnector(dto.getType(), datasourceType)
+          .getDeviceMeasurementSchema(dto, datasourceCode);
     } catch (ApiResourceNotAvailableException e) {
       dto = this.refreshMetadata(dto, datasourceCode);
-      measurementTemplate = connectorFactory.getConnector(dto.getType())
-          .getDeviceMeasurementSchema(dto, datasourceCode, type);
+      measurementTemplate = connectorFactory.getConnector(dto.getType(), datasourceType)
+          .getDeviceMeasurementSchema(dto, datasourceCode);
     }
     return measurementTemplate;
   }
 
-  private MeasurementConfig getMeasurementConfig(DashboardConfigDto dto, String datasourceCode,
-      DatasourceType type) {
+  private MeasurementConfig getMeasurementConfig(DashboardConfigDto dto, String datasourceCode) {
     MeasurementConfig measurementConfig;
+    DatasourceType datasourceType = getDatasource(dto, datasourceCode).getType();
     try {
-      measurementConfig = connectorFactory.getConnector(dto.getType())
-          .getMeasurementConfig(dto, datasourceCode, type);
+      measurementConfig = connectorFactory.getConnector(dto.getType(), datasourceType)
+          .getMeasurementConfig(dto, datasourceCode);
     } catch (ApiResourceNotAvailableException e) {
       dto = this.refreshMetadata(dto, datasourceCode);
-      measurementConfig = connectorFactory.getConnector(dto.getType())
-          .getMeasurementConfig(dto, datasourceCode, type);
+      measurementConfig = connectorFactory.getConnector(dto.getType(), datasourceType)
+          .getMeasurementConfig(dto, datasourceCode);
     }
     return measurementConfig;
   }
 
   public DashboardConfigDto pingDatasource(DashboardConfigDto dto, String datasourceCode) {
     DashboardConfigDto result;
+    DatasourceType datasourceType = getDatasource(dto, datasourceCode).getType();
     try {
-      result = connectorFactory.getConnector(dto.getType()).pingDevice(dto, datasourceCode);
+      result = connectorFactory.getConnector(dto.getType(), datasourceType).pingDevice(dto, datasourceCode);
     } catch (ApiResourceNotAvailableException e) {
       dto = this.refreshMetadata(dto, datasourceCode);
-      result = connectorFactory.getConnector(dto.getType()).pingDevice(dto, datasourceCode);
+      result = connectorFactory.getConnector(dto.getType(), datasourceType).pingDevice(dto, datasourceCode);
       dashboardConfigService.updateDatasource(getDatasource(result, datasourceCode));
     }
     return result;
   }
 
   private List<Map<String, Object>> getDatasourceMeasurements(DashboardConfigDto dto,
-      String datasourceCode, Date startDate, Date endDate, RestListRequest restListRequest,
-      DatasourceType type) {
+      String datasourceCode, Date startDate, Date endDate, RestListRequest restListRequest) {
     List<Map<String, Object>> measurements;
+    DatasourceType datasourceType = getDatasource(dto, datasourceCode).getType();
     try {
-      measurements = connectorFactory.getConnector(dto.getType())
-          .getMeasurements(dto, datasourceCode, startDate, endDate, restListRequest, type);
+      measurements = connectorFactory.getConnector(dto.getType(), datasourceType)
+          .getMeasurements(dto, datasourceCode, startDate, endDate, restListRequest);
     } catch (ApiResourceNotAvailableException e) {
       dto = this.refreshMetadata(dto, datasourceCode);
-      measurements = connectorFactory.getConnector(dto.getType())
-          .getMeasurements(dto, datasourceCode, startDate, endDate, restListRequest, type);
+      measurements = connectorFactory.getConnector(dto.getType(), datasourceType)
+          .getMeasurements(dto, datasourceCode, startDate, endDate, restListRequest);
     }
     return measurements;
   }

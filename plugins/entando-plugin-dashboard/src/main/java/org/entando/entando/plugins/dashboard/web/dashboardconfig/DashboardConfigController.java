@@ -248,7 +248,7 @@ public class DashboardConfigController {
     DashboardConfigDto dto = IoTUtils
         .checkServerAndDatasource(serverId, datasourceCode, dashboardConfigService);
     new MeasurementTemplate();
-    MeasurementTemplate template = connectorService.getDeviceMeasurementSchema(dto, datasourceCode,type);
+    MeasurementTemplate template = connectorService.getDeviceMeasurementSchema(dto, datasourceCode);
     return new ResponseEntity<>(new SimpleRestResponse(template), HttpStatus.OK);
   }
 
@@ -262,7 +262,7 @@ public class DashboardConfigController {
     DashboardConfigDto dto = IoTUtils
         .checkServerAndDatasource(serverId, datasourceCode, dashboardConfigService);
 
-    MeasurementConfig config = connectorService.getMeasurementsConfig(dto, datasourceCode, type);
+    MeasurementConfig config = connectorService.getMeasurementsConfig(dto, datasourceCode);
     return new ResponseEntity<>(new SimpleRestResponse(config), HttpStatus.OK);
   }
 

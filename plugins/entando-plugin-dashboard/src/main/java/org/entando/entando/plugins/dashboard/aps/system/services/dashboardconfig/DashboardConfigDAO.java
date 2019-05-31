@@ -24,6 +24,8 @@ import com.google.gson.JsonObject;
 
 import org.apache.commons.lang.StringUtils;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DatasourceStatus;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DatasourceType;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,6 +59,7 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
   public static final String FK_DASHBOARD_CONFIG = "fk_dashboard_config";
   public static final String METADATA = "metadata";
   public static final String DATASOURCE_NAME = "name";
+  public static final String DATASOURCE_TYPE = "type";
   
   public static final String DASHBOARD_ID = "id";
   public static final String SERVERDESCRIPTION = "serverdescription";
@@ -220,20 +223,6 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
     }
   }
 
-  private void insertDashboardConfigDatasource(DatasourcesConfigDto datasource)
-      throws SQLException {
-    Connection conn = null;
-    try {
-      conn = this.getConnection();
-      insertDashboardConfigDatasource(datasource, conn);
-    } catch (Throwable t) {
-      logger.error(DATASOURCE_ERROR_ON_INSERT_, t);
-      throw new RuntimeException(DATASOURCE_ERROR_ON_INSERT_, t);
-    } finally {
-      this.closeDaoResources(null, null, conn);
-    }
-  }
-
   private void insertDashboardConfigDatasource(DatasourcesConfigDto datasourcesConfigDto,
       Connection conn) {
     PreparedStatement stat =null;
@@ -263,6 +252,12 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
         stat.setString(index++, metadata);
       } else {
         stat.setNull(index++, Types.VARCHAR);
+      }
+      if(datasourcesConfigDto.getType() != null) {
+        stat.setString(index++, datasourcesConfigDto.getType().toString());
+      }
+      else {
+        stat.setString(index++, DatasourceType.GENERIC.toString());
       }
       stat.executeUpdate();
     } catch (Throwable t) {
@@ -302,6 +297,12 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
           stat.setString(index++, metadata);
         } else {
           stat.setNull(index++, Types.VARCHAR);
+        }
+        if(c.getType() != null) {
+          stat.setString(index++, c.getType().toString());
+        }
+        else {
+          stat.setString(index++, DatasourceType.GENERIC.toString());
         }
         stat.executeUpdate();
       } catch (Throwable t) {
@@ -458,6 +459,12 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
         stat.setString(index++, metadata);
       } else {
         stat.setNull(index++, Types.VARCHAR);
+      }
+      if(d.getType() != null) {
+        stat.setString(index++, d.getType().toString());
+      }
+      else {
+        stat.setString(index++, DatasourceType.GENERIC.toString());
       }
       stat.setString(index++, d.getDatasource());
       stat.executeUpdate();
@@ -634,6 +641,9 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
       datasource.setDatasource(res.getString(DATASOURCE));
       datasource.setDatasourceURI(res.getString(DATASOURCEURI));
       datasource.setStatus(res.getString(STATUS));
+      JsonObject metadata = new Gson().fromJson(res.getString(METADATA), JsonObject.class);
+      datasource.setMetadata(JsonUtils.getMapFromJson(metadata));
+      datasource.setType(DatasourceType.valueOf(res.getString(DATASOURCE_TYPE)));
     } catch (Throwable t) {
       logger.error(String.format(
           DASHBOARD_CONFIG_ERROR_LOADING__WITH_ID_S, dashboardId), t);
@@ -666,6 +676,7 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
         Map<String, Object> metadata = JsonUtils
             .getMapFromJson(new Gson().fromJson(res.getString(METADATA), JsonObject.class));
         datasource.setMetadata(metadata);
+        datasource.setType(DatasourceType.valueOf(res.getString(DATASOURCE_TYPE)));
       }
     } catch (Throwable t) {
       logger.error(String.format(
@@ -716,6 +727,7 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
         datasource.setName(res.getString(DATASOURCE_NAME));
         JsonObject metadata = new Gson().fromJson(res.getString(METADATA), JsonObject.class);
         datasource.setMetadata(JsonUtils.getMapFromJson(metadata));
+        datasource.setType(DatasourceType.valueOf(res.getString(DATASOURCE_TYPE)));
         dashboardConfig.getDatasources().add(datasource);
       }
 
@@ -739,11 +751,11 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
 
   private static final String LOAD_DASHBOARD_CONFIGS_ID = "SELECT id FROM dashboard_config";
 
-  private static final String ADD_DATASOURCE = "INSERT INTO dashboard_config_datasource (fk_dashboard_config, datasourcecode ,datasource, datasourceuri, status , name, metadata) VALUES (?, ?, ?, ?, ?, ? , ?)";
+  private static final String ADD_DATASOURCE = "INSERT INTO dashboard_config_datasource (fk_dashboard_config, datasourcecode ,datasource, datasourceuri, status , name, metadata, type) VALUES (?, ?, ?, ?, ?, ? , ?, ?)";
 
   private static final String DELETE_DATASOURCE = "DELETE FROM dashboard_config_datasource WHERE fk_dashboard_config = ?";
 
-  private static final String LOAD_DATASOURCE = "SELECT fk_dashboard_config, datasourcecode ,datasource, datasourceuri, status , name, metadata FROM dashboard_config_datasource WHERE fk_dashboard_config = ?";
+  private static final String LOAD_DATASOURCE = "SELECT fk_dashboard_config, datasourcecode ,datasource, datasourceuri, status , name, metadata, type FROM dashboard_config_datasource WHERE fk_dashboard_config = ?";
 
   private static final String LOAD_DATASOURCE_BY_DASHBOARD_AND_DATASOURCECODE = "SELECT * FROM dashboard_config_datasource WHERE fk_dashboard_config = ? AND datasourcecode = ?";
 
@@ -751,11 +763,11 @@ public class DashboardConfigDAO extends AbstractSearcherDAO implements IDashboar
 
   private static final String COUNT_DATASOURCE_BY_CODE = "SELECT COUNT(*) FROM dashboard_config_datasource WHERE datasourcecode = ?";
 
-  private static final String UPDATE_DATASOURCE = "UPDATE dashboard_config_datasource SET fk_dashboard_config = ?, datasourcecode = ?, datasourceuri = ?, status = ?, name = ?, metadata = ? WHERE datasource = ?";
+  private static final String UPDATE_DATASOURCE = "UPDATE dashboard_config_datasource SET fk_dashboard_config = ?, datasourcecode = ?, datasourceuri = ?, status = ?, name = ?, metadata = ?, type = ? WHERE datasource = ?";
 
   private static final String COUNT_DATASOURCE_BY_DASHBOARD_ID_AND_NAME = "SELECT COUNT(*) FROM dashboard_config_datasource WHERE dashboard_config_datasource = ? AND datasourcecode = ?";
 
-  private static final String LOAD_DATASOURCE_BY_DATASOURCE_NAME = "SELECT fk_dashboard_config, datasourcecode ,datasource, datasourceuri, status , name, metadata FROM dashboard_config_datasource WHERE datasource = ?";
+  private static final String LOAD_DATASOURCE_BY_DATASOURCE_NAME = "SELECT fk_dashboard_config, datasourcecode ,datasource, datasourceuri, status , name, metadata, type FROM dashboard_config_datasource WHERE datasource = ?";
 
   private static final String DELETE_DATASOURCE_BY_ID = "DELETE FROM dashboard_config_datasource WHERE datasource = ?";
 }

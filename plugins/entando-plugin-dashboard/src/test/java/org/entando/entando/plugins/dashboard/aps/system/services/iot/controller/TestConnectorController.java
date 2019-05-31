@@ -161,7 +161,7 @@ public class TestConnectorController extends AbstractControllerTest {
     when(dashboardConfigService.existsByIdAndIsActive(dashboardId)).thenReturn(true);
     when(dashboardConfigService.getDashboardConfig(dashboardId)).thenReturn(dashboardConfigDto);
     when(connectorService.getDeviceMeasurements(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(),
-            Mockito.any(), Mockito.any())).thenReturn(measurements);
+            Mockito.any())).thenReturn(measurements);
     ResultActions result = mockMvc.perform(
         get(BASE_PATH + "server/" + dashboardId + "/datasource/" + datasourceCode + "/data")
             .param("nMeasurements", nMeasurements.toString())

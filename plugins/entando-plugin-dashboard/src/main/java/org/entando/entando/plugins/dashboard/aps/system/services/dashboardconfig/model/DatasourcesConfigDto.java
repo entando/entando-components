@@ -18,6 +18,7 @@
 package org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model;
 
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DatasourceStatus;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DatasourceType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,8 +40,18 @@ public class DatasourcesConfigDto {
     
     private Map<String, Object> metadata = new HashMap();
 
+    private DatasourceType type;
 
-    public Map<String, Object> getMetadata() {
+  public DatasourceType getType() {
+    return type;
+  }
+
+  public void setType(
+      DatasourceType type) {
+    this.type = type;
+  }
+
+  public Map<String, Object> getMetadata() {
 		return metadata;
 	}
 

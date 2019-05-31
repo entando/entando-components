@@ -99,8 +99,7 @@ public class ConnectorControllerTest extends AbstractControllerTest {
     DashboardConfigDto dto = new DashboardConfigDto();
     String datasourceCode = "";
     when(this.dashboardConfigService.existsById(Mockito.anyInt())).thenReturn(true);
-    when(connectorService.getDeviceMeasurements(dto, datasourceCode, null,null, requestList,
-        DatasourceType.GENERIC)).thenReturn(lista);
+    when(connectorService.getDeviceMeasurements(dto, datasourceCode, null,null, requestList)).thenReturn(lista);
 
     String accessToken = "token";
     ResultActions result =mockMvc.perform(get("/plugins/dashboard/server/2/datasource/3/data")

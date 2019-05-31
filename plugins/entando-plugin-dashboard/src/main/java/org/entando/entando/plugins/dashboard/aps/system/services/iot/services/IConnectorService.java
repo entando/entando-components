@@ -3,21 +3,17 @@ package org.entando.entando.plugins.dashboard.aps.system.services.iot.services;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.google.gson.JsonObject;
 
-import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.ServerType;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.dto.DeviceLocations;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DatasourceType;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigRequest;
-import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,13 +32,13 @@ public interface IConnectorService {
 
 	List<Map<String, Object>> getDeviceMeasurements(DashboardConfigDto dto,
       String datasourceCode, Date startDate, Date endDate,
-      RestListRequest restListRequest, DatasourceType type);
+      RestListRequest restListRequest);
 
-	MeasurementConfig getMeasurementsConfig(DashboardConfigDto dto, String datasourceCode, DatasourceType type)
+	MeasurementConfig getMeasurementsConfig(DashboardConfigDto dto, String datasourceCode)
       throws ApsSystemException;
 
 	MeasurementTemplate getDeviceMeasurementSchema(DashboardConfigDto dto,
-      String datasourceCode, DatasourceType type);
+      String datasourceCode);
 
 	List<ServerType> getDashboardTypes();
 

@@ -117,11 +117,10 @@ public class MessageService extends AbstractService implements IMessageService {
       String datasourceCode) {
     Gson gson = new Gson();
     IotMessage measurementJson = this.messageRepository.findFirstByServerIdAndDashboardCodeOrderByCreatedAtDesc(dashboardId, datasourceCode);
-    MeasurementPayload payload = new MeasurementPayload();
     if(measurementJson != null) {
-      payload = gson
+      return gson
           .fromJson(measurementJson.getContent().toJson(), MeasurementPayload.class);
     }
-    return payload;
+    return null;
   }
 }
