@@ -64,7 +64,6 @@ public class ConnectorController {
   public ResponseEntity<PagedRestResponse<MeasurementPayload>> getMeasurement(
       @PathVariable (value = "serverId")int serverId,
       @PathVariable (value = "datasourceCode")String datasourceCode,
-      @RequestParam (value = "type", required = false, defaultValue = DATASOURCE_TYPE_GENERIC) DatasourceType type,
       @RequestParam(value = "startDate", required = false) Instant startDate,
       @RequestParam(value = "endDate", required = false) Instant endDate,
       RestListRequest requestList) {
@@ -77,27 +76,20 @@ public class ConnectorController {
     if(endDate != null) {
       end = Date.from(endDate);
     }
-
     List<Map<String, Object>> payloads = this.connectorService
         .getDeviceMeasurements(dto, datasourceCode, start, end, requestList);
-
     SearcherDaoPaginatedResult<Map<String, Object>> pagedMeasurements = new SearcherDaoPaginatedResult(
         payloads);
     PagedMetadata<Map<String, Object>> pagedMetadata = new PagedMetadata(requestList,pagedMeasurements);
     pagedMetadata.setBody(payloads);
-
     return new ResponseEntity(new PagedRestResponse(pagedMetadata), HttpStatus.OK);
   }
 
   @RequestMapping(value = "/setTemplate/server/{serverId}/datasource/{datasourceCode}", method = RequestMethod.POST)
   public ResponseEntity<?> setMeasurementTemplate(@PathVariable int serverId,
-      @PathVariable String datasourceCode)
-      throws ApsSystemException {
+      @PathVariable String datasourceCode) {
     DashboardConfigDto dto = IoTUtils.checkServerAndDatasource(serverId, datasourceCode, dashboardConfigService);
 //        connectorService.setDeviceMeasurementSchema(dto);
-
     return new ResponseEntity<>(HttpStatus.OK);
   }
-
-
 }

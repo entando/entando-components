@@ -34,8 +34,7 @@ public interface IConnectorService {
       String datasourceCode, Date startDate, Date endDate,
       RestListRequest restListRequest);
 
-	MeasurementConfig getMeasurementsConfig(DashboardConfigDto dto, String datasourceCode)
-      throws ApsSystemException;
+	MeasurementConfig getMeasurementsConfig(DashboardConfigDto dto, String datasourceCode);
 
 	MeasurementTemplate getDeviceMeasurementSchema(DashboardConfigDto dto,
       String datasourceCode);
