@@ -14,7 +14,8 @@ org.entando.dashboard.Table = class {
       const obj = {
         data: key,
         title: config.columns[key].label,
-        visible: !config.columns[key].hidden || false
+        visible: !config.columns[key].hidden || false,
+        isDate: config.columns[key].isDate
       };
       acc.push(obj);
       return acc;
@@ -41,11 +42,19 @@ org.entando.dashboard.Table = class {
         },
         dataSrc: json => {
           const dateColumns = columns.filter(f => f.isDate).map(m => m.data);
+          const options = {
+            day:'2-digit',
+            month:'2-digit',
+            year:'numeric',
+            hour:'2-digit',
+            minute:'2-digit',
+            second:'2-digit'
+          };
           json.payload.map((m, index) => {
             dateColumns.forEach(col => {
               json.payload[index][col] = new Date(
                 json.payload[index][col]
-              ).toLocaleDateString();
+              ).toLocaleDateString('it-IT',options);
             });
           });
           return json.payload || [];

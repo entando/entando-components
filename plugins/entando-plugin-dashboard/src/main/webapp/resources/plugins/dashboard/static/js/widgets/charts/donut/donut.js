@@ -30,6 +30,8 @@ org.entando.dashboard.DonutChart = class {
       length: 0
     };
     console.log("obj", obj);
-    this.chart.flow(obj);
+    if (obj.json.length > 0) {
+      this.chart.flow(obj);
+    }
   }
 };

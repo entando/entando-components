@@ -1,6 +1,6 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { initialize } from 'redux-form';
+import { initialize, formValueSelector } from 'redux-form';
 import { ADD_ERRORS, ADD_TOAST } from '@entando/messages';
 
 import { getLanguages } from 'api/appBuilder';
@@ -12,6 +12,9 @@ import {
   putServerConfig,
   getDatasources,
   getDatasourceColumns,
+  pingServerConfig,
+  pingDatasource,
+  previewDatasource,
 } from 'api/dashboardConfig';
 
 import {
@@ -26,6 +29,8 @@ import {
   UPDATE_SERVER_CONFIG,
   CLEAR_SELECTED_DATASOURCE,
   SET_SELECTED_DATASOURCE,
+  SET_CHECK_SERVER,
+  SET_CHECK_DATASOURCE,
 } from 'state/main/types';
 
 import {
@@ -40,9 +45,12 @@ import {
   fecthDatasourceList,
   fetchDatasourceColumns,
   updateDatasourceColumns,
+  checkStatusServerConfig,
+  checkStatusDatasource,
 } from 'state/main/actions';
 
 import { getWidgetConfigSelector } from 'state/app-builder/selectors';
+import { getServerConfigList } from 'state/main/selectors';
 
 import { LANGUAGES } from 'mocks/appBuilder';
 import {
@@ -80,13 +88,16 @@ const INITIAL_STATE = {
 
 jest.mock('api/appBuilder');
 jest.mock('api/dashboardConfig');
-
 jest.mock('state/app-builder/selectors');
 
 const VALUE = {
   config: '{"allColumns":false,"options":{"downlodable":true,"filtrable":true},"title":{"en":"titolo"},"serverName":"4","datasource":"temperature","columns":{"timestamp":{"label":"Time","hidden":false},"temperature":{"label":"TEMPERATURA"}}}',
 };
 getWidgetConfigSelector.mockReturnValue(VALUE);
+
+jest.mock('state/main/selectors');
+
+getServerConfigList.mockReturnValue([1]);
 
 describe('state/main/actions', () => {
   let store;
@@ -402,6 +413,60 @@ describe('state/main/actions', () => {
         expect(store.getActions()).toHaveLength(1);
         expect(actions[0]).toHaveProperty('type', SET_DATASOURCE_COLUMNS);
         done();
+      });
+    });
+
+    describe('checkStatusServerConfig', () => {
+      it('call with serverId. If response OK dispatch setCheckServer', (done) => {
+        pingServerConfig
+          .mockImplementation(mockApi({ payload: { status: true } }));
+        store.dispatch(checkStatusServerConfig('1')).then(() => {
+          actions = store.getActions();
+          expect(actions).toHaveLength(1);
+          expect(actions[0]).toHaveProperty('type', SET_CHECK_SERVER);
+          done();
+        });
+      });
+
+      it('if API response is not ok, dispatch setCheckServer for offine and ADD_ERRORS', (done) => {
+        pingServerConfig
+          .mockImplementationOnce(mockApi({ errors: true }));
+        store.dispatch(checkStatusServerConfig('1')).then(() => {
+          actions = store.getActions();
+          expect(actions).toHaveLength(3);
+          expect(actions[0]).toHaveProperty('type', SET_CHECK_SERVER);
+          expect(actions[1]).toHaveProperty('type', ADD_ERRORS);
+          expect(actions[2]).toHaveProperty('type', ADD_TOAST);
+          done();
+        });
+      });
+    });
+
+    describe('checkStatusDatasource', () => {
+      formValueSelector.mockReturnValue(() => '1');
+
+      it('call with serverId. If response OK dispatch setCheckDatasource', (done) => {
+        pingDatasource
+          .mockImplementation(mockApi({ payload: { status: true } }));
+        store.dispatch(checkStatusDatasource('temp')).then(() => {
+          actions = store.getActions();
+          expect(actions).toHaveLength(1);
+          expect(actions[0]).toHaveProperty('type', SET_CHECK_DATASOURCE);
+          done();
+        });
+      });
+
+      it('if API response is not ok, dispatch setCheckDatasource for offine and ADD_ERRORS', (done) => {
+        pingDatasource
+          .mockImplementationOnce(mockApi({ errors: true }));
+        store.dispatch(checkStatusDatasource('temp')).then(() => {
+          actions = store.getActions();
+          expect(actions).toHaveLength(3);
+          expect(actions[0]).toHaveProperty('type', SET_CHECK_DATASOURCE);
+          expect(actions[1]).toHaveProperty('type', ADD_ERRORS);
+          expect(actions[2]).toHaveProperty('type', ADD_TOAST);
+          done();
+        });
       });
     });
 

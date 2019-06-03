@@ -9,6 +9,7 @@ const MapSecondStepContent = ({
   formName,
   optionColumns,
   optionColumnSelected,
+  optionColumnsDeviceLocationsSelected,
   datasourcesValue,
   clearInputDatasourceData,
   addColumnOptionSelected,
@@ -22,6 +23,7 @@ const MapSecondStepContent = ({
     datasourceSelected={datasourceSelected}
     optionColumns={optionColumns}
     optionColumnSelected={optionColumnSelected}
+    optionColumnsDeviceLocationsSelected={optionColumnsDeviceLocationsSelected}
     datasourcesValue={datasourcesValue}
     clearInputDatasourceData={clearInputDatasourceData}
     addColumnOptionSelected={addColumnOptionSelected}
@@ -33,6 +35,7 @@ MapSecondStepContent.propTypes = {
   formName: PropTypes.string,
   optionColumns: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   optionColumnSelected: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  optionColumnsDeviceLocationsSelected: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   addColumnOptionSelected: PropTypes.func.isRequired,
   removeColumnOptionSelected: PropTypes.func.isRequired,
   datasourceSelected: PropTypes.string,

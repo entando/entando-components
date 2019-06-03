@@ -39,7 +39,7 @@ const DatasourceLayer = ({
   formName,
   optionColumns,
   optionColumnSelected,
-  optionColumnsDeviceLocationsSelected,
+  optionColumnDeviceLocationsSelected,
   nameFieldArray,
   addColumnOptionSelected,
   removeColumnOptionSelected,
@@ -99,14 +99,15 @@ const DatasourceLayer = ({
         </Col>
       )}
       <Col xs={6}>
+        { console.log('optionColumns: ', optionColumns)}
+        { console.log('optionColumnSelected: ', optionColumnSelected)}
+        { console.log('optionColumnDeviceLocationsSelected: ', optionColumnDeviceLocationsSelected)}
         {optionColumns.length === 0 ? null : (
-          <div className="form-group clearfix">
-            <Col xs={5} className="DatasourceLayer__item text-left no-padding">
-              <label htmlFor="label-coordinates" className="col-xs-2 control-label">
-                <FormattedMessage id="plugin.geolocalization.coordinates" />
-              </label>
-            </Col>
-            <Col xs={7} className="DatasourceLayer__item">
+          <div className="form-group">
+            <label htmlFor="label-coordinates" className="col-xs-2 control-label">
+              <FormattedMessage id="plugin.geolocalization.coordinates" />
+            </label>
+            <Col xs={9} className="DatasourceLayer__item">
               <FieldArray
                 id="label-coordinates"
                 className="DatasourceLayer__column-selected"
@@ -118,7 +119,7 @@ const DatasourceLayer = ({
                 component={FieldArrayDropDownMultiple}
                 idKey={datasourceSelected}
                 optionColumns={optionColumns}
-                optionColumnSelected={optionColumnsDeviceLocationsSelected}
+                optionColumnSelected={optionColumnDeviceLocationsSelected}
                 disabled={optionColumns.length === 0}
                 addColumnOptionSelected={addColumnOptionSelected}
                 removeColumnOptionSelected={removeColumnOptionSelected}
@@ -134,12 +135,10 @@ const DatasourceLayer = ({
       </Col>
       <Col xs={6}>
         {optionColumns.length === 0 ? null : (
-          <div className="form-group clearfix">
-            <Col xs={2} className="DatasourceLayer__item text-left no-padding">
-              <label htmlFor="label-item" className="col-xs-2 control-label">
-                <FormattedMessage id="plugin.geolocalization.item" />
-              </label>
-            </Col>
+          <div className="form-group">
+            <label htmlFor="label-item" className="col-xs-2 control-label">
+              <FormattedMessage id="plugin.geolocalization.item" />
+            </label>
             <Col xs={10} className="DatasourceLayer__item">
               <FieldArray
                 id="label-item"
@@ -178,7 +177,7 @@ DatasourceLayer.propTypes = {
   formName: PropTypes.string,
   optionColumns: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   optionColumnSelected: PropTypes.arrayOf(PropTypes.shape({})),
-  optionColumnsDeviceLocationsSelected: PropTypes.arrayOf(PropTypes.shape({})),
+  optionColumnDeviceLocationsSelected: PropTypes.arrayOf(PropTypes.shape({})),
   nameFieldArray: PropTypes.string,
   addColumnOptionSelected: PropTypes.func,
   removeColumnOptionSelected: PropTypes.func,
@@ -189,7 +188,7 @@ DatasourceLayer.defaultProps = {
   datasourceSelected: '',
   formName: '',
   optionColumnSelected: [],
-  optionColumnsDeviceLocationsSelected: [],
+  optionColumnDeviceLocationsSelected: [],
   nameFieldArray: undefined,
   addColumnOptionSelected: () => null,
   removeColumnOptionSelected: () => null,

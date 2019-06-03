@@ -16,20 +16,19 @@ const mapStateToProps = (state, ownProps) => {
   const { formName } = ownProps;
   const selector = formValueSelector(formName);
   const optionColumns = getDatasourceColumns(state);
-  // console.log(
-  //   "MapSecondStepContentContainer optionColumns",
-  //   optionColumns,
-  //   " formName",
-  //   formName
-  // );
-
+  const datasourcesValue = selector(state, 'datasources') || [];
+  const datasourceSelected = selector(state, 'datasource');
+  const optionColumnSelected = selector(state, 'datasourceColumns') || [];
+  const optionColumnsDeviceLocationsSelected = selector(state, 'datasourceColumnsDeviceLocations') || [];
+  const label = selector(state, 'label');
   return {
     formName,
-    datasourcesValue: selector(state, 'datasources') || [],
-    datasourceSelected: selector(state, 'datasource'),
+    datasourcesValue,
+    datasourceSelected,
     optionColumns,
-    optionColumnSelected: selector(state, 'datasourceColumns') || [],
-    label: selector(state, 'label'),
+    optionColumnSelected,
+    optionColumnsDeviceLocationsSelected,
+    label,
   };
 };
 
@@ -40,6 +39,7 @@ const mapsDispatchToProps = (dispatch, ownProps) => {
       dispatch(clearFields(formName, false, false, 'label', 'datasource'));
       dispatch(clearDatasourceColumns());
       dispatch(arrayRemoveAll(formName, 'datasourceColumns'));
+      dispatch(arrayRemoveAll(formName, 'datasourceColumnsDeviceLocations'));
     },
     addColumnOptionSelected: (fieldName, value) => {
       dispatch(arrayPush(formName, fieldName, value));

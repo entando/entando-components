@@ -132,6 +132,7 @@ export default {
     'plugin.chart.spline': 'Change layout to spline',
     'plugin.geolocalization.label': 'Label',
     'plugin.geolocalization.item': 'Item',
+    'plugin.geolocalization.coordinates': 'Coordinates',
     'plugin.geolocalization.label.requirement':
       'letters, numbers, symbols, min 3 and max 20 characters',
     'plugin.geolocalization.mapSize': 'Map Size',

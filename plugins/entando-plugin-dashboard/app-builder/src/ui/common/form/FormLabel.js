@@ -26,7 +26,7 @@ const FormLabel = ({
   return (
     <span className="FormLabel">
       {langLabel}
-      <FormattedMessage id={labelId} />&nbsp; {requiredIcon}
+      <FormattedMessage id={labelId} />{' '}{requiredIcon}
       {fieldHelp}
     </span>);
 };

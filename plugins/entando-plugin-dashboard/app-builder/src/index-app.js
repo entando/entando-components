@@ -10,7 +10,7 @@ import rootReducer from 'state/main/reducer';
 import {
   config,
   api,
-  // , setApi
+  setApi,
 } from '@entando/apimanager';
 
 import { Grid, Row, Col } from 'patternfly-react';
@@ -35,12 +35,12 @@ import 'patternfly/dist/css/patternfly-additions.min.css';
 // from 'ui/dashboard-config/list/containers/DashboardConfigPageContainer';
 
 // import DashboardTable from 'ui/widgets/table/components/DashboardTable';
-import DashboardLineChart from 'ui/widgets/charts/line-chart/components/DashboardLineChart';
+// import DashboardLineChart from 'ui/widgets/charts/line-chart/components/DashboardLineChart';
 // import DashboardBarChart from 'ui/widgets/charts/bar-chart/components/DashboardBarChart';
 // import DashboardDonutChart from 'ui/widgets/charts/donut-chart/components/DashboardDonutChart';
 // import DashboardGaugeChart from 'ui/widgets/charts/gauge-chart/components/DashboardGaugeChart';
 // import DashboardPieChart from 'ui/widgets/charts/pie-chart/components/DashboardPieChart';
-// import DashboardMap from 'ui/widgets/geolocalization/components/DashboardMap';
+import DashboardMap from 'ui/widgets/geolocalization/components/DashboardMap';
 
 
 import plugin from 'index';
@@ -60,7 +60,7 @@ setCurrentLocale(enLocale);
 
 const currentUser = combineReducers({
   username: () => 'admin',
-  token: () => 'd2899dccfdf21a3212c43b4e093197bc',
+  token: () => 'c4cde124570dfea5b8d90631b5a2a0cc',
 });
 
 const wrappedReducer = combineReducers({
@@ -85,10 +85,10 @@ const store = createStore(
 );
 config(store);
 
-// store.dispatch(setApi({
-//   domain: '//localhost:8080/entando-iot',
-//   useMocks: false,
-// }));
+store.dispatch(setApi({
+  domain: '//localhost:8080/entando-iot',
+  useMocks: false,
+}));
 
 // exporting for tests
 export default ReactDOM.render(
@@ -97,7 +97,7 @@ export default ReactDOM.render(
       <Grid fluid>
         <Row>
           <Col xs={12}>
-            <DashboardLineChart />
+            <DashboardMap />
           </Col>
         </Row>
       </Grid>
