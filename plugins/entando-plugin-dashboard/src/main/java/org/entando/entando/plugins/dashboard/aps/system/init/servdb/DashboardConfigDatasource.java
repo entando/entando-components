@@ -14,7 +14,6 @@
  *  * details.
  *
  */
-
 package org.entando.entando.plugins.dashboard.aps.system.init.servdb;
 
 import com.j256.ormlite.field.DataType;
@@ -24,29 +23,29 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = DashboardConfigDatasource.TABLE_NAME)
 public class DashboardConfigDatasource {
 
-	public DashboardConfigDatasource() {
-	}
+    public DashboardConfigDatasource() {
+    }
 
-	@DatabaseField(columnName = "fk_dashboard_config", dataType = DataType.INTEGER, canBeNull = false)
-	private int fkDashboardConfig;
+    @DatabaseField(columnName = "fk_dashboard_config", dataType = DataType.INTEGER, canBeNull = false)
+    private int fkDashboardConfig;
 
-	@DatabaseField(columnName = "datasource", dataType = DataType.STRING, width = 30, canBeNull = false)
-	private String datasource;
+    @DatabaseField(columnName = "datasource", dataType = DataType.STRING, width = 30, canBeNull = false)
+    private String datasource;
 
-	@DatabaseField(columnName = "datasourcecode", dataType = DataType.STRING, width = 255, canBeNull = false, id = true)
-	private String datasourceCode;
+    @DatabaseField(columnName = "datasourcecode", dataType = DataType.STRING, width = 255, canBeNull = false, id = true)
+    private String datasourceCode;
 
-	@DatabaseField(columnName = "datasourceuri", dataType = DataType.STRING, width = 255, canBeNull = true)
-	private String datasourceURI;
+    @DatabaseField(columnName = "datasourceuri", dataType = DataType.STRING, width = 255, canBeNull = true)
+    private String datasourceURI;
 
-	@DatabaseField(columnName = "online", dataType = DataType.STRING, width = 50, canBeNull = true)
-	private String status;
+    @DatabaseField(columnName = "status", dataType = DataType.STRING, width = 50, canBeNull = true)
+    private String status;
 
-	@DatabaseField(columnName = "metadata", dataType = DataType.STRING, canBeNull = true)
-	private String metadata;
+    @DatabaseField(columnName = "metadata", dataType = DataType.STRING, canBeNull = true)
+    private String metadata;
 
-	@DatabaseField(columnName = "name", dataType = DataType.STRING, width = 255, canBeNull = true)
-	private String name;
+    @DatabaseField(columnName = "name", dataType = DataType.STRING, width = 255, canBeNull = true)
+    private String name;
 
-	public static final String TABLE_NAME = "dashboard_config_datasource";
+    public static final String TABLE_NAME = "dashboard_config_datasource";
 }
