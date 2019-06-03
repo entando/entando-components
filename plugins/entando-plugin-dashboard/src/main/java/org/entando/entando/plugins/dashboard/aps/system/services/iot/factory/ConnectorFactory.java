@@ -34,12 +34,19 @@ public class ConnectorFactory  implements ApplicationContextAware {
   public IConnectorFactory getConnector(String serverType, DatasourceType datasourceType) {
     Map<String, IConnectorFactory> beans = applicationContext.getBeansOfType(IConnectorFactory.class);
     IConnectorFactory defName = beans.values().stream()
-        .filter(service -> service.supports(serverType, datasourceType))
+        .filter(service -> service.supports(serverType) && service.getDatasourceType().equals(datasourceType))
         .findFirst()
         .orElseGet(BaseConnectorIot::new);
     return defName;
   }
 
+  public List<DatasourceType> getDatasourceTypes(String serverType) {
+    Map<String, IConnectorFactory> beans = applicationContext.getBeansOfType(IConnectorFactory.class);
+    List<DatasourceType> datasourceTypes = new ArrayList<>();
+    beans.values().stream().filter(service -> service.supports(serverType)).forEach(impl -> datasourceTypes.add(impl.getDatasourceType()));
+    return datasourceTypes;
+  }
+  
   public List<ServerType> getServerType() {
     Map<String, IConnectorFactory> beans = applicationContext.getBeansOfType(IConnectorFactory.class);
     List<ServerType> serverTypes = new ArrayList<>();

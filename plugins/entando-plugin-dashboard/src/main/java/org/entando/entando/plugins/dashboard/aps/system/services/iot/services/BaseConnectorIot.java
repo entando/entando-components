@@ -22,7 +22,7 @@ import java.util.Map;
 public class BaseConnectorIot implements IConnectorFactory {
 
   @Override
-  public boolean supports(String connectorType, DatasourceType datasourceType) {
+  public boolean supports(String connectorType) {
     return false;
   }
 
@@ -68,6 +68,11 @@ public class BaseConnectorIot implements IConnectorFactory {
 
   @Override
   public ServerType getServerType() {
+    return null;
+  }
+
+  @Override
+  public DatasourceType getDatasourceType() {
     return null;
   }
 

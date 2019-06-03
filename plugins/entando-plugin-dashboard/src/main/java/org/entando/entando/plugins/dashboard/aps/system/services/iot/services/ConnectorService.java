@@ -156,6 +156,11 @@ public class ConnectorService extends AbstractConnectorService implements IConne
   }
 
   @Override
+  public List<DatasourceType> getDatasourceTypes(String serverType) {
+    return connectorFactory.getDatasourceTypes(serverType);
+  }
+
+  @Override
   public DashboardConfigRequest setDevicesMetadata(DashboardConfigRequest dashboardConfigRequest) {
     return connectorFactory.getConnector(dashboardConfigRequest.getType(), DatasourceType.GENERIC)
         .setDevicesMetadata(dashboardConfigRequest);

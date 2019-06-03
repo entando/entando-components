@@ -97,7 +97,14 @@ public class DashboardConfigController {
     List<ServerType> lista = connectorService.getDashboardTypes();
     return new ResponseEntity<>(new SimpleRestResponse(lista), HttpStatus.OK);
   }
-
+  
+  @RestAccessControl(permission = "superuser")
+  @RequestMapping(value = "/{serverType}/datasourceTypes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<SimpleRestResponse<DatasourceType>> getDatasourceTypes(@PathVariable String serverType) {
+    List<DatasourceType> lista = connectorService.getDatasourceTypes(serverType);
+    return new ResponseEntity<>(new SimpleRestResponse(lista), HttpStatus.OK);
+  }
+  
   @RestAccessControl(permission = "superuser")
   @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<PagedRestResponse<PagedMetadata<DashboardConfigDto>>> getDashboardConfigs(

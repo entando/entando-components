@@ -21,7 +21,7 @@ import com.google.gson.JsonObject;
 
 public interface IConnectorIot {
 
-  boolean supports(String connectorType, DatasourceType datasourceType);
+  boolean supports(String connectorType);
   
   DashboardConfigDto pingDevice(DashboardConfigDto dashboardDatasourceDto, String datasourceCode);
 
@@ -43,10 +43,12 @@ public interface IConnectorIot {
   MeasurementTemplate getDeviceMeasurementSchema(DashboardConfigDto dto,
       String datasourceCode) throws ApiResourceNotAvailableException;
 
-  ServerType getServerType();
-
   DashboardConfigRequest setDevicesMetadata(DashboardConfigRequest dashboardConfigRequest);
 
   DashboardConfigDto refreshMetadata(DashboardConfigDto dto, String datasourceCode);
+
+  ServerType getServerType();
+
+  DatasourceType getDatasourceType();
   
 }
