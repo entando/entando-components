@@ -41,7 +41,7 @@ public class DashboardConfigDatasource {
 	@DatabaseField(columnName = "datasourceuri", dataType = DataType.STRING, width = 255, canBeNull = true)
 	private String datasourceURI;
 
-	@DatabaseField(columnName = "online", dataType = DataType.STRING, width = 50, canBeNull = true)
+	@DatabaseField(columnName = "status", dataType = DataType.STRING, width = 50, canBeNull = true)
 	private String status;
 
 	@DatabaseField(columnName = "metadata", dataType = DataType.STRING, canBeNull = true)
