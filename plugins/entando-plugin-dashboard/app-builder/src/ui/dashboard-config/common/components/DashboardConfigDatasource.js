@@ -91,6 +91,9 @@ class DashboardConfigDatasource extends Component {
                     <th width="10%">
                       <FormattedMessageLocal id="plugin.config.datasourceStatus" />
                     </th>
+                    <th width="10%">
+                      <FormattedMessageLocal id="plugin.config.datasourceType" />
+                    </th>
                     <th width="5%">
                       <FormattedMessageLocal id="common.actions" />
                     </th>
@@ -107,6 +110,7 @@ class DashboardConfigDatasource extends Component {
                           status={datasourceCheck[ds.datasourceCode]}
                         />
                       </td>
+                      <td>{ds.type}</td>
                       <td className="text-center">
                         <DropdownKebab id="kebab-datadource">
                           <MenuItem
