@@ -14,6 +14,10 @@ import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.exception.ApiResourceNotAvailableException;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.exception.InvalidFieldException;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementConfig;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementMapping;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementTemplate;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.MeasurementType;
 import org.entando.entando.web.entity.validator.EntityValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -221,5 +225,20 @@ public class IoTUtils {
       throw new ResourceNotFoundException(EntityValidator.ERRCODE_ENTITY_DOES_NOT_EXIST, "Datasource" , datasourceCode);
     }
     return dashboardConfig;
+  }
+
+  public static MeasurementConfig getMeasurementConfig(DashboardConfigDto dto, String datasourceCode,
+      MeasurementTemplate template) {
+    MeasurementConfig measurementConfig = new MeasurementConfig();
+    measurementConfig.setDashboardId(dto.getId());
+    measurementConfig.setDatasourceCode(datasourceCode);
+    measurementConfig.setMeasurementTemplateId(template.getId());
+    for (MeasurementType measurementType : template.getFields()) {
+      MeasurementMapping mapping = new MeasurementMapping();
+      mapping.setSourceName(measurementType.getName());
+      mapping.setDestinationName(measurementType.getName());
+      measurementConfig.getMappings().add(mapping);
+    }
+    return measurementConfig;
   }
 }
