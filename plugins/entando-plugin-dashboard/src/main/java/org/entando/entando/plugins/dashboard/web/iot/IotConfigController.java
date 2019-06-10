@@ -26,7 +26,7 @@ public class IotConfigController {
 
   @RestAccessControl(permission = "superuser")
   @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<SimpleRestResponse<IotDefaultConfig>> getDashboardConfig()
+  public ResponseEntity<SimpleRestResponse<IotDefaultConfig>> getDefaultConfig()
       throws ApsSystemException {
 
     IotDefaultConfig iotTag = iotDefaultConfigManager.getIotTag();
@@ -36,12 +36,9 @@ public class IotConfigController {
 
   @RestAccessControl(permission = "superuser")
   @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<SimpleRestResponse<?>> updateDashboardConfig(@RequestBody IotDefaultConfig req)
+  public ResponseEntity<SimpleRestResponse<?>> updateDefaultConfig(@RequestBody IotDefaultConfig req)
       throws ApsSystemException {
     iotDefaultConfigManager.updateIotTag(req);
     return new ResponseEntity<>(HttpStatus.OK);
   }
-  
-  
-
 }

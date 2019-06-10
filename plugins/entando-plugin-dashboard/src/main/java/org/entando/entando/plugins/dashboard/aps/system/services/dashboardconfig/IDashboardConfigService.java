@@ -19,6 +19,7 @@ package org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfi
 
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DatasourceType;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigRequest;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
@@ -50,5 +51,9 @@ public interface IDashboardConfigService {
   void updateDatasource(DatasourcesConfigDto datasource);
 
   DatasourcesConfigDto getDatasourceById(String datasource);
+
+  DashboardConfigDto getDashboardConfig(int dashboardConfigId, DatasourceType type);
+
+  PagedMetadata<DashboardConfigDto> getDashboardConfigs(DatasourceType datasourceType, RestListRequest requestList);
 }
 

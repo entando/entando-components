@@ -26,8 +26,8 @@ import org.entando.entando.aps.system.services.DtoBuilder;
 import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
-import org.entando.entando.plugins.dashboard.aps.system.services.iot.factory.ConnectorFactory;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.factory.DatasourceUtilizerFactory;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DatasourceType;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigBuilder;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigRequest;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DatasourcesConfigRequest;
@@ -43,6 +43,7 @@ import org.springframework.validation.ObjectError;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import static org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfigExceptionMessages.DASHBOARD_CONFIGS_ERROR_SEARCHING;
@@ -58,13 +59,10 @@ import static org.entando.entando.plugins.dashboard.web.dashboardconfig.validato
 public class DashboardConfigService implements IDashboardConfigService {
 
   private final Logger logger = LoggerFactory.getLogger(getClass());
-
-  @Autowired
-  private IDashboardConfigManager dashboardConfigManager;
-
   @Autowired
   DatasourceUtilizerFactory datasourceUtilizerFactory;
-  
+  @Autowired
+  private IDashboardConfigManager dashboardConfigManager;
   private IDtoBuilder<DashboardConfig, DashboardConfigDto> dtoBuilder;
 
 
@@ -138,7 +136,7 @@ public class DashboardConfigService implements IDashboardConfigService {
       }
 
       deleteDatasourceReferencesForUpdate(dashboardConfigRequest, dashboardConfig);
-      
+
       dashboardConfig = DashboardConfigBuilder.fromRequestToEntity(dashboardConfigRequest);
       this.getDashboardConfigManager().updateDashboardConfig(dashboardConfig);
       logEndMethod(dashboardConfig.getId(), null, true, getClass());
@@ -149,15 +147,6 @@ public class DashboardConfigService implements IDashboardConfigService {
       throw new RestServerError(DASHBOARD_CONFIG_ERROR_UPDATING_S, e);
     }
 
-  }
-
-  private void deleteDatasourceReferencesForUpdate(DashboardConfigRequest request,
-      DashboardConfig fromDB) {
-    for (DatasourcesConfigDto db : fromDB.getDatasources()) {
-      if(request.getDatasources().stream().noneMatch(r -> r.getDatasource().equals(db.getDatasource()))) {
-        datasourceUtilizerFactory.deleteDatasourceUtilizers(db.getDatasource());
-      }
-    }
   }
 
   @Override
@@ -193,7 +182,8 @@ public class DashboardConfigService implements IDashboardConfigService {
       if (validationResult.hasErrors()) {
         throw new ValidationGenericException(validationResult);
       }
-      this.getDashboardConfig(id).getDatasources().forEach(d -> datasourceUtilizerFactory.deleteDatasourceUtilizers(d.getDatasource()));
+      this.getDashboardConfig(id).getDatasources()
+          .forEach(d -> datasourceUtilizerFactory.deleteDatasourceUtilizers(d.getDatasource()));
       this.getDashboardConfigManager().deleteDashboardConfig(id);
       logEndMethod(id, null, true, getClass());
     } catch (ApsSystemException e) {
@@ -283,6 +273,44 @@ public class DashboardConfigService implements IDashboardConfigService {
     return dto;
   }
 
+  @Override
+  public DashboardConfigDto getDashboardConfig(int dashboardConfigId, DatasourceType type) {
+    DashboardConfigDto dashboardConfig = getDashboardConfig(dashboardConfigId);
+    if (type != null) {
+      dashboardConfig.setDatasources(
+          dashboardConfig.getDatasources().stream().filter(d -> d.getType().equals(type)).collect(
+              Collectors.toList()));
+    }
+    return dashboardConfig;
+  }
+
+  @Override
+  public PagedMetadata<DashboardConfigDto> getDashboardConfigs(DatasourceType datasourceType,
+      RestListRequest requestList) {
+    PagedMetadata<DashboardConfigDto> pagedMetadata = getDashboardConfigs(requestList);
+    if(datasourceType != null) {
+      List<DashboardConfigDto> dashboardConfigDtos = pagedMetadata.getBody();
+      List<DashboardConfigDto> validDashboards = new ArrayList<>();
+      for (DashboardConfigDto dashboard : dashboardConfigDtos) {
+        if (dashboard.getDatasources().stream()
+            .anyMatch(datasource -> datasource.getType().equals(datasourceType))) {
+          validDashboards.add(dashboard);
+        }
+      }
+      pagedMetadata.setBody(validDashboards);
+    }
+    return pagedMetadata;
+  }
+
+  private void deleteDatasourceReferencesForUpdate(DashboardConfigRequest request,
+      DashboardConfig fromDB) {
+    for (DatasourcesConfigDto db : fromDB.getDatasources()) {
+      if (request.getDatasources().stream()
+          .noneMatch(r -> r.getDatasource().equals(db.getDatasource()))) {
+        datasourceUtilizerFactory.deleteDatasourceUtilizers(db.getDatasource());
+      }
+    }
+  }
 
   private DashboardConfig createDashboardConfig(DashboardConfigRequest dashboardConfigRequest) {
     DashboardConfig dashboardConfig = new DashboardConfig();

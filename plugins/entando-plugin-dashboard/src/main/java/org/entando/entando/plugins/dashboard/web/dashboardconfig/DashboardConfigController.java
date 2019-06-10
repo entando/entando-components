@@ -108,11 +108,12 @@ public class DashboardConfigController {
   @RestAccessControl(permission = "superuser")
   @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<PagedRestResponse<PagedMetadata<DashboardConfigDto>>> getDashboardConfigs(
+      @RequestParam (value = "type", required = false) DatasourceType datasourceType,
       RestListRequest requestList) throws JsonProcessingException {
     this.getDashboardConfigValidator()
         .validateRestListRequest(requestList, DashboardConfigDto.class);
     PagedMetadata<DashboardConfigDto> result = this.getDashboardConfigService()
-        .getDashboardConfigs(requestList);
+        .getDashboardConfigs(datasourceType, requestList);
     this.getDashboardConfigValidator().validateRestListResult(requestList, result);
     logger.debug("Main Response -> {}", result);
     return new ResponseEntity<>(new PagedRestResponse(result), HttpStatus.OK);
@@ -146,9 +147,10 @@ public class DashboardConfigController {
   @RestAccessControl(permission = "superuser")
   @RequestMapping(value = "/{dashboardConfigId}/datasources", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SimpleRestResponse<DatasourcesConfigDto>> getDashboardConfigDatasource(
-      @PathVariable String dashboardConfigId) {
+      @PathVariable int dashboardConfigId,
+      @RequestParam (value = "type", required = false) DatasourceType type) {
     DashboardConfigDto dashboardConfig = this.getDashboardConfigService()
-        .getDashboardConfig(Integer.valueOf(dashboardConfigId));
+        .getDashboardConfig(dashboardConfigId, type);
     return new ResponseEntity<>(new SimpleRestResponse(dashboardConfig.getDatasources()),
         HttpStatus.OK);
   }
@@ -169,8 +171,6 @@ public class DashboardConfigController {
     if (bindingResult.hasErrors()) {
       throw new ValidationGenericException(bindingResult);
     }
-
-//    connectorService.setDevicesMetadata(dashboardConfigRequest);
     DashboardConfigDto dashboardConfig = this.getDashboardConfigService()
         .updateDashboardConfig(dashboardConfigRequest);
     return new ResponseEntity<>(new SimpleRestResponse(dashboardConfig), HttpStatus.OK);
