@@ -28,6 +28,8 @@ import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DatasourcesConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.factory.DatasourceUtilizerFactory;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.model.DatasourceType;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IotDefaultConfig;
+import org.entando.entando.plugins.dashboard.aps.system.services.iot.services.IotDefaultConfigManager;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigBuilder;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DashboardConfigRequest;
 import org.entando.entando.plugins.dashboard.web.dashboardconfig.model.DatasourcesConfigRequest;
@@ -63,6 +65,10 @@ public class DashboardConfigService implements IDashboardConfigService {
   DatasourceUtilizerFactory datasourceUtilizerFactory;
   @Autowired
   private IDashboardConfigManager dashboardConfigManager;
+  
+  @Autowired
+  private IotDefaultConfigManager iotDefaultConfigManager;
+  
   private IDtoBuilder<DashboardConfig, DashboardConfigDto> dtoBuilder;
 
 
@@ -302,6 +308,27 @@ public class DashboardConfigService implements IDashboardConfigService {
     return pagedMetadata;
   }
 
+  @Override
+  public DashboardConfigDto getDefaultDashboard() {
+    IotDefaultConfig defaultConfig = iotDefaultConfigManager.getConfig();
+    return getDashboardConfig(defaultConfig.getDashboardId().intValue());
+  }
+  
+  @Override
+  public DashboardConfigDto getDefaultDashboardAndDatasource() {
+    IotDefaultConfig defaultConfig = iotDefaultConfigManager.getConfig();
+    
+    DashboardConfigDto dashboardConfig = getDashboardConfig(
+        defaultConfig.getDashboardId().intValue());
+    
+    List<DatasourcesConfigDto> datasourcesConfigDto= dashboardConfig.getDatasources().stream()
+        .filter(d -> d.getDatasourceCode().equals(defaultConfig.getDatasourceCode()))
+        .collect(Collectors.toList());
+    
+    dashboardConfig.setDatasources(datasourcesConfigDto);
+    return dashboardConfig;
+  }
+  
   private void deleteDatasourceReferencesForUpdate(DashboardConfigRequest request,
       DashboardConfig fromDB) {
     for (DatasourcesConfigDto db : fromDB.getDatasources()) {

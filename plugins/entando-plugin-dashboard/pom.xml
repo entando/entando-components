@@ -16,6 +16,7 @@
 	
 	<properties>
 		<org.springframework.data-version>2.0.9.RELEASE</org.springframework.data-version>
+    <entando.version>5.1.0</entando.version>
 	</properties>
 	<developers>
 		<developer>
@@ -65,8 +66,6 @@
 			<artifactId>spring-data-mongodb</artifactId>
 			<version>${org.springframework.data-version}</version>
 		</dependency>
- 
-
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
@@ -96,6 +95,23 @@
 			<artifactId>spring-web</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
+    
+    <dependency>
+      <groupId>org.entando.entando.plugins</groupId>
+      <artifactId>entando-plugin-jacms</artifactId>
+      <version>${entando.version}</version>
+      <type>jar</type>
+      <classifier>classes</classifier>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+    <groupId>org.entando.entando.plugins</groupId>
+    <artifactId>entando-plugin-jacms</artifactId>
+      <version>${entando.version}</version>
+    <type>war</type>
+    <scope>compile</scope>
+    </dependency>
 	</dependencies>
 
 </project>

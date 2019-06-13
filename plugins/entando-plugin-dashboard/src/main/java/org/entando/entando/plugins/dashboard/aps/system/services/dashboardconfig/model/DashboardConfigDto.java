@@ -135,4 +135,8 @@ public class DashboardConfigDto {
   public void setDatasources(final List<DatasourcesConfigDto> datasources) {
     this.datasources = datasources;
   }
+  
+  public void addDatasource(DatasourcesConfigDto datasourcesConfigDto) {
+    this.datasources.add(datasourcesConfigDto);
+  }
 }

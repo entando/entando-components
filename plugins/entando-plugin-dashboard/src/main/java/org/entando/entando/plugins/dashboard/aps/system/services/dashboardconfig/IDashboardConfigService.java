@@ -55,5 +55,9 @@ public interface IDashboardConfigService {
   DashboardConfigDto getDashboardConfig(int dashboardConfigId, DatasourceType type);
 
   PagedMetadata<DashboardConfigDto> getDashboardConfigs(DatasourceType datasourceType, RestListRequest requestList);
+
+  DashboardConfigDto getDefaultDashboard();
+
+  DashboardConfigDto getDefaultDashboardAndDatasource();
 }
 
