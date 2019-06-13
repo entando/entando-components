@@ -5,6 +5,14 @@ public class DeviceLocations {
   private Double latitude;
   private Double longitude;
 
+  public DeviceLocations() {
+  }
+
+  public DeviceLocations(Double latitude, Double longitude) {
+    this.latitude = latitude;
+    this.longitude = longitude;
+  }
+
   public Double getLatitude() {
     return latitude;
   }
