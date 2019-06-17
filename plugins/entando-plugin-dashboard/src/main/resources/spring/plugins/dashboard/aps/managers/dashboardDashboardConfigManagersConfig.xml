@@ -17,7 +17,7 @@
     </bean>
 
     <bean id="dashboardDashboardConfigService"
-          class="org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfigService">
+          class="org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfigService" parent="abstractService">
         <property name="dashboardConfigManager" ref="dashboardDashboardConfigManager"/>
     </bean>
 

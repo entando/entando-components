@@ -26,4 +26,5 @@ public class IoTConstants {
   public static final String DATASOURCE_TYPE_GATE = "GATE";
   public static final String DATASOURCE_STATUS_ONLINE = "online";
   public static final String DATASOURCE_STATUS_OFFLINE = "offline";
+  
 }

@@ -18,4 +18,6 @@ public class DashboardConfigExceptionMessages {
   public static final String DATASOURCE_ERROR_ON_UPDATE_S = "Error on update datasource %s";
   public static final String DATASOURCE_ERROR_REMOVING_S = "Error removing datasource %s";
   public static final String DATASOURCE_ALREADY_EXISTS_FIELD_WITH_NAME_S = "Already Exists field with name %s";
+  public static final String INVALID_DATASOURCE_TYPE_FOR_DATASOURCE = "invalid DatasourceType for datasource %s";
+  public static final String NO_MEASUREMENT_FOR_DATASOURCE_S = "no measurements available for datasource %s";
 }

@@ -1,5 +1,7 @@
 package org.entando.entando.plugins.dashboard.aps.system.services.iot.services;
 
+import com.agiletec.aps.system.common.AbstractService;
+
 import org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.model.DashboardConfigDto;
 import org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTConstants;
 import org.slf4j.Logger;
@@ -13,7 +15,7 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.UnknownHostException;
 
-public abstract class AbstractConnectorService implements IConnectorService{
+public abstract class AbstractConnectorService extends AbstractService implements IConnectorService{
 
   private final Logger logger = LoggerFactory.getLogger(getClass());
 

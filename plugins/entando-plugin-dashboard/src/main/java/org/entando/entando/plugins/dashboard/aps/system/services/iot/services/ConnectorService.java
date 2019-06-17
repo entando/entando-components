@@ -50,6 +50,16 @@ public class ConnectorService extends AbstractConnectorService implements IConne
   }
 
   @Override
+  public void init() throws Exception {
+    try {
+      logger.info(this.getClass().getName() + ": initialized");
+    }
+    catch (Throwable t) {
+      logger.error("{} Service: Error on initialization", this.getClass().getName(), t);
+    }
+  }
+
+  @Override
   public DashboardConfigDto pingDevice(DashboardConfigDto dto, String datasourceCode) {
     logStartMethod(dto.getId(), datasourceCode, this.getClass());
     DashboardConfigDto result = null;

@@ -16,6 +16,7 @@
 
 package org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig;
 
+import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -53,12 +54,13 @@ import static org.entando.entando.plugins.dashboard.aps.system.services.dashboar
 import static org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfigExceptionMessages.DASHBOARD_CONFIG_ERROR_LOADING__WITH_ID_S;
 import static org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfigExceptionMessages.DASHBOARD_CONFIG_ERROR_ON_INSERT;
 import static org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfigExceptionMessages.DASHBOARD_CONFIG_ERROR_UPDATING_S;
+import static org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfigExceptionMessages.DASHBOARD_CONFIG_NOT_FOUND_WITH_CODE_S;
 import static org.entando.entando.plugins.dashboard.aps.system.services.dashboardconfig.DashboardConfigExceptionMessages.DATASOURCE_ALREADY_EXISTS_FIELD_WITH_NAME_S;
 import static org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils.logEndMethod;
 import static org.entando.entando.plugins.dashboard.aps.system.services.iot.utils.IoTUtils.logStartMethod;
 import static org.entando.entando.plugins.dashboard.web.dashboardconfig.validator.DashboardConfigValidator.ERRCODE_DASHBOARDCONFIG_NOT_FOUND;
 
-public class DashboardConfigService implements IDashboardConfigService {
+public class DashboardConfigService extends AbstractService implements IDashboardConfigService {
 
   private final Logger logger = LoggerFactory.getLogger(getClass());
   @Autowired
@@ -87,6 +89,17 @@ public class DashboardConfigService implements IDashboardConfigService {
   public void setDtoBuilder(IDtoBuilder<DashboardConfig, DashboardConfigDto> dtoBuilder) {
     this.dtoBuilder = dtoBuilder;
   }
+
+  @Override
+  public void init() throws Exception {
+    try {
+      logger.info(this.getClass().getName() + ": initialized");
+    }
+    catch (Throwable t) {
+      logger.error("{} Service: Error on initialization", this.getClass().getName(), t);
+    }
+  }
+
 
   @PostConstruct
   public void onInit() {
@@ -181,7 +194,7 @@ public class DashboardConfigService implements IDashboardConfigService {
     try {
       DashboardConfig dashboardConfig = this.getDashboardConfigManager().getDashboardConfig(id);
       if (null == dashboardConfig) {
-        logger.info("dashboardConfig {} does not exists", id);
+        logger.info(String.format(DASHBOARD_CONFIG_NOT_FOUND_WITH_CODE_S, id));
         return;
       }
       BeanPropertyBindingResult validationResult = this.validateForDelete(dashboardConfig);
@@ -206,7 +219,7 @@ public class DashboardConfigService implements IDashboardConfigService {
       DashboardConfig dashboardConfig = this.getDashboardConfigManager().getDashboardConfig(id);
       if (null == dashboardConfig) {
         logger.warn(String.format(
-            DashboardConfigExceptionMessages.DASHBOARD_CONFIG_NOT_FOUND_WITH_CODE_S, id));
+            DASHBOARD_CONFIG_NOT_FOUND_WITH_CODE_S, id));
         throw new ResourceNotFoundException(
             ERRCODE_DASHBOARDCONFIG_NOT_FOUND, "dashboardConfig",
             String.valueOf(id));
