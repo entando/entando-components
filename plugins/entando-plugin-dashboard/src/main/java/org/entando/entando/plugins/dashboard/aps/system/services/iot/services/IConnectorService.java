@@ -26,8 +26,6 @@ public interface IConnectorService {
 
 	List<DatasourcesConfigDto> getAllDevices(DashboardConfigDto dashboardConfigDto);
 
-	void setDeviceMeasurementSchema(DashboardConfigDto dto, String datasourceCode);
-
 	void saveDeviceMeasurement(DashboardConfigDto dashboardDatasourceDto,
       String datasourceCode, String measure);
 
@@ -43,8 +41,6 @@ public interface IConnectorService {
 	List<ServerType> getDashboardTypes();
 
   List<DatasourceType> getDatasourceTypes(String serverType);
-
-  DashboardConfigRequest setDevicesMetadata(DashboardConfigRequest dashboardConfigRequest);
 
   DashboardConfigDto refreshMetadata(DashboardConfigDto dto, String datasourceCode);
 

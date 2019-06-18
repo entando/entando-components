@@ -39,11 +39,6 @@ public class BaseConnectorIot implements IConnectorFactory {
   }
 
   @Override
-  public void saveMeasurementTemplate(DashboardConfigDto dashboardDatasource, String datasourceCode) {
-
-  }
-
-  @Override
   public void saveDeviceMeasurement(DashboardConfigDto dashboardDatasourceDto,
       String datasourceCode, String measurementBody) {
 
@@ -73,11 +68,6 @@ public class BaseConnectorIot implements IConnectorFactory {
 
   @Override
   public DatasourceType getDatasourceType() {
-    return null;
-  }
-
-  @Override
-  public DashboardConfigRequest setDevicesMetadata(DashboardConfigRequest dashboardConfigRequest) {
     return null;
   }
 

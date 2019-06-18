@@ -62,7 +62,7 @@ public class ConnectorService extends AbstractConnectorService implements IConne
   @Override
   public DashboardConfigDto pingDevice(DashboardConfigDto dto, String datasourceCode) {
     logStartMethod(dto.getId(), datasourceCode, this.getClass());
-    DashboardConfigDto result = null;
+    DashboardConfigDto result;
     try {
       result = pingDatasource(dto, datasourceCode);
     } catch (ApiResourceNotAvailableException e) {
@@ -89,16 +89,7 @@ public class ConnectorService extends AbstractConnectorService implements IConne
     logEndMethod(dto.getId(), null, true, getClass());
     return devices;
   }
-
-  @Override
-  public void setDeviceMeasurementSchema(
-      DashboardConfigDto dto, String datasourceCode) {
-    logStartMethod(dto.getId(), datasourceCode, this.getClass());
-    connectorFactory.getConnector(dto.getType(), DatasourceType.GENERIC)
-        .saveMeasurementTemplate(dto, datasourceCode);
-    logEndMethod(dto.getId(), datasourceCode, true, getClass());
-  }
-
+  
   @Override
   public void saveDeviceMeasurement(
       DashboardConfigDto dto, String datasourceCode,
@@ -132,7 +123,7 @@ public class ConnectorService extends AbstractConnectorService implements IConne
   public MeasurementConfig getMeasurementsConfig(DashboardConfigDto dto,
       String datasourceCode) {
     logStartMethod(dto.getId(), datasourceCode, this.getClass());
-    MeasurementConfig measurementConfig = null;
+    MeasurementConfig measurementConfig;
     try {
       measurementConfig = getMeasurementConfig(dto, datasourceCode);
     } catch (ApiResourceNotAvailableException e) {
@@ -148,7 +139,7 @@ public class ConnectorService extends AbstractConnectorService implements IConne
   public MeasurementTemplate getDeviceMeasurementSchema(DashboardConfigDto dto,
       String datasourceCode) {
     logStartMethod(dto.getId(), datasourceCode, this.getClass());
-    MeasurementTemplate measurementTemplate = null;
+    MeasurementTemplate measurementTemplate;
     try {
       measurementTemplate = getDatasourceMeasurementTemplate(dto, datasourceCode);
     } catch (ApiResourceNotAvailableException e) {
@@ -169,13 +160,7 @@ public class ConnectorService extends AbstractConnectorService implements IConne
   public List<DatasourceType> getDatasourceTypes(String serverType) {
     return connectorFactory.getDatasourceTypes(serverType);
   }
-
-  @Override
-  public DashboardConfigRequest setDevicesMetadata(DashboardConfigRequest dashboardConfigRequest) {
-    return connectorFactory.getConnector(dashboardConfigRequest.getType(), DatasourceType.GENERIC)
-        .setDevicesMetadata(dashboardConfigRequest);
-  }
-
+  
   @Override
   public DashboardConfigDto refreshMetadata(DashboardConfigDto dto,
       String datasourceCode) {
@@ -211,7 +196,7 @@ public class ConnectorService extends AbstractConnectorService implements IConne
   @Override
   public DeviceLocations getDeviceLocations(DashboardConfigDto dto, String datasourceCode) {
     logStartMethod(dto.getId(), datasourceCode, getClass());
-    DeviceLocations deviceLocations = null;
+    DeviceLocations deviceLocations;
     try {
       deviceLocations = getDatasourceLocations(dto, datasourceCode);
     } catch (ApiResourceNotAvailableException e) {
@@ -226,7 +211,7 @@ public class ConnectorService extends AbstractConnectorService implements IConne
   @Override
   public boolean isParcheggioAvailable(DashboardConfigDto dto, String datasourceCode) {
     logStartMethod(dto.getId(), datasourceCode, getClass());
-    boolean result = false;
+    boolean result;
     try {
       result = isParcheggioAvaialable(dto, datasourceCode);
     } catch (ApiResourceNotAvailableException e) {
@@ -286,7 +271,7 @@ public class ConnectorService extends AbstractConnectorService implements IConne
 
   private MeasurementTemplate getDatasourceMeasurementTemplate(DashboardConfigDto dto,
       String datasourceCode) {
-    MeasurementTemplate measurementTemplate = null;
+    MeasurementTemplate measurementTemplate;
     DatasourceType datasourceType = getDatasource(dto, datasourceCode).getType();
     try {
       measurementTemplate = connectorFactory.getConnector(dto.getType(), datasourceType)

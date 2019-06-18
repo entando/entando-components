@@ -27,9 +27,6 @@ public interface IConnectorIot {
 
   List<DatasourcesConfigDto> getAllDevices(DashboardConfigDto dashboardConfigDto) throws ApiResourceNotAvailableException;
 
-  void saveMeasurementTemplate(DashboardConfigDto dashboardDatasource,
-      String datasourceCode);
-
   void saveDeviceMeasurement(DashboardConfigDto dashboardDatasourceDto,
       String datasourceCode, String measurementBody);
 
@@ -42,8 +39,6 @@ public interface IConnectorIot {
 
   MeasurementTemplate getDeviceMeasurementSchema(DashboardConfigDto dto,
       String datasourceCode) throws ApiResourceNotAvailableException;
-
-  DashboardConfigRequest setDevicesMetadata(DashboardConfigRequest dashboardConfigRequest);
 
   DashboardConfigDto refreshMetadata(DashboardConfigDto dto, String datasourceCode);
 

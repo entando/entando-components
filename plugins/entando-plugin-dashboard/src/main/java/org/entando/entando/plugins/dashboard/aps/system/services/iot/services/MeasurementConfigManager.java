@@ -13,7 +13,7 @@ import java.util.List;
 
 public class MeasurementConfigManager extends AbstractService implements IMeasurementConfigManager{
 
-  private static final Logger logger = LoggerFactory.getLogger(MeasurementTemplateManager.class);
+  private static final Logger logger = LoggerFactory.getLogger(MeasurementConfigManager.class);
 
   @Override
   public void init() throws Exception {
