@@ -69,6 +69,19 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
+  
+    <tag>
+        <description>Loads and returns the default Server Configuration.</description>
+        <name>defaultServerConfiguration</name>
+        <tag-class>org.entando.entando.plugins.dashboard.aps.tags.DefaultServerConfigurationTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <description>The name of the variable setted in the pagecontext.</description>
+            <name>var</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+    </tag>
 
     <tag>
         <description>Loads and returns an DashboardTable given a key.</description>
