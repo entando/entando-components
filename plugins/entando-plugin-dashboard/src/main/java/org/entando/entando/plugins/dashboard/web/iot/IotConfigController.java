@@ -39,6 +39,6 @@ public class IotConfigController {
   public ResponseEntity<SimpleRestResponse<IotDefaultConfig>> updateDefaultConfig(@RequestBody IotDefaultConfig req)
       throws ApsSystemException {
     IotDefaultConfig iotDefaultConfig = iotDefaultConfigManager.updateIotTag(req);
-    return new ResponseEntity(iotDefaultConfig, HttpStatus.OK);
+    return new ResponseEntity(new SimpleRestResponse(iotDefaultConfig), HttpStatus.OK);
   }
 }
