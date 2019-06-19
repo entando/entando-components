@@ -76,3 +76,10 @@ VALUES ('dashboard-map', '<?xml version="1.0" encoding="UTF-8"?>
 	<parameter name="id">id</parameter>
 	<action name="dashboardDashboardMapConfig"/>
 </config>','dashboard', NULL, NULL, 1, 'free');
+
+INSERT INTO public.widgetcatalog (code, titles, parameters, lpugincode, parenttypecode, defaultconfig, locked, maingroup) VALUES ('default-dashboard-map', '<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<property key="en">Publish Default Dashboard Map</property>
+<property key="it">Pubblica Default Dashboard Map</property>
+</properties>', NULL, 'dashboard', NULL, NULL, 1, 'free');
+
