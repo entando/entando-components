@@ -6,6 +6,6 @@ public interface IIotDefaultConfigManager {
 
   public IotDefaultConfig getIotTag() throws ApsSystemException;
   
-  public void updateIotTag(IotDefaultConfig iotTag) throws ApsSystemException;
+  public IotDefaultConfig updateIotTag(IotDefaultConfig iotTag) throws ApsSystemException;
   
 }

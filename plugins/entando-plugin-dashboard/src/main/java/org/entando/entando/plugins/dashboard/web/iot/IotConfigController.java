@@ -36,9 +36,9 @@ public class IotConfigController {
 
   @RestAccessControl(permission = "superuser")
   @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<SimpleRestResponse<?>> updateDefaultConfig(@RequestBody IotDefaultConfig req)
+  public ResponseEntity<SimpleRestResponse<IotDefaultConfig>> updateDefaultConfig(@RequestBody IotDefaultConfig req)
       throws ApsSystemException {
-    iotDefaultConfigManager.updateIotTag(req);
-    return new ResponseEntity<>(HttpStatus.OK);
+    IotDefaultConfig iotDefaultConfig = iotDefaultConfigManager.updateIotTag(req);
+    return new ResponseEntity(iotDefaultConfig, HttpStatus.OK);
   }
 }

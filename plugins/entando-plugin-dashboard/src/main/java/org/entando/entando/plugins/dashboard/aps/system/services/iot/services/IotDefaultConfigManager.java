@@ -51,11 +51,12 @@ public class IotDefaultConfigManager extends AbstractService implements IIotDefa
   }
 
   @Override
-  public void updateIotTag(IotDefaultConfig iotTag) throws ApsSystemException {
+  public IotDefaultConfig updateIotTag(IotDefaultConfig iotTag) throws ApsSystemException {
     try {
       String xml = new IotDefaultConfigDOM().createConfigXml(iotTag);
       this.getConfigManager().updateConfigItem(IOT_CONNECTOR_ITEM, xml);
       this.setConfig(iotTag);
+      return iotTag;
     } catch (Throwable t) {
       _logger.error("Error updating configs", t);
       throw new ApsSystemException("Error updating configs", t);
