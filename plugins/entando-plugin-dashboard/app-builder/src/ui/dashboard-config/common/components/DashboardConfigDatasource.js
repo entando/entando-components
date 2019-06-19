@@ -7,16 +7,23 @@ import DashboardConfigModalPreviewDatasource from 'ui/dashboard-config/common/co
 
 import { isUndefined, get } from 'lodash';
 
-const addDatasource = (fields, obj, callback) => {
+const addDatasource = (fields, obj, callbacks) => {
   const {
     datasourceCode,
-    datasourceValue: { datasource, datasourceURI },
+    datasourceValue: {
+      datasource, datasourceURI, datasourceType = 'GENERIC', defaultDatasource,
+    },
   } = obj;
 
   if ((!isUndefined(datasourceCode) && !isUndefined(datasource)) || fields.length > 0) {
-    fields.push({ datasourceCode, datasource, datasourceURI });
-    if (callback) {
-      callback(datasourceCode);
+    fields.push({
+      datasourceCode, datasource, datasourceURI, type: datasourceType,
+    });
+    if (callbacks) {
+      callbacks[0](datasourceCode);
+      if (defaultDatasource && datasourceType === 'GATE') {
+        callbacks[1](datasourceCode);
+      }
     }
   }
 };
@@ -52,6 +59,7 @@ class DashboardConfigDatasource extends Component {
       previewDatasource,
       previewColumns,
       datasourceCheck,
+      setDefault,
     } = this.props;
     return (
       <div className="DashboardConfigDatasource">
@@ -66,8 +74,12 @@ class DashboardConfigDatasource extends Component {
               }
                 type="button"
                 bsStyle="default"
-                onClick={() =>
-                addDatasource(fields, { datasourceCode, datasourceValue }, testConnection)
+                onClick={
+                  () =>
+                addDatasource(
+                  fields,
+                  { datasourceCode, datasourceValue }, [testConnection, setDefault],
+                )
               }
               >
                 <FormattedMessageLocal id="common.add" />
@@ -120,6 +132,13 @@ class DashboardConfigDatasource extends Component {
                             <FormattedMessageLocal id="common.test" />
                           </MenuItem>
                           <MenuItem
+                            className="DashboardConfigDatasource__menu-item-default"
+                            onClick={() => setDefault(ds.datasourceCode)}
+                            disabled={ds.type !== 'GATE'}
+                          >
+                            <strong><FormattedMessageLocal id="plugin.config.default" /></strong>
+                          </MenuItem>
+                          <MenuItem
                             className="DashboardConfigDatasource__menu-item-preview"
                             onClick={() => this.handleModal(ds.datasourceCode)}
                             disabled={get(datasourceCheck[ds.datasourceCode], 'status') === 'offline'}
@@ -168,6 +187,7 @@ DashboardConfigDatasource.propTypes = {
   previewDatasource: PropTypes.func.isRequired,
   previewColumns: PropTypes.arrayOf(PropTypes.shape({})),
   datasourceCheck: PropTypes.shape({}),
+  setDefault: PropTypes.func.isRequired,
 };
 DashboardConfigDatasource.defaultProps = {
   datasourceValue: {

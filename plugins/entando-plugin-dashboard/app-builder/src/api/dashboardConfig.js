@@ -139,3 +139,21 @@ export const refreshDatasourceMetadata = (serverId, datasourceCode) =>
     mockResponse: {},
     useAuthentication: true,
   });
+
+export const getIotConfig = () => makeRequest({
+  uri: '/api/plugins/dashboard/iotConfigController',
+  method: METHODS.GET,
+  mockResponse: {},
+  useAuthentication: true,
+});
+
+export const putIotConfig = (dashboardId, datasourceCode) => makeRequest({
+  uri: '/api/plugins/dashboard/iotConfigController',
+  method: METHODS.PUT,
+  body: {
+    dashboardId,
+    datasourceCode,
+  },
+  mockResponse: {},
+  useAuthentication: true,
+});

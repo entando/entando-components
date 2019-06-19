@@ -1,6 +1,5 @@
 import { getRoute, getParams, getSearchParams, gotoRoute } from '@entando/router';
 import { addToast, addErrors, TOAST_ERROR } from '@entando/messages';
-import { formattedText } from '@entando/utils';
 import { formValueSelector, initialize, change, arrayPush } from 'redux-form';
 import { get } from 'lodash';
 
@@ -17,6 +16,8 @@ import {
   getDatasources,
   getDatasourceColumns,
   previewDatasource,
+  getIotConfig,
+  putIotConfig,
 } from 'api/dashboardConfig';
 
 import { getWidgetConfigSelector } from 'state/app-builder/selectors';
@@ -43,6 +44,7 @@ import {
   SET_SELECTED_DATASOURCE,
   CLEAR_SELECTED_DATASOURCE,
   SET_INTERNAL_ROUTE,
+  SET_DEFAULT_CONFIG,
 } from './types';
 
 
@@ -151,6 +153,13 @@ export const setInternalRoute = route => ({
   payload: { route },
 });
 
+export const setDefaultConfig = config => ({
+  type: SET_DEFAULT_CONFIG,
+  payload: {
+    config,
+  },
+});
+
 // thunk
 
 export const gotoConfigurationPage = () => (dispatch, getState) => {
@@ -183,7 +192,8 @@ export const fetchLanguages = () => dispatch =>
           resolve();
         } else {
           dispatch(addErrors(json.errors.map(e => e.message)));
-          dispatch(addToast(formattedText('plugin.alert.error'), TOAST_ERROR));
+          const { errors } = json;
+          errors.map(e => dispatch(addToast(e.message, TOAST_ERROR)));
           resolve();
         }
       });
@@ -199,7 +209,8 @@ export const fetchServerType = () => dispatch =>
           resolve();
         } else {
           dispatch(addErrors(json.errors.map(e => e.message)));
-          dispatch(addToast(formattedText('plugin.alert.error'), TOAST_ERROR));
+          const { errors } = json;
+          errors.map(e => dispatch(addToast(e.message, TOAST_ERROR)));
           resolve();
         }
       });
@@ -218,7 +229,8 @@ export const fetchServerConfigList = configItem => dispatch =>
           resolve();
         } else {
           dispatch(addErrors(json.errors.map(e => e.message)));
-          dispatch(addToast(formattedText('plugin.alert.error'), TOAST_ERROR));
+          const { errors } = json;
+          errors.map(e => dispatch(addToast(e.message, TOAST_ERROR)));
           resolve();
         }
       });
@@ -237,7 +249,8 @@ export const editServerConfig = (formName, configItem) => dispatch =>
           resolve();
         } else {
           dispatch(addErrors(json.errors.map(e => e.message)));
-          dispatch(addToast(formattedText('plugin.alert.error'), TOAST_ERROR));
+          const { errors } = json;
+          errors.map(e => dispatch(addToast(e.message, TOAST_ERROR)));
           resolve();
         }
       });
@@ -251,9 +264,47 @@ export const removeServerConfig = id => dispatch =>
         dispatch(removeServerConfigSync(id));
         resolve();
       } else {
-        dispatch(addToast(formattedText('plugin.alert.error'), TOAST_ERROR));
+        dispatch(addToast('Error', TOAST_ERROR));
         resolve();
       }
+    });
+  });
+
+export const fetchDefaultConfiguration = () => dispatch =>
+  new Promise((resolve) => {
+    getIotConfig().then((response) => {
+      response.json().then((json) => {
+        if (response.ok) {
+          dispatch(setDefaultConfig({
+            serverId: json.payload.dashboardId,
+            datasourceCode: json.payload.datasourceCode,
+          }));
+          resolve(json.payload);
+        } else {
+          dispatch(addErrors(json.errors.map(e => e.message)));
+          const { errors } = json;
+          errors.map(e => dispatch(addToast(e.message, TOAST_ERROR)));
+          resolve();
+        }
+      });
+    });
+  });
+
+export const setDefaultConfiguration = (dashboardId, datasourceCode) => dispatch =>
+  new Promise((resolve) => {
+    // console.log('setDefaultConfiguration ', dashboardId, datasourceCode);
+    putIotConfig(dashboardId, datasourceCode).then((response) => {
+      response.json().then((json) => {
+        if (response.ok) {
+          console.log('json', json);
+          resolve(response.status);
+        } else {
+          dispatch(addErrors(json.errors.map(e => e.message)));
+          const { errors } = json;
+          errors.map(e => dispatch(addToast(e.message, TOAST_ERROR)));
+          resolve();
+        }
+      });
     });
   });
 
@@ -264,10 +315,11 @@ export const createServerConfig = serverConfig => dispatch =>
         if (response.ok) {
           dispatch(setInternalRoute('home'));
           dispatch(addServerConfig(json.payload));
-          resolve();
+          resolve(json.payload);
         } else {
           dispatch(addErrors(json.errors.map(e => e.message)));
-          dispatch(addToast(formattedText('plugin.alert.error'), TOAST_ERROR));
+          const { errors } = json;
+          errors.map(e => dispatch(addToast(e.message, TOAST_ERROR)));
           resolve();
         }
       });
@@ -276,6 +328,7 @@ export const createServerConfig = serverConfig => dispatch =>
 
 export const updateServerConfig = serverConfig => dispatch =>
   new Promise((resolve) => {
+    console.log('updateServerConfig', serverConfig);
     putServerConfig(serverConfig).then((response) => {
       response.json().then((json) => {
         if (response.ok) {
@@ -284,7 +337,8 @@ export const updateServerConfig = serverConfig => dispatch =>
           resolve();
         } else {
           dispatch(addErrors(json.errors.map(e => e.message)));
-          dispatch(addToast(formattedText('plugin.alert.error'), TOAST_ERROR));
+          const { errors } = json;
+          errors.map(e => dispatch(addToast(e.message, TOAST_ERROR)));
           resolve();
         }
       });
@@ -331,9 +385,9 @@ export const checkStatusDatasource = datasourceId => (dispatch, getState) =>
               resolve();
             } else {
               dispatch(setCheckDatasource(datasourceId, { status: 'offline' }));
-              const { errors } = json;
-              dispatch(addErrors(errors.map(e => e.message)));
-              errors.map(e => dispatch(addToast(e.message, TOAST_ERROR)));
+              // const { errors } = json;
+              // dispatch(addErrors(errors.map(e => e.message)));
+              // errors.map(e => dispatch(addToast(e.message, TOAST_ERROR)));
               resolve();
             }
           });
@@ -359,7 +413,8 @@ export const fetchPreviewDatasource = datasourceId => (dispatch, getState) =>
               resolve();
             } else {
               dispatch(addErrors(json.errors.map(e => e.message)));
-              dispatch(addToast(formattedText('plugin.alert.error'), TOAST_ERROR));
+              const { errors } = json;
+              errors.map(e => dispatch(addToast(e.message, TOAST_ERROR)));
               resolve();
             }
           });
@@ -380,7 +435,8 @@ export const fecthDatasourceList = serverId => dispatch =>
             resolve();
           } else {
             dispatch(addErrors(json.errors.map(e => e.message)));
-            dispatch(addToast(formattedText('plugin.alert.error'), TOAST_ERROR));
+            const { errors } = json;
+            errors.map(e => dispatch(addToast(e.message, TOAST_ERROR)));
             resolve();
           }
         });
@@ -420,7 +476,8 @@ export const fetchDatasourceColumns = (formName, field, datasourceId) => (
           resolve();
         } else {
           dispatch(addErrors(json.errors.map(e => e.message)));
-          dispatch(addToast(formattedText('plugin.alert.error'), TOAST_ERROR));
+          const { errors } = json;
+          errors.map(e => dispatch(addToast(e.message, TOAST_ERROR)));
           resolve();
         }
       });
@@ -495,7 +552,8 @@ export const getWidgetConfigChart = formName => (dispatch, getState) => {
           }
         } else {
           dispatch(addErrors(json.errors.map(e => e.message)));
-          dispatch(addToast(formattedText('plugin.alert.error'), TOAST_ERROR));
+          const { errors } = json;
+          errors.map(e => dispatch(addToast(e.message, TOAST_ERROR)));
         }
       });
     });

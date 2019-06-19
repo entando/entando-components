@@ -81,3 +81,8 @@ export const getDatasourceList = createSelector(
   [getDashboardConfig],
   dc => dc.datasourceList,
 );
+
+export const getDefaultConfiguration = createSelector(
+  [getDashboardConfig],
+  dc => dc.defaultConfiguration,
+);

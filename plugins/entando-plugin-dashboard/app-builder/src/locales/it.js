@@ -2,6 +2,9 @@ export default {
   locale: 'it',
   messages: {
     'app.serverError': 'Errore nel server',
+    'app.permissionDenied': 'permissionDenied',
+    'app.noJsonReturned': 'could not establish connection with {domain}',
+    'app.usingMocks': 'App Builder is currently using mocks',
     'PluginStatus.test': 'ok',
     'menu.itemLabel': 'Entando Dashboard Plugin',
     'plugin.title': 'Entando Dashboard Plugin',
@@ -44,6 +47,7 @@ export default {
     'common.required': 'Campo richiesto',
     'plugin.fieldsRequired': 'Campi Richiesti',
     'plugin.chooseAnOptionServerType': 'Seleziona il tipo di Server',
+    'plugin.chooseAnOptionDatasourceType': 'Seleziona il tipo del Datasource',
     'plugin.chooseAnOptionServerName': 'Seleziona Server',
     'plugin.chooseAnOptionDatasource': 'Seleziona Sorgente Dati',
     'plugin.serverType': 'Tipo Server',
@@ -74,6 +78,8 @@ export default {
     'plugin.alert.error': 'Error during fetch data',
     'plugin.entando-dashboard': 'Dashboard Plugin',
     'plugin.config.id': 'Id',
+    'plugin.config.default': 'Set as Default',
+    'plugin.config.defaultDatasource': 'Default Datasource',
     'plugin.config.settings': 'General Settings',
     'plugin.config.serverConfigure':
       'Check your Server to configure these fields',

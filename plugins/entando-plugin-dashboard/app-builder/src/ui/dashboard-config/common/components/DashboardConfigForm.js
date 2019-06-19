@@ -62,6 +62,7 @@ export class DashboardConfigFormBody extends Component {
       invalid,
       submitting,
       serverTypeList,
+      optionDasourceTypeList,
       datasources,
       datasourceValue,
       gotoHomePage,
@@ -70,6 +71,7 @@ export class DashboardConfigFormBody extends Component {
       previewDatasource,
       previewColumns,
       datasourceCheck,
+      setDefaultDatasource,
     } = this.props;
 
     const disableSubmit = invalid || submitting || datasources.length === 0;
@@ -93,8 +95,6 @@ export class DashboardConfigFormBody extends Component {
               <Col xs={1}>
                 <Field component={SwitchRenderer} name="active" />
               </Col>
-
-
             </FormGroup>
             <div className="DashboardConfig__server-configure">
               <FormattedMessageLocal id="plugin.config.serverConfigure" />
@@ -192,6 +192,26 @@ export class DashboardConfigFormBody extends Component {
                   labelSize={3}
                 />
               </Col>
+              <Col xs={3}>
+                <Field
+                  component={RenderSelectInput}
+                  options={optionDasourceTypeList}
+                  defaultOptionId="plugin.chooseAnOptionDatasourceType"
+                  label={<FormLabel labelId="plugin.config.datasourceType" />}
+                  labelSize={4}
+                  alignClass="text-left"
+                  name="datasourceType"
+                />
+              </Col>
+              <Col xs={3}>
+                <label htmlFor="default" className="col-xs-6 control-label">
+                  <FormattedMessageLocal id="plugin.config.defaultDatasource" />
+                </label>
+                <Col xs={6}>
+                  <Field component={SwitchRenderer} name="defaultDatasource" disabled={datasourceValue.datasourceType !== 'GATE'} />
+                </Col>
+
+              </Col>
             </Row>
             <Row>
               <Col xs={6}>
@@ -225,6 +245,8 @@ export class DashboardConfigFormBody extends Component {
               previewDatasource={previewDatasource}
               previewColumns={previewColumns}
               datasourceCheck={datasourceCheck}
+              defaultDatasource
+              setDefault={setDefaultDatasource}
             />
             <Row>
               <Col xs={12}>
@@ -261,6 +283,7 @@ DashboardConfigFormBody.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   gotoHomePage: PropTypes.func.isRequired,
   testConnection: PropTypes.func.isRequired,
+  setDefaultDatasource: PropTypes.func.isRequired,
   previewDatasource: PropTypes.func.isRequired,
   serverTypeList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   previewColumns: PropTypes.arrayOf(PropTypes.shape({})),
@@ -271,6 +294,8 @@ DashboardConfigFormBody.propTypes = {
 
   invalid: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
+  optionDasourceTypeList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+
 };
 DashboardConfigFormBody.defaultProps = {
   datasourceValue: {
@@ -281,6 +306,7 @@ DashboardConfigFormBody.defaultProps = {
   datasourceCode: '',
   datasourceCheck: {},
   previewColumns: [],
+  datasourceTypeSelected: '',
 
 };
 const DashboardConfigForm = reduxForm({

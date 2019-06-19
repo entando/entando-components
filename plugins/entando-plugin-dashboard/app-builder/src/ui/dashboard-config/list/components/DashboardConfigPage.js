@@ -20,6 +20,7 @@ class DashboardConfigPage extends Component {
       serverCheck,
       gotoPluginPage,
       editConfigItem,
+      defaultConfiguration,
     } = this.props;
     return (
       <Grid fluid className="DashboardConfigPage">
@@ -54,6 +55,7 @@ class DashboardConfigPage extends Component {
                 <ServerConfigCard
                   key={configItem.id}
                   configItem={configItem}
+                  defaultConfiguration={defaultConfiguration}
                   testConnectionOutcome={serverCheck[configItem.id]}
                   onClickRemove={() => removeConfigItem(configItem.id)}
                   onClickTest={() => testConfigItem(configItem.id)}
@@ -78,6 +80,8 @@ DashboardConfigPage.propTypes = {
   gotoPluginPage: PropTypes.func.isRequired,
   serverList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   serverCheck: PropTypes.shape({}),
+  defaultConfiguration: PropTypes.shape({}).isRequired,
+
 };
 
 DashboardConfigPage.defaultProps = {

@@ -12,6 +12,7 @@ import {
 
 const ServerConfigCard = ({
   configItem,
+  defaultConfiguration,
   onClickRemove,
   onClickTest,
   onClickEdit,
@@ -36,8 +37,9 @@ const ServerConfigCard = ({
       </div>
     );
   }
+
   return (
-    <Col xs={6} sm={4} md={4}>
+    <Col xs={6} sm={4} md={4} className="ServerConfigCard">
       <Card className="card-pf card-pf-view" matchHeight>
         <CardTitle>
           <DropdownKebab id="myKebab" className="pull-right" pullRight>
@@ -64,9 +66,13 @@ const ServerConfigCard = ({
         </CardTitle>
         <CardBody>
           <div className="card-pf-top-element">
-            <span className="fa fa-server card-pf-icon-circle" />
+            <span
+              className={`fa fa-server card-pf-icon-circle  ${defaultConfiguration && defaultConfiguration.serverId === configItem.id ? 'ServerConfigCard__config-default' : ''}`}
+            />
           </div>
-          <h3 className="card-pf-title text-center">
+          <h3
+            className="card-pf-title text-center"
+          >
             <strong>
               <FormattedMessage id="plugin.config.server" />
             </strong>
@@ -91,6 +97,12 @@ const ServerConfigCard = ({
 
           <p className="card-pf-info">
             <strong>
+              <FormattedMessage id="plugin.config.defaultDatasource" />
+            </strong>
+            {defaultConfiguration && defaultConfiguration.serverId === configItem.id ? defaultConfiguration.datasourceCode : '-'}
+          </p>
+          <p className="card-pf-info">
+            <strong>
               <FormattedMessage id="plugin.config.id" />
             </strong>
             {configItem.id}
@@ -110,6 +122,7 @@ const ServerConfigCard = ({
 
 ServerConfigCard.propTypes = {
   configItem: PropTypes.shape({}).isRequired,
+  defaultConfiguration: PropTypes.shape({}).isRequired,
   testConnectionOutcome: PropTypes.shape({}),
   onClickRemove: PropTypes.func.isRequired,
   onClickTest: PropTypes.func.isRequired,

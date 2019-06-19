@@ -30,7 +30,7 @@ import enLocale from 'locales/en';
 import 'patternfly/dist/css/patternfly.min.css';
 import 'patternfly/dist/css/patternfly-additions.min.css';
 
-// import DashboardConfigAddPage from 'ui/dashboard-config/add/components/DashboardConfigAddPage';
+import DashboardConfigAddPage from 'ui/dashboard-config/add/components/DashboardConfigAddPage';
 // import DashboardConfigPageContainer
 // from 'ui/dashboard-config/list/containers/DashboardConfigPageContainer';
 
@@ -40,7 +40,7 @@ import 'patternfly/dist/css/patternfly-additions.min.css';
 // import DashboardDonutChart from 'ui/widgets/charts/donut-chart/components/DashboardDonutChart';
 // import DashboardGaugeChart from 'ui/widgets/charts/gauge-chart/components/DashboardGaugeChart';
 // import DashboardPieChart from 'ui/widgets/charts/pie-chart/components/DashboardPieChart';
-import DashboardMap from 'ui/widgets/geolocalization/components/DashboardMap';
+// import DashboardMap from 'ui/widgets/geolocalization/components/DashboardMap';
 
 
 import plugin from 'index';
@@ -60,7 +60,7 @@ setCurrentLocale(enLocale);
 
 const currentUser = combineReducers({
   username: () => 'admin',
-  token: () => 'c4cde124570dfea5b8d90631b5a2a0cc',
+  token: () => '14f2195025dbf6a866393cf5953116cb',
 });
 
 const wrappedReducer = combineReducers({
@@ -97,7 +97,7 @@ export default ReactDOM.render(
       <Grid fluid>
         <Row>
           <Col xs={12}>
-            <DashboardMap />
+            <DashboardConfigAddPage />
           </Col>
         </Row>
       </Grid>
