@@ -95,6 +95,7 @@ export default {
     'plugin.config.previewType': 'Type',
     'plugin.config.testConnection': 'Test Connection',
     'plugin.config.datasourceStatus': 'Status',
+    'plugin.config.datasourceType': 'Type',
     'plugin.config.testServers': 'Test Servers',
     'plugin.config.addServer': 'Add Server',
     'plugin.config.active': 'Active',
