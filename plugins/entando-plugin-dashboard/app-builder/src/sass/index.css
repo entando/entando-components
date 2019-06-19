@@ -118,6 +118,10 @@
 .DashboardConfigPage__btn-tests {
   margin-left: 2em; }
 
+.ServerConfigCard__config-default {
+  background-color: #3f9c35;
+  color: #ffffff; }
+
 .DashboardTableForm {
   margin: 2em; }
   .DashboardTableForm .row {

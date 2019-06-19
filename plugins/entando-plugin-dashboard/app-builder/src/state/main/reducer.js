@@ -18,6 +18,7 @@ import {
   SET_CHECK_SERVER,
   SET_CHECK_DATASOURCE,
   SET_PREVIEW_DATASOURCE,
+  SET_DEFAULT_CONFIG,
 } from './types';
 
 const internalRoute = (state = '', action = {}) => {
@@ -149,6 +150,14 @@ const preview = (state = [], action = {}) => {
   }
 };
 
+const defaultConfiguration = (state = {}, action = {}) => {
+  switch (action.type) {
+    case SET_DEFAULT_CONFIG:
+      return action.payload.config;
+    default: return state;
+  }
+};
+
 export default combineReducers({
   internalRoute,
   appBuilder: combineReducers({
@@ -161,6 +170,7 @@ export default combineReducers({
     serverCheck,
     datasourceCheck,
     datasourceList,
+    defaultConfiguration,
     datasource: combineReducers({
       preview,
       selected: datasourceSelected,

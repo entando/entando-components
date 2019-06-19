@@ -26,3 +26,5 @@ export const CLEAR_SELECTED_DATASOURCE =
 export const SET_DATASOURCE_DATA = 'plugin/dashboard/set-datasource-data';
 
 export const SET_INTERNAL_ROUTE = 'plugin/dashboard/set-internal-route';
+
+export const SET_DEFAULT_CONFIG = 'plugin/dashboard/set-default-config';

@@ -3,6 +3,7 @@ import DashboardConfigPage from 'ui/dashboard-config/list/components/DashboardCo
 
 import {
   fetchServerConfigList,
+  fetchDefaultConfiguration,
   editServerConfig,
   removeServerConfig,
   checkStatusServerConfig,
@@ -10,17 +11,19 @@ import {
   gotoPluginPage,
 } from 'state/main/actions';
 
-import { getServerConfigList, getServerCheck } from 'state/main/selectors';
+import { getServerConfigList, getServerCheck, getDefaultConfiguration } from 'state/main/selectors';
 
 export const mapStateToProps = state => ({
   serverList: getServerConfigList(state),
   serverCheck: getServerCheck(state),
+  defaultConfiguration: getDefaultConfiguration(state),
 });
 
 export const mapDispatchToProps = dispatch => ({
   onWillMount: () => {
     dispatch(fetchServerConfigList()).then(() => {
       dispatch(checkStatusServerConfig());
+      dispatch(fetchDefaultConfiguration());
     });
   },
 
