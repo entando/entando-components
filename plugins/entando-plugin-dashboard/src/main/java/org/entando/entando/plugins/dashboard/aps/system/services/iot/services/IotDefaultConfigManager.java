@@ -53,9 +53,13 @@ public class IotDefaultConfigManager extends AbstractService implements IIotDefa
   @Override
   public IotDefaultConfig updateIotTag(IotDefaultConfig iotTag) throws ApsSystemException {
     try {
+      System.out.println("appena entrato nel manager");
       String xml = new IotDefaultConfigDOM().createConfigXml(iotTag);
+      System.out.println("creato oggetto xml");
       this.getConfigManager().updateConfigItem(IOT_CONNECTOR_ITEM, xml);
+      System.out.println("inserito nel db");
       this.setConfig(iotTag);
+      System.out.println("settata configurazione, la sto restituendo");
       return iotTag;
     } catch (Throwable t) {
       _logger.error("Error updating configs", t);
