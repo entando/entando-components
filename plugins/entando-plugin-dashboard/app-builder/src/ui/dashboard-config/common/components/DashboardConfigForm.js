@@ -72,6 +72,7 @@ export class DashboardConfigFormBody extends Component {
       previewColumns,
       datasourceCheck,
       setDefaultDatasource,
+      defaultConfiguration,
     } = this.props;
 
     const disableSubmit = invalid || submitting || datasources.length === 0;
@@ -245,8 +246,8 @@ export class DashboardConfigFormBody extends Component {
               previewDatasource={previewDatasource}
               previewColumns={previewColumns}
               datasourceCheck={datasourceCheck}
-              defaultDatasource
               setDefault={setDefaultDatasource}
+              defaultConfiguration={defaultConfiguration}
             />
             <Row>
               <Col xs={12}>
@@ -295,6 +296,7 @@ DashboardConfigFormBody.propTypes = {
   invalid: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
   optionDasourceTypeList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  defaultConfiguration: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
 
 };
 DashboardConfigFormBody.defaultProps = {

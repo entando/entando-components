@@ -296,8 +296,11 @@ export const setDefaultConfiguration = (dashboardId, datasourceCode) => dispatch
     putIotConfig(dashboardId, datasourceCode).then((response) => {
       response.json().then((json) => {
         if (response.ok) {
-          console.log('json', json);
-          resolve(response.status);
+          dispatch(setDefaultConfig({
+            serverId: json.payload.dashboardId,
+            datasourceCode: json.payload.datasourceCode,
+          }));
+          resolve(response.payload);
         } else {
           dispatch(addErrors(json.errors.map(e => e.message)));
           const { errors } = json;

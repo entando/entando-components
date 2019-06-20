@@ -59,8 +59,11 @@ class DashboardConfigDatasource extends Component {
       previewDatasource,
       previewColumns,
       datasourceCheck,
+      defaultConfiguration,
       setDefault,
     } = this.props;
+
+
     return (
       <div className="DashboardConfigDatasource">
         <Row>
@@ -112,8 +115,12 @@ class DashboardConfigDatasource extends Component {
                   </tr>
                 </thead>
                 <tbody>
+
                   {datasources.map((ds, index) => (
-                    <tr key={`datasource-${ds.datasourceCode}`}>
+                    <tr
+                      key={`datasource-${ds.datasourceCode}`}
+                      className={defaultConfiguration.datasourceCode === ds.datasourceCode ? 'DashboardConfigDatasource__default-datasource' : ''}
+                    >
                       <td>{ds.datasourceCode}</td>
                       <td>{ds.datasource}</td>
                       <td>{ds.datasourceURI}</td>
@@ -133,7 +140,9 @@ class DashboardConfigDatasource extends Component {
                           </MenuItem>
                           <MenuItem
                             className="DashboardConfigDatasource__menu-item-default"
-                            onClick={() => setDefault(ds.datasourceCode)}
+                            onClick={() => {
+                              setDefault(ds.datasourceCode);
+                            }}
                             disabled={ds.type !== 'GATE'}
                           >
                             <strong><FormattedMessageLocal id="plugin.config.default" /></strong>
@@ -188,6 +197,7 @@ DashboardConfigDatasource.propTypes = {
   previewColumns: PropTypes.arrayOf(PropTypes.shape({})),
   datasourceCheck: PropTypes.shape({}),
   setDefault: PropTypes.func.isRequired,
+  defaultConfiguration: PropTypes.shape({}).isRequired,
 };
 DashboardConfigDatasource.defaultProps = {
   datasourceValue: {

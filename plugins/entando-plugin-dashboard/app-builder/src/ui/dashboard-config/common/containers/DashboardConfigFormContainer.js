@@ -15,7 +15,7 @@ import {
   setDefaultConfiguration,
 } from 'state/main/actions';
 
-import { getServerType, getDatasoucePreview, getDatasourceCheck } from 'state/main/selectors';
+import { getServerType, getDatasoucePreview, getDatasourceCheck, getDefaultConfiguration } from 'state/main/selectors';
 
 const selector = formValueSelector('dashboard-config-form');
 
@@ -48,6 +48,7 @@ export const mapStateToProps = state => ({
   datasourceCheck: getDatasourceCheck(state),
   optionDasourceTypeList,
   serverId: selector(state, 'id'),
+  defaultConfiguration: getDefaultConfiguration(state),
 
 });
 

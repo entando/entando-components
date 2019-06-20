@@ -107,6 +107,8 @@
     margin-top: 1em; }
   .DashboardConfigDatasource__table.table {
     margin-bottom: 0px; }
+  .DashboardConfigDatasource__table tr.DashboardConfigDatasource__default-datasource {
+    background: #3f9c35 !important; }
 
 .DashboardConfigDatasourceStatus {
   border: 0 solid;
