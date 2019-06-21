@@ -11,6 +11,7 @@
   text-decoration: inherit;
   font-size: 25px;
 }
+
 .marker-icon-1.fa::before {
   color: #428bca;
   border-radius: 50%;
@@ -19,14 +20,16 @@
   text-decoration: inherit;
   font-size: 25px;
 }
+
 .marker-icon-2.fa::before {
-  color: #d9534f ;
+  color: #d9534f;
   border-radius: 50%;
   font-style: normal;
   font-weight: normal;
   text-decoration: inherit;
   font-size: 25px;
 }
+
 .marker-icon-3.fa::before {
   color: green;
   border-radius: 50%;
@@ -35,6 +38,7 @@
   text-decoration: inherit;
   font-size: 25px;
 }
+
 .marker-icon-4.fa::before {
   color: yellow;
   border-radius: 50%;
@@ -42,4 +46,49 @@
   font-weight: normal;
   text-decoration: inherit;
   font-size: 25px;
+}
+
+.title-parking {
+  margin-top: 0 !important;
+  position: relative;
+  top: -25px;
+  left: 30px;
+}
+
+.leaflet-popup-content-wrapper,
+.leaflet-popup-content {
+  width: auto;
+}
+
+.leaflet-popup-content .panel {
+  width: 250px;
+}
+
+.li-point-libero, .li-point-occupati {
+  height: 10px;
+  width: 10px;
+  border-radius: 5px;
+  background: green;
+  display: inline-block;
+}
+
+.li-point-occupati {
+  background: red;
+}
+
+.parking-liberi, .parking-occupati {
+  display: inline-block;
+}
+
+.panel-info {
+  border-color: #22389F;
+}
+
+.panel-info>.panel-heading {
+  background-color: #22389F;
+  border-color: #22389F;
+}
+
+h2.title-parking small {
+  color: #ffffff;
 }

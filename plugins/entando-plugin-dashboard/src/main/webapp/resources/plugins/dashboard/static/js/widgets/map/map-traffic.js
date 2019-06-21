@@ -7,38 +7,6 @@ const OPTIONS = {
 
 const PATH_IMG = "../resources/plugins/dashboard/static/img/";
 
-const panelToolTip =(info) =>(`
-  <div class="panel panel-info">
-    <div class="panel-heading">
-      <div>
-        <i class="fa fa-product-hunt fa-2x" aria-hidden="true"></i>
-        <h2 class="title-parking">
-          <div>Parcheggio</div>
-          <div><small>P.zza Matteoti</small></div>
-        </h2>
-      </div>
-    </div>
-    <div class="panel-body">
-      <ul class="list-group">
-        <li class="list-group-item">
-          <div class="li-point-libero"></div>
-          <div class="parking-liberi">Liberi: ${info.liberi}</div>
-        </li>
-        <li class="list-group-item">
-          <div class="li-point-occupati"></div>
-          <div class="parking-occupati">Occupati: ${info.occupati} </div>
-        </li>
-        <li class="list-group-item">
-          <div class="li-point-totale"></div>
-          <div class="parking-totale">Totali: ${info.totale}</div>
-        </li>
-      </ul>
-    </div>
-  </div>
-  `);
-
-
-
 class Map {
   constructor(
     id,
@@ -103,21 +71,17 @@ class Map {
 
   addLayer(layer, options) {
     this.control.removeLayer(this.layerGroup);
-    console.log('layer', layer);
     const {title, data} = layer;
     const icon = layer.icon;
     data.forEach(item => {
       const lat = _.get(item, options.latitude);
       const lon = _.get(item, options.longitude);
       const info = _.get(item, options.information);
-      console.log('info', info);
       if (lat !== null && lon !== null) {
         L.marker([lat, lon], {
           icon: this.getIcon(item, icon)
         })
-          .bindPopup(panelToolTip(info), {
-
-          })
+          .bindPopup(info)
           .addTo(this.layerGroup);
       }
     });
@@ -126,14 +90,14 @@ class Map {
   }
 
   showData(datasources) {
-
-    loadData(
-      // inserire url endpoint `${context}api/plugins/dashboard/server/${serverName}/datasource/${datasource}/data`
+    const hourRange = "7-10";
+    loadTrafficData(
+      `http://156.148.14.180:8080/crs4-smartmobility/api/jptraffic/traffics/alltraffic/lat/0/long/0/hour/${hourRange}`
     ).then(paking => {
-      this.addLayer(datasources[0], {
-        latitude: "DeviceLocations.latitude",
-        longitude: "DeviceLocations.longitude",
-        information: "DeviceInformation"
+      this.addLayer(CONFIG_MAP.datasources[0], {
+        latitude: "street.latitude",
+        longitude: "street.longitude",
+        information: "street.name"
       });
     });
   }
@@ -144,7 +108,7 @@ $(document).ready(() => {
   console.log("eseguo la mappa");
   const map = new Map("map", 39.223841, 9.121661, 13, "topright");
   map.showData(CONFIG_MAP.datasources);
-   // setInterval(() => {
-   //   map.showData(CONFIG_MAP.datasources);
-   // }, 10000);
+  setInterval(() => {
+    map.showData(CONFIG_MAP.datasources);
+  }, 20000);
 });
