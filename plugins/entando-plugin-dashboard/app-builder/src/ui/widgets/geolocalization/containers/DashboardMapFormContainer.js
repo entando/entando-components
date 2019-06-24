@@ -1,8 +1,9 @@
 import { connect } from 'react-redux';
-import { formValueSelector, getFormSyncErrors } from 'redux-form';
+import { formValueSelector, getFormSyncErrors, change } from 'redux-form';
 import { pick, omit } from 'lodash';
 
-import { fetchServerConfigList, gotoConfigurationPage } from 'state/main/actions';
+import { fetchServerConfigList, gotoConfigurationPage, fetchDefaultConfiguration } from 'state/main/actions';
+
 
 import DashboardMapForm from 'ui/widgets/geolocalization/components/DashboardMapForm';
 
@@ -32,6 +33,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = (dispatch, ownProps) => ({
   onWillMount: () => {
     dispatch(fetchServerConfigList());
+    dispatch(fetchDefaultConfiguration()).then((config) => {
+      dispatch(change('form-dashboard-map', 'serverName', config.dashboardId));
+    });
   },
   onCancel: () => dispatch(gotoConfigurationPage()),
   onSubmit: (data) => {

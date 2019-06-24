@@ -331,7 +331,6 @@ export const createServerConfig = serverConfig => dispatch =>
 
 export const updateServerConfig = serverConfig => dispatch =>
   new Promise((resolve) => {
-    console.log('updateServerConfig', serverConfig);
     putServerConfig(serverConfig).then((response) => {
       response.json().then((json) => {
         if (response.ok) {
