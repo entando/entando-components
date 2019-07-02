@@ -135,7 +135,7 @@
                         <plugin>
                             <groupId>org.owasp</groupId>
                             <artifactId>dependency-check-maven</artifactId>
-                            <version>4.0.2</version>
+                            <version>5.0.0</version>
                             <executions>
                                 <execution>
                                     <goals>
@@ -144,6 +144,9 @@
                                 </execution>
                             </executions>
                             <configuration>
+                                <suppressionFiles>
+                                    <suppressionFile>owasp-dependency-check-suppressions.xml</suppressionFile>
+                                </suppressionFiles>
                                 <autoUpdate>true</autoUpdate>
                                 <format>XML</format>
                             </configuration>
