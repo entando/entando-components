@@ -1,21 +1,21 @@
 <%@ taglib prefix="wp" uri="/aps-core" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<wp:headInfo type="JS" info="entando-misc-jquery/jquery-1.10.0.min.js" />
+<wp:headInfo type="JS" info="entando-misc-jquery/jquery-3.4.1.min.js" />
 <wp:headInfo type="JS" info="entando-misc-bootstrap/bootstrap.min.js" />
 <wp:info key="langs" var="langs" />
 <wp:info key="currentLang" var="currentLang" />
 
-<a data-toggle="dropdown" class="dropdown-toggle" href="#"  title="<wp:i18n key="ESLC_LANGUAGE" />">     
+<a data-toggle="dropdown" class="dropdown-toggle" href="#"  title="<wp:i18n key="ESLC_LANGUAGE" />">
     <c:choose>
         <c:when test="${sessionScope.currentUser != 'guest'}">
-            <span class="block m-t-xs"> 
+            <span class="block m-t-xs">
                 <strong class="font-bold">
                     ${Session.currentUser}
                 </strong>
             </span>
         </c:when>
         <c:otherwise>
-            <span class="block m-t-xs"> 
+            <span class="block m-t-xs">
                 <strong class="font-bold">
                     <wp:i18n key="ESLF_SIGNIN" />
                 </strong>

@@ -5,7 +5,7 @@ INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode,
 </properties>', NULL, NULL, NULL, NULL, 1, NULL);
 
 INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('entando-widget-language_choose', 'entando-widget-language_choose', NULL, NULL, '<#assign wp=JspTaglibs["/aps-core"]>
-<@wp.headInfo type="JS" info="entando-misc-jquery/jquery-1.10.0.min.js" />
+<@wp.headInfo type="JS" info="entando-misc-jquery/jquery-3.4.1.min.js" />
 <@wp.headInfo type="JS" info="entando-misc-bootstrap/bootstrap.min.js" />
 <@wp.info key="langs" var="langsVar" />
 <@wp.info key="currentLang" var="currentLangVar" />
