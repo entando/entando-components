@@ -25,5 +25,12 @@
        <cve>CVE-2018-1338</cve>
        <cve>CVE-2018-1339</cve>
     </suppress>
+    <suppress>
+       <notes><![CDATA[
+       file name: jquery.js - This is the jquery library inside of bootstrap docs folder which should never be used
+       ]]></notes>
+       <sha1>ae49e56999d82802727455f0ba83b63acd90a22b</sha1>
+       <cve>CVE-2015-9251</cve>
+    </suppress>
 </suppressions>
 
