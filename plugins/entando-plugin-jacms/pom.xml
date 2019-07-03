@@ -89,6 +89,10 @@
                     <groupId>com.fasterxml.jackson.core</groupId>
                     <artifactId>jackson-annotations</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.gagravarr</groupId>
+                    <artifactId>vorbis-java-tika</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <!-- fixes for tike-parser vulnerabilities -->
@@ -97,6 +101,19 @@
             <artifactId>c3p0</artifactId>
             <version>0.9.5.4</version>
         </dependency>
+        <dependency>
+            <groupId>org.gagravarr</groupId>
+            <artifactId>vorbis-java-tika</artifactId>
+            <version>0.8</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.tika</groupId>
+                    <artifactId>tika-parsers</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+
         <!-- Remove sentiment analysis parser dependency to solve vulnerabilities issues associated with dependencies | TODO: if necessary reintegrate and remove libraries
         <dependency>
             <groupId>edu.usc.ir</groupId>
