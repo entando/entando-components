@@ -55,7 +55,7 @@
         <dependency>
             <groupId>org.infinispan</groupId>
             <artifactId>infinispan-spring</artifactId>
-            <version>8.0.2.Final</version>
+            <version>8.2.11.Final</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework</groupId>
@@ -120,7 +120,7 @@
         <dependency>
             <groupId>org.infinispan</groupId>
             <artifactId>infinispan-core</artifactId>
-            <version>8.0.2.Final</version>
+            <version>9.2.0.Final</version>
             <exclusions>
                 <exclusion>
                     <groupId>commons-logging</groupId>

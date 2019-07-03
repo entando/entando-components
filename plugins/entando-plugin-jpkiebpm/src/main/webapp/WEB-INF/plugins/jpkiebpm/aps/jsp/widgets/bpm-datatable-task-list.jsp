@@ -11,7 +11,8 @@
 <jpkie:tasklistwidgetinfo showClaimButtonVar="showClaimButtonVar"/>
 <jpkie:tasklistwidgetinfo showCompleteButtonVar="showCompleteButtonVar"/>
 
-<script src="<wp:resourceURL />administration/js/jquery-2.2.4.min.js"></script>
+<script src="<wp:resourceURL />administration/js/jquery-3.4.1.min.js"></script>
+<script src="<wp:resourceURL />administration/js/jquery-migrate-3.0.1.min.js"></script>
 <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/jquery.validate.js"></script>
 <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/additional-methods.js"></script>
 <script src="<wp:resourceURL />plugins/jpkiebpm/static/js/jquery-ui.js"></script>
@@ -36,7 +37,7 @@
 <link rel="stylesheet" href="<wp:resourceURL />plugins/jpkiebpm/static/css/jquery.toast.min.css" media="screen"/>
 
 <script>
-    
+
     function capitalize(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
@@ -165,11 +166,11 @@
             });
         });
     };
-    
-    
-    
-    
-    
+
+
+
+
+
     function openDetailsPage(containerId, taskId)
     {
         var context = "<wp:info key="systemParam" paramName="applicationBaseURL" />";
@@ -177,7 +178,7 @@
         var urlNewPage = context + "<wp:info key="currentLang" />/<c:out value="${redirectDetailsPageVar}" />.page?configId=" + configId + "&containerId=" + containerId + "&taskId=" + taskId;
         window.open(urlNewPage);
     }
-    
+
     function refreshDataTable() {
         $("#data-table-task-list").empty();
         loadDataTable('#data-table-task-list');
@@ -212,9 +213,9 @@
                         configId:  configId
                     }
                 };
-                
 
-                
+
+
                 var action = context + "claimTask.json";
 
                 $.ajax({
@@ -232,7 +233,7 @@
                             allowToastClose : true,
                             hideAfter : 5000,
                             stack : 5,
-                            textAlign : 'left', 
+                            textAlign : 'left',
                             position : 'top-right'
                         });
                         refreshDataTable();
@@ -247,13 +248,13 @@
                             allowToastClose : true,
                             hideAfter : 5000,
                             stack : 5,
-                            textAlign : 'left', 
+                            textAlign : 'left',
                             position : 'top-right'
-                        })                       
-                       
+                        })
+
                     }
                 });
-    
+
     }
 
     function  loadDataTable(idTable) {
@@ -264,8 +265,8 @@
             <c:if test="${showClaimButtonVar == 'true'}">
             {
                 html: '<button type="button" class="class-open-bpm-task-list-modal-form-details btn btn-success btn-sm" style="margin-right:10px;">Claim</button>',
-                    onClick: function (ev, data) {         
-                        if (data.status=='Ready') { 
+                    onClick: function (ev, data) {
+                        if (data.status=='Ready') {
                             claimTask(ev, configId, data.id, context);
                         }
                         else {
@@ -277,13 +278,13 @@
                                 allowToastClose : true,
                                 hideAfter : 5000,
                                 stack : 5,
-                                textAlign : 'left', 
+                                textAlign : 'left',
                                 position : 'top-right'
                             });
                         }
                     }
             },
-            </c:if>                        
+            </c:if>
             <c:if test="${showCompleteButtonVar == 'true'}">
             {
                 html: '<button type="button" class="class-open-bpm-task-list-modal-form-details btn btn-success btn-sm" style="margin-right:10px;">Complete</button>',
@@ -291,7 +292,7 @@
                         openModalForm(ev, configId, data, context);
                     }
             },
-            </c:if>            
+            </c:if>
             {
             html: '<button type="button" class=" class-open-bpm-task-list-modal-diagram-details btn btn-info btn-sm ">Diagram</button>',
                     onClick: function (event, rowData) {
@@ -315,7 +316,7 @@
                   <c:if test="${redirectOnClickRowVar == 'true'}">
                     buttons: extraBtns,
                         onClickRow: function (event, rowData) {
-                        openDetailsPage(rowData.containerId , rowData.id);                    
+                        openDetailsPage(rowData.containerId , rowData.id);
                         }
                     </c:if>
                     <c:if test="${redirectOnClickRowVar == 'false'}">
@@ -329,11 +330,11 @@
                                 optModal.title = "BPM Data";
                                 $('#bpm-task-list-modal-data').dialog(optModal);
                                 });
-                            }                        
-                    </c:if>                
+                            }
+                    </c:if>
                };
-               
-                $.get(url, function (data) {         
+
+                $.get(url, function (data) {
                     var items = data.response.result.taskList.list || [];
                         items = Array.isArray(items) ? items : [items];
                         items = items.map(function (item) {
@@ -356,14 +357,14 @@
                         var containerId = data.response.result.taskList.containerId;
 
                         extraConfig.columnDefinition = data.response.result.taskList["datatable-field-definition"].fields;
-                        org.entando.datatable.CustomDatatable(items, idTable, extraConfig, containerId);                                    
-                });                                            
+                        org.entando.datatable.CustomDatatable(items, idTable, extraConfig, containerId);
+                });
         };
-    
+
     $(document).ready(function () {
         loadDataTable('#data-table-task-list');
     });
-    
+
 </script>
 
 <table id="data-table-task-list" class="display nowrap" cellspacing="0" width="100%"></table>
@@ -378,7 +379,7 @@
     <img id="bpm-task-list-modal-diagram-data" />
 </div>
 
-<div id="bpm-task-data-container">    
+<div id="bpm-task-data-container">
     <div id="bpm-task-data"></div>
 </div>
 <div id="bpm-task-list-modal-form"></div>
