@@ -149,7 +149,7 @@
                                 </suppressionFiles>
                                 <autoUpdate>true</autoUpdate>
                                 <format>ALL</format>
-                                <skipProvided>true<skipProvided>
+                                <skipProvided>true</skipProvided>
                             </configuration>
                         </plugin>
                         <!-- end maven dependency-check plugin -->
