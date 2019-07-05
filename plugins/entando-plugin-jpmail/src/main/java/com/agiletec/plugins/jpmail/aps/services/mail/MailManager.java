@@ -111,13 +111,13 @@ public class MailManager extends AbstractService implements IMailManager {
 	@Override
 	public boolean sendMail(String text, String subject, String[] recipientsTo,
 			String[] recipientsCc, String[] recipientsBcc, String senderCode) throws ApsSystemException {
-		return this.sendMail(text, subject, CONTENTTYPE_TEXT_PLAIN, null, recipientsTo, recipientsCc, recipientsBcc, senderCode);
+		return this.sendMail(text, subject,attachmentFiles, CONTENTTYPE_TEXT_PLAIN, null, recipientsTo, recipientsCc, recipientsBcc, senderCode);
 	}
 	
 	@Override
 	public boolean sendMail(String text, String subject, String[] recipientsTo,
 			String[] recipientsCc, String[] recipientsBcc, String senderCode, String contentType) throws ApsSystemException {
-		return this.sendMail(text, subject, contentType, null, recipientsTo, recipientsCc, recipientsBcc, senderCode);
+		return this.sendMail(text, subject,attachmentFiles, contentType, null, recipientsTo, recipientsCc, recipientsBcc, senderCode);
 	}
 	
 	@Override
