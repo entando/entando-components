@@ -5,7 +5,7 @@ INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode,
 </properties>', NULL, NULL, NULL, NULL, 1, NULL);
 
 INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('entando-widget-login_form', 'entando-widget-login_form', NULL, NULL, '<#assign wp=JspTaglibs["/aps-core"]>
-<@wp.headInfo type="JS" info="entando-misc-jquery/jquery-1.10.0.min.js" />
+<@wp.headInfo type="JS" info="entando-misc-jquery/jquery-3.4.1.min.js" />
 <@wp.headInfo type="JS" info="entando-misc-bootstrap/bootstrap.min.js" />
 
 <ul class="nav pull-right">
@@ -39,7 +39,7 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
 						</#if>
 					</li>
 				</ul>
-			</div>	
+			</div>
 		<#else>
 			<a class="dropdown-toggle text-right" data-toggle="dropdown" href="#"><@wp.i18n key="ESLF_SIGNIN" /> <span class="caret"></span></a>
 			<ul class="dropdown-menu well-small">
