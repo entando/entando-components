@@ -45,6 +45,13 @@
         <property name="searchEngineManager" ref="jacmsSearchEngineManager" />
         <property name="langManager" ref="LangManager" />
     </bean>
+
+    <bean id="jacmsContentSettingsService" class="org.entando.entando.plugins.jacms.aps.system.services.contentsettings.ContentSettingsService" >
+        <property name="contentManager" ref="jacmsContentManager" />
+        <property name="searchEngineManager" ref="jacmsSearchEngineManager" />
+        <property name="resourceManager" ref="jacmsResourceManager" />
+        <property name="configManager" ref="BaseConfigManager" />
+    </bean>
 	
     <bean id="jacmPageServiceWrapper" 
           class="org.entando.entando.plugins.jacms.aps.system.services.page.CmsPageServiceWrapper" />
