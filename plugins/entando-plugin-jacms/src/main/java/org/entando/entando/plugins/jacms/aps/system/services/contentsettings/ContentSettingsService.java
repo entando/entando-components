@@ -147,14 +147,6 @@ public class ContentSettingsService implements ApplicationContextAware {
     }
 
     public List<String> addCropRatio(String ratio) {
-        /*Optional.ofNullable(ratio.split(":")).ifPresent(list -> list.forEach(elem -> {
-            Pattern p = Pattern.compile(ASPECT_RATIO_PATTERN);
-            Matcher m = p.matcher(elem);
-            if (!m.matches()) {
-                this.addFieldError("ratio", this.getText("error.contentSettings.aspectRatio.invalidFormat", new String[]{elem}));
-            }
-        }));*/
-
         List<String> cropRatios = listCropRatios();
         cropRatios.add(ratio);
 

@@ -22,7 +22,6 @@ import org.entando.entando.plugins.jacms.web.contentsettings.model.ContentSettin
 import org.entando.entando.plugins.jacms.web.contentsettings.model.ContentSettingsDto;
 import org.entando.entando.plugins.jacms.web.contentsettings.model.ContentSettingsEditorRequest;
 import org.entando.entando.plugins.jacms.web.contentsettings.model.ContentSettingsMetadataRequest;
-import org.entando.entando.plugins.jacms.web.contentsettings.validator.ContentSettingsValidator;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.slf4j.Logger;
@@ -41,12 +40,10 @@ public class ContentSettingsController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final ContentSettingsService service;
-    private final ContentSettingsValidator validator;
 
     @Autowired
-    public ContentSettingsController(ContentSettingsService service, ContentSettingsValidator validator) {
+    public ContentSettingsController(ContentSettingsService service) {
         this.service = service;
-        this.validator = validator;
     }
 
     @ApiOperation(value = "GET ContentSettings", nickname = "getContentSettings", tags = {"content-settings-controller"})
