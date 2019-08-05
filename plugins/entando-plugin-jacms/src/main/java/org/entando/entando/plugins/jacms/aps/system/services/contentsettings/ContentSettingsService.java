@@ -36,10 +36,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 //TODO use @Service Annotation instead of XML declaration
-public class ContentSettingsService implements ApplicationContextAware {
+public class ContentSettingsService {
     private final Logger logger = LoggerFactory.getLogger(getClass());
-
-    private ApplicationContext applicationContext;
 
     private IContentManager contentManager;
 
@@ -48,11 +46,6 @@ public class ContentSettingsService implements ApplicationContextAware {
     private IResourceManager resourceManager;
 
     private ConfigInterface configManager;
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-    }
 
     public ContentSettingsDto getContentSettings() {
         ContentSettingsDto dto = new ContentSettingsDto();

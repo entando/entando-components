@@ -68,16 +68,11 @@ public class ContentSettingsController {
     @RestAccessControl(permission = Permission.SUPERUSER)
     public ResponseEntity<SimpleRestResponse<Map<String, List<String>>>> createMetadata(
             @Valid @RequestBody ContentSettingsMetadataRequest request) {
-        try {
-            logger.debug("REST request - add new content settings metadata");
+        logger.debug("REST request - add new content settings metadata");
 
-            return ResponseEntity.ok(new SimpleRestResponse<>(
-                    service.addMetadata(request.getKey().trim(), request.getMapping().trim())
-            ));
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
-        }
+        return ResponseEntity.ok(new SimpleRestResponse<>(
+                service.addMetadata(request.getKey().trim(), request.getMapping().trim())
+        ));
     }
 
     @ApiOperation(value = "DELETE ContentSettingsMetadata", nickname = "deleteContentSettingsMetadata", tags = {"content-settings-controller"})
@@ -88,16 +83,11 @@ public class ContentSettingsController {
     @RestAccessControl(permission = Permission.SUPERUSER)
     public ResponseEntity<SimpleRestResponse<Map<String, List<String>>>> deleteMetadata(
             @Valid @RequestBody ContentSettingsMetadataRequest request) {
-        try {
         logger.debug("REST request - delete content settings metadata");
 
         return ResponseEntity.ok(new SimpleRestResponse<>(
                 service.removeMetadata(request.getKey().trim())
         ));
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
-        }
     }
 
     @ApiOperation(value = "CREATE ContentSettingsCropRatio", nickname = "createContentSettingsCropRatio", tags = {"content-settings-controller"})
@@ -153,15 +143,8 @@ public class ContentSettingsController {
     @RestAccessControl(permission = Permission.SUPERUSER)
     public ResponseEntity<SimpleRestResponse<String>> reloadIndexes() {
         logger.debug("REST request - reload indexes");
-
-
-        try {
-            service.reloadContentsIndex();
-            return ResponseEntity.ok(new SimpleRestResponse<>("")); //TODO how to return with no result?
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            throw ex;
-        }
+        service.reloadContentsIndex();
+        return ResponseEntity.ok(new SimpleRestResponse<>("")); //TODO how to return with no result?
     }
 
     @ApiOperation(value = "POST Reload References", nickname = "postReloadReferences", tags = {"content-settings-controller"})
@@ -172,14 +155,7 @@ public class ContentSettingsController {
     @RestAccessControl(permission = Permission.SUPERUSER)
     public ResponseEntity<SimpleRestResponse<String>> reloadReferences() {
         logger.debug("REST request - reload references");
-
-
-        try {
-            service.reloadContentsReference();
-            return ResponseEntity.ok(new SimpleRestResponse<>("")); //TODO how to return with no result?
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            throw ex;
-        }
+        service.reloadContentsReference();
+        return ResponseEntity.ok(new SimpleRestResponse<>("")); //TODO how to return with no result?
     }
 }
