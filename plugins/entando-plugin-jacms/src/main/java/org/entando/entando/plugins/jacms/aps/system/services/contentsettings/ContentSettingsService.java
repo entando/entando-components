@@ -19,32 +19,38 @@ import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.baseconfig.SystemParamsUtils;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
-import org.entando.entando.plugins.jacms.web.contentsettings.model.ContentSettingsDto;
 import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
 import com.agiletec.plugins.jacms.aps.system.services.searchengine.ICmsSearchEngineManager;
 import com.agiletec.plugins.jacms.aps.system.services.searchengine.LastReloadInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.RestServerError;
+import org.entando.entando.plugins.jacms.web.contentsettings.model.ContentSettingsDto;
 import org.entando.entando.plugins.jacms.web.contentsettings.model.LastReloadInfoDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-//TODO use @Service Annotation instead of XML declaration
+@Service
 public class ContentSettingsService {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
+    @Autowired
     private IContentManager contentManager;
 
+    @Autowired
     private ICmsSearchEngineManager searchEngineManager;
 
+    @Autowired
     private IResourceManager resourceManager;
 
+    @Autowired
     private ConfigInterface configManager;
 
     public ContentSettingsDto getContentSettings() {
