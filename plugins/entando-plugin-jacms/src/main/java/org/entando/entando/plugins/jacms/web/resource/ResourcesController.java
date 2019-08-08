@@ -13,6 +13,7 @@
  */
 package org.entando.entando.plugins.jacms.web.resource;
 
+import com.agiletec.aps.system.services.role.Permission;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -20,6 +21,7 @@ import org.entando.entando.plugins.jacms.aps.system.services.resource.ResourcesS
 import org.entando.entando.plugins.jacms.web.resource.model.ImageAssetDto;
 import org.entando.entando.plugins.jacms.web.resource.validator.FileAssetValidator;
 import org.entando.entando.plugins.jacms.web.resource.validator.ImageAssetValidator;
+import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
@@ -29,6 +31,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 @RestController
 public class ResourcesController {
@@ -51,7 +56,7 @@ public class ResourcesController {
             @ApiResponse(code = 201, message = "Created"),
             @ApiResponse(code = 401, message = "Unauthorized")})
     @GetMapping("/plugins/cms/assets/images")
-    //@RestAccessControl(permission = Permission.SUPERUSER)
+    @RestAccessControl(permission = Permission.SUPERUSER)
     public ResponseEntity<PagedRestResponse<ImageAssetDto>> listImageAssets(RestListRequest requestList) {
         logger.debug("REST request - list image resources");
         imageValidator.validateRestListRequest(requestList, ImageAssetDto.class);
@@ -65,15 +70,12 @@ public class ResourcesController {
             @ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 401, message = "Unauthorized")})
     @PostMapping("/plugins/cms/assets/images")
-    //@RestAccessControl(permission = Permission.SUPERUSER)
-    public ResponseEntity createImageAsset(@RequestPart("file") MultipartFile file) {
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    public ResponseEntity createImageAsset(@RequestPart("file") MultipartFile file, @RequestParam String group,
+               @RequestParam String categories) {
         logger.debug("REST request - create new image resource");
-        try {
-            service.createImageAsset(file);
-        } catch (Throwable e) {
-            e.printStackTrace();
-            throw e;
-        }
+        service.createImageAsset(file, group, Arrays.stream(categories.split(","))
+            .map(String::trim).collect(Collectors.toList()));
 
         return ResponseEntity.ok().build();
     }

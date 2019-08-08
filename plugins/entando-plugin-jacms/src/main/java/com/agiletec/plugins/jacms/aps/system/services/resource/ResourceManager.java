@@ -13,18 +13,6 @@
  */
 package com.agiletec.plugins.jacms.aps.system.services.resource;
 
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.FieldSearchFilter;
@@ -39,27 +27,24 @@ import com.agiletec.aps.util.DateConverter;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.resource.cache.IResourceManagerCacheWrapper;
 import com.agiletec.plugins.jacms.aps.system.services.resource.event.ResourceChangedEvent;
-import com.agiletec.plugins.jacms.aps.system.services.resource.model.AbstractMonoInstanceResource;
-import com.agiletec.plugins.jacms.aps.system.services.resource.model.AbstractMultiInstanceResource;
-import com.agiletec.plugins.jacms.aps.system.services.resource.model.BaseResourceDataBean;
-import com.agiletec.plugins.jacms.aps.system.services.resource.model.JaxbMetadataMapping;
-import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceDataBean;
-import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInstance;
-import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
-import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceRecordVO;
+import com.agiletec.plugins.jacms.aps.system.services.resource.model.*;
 import com.agiletec.plugins.jacms.aps.system.services.resource.parse.ResourceHandler;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 /**
  * Servizio gestore tipi di risorse (immagini, audio, video, etc..).
@@ -178,11 +163,11 @@ public class ResourceManager extends AbstractService implements IResourceManager
      * @throws ApsSystemException in caso di errore.
      */
     @Override
-    public ResourceInterface addResource(ResourceDataBean bean) throws ApsSystemException {
+    public ResourceInterface addResource(ResourceDataBean bean, List<String> ignoreMetadataKeys) throws ApsSystemException {
         ResourceInterface newResource = this.createResource(bean);
         try {
             this.generateAndSetResourceId(newResource, bean.getResourceId());
-            newResource.saveResourceInstances(bean);
+            newResource.saveResourceInstances(bean, ignoreMetadataKeys);
             this.getResourceDAO().addResource(newResource);
         } catch (Throwable t) {
             newResource.deleteResourceInstances();
@@ -190,6 +175,19 @@ public class ResourceManager extends AbstractService implements IResourceManager
             throw new ApsSystemException("Error adding resource", t);
         }
         return newResource;
+    }
+
+    /**
+     * Salva una risorsa nel db con incluse nel filesystem, indipendentemente
+     * dal tipo.
+     *
+     * @param bean L'oggetto detentore dei dati della risorsa da inserire.
+     * @return la risorsa aggiunta.
+     * @throws ApsSystemException in caso di errore.
+     */
+    @Override
+    public ResourceInterface addResource(ResourceDataBean bean) throws ApsSystemException {
+        return addResource(bean, new ArrayList<>());
     }
 
     /**

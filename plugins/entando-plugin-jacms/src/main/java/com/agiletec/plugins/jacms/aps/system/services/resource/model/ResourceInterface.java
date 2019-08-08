@@ -218,6 +218,15 @@ public interface ResourceInterface {
     public void saveResourceInstances(ResourceDataBean bean) throws ApsSystemException;
 
     /**
+     * Ricava ed salva tutte le istanze associate ad una risorsa, valorizzando
+     * quest'ultima con i dati delle istanze ricavate.
+     *
+     * @param bean L'oggetto detentore dei dati della risorsa da inserire.
+     * @throws ApsSystemException In caso di eccezioni.
+     */
+    public void saveResourceInstances(ResourceDataBean bean, List<String> ignoreMetadataKeys) throws ApsSystemException;
+
+    /**
      * Cancella tutte le istanze associate alla risorsa.
      *
      * @throws ApsSystemException In caso di eccezioni.

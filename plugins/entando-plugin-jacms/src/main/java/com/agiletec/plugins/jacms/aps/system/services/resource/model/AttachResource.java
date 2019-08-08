@@ -18,6 +18,9 @@ import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Classe rappresentante una risorsa Attach.
  * @author W.Ambu - E.Santoboni
@@ -50,7 +53,7 @@ public class AttachResource extends AbstractMonoInstanceResource  {
     }
     
     @Override
-	public void saveResourceInstances(ResourceDataBean bean) throws ApsSystemException {
+	public void saveResourceInstances(ResourceDataBean bean, List<String> ignoreMetadataKeys) throws ApsSystemException {
 		try {
 			String fileName = this.getNewInstanceFileName(bean.getFileName());
 			String subPath = this.getDiskSubFolder() + fileName;
@@ -66,6 +69,11 @@ public class AttachResource extends AbstractMonoInstanceResource  {
 			_logger.error("Error on saving attach resource instances", t);
 			throw new ApsSystemException("Error on saving attach resource instances", t);
 		}
+	}
+
+	@Override
+	public void saveResourceInstances(ResourceDataBean bean) throws ApsSystemException {
+		saveResourceInstances(bean, new ArrayList<>());
 	}
     
     @Override

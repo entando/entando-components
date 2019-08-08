@@ -4,9 +4,16 @@ import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.exception.ApsException;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.category.Category;
+import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.*;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.util.IImageDimensionReader;
+import com.drew.imaging.ImageMetadataReader;
+import com.drew.imaging.ImageProcessingException;
+import com.drew.metadata.Directory;
+import com.drew.metadata.Metadata;
+import com.drew.metadata.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanComparator;
 import org.entando.entando.aps.system.exception.RestServerError;
@@ -20,15 +27,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class ResourcesService {
     @Autowired
     private IResourceManager resourceManager;
+
+    @Autowired
+    private ICategoryManager categoryManager;
 
     @Autowired
     private IImageDimensionReader imageDimensionManager;
@@ -46,10 +59,16 @@ public class ResourcesService {
                         .description(resource.getDescription())
                         .createdAt(resource.getCreationDate())
                         .updatedAt(resource.getLastModified())
+                        .group(resource.getMainGroup())
+                        .metadata(resource.getMetadata())
                         .version(ImageMetadataDto.builder()
                             .path(resource.getImagePath("0"))
                             .size(resource.getDefaultInstance().getFileLength())
                             .build());
+
+                for (Category category : resource.getCategories()) {
+                    builder.category(category.getCode());
+                }
 
                 for (ImageResourceDimension dimensions : getImageDimensions()) {
                     ResourceInstance instance = resource.getInstance(dimensions.getIdDim(), null);
@@ -111,22 +130,22 @@ public class ResourcesService {
         return null;
     }
 
-    public void createImageAsset(MultipartFile asset) {
+    public void createImageAsset(MultipartFile file, String group, List<String> categories) {
         //TODO handle possible formats from config file
         BaseResourceDataBean resourceFile = new BaseResourceDataBean();
 
         try {
-            resourceFile.setInputStream(asset.getInputStream());
-            resourceFile.setFileSize(asset.getBytes().length / 1000);
-            resourceFile.setFileName(asset.getOriginalFilename());
-            resourceFile.setMimeType(asset.getContentType());
-            resourceFile.setDescr(asset.getOriginalFilename());
-            resourceFile.setMainGroup("free"); //TODO
+            resourceFile.setInputStream(file.getInputStream());
+            resourceFile.setFileSize(file.getBytes().length / 1000);
+            resourceFile.setFileName(file.getOriginalFilename());
+            resourceFile.setMimeType(file.getContentType());
+            resourceFile.setDescr(file.getOriginalFilename());
+            resourceFile.setMainGroup(group);
             resourceFile.setResourceType("Image");
-            resourceFile.setCategories(new ArrayList<>()); //TODO
-            resourceFile.setMetadata(new HashMap<>()); //TODO
+            resourceFile.setCategories(categories.stream()
+                .map(code -> categoryManager.getCategory(code)).collect(Collectors.toList()));
 
-            resourceManager.addResource(resourceFile);
+            resourceManager.addResource(resourceFile, getIgnoreMetadataKeysForResourceType("Image"));
         } catch (ApsSystemException e) {
             throw new RestServerError("Error saving new image resource", e);
         } catch (IOException e) {
@@ -134,41 +153,13 @@ public class ResourcesService {
         }
     }
 
-    /*protected Map getImgMetadata(File file) {
-        logger.debug("Get image Metadata in Resource Action");
-        Map<String, String> meta = new HashMap<>();
-        ResourceInterface resourcePrototype = this.getResourceManager().createResourceType(this.getResourceType());
-        try {
-            Metadata metadata = ImageMetadataReader.readMetadata(file);
-            String ignoreKeysConf = resourcePrototype.getMetadataIgnoreKeys();
-            String[] ignoreKeys = null;
-            if (null != ignoreKeysConf) {
-                ignoreKeys = ignoreKeysConf.split(",");
-                logger.debug("Metadata ignoreKeys: {}", ignoreKeys);
-            } else {
-                logger.debug("Metadata ignoreKeys not configured");
-            }
-            List<String> ignoreKeysList = new ArrayList<String>();
-            if (null != ignoreKeys) {
-                ignoreKeysList = Arrays.asList(ignoreKeys);
-            }
-            for (Directory directory : metadata.getDirectories()) {
-                for (Tag tag : directory.getTags()) {
-                    if (!ignoreKeysList.contains(tag.getTagName())) {
-                        logger.debug("Add Metadata with key: {}", tag.getTagName());
-                        meta.put(tag.getTagName(), tag.getDescription());
-                    } else {
-                        logger.debug("Skip Metadata key {}", tag.getTagName());
-                    }
-                }
-            }
-        } catch (ImageProcessingException ex) {
-            logger.error("Error reading metadata");
-        } catch (IOException ioex) {
-            logger.error("Error reading file");
-        }
-        return meta;
-    }*/
+    private List<String> getIgnoreMetadataKeysForResourceType(String resourceType) {
+        ResourceInterface resourcePrototype = resourceManager.createResourceType(resourceType);
+
+        String ignoreKeysConf = resourcePrototype.getMetadataIgnoreKeys();
+        String[] ignoreKeys = ignoreKeysConf.split(",");
+        return Arrays.asList(ignoreKeys);
+    }
 
     public FileAssetDto createFileAsset(MultipartFile asset) {
         return null;
