@@ -163,11 +163,11 @@ public class ResourceManager extends AbstractService implements IResourceManager
      * @throws ApsSystemException in caso di errore.
      */
     @Override
-    public ResourceInterface addResource(ResourceDataBean bean, List<String> ignoreMetadataKeys) throws ApsSystemException {
+    public ResourceInterface addResource(ResourceDataBean bean) throws ApsSystemException {
         ResourceInterface newResource = this.createResource(bean);
         try {
             this.generateAndSetResourceId(newResource, bean.getResourceId());
-            newResource.saveResourceInstances(bean, ignoreMetadataKeys);
+            newResource.saveResourceInstances(bean, getIgnoreMetadataKeysForResourceType(bean.getResourceType()));
             this.getResourceDAO().addResource(newResource);
         } catch (Throwable t) {
             newResource.deleteResourceInstances();
@@ -177,17 +177,12 @@ public class ResourceManager extends AbstractService implements IResourceManager
         return newResource;
     }
 
-    /**
-     * Salva una risorsa nel db con incluse nel filesystem, indipendentemente
-     * dal tipo.
-     *
-     * @param bean L'oggetto detentore dei dati della risorsa da inserire.
-     * @return la risorsa aggiunta.
-     * @throws ApsSystemException in caso di errore.
-     */
-    @Override
-    public ResourceInterface addResource(ResourceDataBean bean) throws ApsSystemException {
-        return addResource(bean, new ArrayList<>());
+    private List<String> getIgnoreMetadataKeysForResourceType(String resourceType) {
+        ResourceInterface resourcePrototype = createResourceType(resourceType);
+
+        String ignoreKeysConf = resourcePrototype.getMetadataIgnoreKeys();
+        String[] ignoreKeys = ignoreKeysConf.split(",");
+        return Arrays.asList(ignoreKeys);
     }
 
     /**
@@ -265,8 +260,8 @@ public class ResourceManager extends AbstractService implements IResourceManager
                 this.getResourceDAO().updateResource(oldResource);
                 this.notifyResourceChanging(oldResource);
             } else {
-                ResourceInterface updatedResource = this.createResource(bean);//this.saveResource(bean);
-                updatedResource.saveResourceInstances(bean);
+                ResourceInterface updatedResource = this.createResource(bean);
+                updatedResource.saveResourceInstances(bean, getIgnoreMetadataKeysForResourceType(bean.getResourceType()));
                 this.getResourceDAO().updateResource(updatedResource);
                 if (!updatedResource.getMasterFileName().equals(oldResource.getMasterFileName())) {
                     oldResource.deleteResourceInstances();

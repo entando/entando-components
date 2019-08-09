@@ -13,6 +13,8 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 public abstract class AssetDto {
+    private String id;
+
     private String name;
 
     private String description;

@@ -83,17 +83,6 @@ public interface IResourceManager {
     public ResourceInterface addResource(ResourceDataBean bean) throws ApsSystemException;
 
     /**
-     * Salva una risorsa nel db con incluse nel filesystem, indipendentemente
-     * dal tipo.
-     *
-     * @param bean L'oggetto detentore dei dati della risorsa da inserire.
-     * @param ignoreMetadataKeys List of metadata keys to ignore during processing of resource
-     * @return la risorsa aggiunta.
-     * @throws ApsSystemException in caso di errore.
-     */
-    public ResourceInterface addResource(ResourceDataBean bean, List<String> ignoreMetadataKeys) throws ApsSystemException;
-
-    /**
      * Salva una risorsa nel db, indipendentemente dal tipo.
      *
      * @param resource La risorsa da salvare.
