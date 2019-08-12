@@ -17,7 +17,6 @@ import com.agiletec.aps.system.services.role.Permission;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.plugins.jacms.aps.system.services.resource.ResourcesService;
 import org.entando.entando.plugins.jacms.web.resource.model.ImageAssetDto;
 import org.entando.entando.plugins.jacms.web.resource.validator.FileAssetValidator;
@@ -34,7 +33,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;

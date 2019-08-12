@@ -1,6 +1,7 @@
 package org.entando.entando.plugins.jacms.aps.system.services.resource;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
+import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.exception.ApsException;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -9,29 +10,21 @@ import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.*;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.util.IImageDimensionReader;
-import com.drew.imaging.ImageMetadataReader;
-import com.drew.imaging.ImageProcessingException;
-import com.drew.metadata.Directory;
-import com.drew.metadata.Metadata;
-import com.drew.metadata.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanComparator;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.plugins.jacms.web.resource.model.FileAssetDto;
 import org.entando.entando.plugins.jacms.web.resource.model.ImageAssetDto;
 import org.entando.entando.plugins.jacms.web.resource.model.ImageMetadataDto;
+import org.entando.entando.web.common.model.Filter;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -49,7 +42,8 @@ public class ResourcesService {
     public PagedMetadata<ImageAssetDto> listImageAssets(RestListRequest requestList) {
         List<ImageAssetDto> assets = new ArrayList<>();
         try {
-            List<String> resourceIds = resourceManager.searchResourcesId(createSearchFilters("Image"), null, null);
+            List<String> resourceIds = resourceManager.searchResourcesId(createSearchFilters("Image", requestList),
+                    extractCategoriesFromFilters(requestList));
 
             for(String id : resourceIds) {
                 assets.add(convertImageResorceToDto((ImageResource) resourceManager.loadResource(id)));
@@ -173,25 +167,85 @@ public class ResourcesService {
         return dimensions;
     }
 
-    private FieldSearchFilter[] createSearchFilters(String type) {
-        FieldSearchFilter typeCodeFilter = new FieldSearchFilter(IResourceManager.RESOURCE_TYPE_FILTER_KEY, type, false);
-        FieldSearchFilter[] filters = {typeCodeFilter};
-        /*if (!StringUtils.isBlank(this.getOwnerGroupName())) {
-            FieldSearchFilter groupFilter = new FieldSearchFilter(IResourceManager.RESOURCE_MAIN_GROUP_FILTER_KEY, this.getOwnerGroupName(), false);
-            filters = ArrayUtils.add(filters, groupFilter);
+    private FieldSearchFilter[] createSearchFilters(String type, RestListRequest requestList) {
+        List<FieldSearchFilter> filters = new ArrayList<>();
+        filters.add(
+            new FieldSearchFilter(IResourceManager.RESOURCE_TYPE_FILTER_KEY, type, false)
+        );
+
+        //TODO better way to convert attributes to ResourceManager properties?
+        for (Filter filter : Optional.ofNullable(requestList.getFilters()).orElse(new Filter[]{})) {
+            String attr;
+            boolean useLikeOption = false;
+            switch (filter.getAttribute()) {
+                case "name":
+                    attr = IResourceManager.RESOURCE_FILENAME_FILTER_KEY;
+                    useLikeOption = true;
+                    break;
+                case "description":
+                    attr = IResourceManager.RESOURCE_DESCR_FILTER_KEY;
+                    useLikeOption = true;
+                    break;
+                case "createdAt":
+                    attr = IResourceManager.RESOURCE_CREATION_DATE_FILTER_KEY;
+                    break;
+                case "updatedAt":
+                    attr = IResourceManager.RESOURCE_MODIFY_DATE_FILTER_KEY;
+                    break;
+                case "group":
+                    attr = IResourceManager.RESOURCE_MAIN_GROUP_FILTER_KEY;
+                    break;
+                default:
+                    continue;
+            }
+
+            filters.add(
+                new FieldSearchFilter(attr, filter.getValue(), useLikeOption)
+            );
         }
-        if (!StringUtils.isBlank(this.getText())) {
-            FieldSearchFilter textFilter = new FieldSearchFilter(IResourceManager.RESOURCE_DESCR_FILTER_KEY, this.getText(), true);
-            filters = ArrayUtils.add(filters, textFilter);
-        }
-        if (!StringUtils.isBlank(this.getFileName())) {
-            FieldSearchFilter filenameFilter = new FieldSearchFilter(IResourceManager.RESOURCE_FILENAME_FILTER_KEY, this.getFileName(), true);
-            filters = ArrayUtils.add(filters, filenameFilter);
-        }
-        filters = ArrayUtils.add(filters, this.getOrderFilter());*/
-        return filters;
+
+        filters.add(createOrderFilter(requestList));
+
+        return filters.stream().toArray(FieldSearchFilter[]::new);
     }
 
+    private EntitySearchFilter createOrderFilter(RestListRequest requestList) {
+        String groupBy = requestList.getSort();
+
+        String key = IResourceManager.RESOURCE_DESCR_FILTER_KEY; //default
+
+        //TODO better way to convert attributes to ResourceManager properties?
+        if ("description".equals(groupBy)) {
+            key = IResourceManager.RESOURCE_DESCR_FILTER_KEY;
+        } else if ("updatedAt".equals(groupBy)) {
+            key = IResourceManager.RESOURCE_MODIFY_DATE_FILTER_KEY;
+        } else if ("createdAt".equals(groupBy)) {
+            key = IResourceManager.RESOURCE_CREATION_DATE_FILTER_KEY;
+        } else if ("name".equals(groupBy)) {
+            key = IResourceManager.RESOURCE_FILENAME_FILTER_KEY;
+        }
+
+        EntitySearchFilter filter = new EntitySearchFilter(key, false);
+        filter.setOrder(requestList.getDirection().equals("desc") ?
+                EntitySearchFilter.DESC_ORDER : EntitySearchFilter.ASC_ORDER);
+
+        return filter;
+    }
+
+    //TODO support array of categories
+    private List<String> extractCategoriesFromFilters(RestListRequest requestList) {
+        List<String> categories = new ArrayList<>();
+
+        for (Filter filter : Optional.ofNullable(requestList.getFilters()).orElse(new Filter[]{})) {
+            if (filter.getAttribute().equals("categories")) {
+                categories.add(filter.getValue());
+            }
+        }
+
+        return categories;
+    }
+
+    //TODO better encapsulate dto conversion, perhaps create separate builder
     private ImageAssetDto convertImageResorceToDto(ImageResource resource){
         ImageAssetDto.ImageAssetDtoBuilder builder = ImageAssetDto.builder()
                 .id(resource.getId())
