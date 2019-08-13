@@ -13,6 +13,7 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.util.IImage
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanComparator;
 import org.entando.entando.aps.system.exception.RestServerError;
+import org.entando.entando.plugins.jacms.web.resource.model.AssetDto;
 import org.entando.entando.plugins.jacms.web.resource.model.FileAssetDto;
 import org.entando.entando.plugins.jacms.web.resource.model.ImageAssetDto;
 import org.entando.entando.plugins.jacms.web.resource.model.ImageMetadataDto;
@@ -39,28 +40,28 @@ public class ResourcesService {
     @Autowired
     private IImageDimensionReader imageDimensionManager;
 
-    public PagedMetadata<ImageAssetDto> listImageAssets(RestListRequest requestList) {
-        List<ImageAssetDto> assets = new ArrayList<>();
+    public PagedMetadata<AssetDto> listAssets(String resourceType, RestListRequest requestList) {
+        List<AssetDto> assets = new ArrayList<>();
         try {
-            List<String> resourceIds = resourceManager.searchResourcesId(createSearchFilters("Image", requestList),
+            List<String> resourceIds = resourceManager.searchResourcesId(createSearchFilters(resourceType, requestList),
                     extractCategoriesFromFilters(requestList));
 
             for(String id : resourceIds) {
-                assets.add(convertImageResorceToDto((ImageResource) resourceManager.loadResource(id)));
+                assets.add(convertResourceToDto(resourceType, resourceManager.loadResource(id)));
             }
 
         } catch (ApsException e) {
             throw new RestServerError("Error listing image resources", e);
         }
 
-        SearcherDaoPaginatedResult<ImageAssetDto> paginatedResult = new SearcherDaoPaginatedResult<>(assets.size(), assets);
-        PagedMetadata<ImageAssetDto> pagedResults = new PagedMetadata<>(requestList, paginatedResult);
+        SearcherDaoPaginatedResult<AssetDto> paginatedResult = new SearcherDaoPaginatedResult<>(assets.size(), assets);
+        PagedMetadata<AssetDto> pagedResults = new PagedMetadata<>(requestList, paginatedResult);
         pagedResults.setBody(assets);
 
         return pagedResults;
     }
 
-    public ImageAssetDto createImageAsset(MultipartFile file, String group, List<String> categories) {
+    public AssetDto createAsset(String resourceType, MultipartFile file, String group, List<String> categories) {
         //TODO handle possible formats from config file
         BaseResourceDataBean resourceFile = new BaseResourceDataBean();
 
@@ -71,20 +72,20 @@ public class ResourcesService {
             resourceFile.setMimeType(file.getContentType());
             resourceFile.setDescr(file.getOriginalFilename());
             resourceFile.setMainGroup(group);
-            resourceFile.setResourceType("Image");
+            resourceFile.setResourceType(resourceType);
             resourceFile.setCategories(categories.stream()
                 .map(code -> categoryManager.getCategory(code)).collect(Collectors.toList()));
 
-            ImageResource resource = (ImageResource) resourceManager.addResource(resourceFile);
-            return convertImageResorceToDto(resource);
+            ResourceInterface resource = resourceManager.addResource(resourceFile);
+            return convertResourceToDto(resourceType, resourceManager.loadResource(resource.getId()));
         } catch (ApsSystemException e) {
-            throw new RestServerError("Error saving new image resource", e);
+            throw new RestServerError("Error saving new resource", e);
         } catch (IOException e) {
-            throw new RestServerError("Error reading image stream", e);
+            throw new RestServerError("Error reading resource stream", e);
         }
     }
 
-    public void deleteImageAsset(String resourceId) {
+    public void deleteAsset(String resourceId) {
         try {
             ResourceInterface resource = resourceManager.loadResource(resourceId);
             if (resource == null) {
@@ -96,7 +97,7 @@ public class ResourcesService {
         }
     }
 
-    public ImageAssetDto editImageAsset(String resourceId, MultipartFile file, String description, String group, List<String> categories) {
+    public AssetDto editAsset(String resourceId, MultipartFile file, String description, String group, List<String> categories) {
         try {
             ResourceInterface resource = resourceManager.loadResource(resourceId);
             if (resource == null) {
@@ -104,7 +105,7 @@ public class ResourcesService {
             }
 
             BaseResourceDataBean resourceFile = new BaseResourceDataBean();
-            resourceFile.setResourceType("Image");
+            resourceFile.setResourceType(resource.getType());
             resourceFile.setResourceId(resourceId);
             resourceFile.setMetadata(resource.getMetadata());
 
@@ -141,20 +142,12 @@ public class ResourcesService {
             }
 
             resourceManager.updateResource(resourceFile);
-            return convertImageResorceToDto((ImageResource) resourceManager.loadResource(resourceId));
+            return convertResourceToDto(resource.getType(), resourceManager.loadResource(resourceId));
         } catch (ApsSystemException e) {
             throw new RestServerError("Error updating image resource", e);
         } catch (IOException e) {
             throw new RestServerError("Error reading image stream", e);
         }
-    }
-
-    public PagedMetadata<String> listFileAssets(RestListRequest requestList) {
-        return null;
-    }
-
-    public FileAssetDto createFileAsset(MultipartFile asset) {
-        return null;
     }
 
     /****** Auxiliary Methods ******/
@@ -245,8 +238,18 @@ public class ResourcesService {
         return categories;
     }
 
-    //TODO better encapsulate dto conversion, perhaps create separate builder
-    private ImageAssetDto convertImageResorceToDto(ImageResource resource){
+    private AssetDto convertResourceToDto(String resourceType, ResourceInterface resource) {
+        if ("Image".equals(resourceType)) {
+            return convertImageResourceToDto((ImageResource) resource);
+        } else if ("Attach".equals(resourceType)) {
+            return convertFileResourceToDto((AttachResource) resource);
+        } else {
+            throw new RestServerError(String.format("Invalid resource type: %s", resourceType), null);
+        }
+    }
+
+    //TODO better encapsulate dto conversion, perhaps create separate builder?
+    private ImageAssetDto convertImageResourceToDto(ImageResource resource) {
         ImageAssetDto.ImageAssetDtoBuilder builder = ImageAssetDto.builder()
                 .id(resource.getId())
                 .name(resource.getMasterFileName())
@@ -277,6 +280,24 @@ public class ResourcesService {
                     .size(instance.getFileLength())
                     .dimensions(String.format("%dx%d px", dimensions.getDimx(), dimensions.getDimy()))
                     .build());
+        }
+
+        return builder.build();
+    }
+
+    private FileAssetDto convertFileResourceToDto(AttachResource resource){
+        FileAssetDto.FileAssetDtoBuilder builder = FileAssetDto.builder()
+                .id(resource.getId())
+                .name(resource.getMasterFileName())
+                .description(resource.getDescription())
+                .createdAt(resource.getCreationDate())
+                .updatedAt(resource.getLastModified())
+                .group(resource.getMainGroup())
+                .path(resource.getAttachPath())
+                .size(resource.getDefaultInstance().getFileLength());
+
+        for (Category category : resource.getCategories()) {
+            builder.category(category.getCode());
         }
 
         return builder.build();

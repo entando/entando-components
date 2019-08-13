@@ -12,11 +12,13 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class FileAssetDto extends AssetDto {
     private String size;
+    private String path;
 
     @Builder
     public FileAssetDto(String id, String name, String description, Date createdAt, Date updatedAt,
-                         String group, @Singular List<String> categories, String size) {
+                         String group, @Singular List<String> categories, String size, String path) {
         super(id, name, description, createdAt, updatedAt, group, categories);
         this.size = size;
+        this.path = path;
     }
 }

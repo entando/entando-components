@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 
 @Component
-public class ImageAssetValidator extends AbstractPaginationValidator {
+public class ResourcesValidator extends AbstractPaginationValidator {
 
     @Override
     public boolean supports(Class<?> paramClass) {
