@@ -21,6 +21,7 @@ import org.entando.entando.web.common.model.Filter;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,6 +40,12 @@ public class ResourcesService {
 
     @Autowired
     private IImageDimensionReader imageDimensionManager;
+
+    @Value("#{'${jacms.imageResource.allowedExtensions}'.split(',')}")
+    private List<String> imageAllowedExtensions;
+
+    @Value("#{'${jacms.attachResource.allowedExtensions}'.split(',')}")
+    private List<String> fileAllowedExtensions;
 
     public PagedMetadata<AssetDto> listAssets(String resourceType, RestListRequest requestList) {
         List<AssetDto> assets = new ArrayList<>();
@@ -62,8 +69,9 @@ public class ResourcesService {
     }
 
     public AssetDto createAsset(String resourceType, MultipartFile file, String group, List<String> categories) {
-        //TODO handle possible formats from config file
         BaseResourceDataBean resourceFile = new BaseResourceDataBean();
+
+        validateMimeType(resourceType, file.getContentType());
 
         try {
             resourceFile.setInputStream(file.getInputStream());
@@ -111,6 +119,8 @@ public class ResourcesService {
 
 
             if (file != null) {
+                validateMimeType(resource.getType(), file.getContentType());
+
                 resourceFile.setInputStream(file.getInputStream());
                 resourceFile.setFileSize(file.getBytes().length / 1000);
                 resourceFile.setFileName(file.getOriginalFilename());
@@ -151,6 +161,23 @@ public class ResourcesService {
     }
 
     /****** Auxiliary Methods ******/
+
+    private void validateMimeType(String resourceType, String mimeType) {
+        mimeType = Optional.ofNullable(mimeType)
+                .map(t -> t.split("/")[1])
+                .orElseThrow(() -> new RestServerError("Invalid mime type", null));
+
+        List<String> allowedExtensions;
+        if ("Image".equals(resourceType)){
+            allowedExtensions = imageAllowedExtensions;
+        } else if ("Attach".equals(resourceType)){
+            allowedExtensions = fileAllowedExtensions;
+        } else throw new RestServerError(String.format("Invalid resource type %s", resourceType), null);
+
+        if (!allowedExtensions.contains(mimeType)) {
+            throw new RestServerError(String.format("Invalid mime type: %s", mimeType), null);
+        }
+    }
 
     private List<ImageResourceDimension> getImageDimensions() {
         Map<Integer, ImageResourceDimension> master = imageDimensionManager.getImageDimensions();
