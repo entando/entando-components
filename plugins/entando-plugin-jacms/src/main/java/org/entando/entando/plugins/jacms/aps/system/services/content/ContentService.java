@@ -380,6 +380,20 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
     }
 
     @Override
+    public List<ContentDto> addContent(List<ContentDto> request, UserDetails user, BindingResult bindingResult) {
+        List<ContentDto> result = new ArrayList<>();
+        for(ContentDto content : request) {
+            if (!this.getAuthorizationManager().isAuthOnGroup(user, content.getMainGroup())) {
+                bindingResult.reject(ContentController.ERRCODE_UNAUTHORIZED_CONTENT, new String[]{content.getMainGroup()}, "content.group.unauthorized");
+                throw new ResourcePermissionsException(bindingResult);
+            }
+            content.setId(null);
+            result.add(this.addEntity(JacmsSystemConstants.CONTENT_MANAGER, content, bindingResult));
+        }
+        return result;
+    }
+
+    @Override
     public ContentDto updateContent(ContentDto request, UserDetails user, BindingResult bindingResult) {
         this.checkContentAuthorization(user, request.getId(), false, true, bindingResult);
         return super.updateEntity(JacmsSystemConstants.CONTENT_MANAGER, request, bindingResult);

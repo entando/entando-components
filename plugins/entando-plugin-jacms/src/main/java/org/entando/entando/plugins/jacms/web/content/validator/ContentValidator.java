@@ -15,11 +15,16 @@ package org.entando.entando.plugins.jacms.web.content.validator;
 
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
 import org.entando.entando.aps.system.exception.RestServerError;
+import org.entando.entando.aps.system.services.entity.model.EntityDto;
 import org.entando.entando.plugins.jacms.aps.system.services.content.IContentService;
 import org.entando.entando.web.entity.validator.EntityValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.Errors;
+
+import java.util.List;
 
 /**
  * @author E.Santoboni
@@ -29,6 +34,12 @@ public class ContentValidator extends EntityValidator {
 
     @Autowired
     private IContentManager contentManager;
+
+    public void validate(List<ContentDto> target, Errors errors) {
+        for(ContentDto entity : target) {
+            super.validate(entity, errors);
+        }
+    }
 
     public boolean existContent(String code, String status) {
         boolean online = (IContentService.STATUS_ONLINE.equalsIgnoreCase(status));

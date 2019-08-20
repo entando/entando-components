@@ -20,6 +20,7 @@ import org.entando.entando.plugins.jacms.aps.system.services.content.IContentSer
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpSession;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
@@ -150,7 +151,7 @@ public class ContentController {
 
     @RestAccessControl(permission = Permission.CONTENT_EDITOR)
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<ContentDto>> addContent(@Valid @RequestBody ContentDto bodyRequest, BindingResult bindingResult) {
+    public ResponseEntity<SimpleRestResponse<List<ContentDto>>> addContent(@Valid @RequestBody List<ContentDto> bodyRequest, BindingResult bindingResult) {
         logger.debug("Add new content -> {}", bodyRequest);
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
@@ -159,7 +160,7 @@ public class ContentController {
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         }
-        ContentDto response = this.getContentService().addContent(bodyRequest, this.extractCurrentUser(), bindingResult);
+        List<ContentDto> response = this.getContentService().addContent(bodyRequest, this.extractCurrentUser(), bindingResult);
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         }

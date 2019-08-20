@@ -20,6 +20,8 @@ import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.springframework.validation.BindingResult;
 
+import java.util.List;
+
 /**
  * @author E.Santoboni
  */
@@ -32,6 +34,8 @@ public interface IContentService {
     public ContentDto getContent(String code, String modelId, String status, String langCode, boolean resolveLinks, UserDetails user);
 
     public ContentDto addContent(ContentDto request, UserDetails user, BindingResult bindingResult);
+
+    public List<ContentDto> addContent(List<ContentDto> request, UserDetails user, BindingResult bindingResult);
 
     public ContentDto updateContent(ContentDto request, UserDetails user, BindingResult bindingResult);
 

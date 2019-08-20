@@ -127,11 +127,12 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             result.andExpect(jsonPath("$.metaData.size()", is(0)));
 
             ResultActions result2 = this.executeContentPost("1_POST_valid.json", accessToken, status().isOk());
-            result2.andExpect(jsonPath("$.payload.id", Matchers.anything()));
+            result2.andExpect(jsonPath("$.payload.size()", is(1)));
+            result2.andExpect(jsonPath("$.payload[0].id", Matchers.anything()));
             result2.andExpect(jsonPath("$.errors.size()", is(0)));
             result2.andExpect(jsonPath("$.metaData.size()", is(0)));
             String bodyResult = result2.andReturn().getResponse().getContentAsString();
-            newContentId = JsonPath.read(bodyResult, "$.payload.id");
+            newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
             Content newContent = this.contentManager.loadContent(newContentId, false);
 
             Assert.assertNotNull(newContent);
@@ -193,11 +194,12 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             Assert.assertNotNull(this.contentManager.getEntityPrototype("TST"));
 
             ResultActions result = this.executeContentPost("1_POST_valid.json", accessToken, status().isOk());
-            result.andExpect(jsonPath("$.payload.id", Matchers.anything()));
+            result.andExpect(jsonPath("$.payload.size()", is(1)));
+            result.andExpect(jsonPath("$.payload[0].id", Matchers.anything()));
             result.andExpect(jsonPath("$.errors.size()", is(0)));
             result.andExpect(jsonPath("$.metaData.size()", is(0)));
             String bodyResult = result.andReturn().getResponse().getContentAsString();
-            newContentId = JsonPath.read(bodyResult, "$.payload.id");
+            newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
             Content newContent = this.contentManager.loadContent(newContentId, false);
             Assert.assertNotNull(newContent);
             Content newPublicContent = this.contentManager.loadContent(newContentId, true);
