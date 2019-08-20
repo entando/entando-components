@@ -257,6 +257,7 @@ public class ResourceManager extends AbstractService implements IResourceManager
                 oldResource.setDescription(bean.getDescr());
                 oldResource.setCategories(bean.getCategories());
                 oldResource.setMetadata(bean.getMetadata());
+                oldResource.setMainGroup(bean.getMainGroup());
                 this.getResourceDAO().updateResource(oldResource);
                 this.notifyResourceChanging(oldResource);
             } else {
