@@ -15,8 +15,10 @@ package org.entando.entando.plugins.jacms.web.resource;
 
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.ResultActions;
@@ -234,15 +236,15 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
 
         try {
             ResultActions result = this.performCreateResource(user, "image", "free", Arrays.stream(new String[]{"resCat1, resCat2"}).collect(Collectors.toList()));
-            CapturingMatcher capturingMatcher = new CapturingMatcher();
 
             String content = result.andReturn().getResponse().getContentAsString();
             System.out.println(content);
 
+            createdId = JsonPath.read(content, "$.payload.id");
 
             result
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.payload.id", capturingMatcher))
+                    .andExpect(jsonPath("$.payload.id", Matchers.anything()))
                     .andExpect(jsonPath("$.payload.categories.size()", is(2)))
                     .andExpect(jsonPath("$.payload.categories[0]", is("resCat1")))
                     .andExpect(jsonPath("$.payload.categories[1]", is("resCat2")))
@@ -252,8 +254,6 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
                     .andExpect(jsonPath("$.payload.versions[0].size", is("2 Kb")))
                     .andExpect(jsonPath("$.payload.versions[0].path", startsWith("/Entando/resources/cms/images/image_test")))
             ;
-
-            createdId = (String) capturingMatcher.getLastMatched();
 
             result = this.performGetResources(user, "image", null);
 
@@ -314,15 +314,15 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
 
         try {
             ResultActions result = this.performCreateResource(user, "file", "free", Arrays.stream(new String[]{"resCat1, resCat2"}).collect(Collectors.toList()));
-            CapturingMatcher capturingMatcher = new CapturingMatcher();
 
             String content = result.andReturn().getResponse().getContentAsString();
             System.out.println(content);
+            createdId = JsonPath.read(content, "$.payload.id");
 
 
             result
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.payload.id", capturingMatcher))
+                    .andExpect(jsonPath("$.payload.id", Matchers.anything()))
                     .andExpect(jsonPath("$.payload.categories.size()", is(2)))
                     .andExpect(jsonPath("$.payload.categories[0]", is("resCat1")))
                     .andExpect(jsonPath("$.payload.categories[1]", is("resCat2")))
@@ -331,8 +331,6 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
                     .andExpect(jsonPath("$.payload.size", is("2 Kb")))
                     .andExpect(jsonPath("$.payload.path", startsWith("/Entando/resources/cms/documents/file_test")))
             ;
-
-            createdId = (String) capturingMatcher.getLastMatched();
 
             result = this.performGetResources(user, "file", null);
 
@@ -392,15 +390,16 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
 
         try {
             ResultActions result = this.performCreateResource(user, "image", "free", Arrays.stream(new String[]{"resCat1, resCat2"}).collect(Collectors.toList()));
-            CapturingMatcher capturingMatcher = new CapturingMatcher();
 
             String content = result.andReturn().getResponse().getContentAsString();
             System.out.println(content);
 
+            createdId = JsonPath.read(content, "$.payload.id");
+
 
             result
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.payload.id", capturingMatcher))
+                    .andExpect(jsonPath("$.payload.id", Matchers.anything()))
                     .andExpect(jsonPath("$.payload.categories.size()", is(2)))
                     .andExpect(jsonPath("$.payload.categories[0]", is("resCat1")))
                     .andExpect(jsonPath("$.payload.categories[1]", is("resCat2")))
@@ -410,8 +409,6 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
                     .andExpect(jsonPath("$.payload.versions[0].size", is("2 Kb")))
                     .andExpect(jsonPath("$.payload.versions[0].path", startsWith("/Entando/resources/cms/images/image_test")))
             ;
-
-            createdId = (String) capturingMatcher.getLastMatched();
 
             result = this.performGetResources(user, "image", null);
 
@@ -472,15 +469,16 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
 
         try {
             ResultActions result = this.performCreateResource(user, "file", "free", Arrays.stream(new String[]{"resCat1, resCat2"}).collect(Collectors.toList()));
-            CapturingMatcher capturingMatcher = new CapturingMatcher();
 
             String content = result.andReturn().getResponse().getContentAsString();
             System.out.println(content);
 
+            createdId = JsonPath.read(content, "$.payload.id");
+
 
             result
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.payload.id", capturingMatcher))
+                    .andExpect(jsonPath("$.payload.id", Matchers.anything()))
                     .andExpect(jsonPath("$.payload.categories.size()", is(2)))
                     .andExpect(jsonPath("$.payload.categories[0]", is("resCat1")))
                     .andExpect(jsonPath("$.payload.categories[1]", is("resCat2")))
@@ -489,8 +487,6 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
                     .andExpect(jsonPath("$.payload.size", is("2 Kb")))
                     .andExpect(jsonPath("$.payload.path", startsWith("/Entando/resources/cms/documents/file_test")))
             ;
-
-            createdId = (String) capturingMatcher.getLastMatched();
 
             result = this.performGetResources(user, "file", null);
 
