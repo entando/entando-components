@@ -63,7 +63,7 @@ public class ResourcesService {
 
         SearcherDaoPaginatedResult<AssetDto> paginatedResult = new SearcherDaoPaginatedResult<>(assets.size(), assets);
         PagedMetadata<AssetDto> pagedResults = new PagedMetadata<>(requestList, paginatedResult);
-        pagedResults.setBody(assets);
+        pagedResults.setBody(requestList.getSublist(assets));
 
         return pagedResults;
     }
