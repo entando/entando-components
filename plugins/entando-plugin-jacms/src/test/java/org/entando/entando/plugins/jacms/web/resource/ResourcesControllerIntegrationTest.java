@@ -21,15 +21,13 @@ import org.junit.Test;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.startsWith;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -387,6 +385,208 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
         }
     }
 
+    @Test
+    public void testCreateEditWithoutFileDeleteImageResource() throws Exception {
+        UserDetails user = createAccessToken();
+        String createdId = null;
+
+        try {
+            ResultActions result = this.performCreateResource(user, "image", "free", Arrays.stream(new String[]{"resCat1, resCat2"}).collect(Collectors.toList()));
+            CapturingMatcher capturingMatcher = new CapturingMatcher();
+
+            String content = result.andReturn().getResponse().getContentAsString();
+            System.out.println(content);
+
+
+            result
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.id", capturingMatcher))
+                    .andExpect(jsonPath("$.payload.categories.size()", is(2)))
+                    .andExpect(jsonPath("$.payload.categories[0]", is("resCat1")))
+                    .andExpect(jsonPath("$.payload.categories[1]", is("resCat2")))
+                    .andExpect(jsonPath("$.payload.group", is("free")))
+                    .andExpect(jsonPath("$.payload.description", is("image_test.jpeg")))
+                    .andExpect(jsonPath("$.payload.versions.size()", is(4)))
+                    .andExpect(jsonPath("$.payload.versions[0].size", is("2 Kb")))
+                    .andExpect(jsonPath("$.payload.versions[0].path", startsWith("/Entando/resources/cms/images/image_test")))
+            ;
+
+            createdId = (String) capturingMatcher.getLastMatched();
+
+            result = this.performGetResources(user, "image", null);
+
+            content = result.andReturn().getResponse().getContentAsString();
+            System.out.println(content);
+
+            result
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(4)))
+            ;
+
+            List<String> categories = Arrays.stream(new String[]{"resCat1"}).collect(Collectors.toList());
+
+            result = this.performEditResource(user, "image", createdId, "new image description", "customers", categories, false);
+
+            content = result.andReturn().getResponse().getContentAsString();
+            System.out.println(content);
+
+            result
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.id", is(createdId)))
+                    .andExpect(jsonPath("$.payload.categories.size()", is(1)))
+                    .andExpect(jsonPath("$.payload.categories[0]", is("resCat1")))
+                    .andExpect(jsonPath("$.payload.group", is("customers")))
+                    .andExpect(jsonPath("$.payload.description", is("new image description")))
+                    .andExpect(jsonPath("$.payload.versions.size()", is(4)))
+                    .andExpect(jsonPath("$.payload.versions[0].size", is("2 Kb")))
+                    .andExpect(jsonPath("$.payload.versions[0].path", startsWith("/Entando/resources/cms/images/image_test")))
+            ;
+        } finally {
+            if (createdId != null) {
+                ResultActions result = this.performDeleteResource(user, "image", createdId);
+
+                String content = result.andReturn().getResponse().getContentAsString();
+                System.out.println(content);
+
+                result
+                        .andExpect(status().isOk())
+                ;
+
+                result = this.performGetResources(user, "image", null);
+
+                content = result.andReturn().getResponse().getContentAsString();
+                System.out.println(content);
+
+                result
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.payload.size()", is(3)))
+                ;
+            }
+        }
+    }
+
+    @Test
+    public void testCreateEditWithoutFileDeleteFileResource() throws Exception {
+        UserDetails user = createAccessToken();
+        String createdId = null;
+
+        try {
+            ResultActions result = this.performCreateResource(user, "file", "free", Arrays.stream(new String[]{"resCat1, resCat2"}).collect(Collectors.toList()));
+            CapturingMatcher capturingMatcher = new CapturingMatcher();
+
+            String content = result.andReturn().getResponse().getContentAsString();
+            System.out.println(content);
+
+
+            result
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.id", capturingMatcher))
+                    .andExpect(jsonPath("$.payload.categories.size()", is(2)))
+                    .andExpect(jsonPath("$.payload.categories[0]", is("resCat1")))
+                    .andExpect(jsonPath("$.payload.categories[1]", is("resCat2")))
+                    .andExpect(jsonPath("$.payload.group", is("free")))
+                    .andExpect(jsonPath("$.payload.description", is("file_test.jpeg")))
+                    .andExpect(jsonPath("$.payload.size", is("2 Kb")))
+                    .andExpect(jsonPath("$.payload.path", startsWith("/Entando/resources/cms/documents/file_test")))
+            ;
+
+            createdId = (String) capturingMatcher.getLastMatched();
+
+            result = this.performGetResources(user, "file", null);
+
+            content = result.andReturn().getResponse().getContentAsString();
+            System.out.println(content);
+
+            result
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(4)))
+            ;
+
+            List<String> categories = Arrays.stream(new String[]{"resCat1"}).collect(Collectors.toList());
+
+            result = this.performEditResource(user, "file", createdId, "new file description", "customers", categories, false);
+
+            content = result.andReturn().getResponse().getContentAsString();
+            System.out.println(content);
+
+            result
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.id", is(createdId)))
+                    .andExpect(jsonPath("$.payload.categories.size()", is(1)))
+                    .andExpect(jsonPath("$.payload.categories[0]", is("resCat1")))
+                    .andExpect(jsonPath("$.payload.group", is("customers")))
+                    .andExpect(jsonPath("$.payload.description", is("new file description")))
+                    .andExpect(jsonPath("$.payload.size", is("2 Kb")))
+                    .andExpect(jsonPath("$.payload.path", startsWith("/Entando/resources/cms/documents/file_test")))
+            ;
+        } finally {
+            if (createdId != null) {
+                ResultActions result = this.performDeleteResource(user, "file", createdId);
+
+                String content = result.andReturn().getResponse().getContentAsString();
+                System.out.println(content);
+
+                result
+                        .andExpect(status().isOk())
+                ;
+
+                result = this.performGetResources(user, "file", null);
+
+                content = result.andReturn().getResponse().getContentAsString();
+                System.out.println(content);
+
+                result
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.payload.size()", is(3)))
+                ;
+            }
+        }
+    }
+
+    @Test
+    public void testCreateImageResourceWithInvalidMimeType() throws Exception {
+        UserDetails user = createAccessToken();
+        ResultActions result = this.performCreateResource(user, "image", "free", Arrays.stream(new String[]{"resCat1, resCat2"}).collect(Collectors.toList()), "application/pdf");
+
+        String content = result.andReturn().getResponse().getContentAsString();
+        System.out.println(content);
+
+
+        result.andExpect(status().is5xxServerError());
+
+        result = this.performGetResources(user, "image", null);
+
+        content = result.andReturn().getResponse().getContentAsString();
+        System.out.println(content);
+
+        result
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.payload.size()", is(3)))
+        ;
+    }
+
+    @Test
+    public void testCreateFileResourceWithInvalidMimeType() throws Exception {
+        UserDetails user = createAccessToken();
+        ResultActions result = this.performCreateResource(user, "file", "free", Arrays.stream(new String[]{"resCat1, resCat2"}).collect(Collectors.toList()), "application/jpeg");
+
+        String content = result.andReturn().getResponse().getContentAsString();
+        System.out.println(content);
+
+
+        result.andExpect(status().is5xxServerError());
+
+        result = this.performGetResources(user, "file", null);
+
+        content = result.andReturn().getResponse().getContentAsString();
+        System.out.println(content);
+
+        result
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(3)))
+        ;
+    }
+
     /* Auxiliary methods */
 
     private UserDetails createAccessToken() throws Exception {
@@ -423,6 +623,10 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
     }
 
     private ResultActions performCreateResource(UserDetails user, String type, String group, List<String> categories) throws Exception {
+        return performCreateResource(user, type, group, categories, "application/jpeg");
+    }
+
+    private ResultActions performCreateResource(UserDetails user, String type, String group, List<String> categories, String mimeType) throws Exception {
         String path = String.format("/plugins/cms/assets?type=%s", type);
 
         if (null == user) {
@@ -447,13 +651,13 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
 
         MockMultipartFile file;
         if (type.equals("image")) {
-            file = new MockMultipartFile("file", "image_test.jpeg", "application/jpeg", contents.getBytes());
+            file = new MockMultipartFile("file", "image_test.jpeg", mimeType, contents.getBytes());
         } else {
-            file = new MockMultipartFile("file", "file_test.jpeg", "application/pdf", contents.getBytes());
+            file = new MockMultipartFile("file", "file_test.jpeg", mimeType, contents.getBytes());
         }
 
         return mockMvc.perform(
-                MockMvcRequestBuilders.multipart(path)
+                multipart(path)
                     .file(file)
                     .param("group", group)
                     .param("categories", String.join(",", categories))
@@ -485,7 +689,7 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
             file = new MockMultipartFile("file", "file_test.jpeg", "application/pdf", contents.getBytes());
         }
 
-        MockMultipartHttpServletRequestBuilder request = MockMvcRequestBuilders.multipart(path);
+        MockMultipartHttpServletRequestBuilder request = multipart(path);
 
         if (user != null) {
             request.header("Authorization", "Bearer " + mockOAuthInterceptor(user));
