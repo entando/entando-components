@@ -22,6 +22,7 @@ import org.entando.entando.plugins.jacms.aps.system.services.content.IContentSer
 import org.entando.entando.web.entity.validator.EntityValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 
 import java.util.List;
@@ -38,6 +39,12 @@ public class ContentValidator extends EntityValidator {
     public void validate(List<ContentDto> target, Errors errors) {
         for(ContentDto entity : target) {
             super.validate(entity, errors);
+        }
+    }
+
+    public void validateBodyName(List<ContentDto> request, BindingResult bindingResult) {
+        for(ContentDto entity : request) {
+            super.validateBodyName(entity.getId(), entity, bindingResult);
         }
     }
 

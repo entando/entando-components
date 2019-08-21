@@ -37,7 +37,7 @@ public interface IContentService {
 
     public List<ContentDto> addContent(List<ContentDto> request, UserDetails user, BindingResult bindingResult);
 
-    public ContentDto updateContent(ContentDto request, UserDetails user, BindingResult bindingResult);
+    public List<ContentDto> updateContent(List<ContentDto> request, UserDetails user, BindingResult bindingResult);
 
     public void deleteContent(String code, UserDetails user);
 

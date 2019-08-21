@@ -38,6 +38,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import org.springframework.validation.BindingResult;
 
+import java.util.List;
+
 public class ContentControllerTest extends AbstractControllerTest {
 
     @Mock
@@ -102,15 +104,15 @@ public class ContentControllerTest extends AbstractControllerTest {
     public void testUpdateContent() throws Exception {
         UserDetails user = this.createUser(true);
         when(this.httpSession.getAttribute("user")).thenReturn(user);
-        when(this.contentService.updateContent(Mockito.any(ContentDto.class), Mockito.any(UserDetails.class), Mockito.any(BindingResult.class)))
-                .thenReturn(Mockito.mock(ContentDto.class));
-        String mockJson = "{\n"
+        when(this.contentService.updateContent(Mockito.anyList(), Mockito.any(UserDetails.class), Mockito.any(BindingResult.class)))
+                .thenReturn(Mockito.anyList());
+        String mockJson = "[{\n"
                 + "    \"id\": \"ART123\",\n"
                 + "    \"typeCode\": \"ART\",\n"
                 + "    \"attributes\": [\n"
                 + "         {\"code\": \"code1\", \"value\": \"value1\"},\n"
                 + "         {\"code\": \"code2\", \"value\": \"value2\"}\n"
-                + "    ]}";
+                + "    ]}]";
         ResultActions result = this.performPutContent("user", mockJson, user);
         result.andExpect(status().isOk());
     }
