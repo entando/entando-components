@@ -87,13 +87,13 @@ public class ContentControllerTest extends AbstractControllerTest {
         when(this.httpSession.getAttribute("user")).thenReturn(user);
         when(this.contentService.addContent(Mockito.any(ContentDto.class), Mockito.any(UserDetails.class), Mockito.any(BindingResult.class)))
                 .thenReturn(Mockito.mock(ContentDto.class));
-        String mockJson = "{\n"
+        String mockJson = "[{\n"
                 + "    \"id\": \"ART123\",\n"
                 + "    \"typeCode\": \"ART\",\n"
                 + "    \"attributes\": [\n"
                 + "         {\"code\": \"code1\", \"value\": \"value1\"},\n"
                 + "         {\"code\": \"code2\", \"value\": \"value2\"}\n"
-                + "    ]}";
+                + "    ]}]";
         ResultActions result = this.performPostContent(mockJson, user);
         result.andExpect(status().isOk());
     }
