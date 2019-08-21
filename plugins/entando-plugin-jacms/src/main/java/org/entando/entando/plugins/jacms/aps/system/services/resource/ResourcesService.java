@@ -3,6 +3,7 @@ package org.entando.entando.plugins.jacms.aps.system.services.resource;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
+import com.agiletec.aps.system.common.tree.TreeNode;
 import com.agiletec.aps.system.exception.ApsException;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.Category;
@@ -58,7 +59,7 @@ public class ResourcesService {
             }
 
         } catch (ApsException e) {
-            throw new RestServerError("Error listing image resources", e);
+            throw new RestServerError("plugins.jacms.resources.resourceManager.error.list", e);
         }
 
         SearcherDaoPaginatedResult<AssetDto> paginatedResult = new SearcherDaoPaginatedResult<>(assets.size(), assets);
@@ -87,9 +88,10 @@ public class ResourcesService {
             ResourceInterface resource = resourceManager.addResource(resourceFile);
             return convertResourceToDto(resourceType, resourceManager.loadResource(resource.getId()));
         } catch (ApsSystemException e) {
-            throw new RestServerError("Error saving new resource", e);
+            throw new RestServerError("plugins.jacms.resources.resourceManager.error.list", e);
         } catch (IOException e) {
-            throw new RestServerError("Error reading resource stream", e);
+            log.error("Error reading file input stream", e);
+            throw new RestServerError("plugins.jacms.resources.image.errorReadingStream", e);
         }
     }
 
@@ -97,11 +99,11 @@ public class ResourcesService {
         try {
             ResourceInterface resource = resourceManager.loadResource(resourceId);
             if (resource == null) {
-                throw new RestServerError(String.format("Resource %s not found", resourceId), null);
+                throw new RestServerError("plugins.jacms.resources.resourceManager.error.notFound", null);
             }
             resourceManager.deleteResource(resource);
         } catch (ApsSystemException e) {
-            throw new RestServerError("Error deleting image resource", e);
+            throw new RestServerError("plugins.jacms.resources.resourceManager.error.delete", e);
         }
     }
 
@@ -109,7 +111,7 @@ public class ResourcesService {
         try {
             ResourceInterface resource = resourceManager.loadResource(resourceId);
             if (resource == null) {
-                throw new RestServerError(String.format("Resource %s not found", resourceId), null);
+                throw new RestServerError("plugins.jacms.resources.resourceManager.error.notFound", null);
             }
 
             BaseResourceDataBean resourceFile = new BaseResourceDataBean();
@@ -154,9 +156,10 @@ public class ResourcesService {
             resourceManager.updateResource(resourceFile);
             return convertResourceToDto(resource.getType(), resourceManager.loadResource(resourceId));
         } catch (ApsSystemException e) {
-            throw new RestServerError("Error updating image resource", e);
+            throw new RestServerError("plugins.jacms.resources.resourceManager.error.persistence", e);
         } catch (IOException e) {
-            throw new RestServerError("Error reading image stream", e);
+            log.error("Error reading file input stream", e);
+            throw new RestServerError("plugins.jacms.resources.image.errorReadingStream", e);
         }
     }
 
@@ -165,17 +168,24 @@ public class ResourcesService {
     private void validateMimeType(String resourceType, String mimeType) {
         mimeType = Optional.ofNullable(mimeType)
                 .map(t -> t.split("/")[1])
-                .orElseThrow(() -> new RestServerError("Invalid mime type", null));
+                .orElseThrow(() -> {
+                    log.error("Invalid mime type");
+                    return new RestServerError("plugins.jacms.resources.invalidMimeType", null);
+                });
 
         List<String> allowedExtensions;
         if ("Image".equals(resourceType)){
             allowedExtensions = imageAllowedExtensions;
         } else if ("Attach".equals(resourceType)){
             allowedExtensions = fileAllowedExtensions;
-        } else throw new RestServerError(String.format("Invalid resource type %s", resourceType), null);
+        } else {
+            log.error("File type not allowed");
+            throw new RestServerError("plugins.jacms.resources.invalidResourceType", null);
+        }
 
         if (!allowedExtensions.contains(mimeType)) {
-            throw new RestServerError(String.format("Invalid mime type: %s", mimeType), null);
+            log.error("Invalid mime type");
+            throw new RestServerError("plugins.jacms.resources.invalidMimeType", null);
         }
     }
 
@@ -216,6 +226,7 @@ public class ResourcesService {
                     attr = IResourceManager.RESOURCE_MAIN_GROUP_FILTER_KEY;
                     break;
                 default:
+                    log.warn("Invalid filter attribute: " + filter.getAttribute());
                     continue;
             }
 
@@ -252,7 +263,6 @@ public class ResourcesService {
         return filter;
     }
 
-    //TODO support array of categories
     private List<String> extractCategoriesFromFilters(RestListRequest requestList) {
         List<String> categories = new ArrayList<>();
 
@@ -271,11 +281,11 @@ public class ResourcesService {
         } else if ("Attach".equals(resourceType)) {
             return convertFileResourceToDto((AttachResource) resource);
         } else {
-            throw new RestServerError(String.format("Invalid resource type: %s", resourceType), null);
+            log.error("Resource type not allowed");
+            throw new RestServerError("plugins.jacms.resources.invalidResourceType", null);
         }
     }
 
-    //TODO better encapsulate dto conversion, perhaps create separate builder?
     private ImageAssetDto convertImageResourceToDto(ImageResource resource) {
         ImageAssetDto.ImageAssetDtoBuilder builder = ImageAssetDto.builder()
                 .id(resource.getId())
@@ -284,15 +294,13 @@ public class ResourcesService {
                 .createdAt(resource.getCreationDate())
                 .updatedAt(resource.getLastModified())
                 .group(resource.getMainGroup())
+                .categories(resource.getCategories().stream()
+                        .map(Category::getCode).collect(Collectors.toList()))
                 .metadata(resource.getMetadata())
                 .version(ImageMetadataDto.builder()
                         .path(resource.getImagePath("0"))
                         .size(resource.getDefaultInstance().getFileLength())
                         .build());
-
-        for (Category category : resource.getCategories()) {
-            builder.category(category.getCode());
-        }
 
         for (ImageResourceDimension dimensions : getImageDimensions()) {
             ResourceInstance instance = resource.getInstance(dimensions.getIdDim(), null);
@@ -313,7 +321,7 @@ public class ResourcesService {
     }
 
     private FileAssetDto convertFileResourceToDto(AttachResource resource){
-        FileAssetDto.FileAssetDtoBuilder builder = FileAssetDto.builder()
+        return FileAssetDto.builder()
                 .id(resource.getId())
                 .name(resource.getMasterFileName())
                 .description(resource.getDescription())
@@ -321,13 +329,10 @@ public class ResourcesService {
                 .updatedAt(resource.getLastModified())
                 .group(resource.getMainGroup())
                 .path(resource.getAttachPath())
-                .size(resource.getDefaultInstance().getFileLength());
-
-        for (Category category : resource.getCategories()) {
-            builder.category(category.getCode());
-        }
-
-        return builder.build();
+                .size(resource.getDefaultInstance().getFileLength())
+                .categories(resource.getCategories().stream()
+                        .map(Category::getCode).collect(Collectors.toList()))
+                .build();
     }
 
     public void setResourceManager(IResourceManager resourceManager) {

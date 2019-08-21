@@ -158,10 +158,8 @@ public class ImageResource extends AbstractMultiInstanceResource {
                     }
                 }
             }
-        } catch (ImageProcessingException ex) {
-            logger.error("Error reading metadata");
-        } catch (IOException ioex) {
-            logger.error("Error reading file");
+        } catch (ImageProcessingException|IOException ex) {
+            logger.error("Error reading image metadata", ex);
         }
         return meta;
     }
