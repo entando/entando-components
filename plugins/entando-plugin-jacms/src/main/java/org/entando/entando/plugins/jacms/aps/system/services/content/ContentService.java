@@ -13,9 +13,6 @@
  */
 package org.entando.entando.plugins.jacms.aps.system.services.content;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.agiletec.aps.system.common.IManager;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
@@ -42,10 +39,6 @@ import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModel
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentRenderizationInfo;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.IContentDispenser;
 import com.agiletec.plugins.jacms.aps.system.services.searchengine.ICmsSearchEngineManager;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
@@ -69,6 +62,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ContentService extends AbstractEntityService<Content, ContentDto>
         implements IContentService,
@@ -380,29 +376,10 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
     }
 
     @Override
-    public List<ContentDto> addContent(List<ContentDto> request, UserDetails user, BindingResult bindingResult) {
-        return request.stream()
-            .map(content -> {
-                if (!this.getAuthorizationManager().isAuthOnGroup(user, content.getMainGroup())) {
-                    bindingResult.reject(ContentController.ERRCODE_UNAUTHORIZED_CONTENT, new String[]{content.getMainGroup()}, "content.group.unauthorized");
-                    throw new ResourcePermissionsException(bindingResult);
-                }
-                content.setId(null);
-                return this.addEntity(JacmsSystemConstants.CONTENT_MANAGER, content, bindingResult);
-            })
-            .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<ContentDto> updateContent(List<ContentDto> request, UserDetails user, BindingResult bindingResult) {
-
-        return request.stream()
-            .map(content -> {
-                this.checkContentExists(content.getId());
-                this.checkContentAuthorization(user, content.getId(), false, true, bindingResult);
-                return super.updateEntity(JacmsSystemConstants.CONTENT_MANAGER, content, bindingResult);
-            })
-            .collect(Collectors.toList());
+    public ContentDto updateContent(ContentDto request, UserDetails user, BindingResult bindingResult) {
+        this.checkContentExists(request.getId());
+        this.checkContentAuthorization(user, request.getId(), false, true, bindingResult);
+        return super.updateEntity(JacmsSystemConstants.CONTENT_MANAGER, request, bindingResult);
     }
 
     @Override

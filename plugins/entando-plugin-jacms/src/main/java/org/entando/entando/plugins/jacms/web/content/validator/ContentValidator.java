@@ -36,18 +36,6 @@ public class ContentValidator extends EntityValidator {
     @Autowired
     private IContentManager contentManager;
 
-    public void validate(List<ContentDto> target, Errors errors) {
-        for(ContentDto entity : target) {
-            super.validate(entity, errors);
-        }
-    }
-
-    public void validateBodyName(List<ContentDto> request, BindingResult bindingResult) {
-        for(ContentDto entity : request) {
-            super.validateBodyName(entity.getId(), entity, bindingResult);
-        }
-    }
-
     public boolean existContent(String code, String status) {
         boolean online = (IContentService.STATUS_ONLINE.equalsIgnoreCase(status));
         try {

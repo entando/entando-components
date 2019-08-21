@@ -155,11 +155,34 @@ public class ContentController {
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         }
-        this.getContentValidator().validate(bodyRequest, bindingResult);
+
+        List<ContentDto> response = bodyRequest.stream()
+            .map(content -> {
+                this.getContentValidator().validate(content, bindingResult);
+                if (bindingResult.hasErrors()) {
+                    throw new ValidationGenericException(bindingResult);
+                }
+                ContentDto result = this.getContentService().addContent(content, this.extractCurrentUser(), bindingResult);
+                if (bindingResult.hasErrors()) {
+                    throw new ValidationGenericException(bindingResult);
+                }
+                return result;
+            })
+            .collect(Collectors.toList());
+
+        return new ResponseEntity<>(new SimpleRestResponse<>(response), HttpStatus.OK);
+    }
+
+    @RestAccessControl(permission = Permission.CONTENT_EDITOR)
+    @RequestMapping(value = "/{code}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SimpleRestResponse<ContentDto>> updateContent(@PathVariable String code,
+                                                                        @Valid @RequestBody ContentDto bodyRequest, BindingResult bindingResult) {
+        logger.debug("Update content -> {}", bodyRequest);
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         }
-        List<ContentDto> response = this.getContentService().addContent(bodyRequest, this.extractCurrentUser(), bindingResult);
+        this.getContentValidator().validateBodyName(code, bodyRequest, bindingResult);
+        ContentDto response = this.getContentService().updateContent(bodyRequest, this.extractCurrentUser(), bindingResult);
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         }
@@ -174,10 +197,18 @@ public class ContentController {
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         }
-        List<ContentDto> response = this.getContentService().updateContent(bodyRequest, this.extractCurrentUser(), bindingResult);
-        if (bindingResult.hasErrors()) {
-            throw new ValidationGenericException(bindingResult);
-        }
+
+        UserDetails userDetails = this.extractCurrentUser();
+        List<ContentDto> response = bodyRequest.stream()
+            .map(content -> {
+                ContentDto result = this.getContentService().updateContent(content, userDetails, bindingResult);
+                if (bindingResult.hasErrors()) {
+                    throw new ValidationGenericException(bindingResult);
+                }
+                return result;
+            })
+            .collect(Collectors.toList());
+
         return new ResponseEntity<>(new SimpleRestResponse<>(response), HttpStatus.OK);
     }
 
@@ -194,6 +225,22 @@ public class ContentController {
         ContentDto contentDto = this.getContentService().updateContentStatus(code, contentStatusRequest.getStatus(), this.extractCurrentUser());
         metadata.put("status", contentStatusRequest.getStatus());
         return new ResponseEntity<>(new RestResponse<>(contentDto, metadata), HttpStatus.OK);
+    }
+
+    @RestAccessControl(permission = Permission.CONTENT_EDITOR)
+    @RequestMapping(value = "/{code}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SimpleRestResponse<?>> deleteContent(@PathVariable String code) {
+        logger.debug("Deleting content -> {}", code);
+        DataBinder binder = new DataBinder(code);
+        BindingResult bindingResult = binder.getBindingResult();
+        //field validations
+        if (bindingResult.hasErrors()) {
+            throw new ValidationGenericException(bindingResult);
+        }
+        this.getContentService().deleteContent(code, this.extractCurrentUser());
+        Map<String, String> payload = new HashMap<>();
+        payload.put("code", code);
+        return new ResponseEntity<>(new SimpleRestResponse<>(payload), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.CONTENT_EDITOR)
