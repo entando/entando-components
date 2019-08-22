@@ -110,5 +110,7 @@ public interface ResourceDataBean {
      */
     public Map getMetadata();
 
+    public void setMetadata(Map<String,String> metadata);
+
 
 }

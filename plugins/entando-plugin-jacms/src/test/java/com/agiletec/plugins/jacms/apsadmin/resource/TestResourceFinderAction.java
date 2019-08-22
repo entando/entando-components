@@ -46,7 +46,7 @@ public class TestResourceFinderAction extends ApsAdminBaseTestCase {
         String resourceTypeCode = action.getResourceTypeCode();
         assertNotNull(resourceTypeCode);
         assertEquals("Attach", resourceTypeCode);
-        assertEquals(2, action.getResources().size());
+        assertEquals(3, action.getResources().size());
         Category root = ((ResourceFinderAction) action).getCategoryRoot();
         assertNotNull(root);
         assertEquals("Home", root.getTitle());
@@ -89,7 +89,7 @@ public class TestResourceFinderAction extends ApsAdminBaseTestCase {
         String result = this.executeSearchResource("admin", "Attach", "", null, null, null);
         assertEquals(Action.SUCCESS, result);
         ResourceFinderAction action = (ResourceFinderAction) this.getAction();
-        assertEquals(2, action.getResources().size());
+        assertEquals(3, action.getResources().size());
         assertEquals("", action.getText());
     }
 

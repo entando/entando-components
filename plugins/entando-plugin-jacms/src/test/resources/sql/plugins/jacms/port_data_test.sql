@@ -230,6 +230,9 @@ INSERT INTO resources (resid, restype, descr, maingroup, resourcexml, masterfile
 INSERT INTO resources (resid, restype, descr, maingroup, resourcexml, masterfilename, creationdate, lastmodified) VALUES ('7', 'Attach', 'configurazione', 'free', '<?xml version="1.0" encoding="UTF-8"?>
 <resource typecode="Attach" id="7"><descr>configurazione</descr><groups mainGroup="free" /><categories /><masterfile>configurazione.txt</masterfile><instance><size>0</size><filename>configurazione.txt</filename><mimetype>application/msword</mimetype><weight>55 Kb</weight></instance></resource>
 ', 'configurazione.txt', '2010-08-25 10:12:00', '2012-07-25 00:10:00');
+INSERT INTO resources (resid, restype, descr, maingroup, resourcexml, masterfilename, creationdate, lastmodified) VALUES ('8', 'Attach', 'Text resource', 'customers', '<?xml version="1.0" encoding="UTF-8"?>
+<resource typecode="Attach" id="8"><descr>Text resource</descr><groups mainGroup="customers" /><categories><category id="resCat2" /></categories><masterfile>text_resource.txt</masterfile><instance><size>1</size><filename>text_resource.txt</filename><mimetype>application/txt</mimetype><weight>55 Kb</weight></instance></resource>
+', 'text_resource.txt', '2008-09-25 00:00:00', '2013-09-10 00:00:00');
 INSERT INTO resources (resid, restype, descr, maingroup, resourcexml, masterfilename, creationdate, lastmodified) VALUES ('82', 'Image', 'Entando', 'customers', '<?xml version="1.0" encoding="UTF-8"?>
 <resource typecode="Image" id="82"><descr>Entando</descr><groups mainGroup="customers" /><categories /><masterfile>entando.jpg</masterfile><instance><size>3</size><filename>entando_d3.jpg</filename><mimetype>image/jpeg</mimetype><weight>2 Kb</weight></instance><instance><size>2</size><filename>entando_d2.jpg</filename><mimetype>image/jpeg</mimetype><weight>2 Kb</weight></instance><instance><size>1</size><filename>entando_d1.jpg</filename><mimetype>image/jpeg</mimetype><weight>1 Kb</weight></instance><instance><size>0</size><filename>entando_d0.jpg</filename><mimetype>image/jpeg</mimetype><weight>9 Kb</weight></instance></resource>
 ', 'entando.jpg', '2011-04-25 00:10:00', '2014-11-25 19:20:00');
@@ -246,6 +249,10 @@ INSERT INTO resources (resid, restype, descr, maingroup, resourcexml, masterfile
 INSERT INTO resourcerelations (resid, refcategory) VALUES ('44', 'resource_root');
 INSERT INTO resourcerelations (resid, refcategory) VALUES ('44', 'Image');
 INSERT INTO resourcerelations (resid, refcategory) VALUES ('44', 'resCat1');
+
+INSERT INTO resourcerelations (resid, refcategory) VALUES ('8', 'resource_root');
+INSERT INTO resourcerelations (resid, refcategory) VALUES ('8', 'Attach');
+INSERT INTO resourcerelations (resid, refcategory) VALUES ('8', 'resCat2');
 
 
 

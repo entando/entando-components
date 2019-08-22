@@ -39,6 +39,8 @@ public class BaseResourceDataBean implements ResourceDataBean {
     private String mimeType;
     private String fileName;
     private Map<String, String> metadata = new HashMap<String, String>();
+    private InputStream inputStream;
+    private int fileSize;
     
     public BaseResourceDataBean() {
     }
@@ -115,10 +117,19 @@ public class BaseResourceDataBean implements ResourceDataBean {
 
     @Override
     public int getFileSize() {
-        if (null == file) {
-            return 0;
+        if (fileSize > 0) {
+            return fileSize;
         }
-        return (int) this.getFile().length() / 1000;
+
+        if (file != null) {
+            fileSize = (int) this.getFile().length() / 1000;
+        }
+
+        return fileSize;
+    }
+
+    public void setFileSize(int fileSize) {
+        this.fileSize = fileSize;
     }
 
     @Override
@@ -139,11 +150,21 @@ public class BaseResourceDataBean implements ResourceDataBean {
 
     @Override
     public InputStream getInputStream() throws Throwable {
-        if (null == file) {
-            return null;
+        if (null != inputStream) {
+            return inputStream;
         }
-        return new FileInputStream(this.file);
+
+        if (null != file) {
+            return new FileInputStream(this.file);
+        }
+
+        return null;
     }
+
+    public void setInputStream(InputStream inputStream) {
+        this.inputStream = inputStream;
+    }
+
     public Map<String, String> getMetadata() {
         return metadata;
     }

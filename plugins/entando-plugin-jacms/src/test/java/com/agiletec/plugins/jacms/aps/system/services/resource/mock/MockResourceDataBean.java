@@ -131,7 +131,8 @@ public class MockResourceDataBean implements ResourceDataBean {
     public Map<String, String> getMetadata() {
         return metadata;
     }
-    
+
+    @Override
     public void setMetadata(Map<String,String> metadata) {
         this.metadata = metadata;
     }
