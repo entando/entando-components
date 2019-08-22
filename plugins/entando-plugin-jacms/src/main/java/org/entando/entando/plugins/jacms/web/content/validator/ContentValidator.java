@@ -15,11 +15,17 @@ package org.entando.entando.plugins.jacms.web.content.validator;
 
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
 import org.entando.entando.aps.system.exception.RestServerError;
+import org.entando.entando.aps.system.services.entity.model.EntityDto;
 import org.entando.entando.plugins.jacms.aps.system.services.content.IContentService;
 import org.entando.entando.web.entity.validator.EntityValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
+
+import java.util.List;
 
 /**
  * @author E.Santoboni
