@@ -457,6 +457,19 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
     }
 
     @Test
+    public void testEditResourceNotFound() throws Exception {
+        UserDetails user = createAccessToken();
+
+        performEditResource(user, "file", "999999", "new file description", null, false)
+            .andDo(print())
+            .andExpect(status().isNotFound());
+
+        performEditResource(user, "image", "999999", "new file description", null, false)
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     public void testDeleteResourceNotFound() throws Exception {
         UserDetails user = createAccessToken();
 

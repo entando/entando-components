@@ -115,7 +115,7 @@ public class ResourcesService {
         try {
             ResourceInterface resource = resourceManager.loadResource(resourceId);
             if (resource == null) {
-                throw new RestServerError("plugins.jacms.resources.resourceManager.error.notFound", null);
+                throw new ResourceNotFoundException(ERRCODE_NOT_FOUND, "asset", resourceId);
             }
 
             BaseResourceDataBean resourceFile = new BaseResourceDataBean();
