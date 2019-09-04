@@ -19,13 +19,11 @@ import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.baseconfig.SystemParamsUtils;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
-import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentModelReference;
 import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
 import com.agiletec.plugins.jacms.aps.system.services.searchengine.ICmsSearchEngineManager;
 import com.agiletec.plugins.jacms.aps.system.services.searchengine.LastReloadInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.RestServerError;
-import org.entando.entando.plugins.jacms.web.contentmodel.validator.ContentModelValidator;
 import org.entando.entando.plugins.jacms.web.contentsettings.model.ContentSettingsDto;
 import org.entando.entando.plugins.jacms.web.contentsettings.model.LastReloadInfoDto;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
@@ -35,9 +33,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.validation.BindingResult;
 
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -90,12 +88,10 @@ public class ContentSettingsService {
     public Map<String, List<String>> addMetadata(String key, String mapping) {
         Map<String, List<String>> metadata = listMetadata();
 
-        if (!StringUtils.isBlank(key) && !metadata.containsKey(key.trim())) {
-            if (!StringUtils.isBlank(mapping)) {
-                List<String> newMetadata = new ArrayList<>(Arrays.asList(mapping.trim().split(",")));
-                metadata.put(key.trim(), newMetadata);
-            }
-        }
+        validateMetadata(metadata, key, mapping);
+
+        List<String> newMetadata = new ArrayList<>(Arrays.asList(mapping.trim().split(",")));
+        metadata.put(key.trim(), newMetadata);
 
         saveMetadata(metadata);
 
@@ -211,7 +207,29 @@ public class ContentSettingsService {
         return getEditor();
     }
 
-    private BindingResult validateCropRatio(List<String> cropRatios, String ratio) {
+    private void validateMetadata(Map<String,List<String>> metadata, String key, String mapping) {
+        BeanPropertyBindingResult errors = new BeanPropertyBindingResult(key, "contentSettings.metadata");
+
+        Pattern regex = Pattern.compile("[a-z0-9_]+");
+        if (StringUtils.isBlank(key) || StringUtils.isBlank(mapping) || !regex.matcher(key).matches()) {
+            errors.reject("3", null, "contentsettings.metadata.invalid");
+            throw new ValidationGenericException(errors);
+        }
+
+        for(String value : mapping.split(",")) {
+            if (!regex.matcher(value).matches()) {
+                errors.reject("3", null, "contentsettings.metadata.invalid");
+                throw new ValidationGenericException(errors);
+            }
+        }
+
+        if (metadata.containsKey(key)) {
+            errors.reject("4", null, "contentsettings.metadata.duplicate");
+            throw new ValidationConflictException(errors);
+        }
+    }
+
+    private void validateCropRatio(List<String> cropRatios, String ratio) {
         BeanPropertyBindingResult errors = new BeanPropertyBindingResult(ratio, "contentSettings.ratio");
 
         if (cropRatios.contains(ratio)) {
@@ -235,8 +253,6 @@ public class ContentSettingsService {
             errors.reject("2", null, "contentsettings.ratio.invalid");
             throw new ValidationGenericException(errors);
         }
-
-        return errors;
     }
 
     private Map<String, String> getSystemParams() {

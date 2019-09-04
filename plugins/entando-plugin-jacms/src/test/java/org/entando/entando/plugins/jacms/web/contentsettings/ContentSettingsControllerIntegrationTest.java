@@ -81,7 +81,7 @@ public class ContentSettingsControllerIntegrationTest extends AbstractController
                 .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.SUPERUSER)
                 .build();
 
-        performCreateMetadata(user, "newKey", "newMappingValue1,newMappingValue2")
+        performCreateMetadata(user, "newkey", "newmappingvalue1,newmappingvalue2")
             .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.payload.size()", is(5)))
@@ -89,16 +89,71 @@ public class ContentSettingsControllerIntegrationTest extends AbstractController
             .andExpect(jsonPath("$.payload.alt", Matchers.anything()))
             .andExpect(jsonPath("$.payload.title", Matchers.anything()))
             .andExpect(jsonPath("$.payload.description", Matchers.anything()))
-            .andExpect(jsonPath("$.payload.newKey.size()", is(2)))
-            .andExpect(jsonPath("$.payload.newKey[0]", Matchers.equalTo("newMappingValue1")))
-            .andExpect(jsonPath("$.payload.newKey[1]", Matchers.equalTo("newMappingValue2")));
+            .andExpect(jsonPath("$.payload.newkey.size()", is(2)))
+            .andExpect(jsonPath("$.payload.newkey[0]", Matchers.equalTo("newmappingvalue1")))
+            .andExpect(jsonPath("$.payload.newkey[1]", Matchers.equalTo("newmappingvalue2")));
 
 
-        performRemoveMetadata(user, "newKey")
+        performRemoveMetadata(user, "newkey")
             .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.payload.size()", is(4)));
 
+    }
+
+    @Test
+    public void testCreateDuplicateMetadata() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.SUPERUSER)
+                .build();
+
+        performCreateMetadata(user, "newkey", "newmappingvalue1,newmappingvalue2")
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(5)))
+                .andExpect(jsonPath("$.payload.newkey.size()", is(2)))
+                .andExpect(jsonPath("$.payload.newkey[0]", Matchers.equalTo("newmappingvalue1")))
+                .andExpect(jsonPath("$.payload.newkey[1]", Matchers.equalTo("newmappingvalue2")));
+
+        performCreateMetadata(user, "newkey", "newmappingvalue3")
+                .andDo(print())
+                .andExpect(status().isConflict());
+
+        performRemoveMetadata(user, "newkey")
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(4)));
+    }
+
+    @Test
+    public void testCreateInvalidMetadata() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.SUPERUSER)
+                .build();
+
+        performCreateMetadata(user, "newkey1", "NEWMAPPINGVALUE?")
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        performCreateMetadata(user, "newkey2", "{newmappingvalue}")
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        performCreateMetadata(user, "newkey3", "newmapping-value")
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        performCreateMetadata(user, "new-key", "newmappingvalue")
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        performCreateMetadata(user, "{newkey}", "newmappingvalue")
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        performCreateMetadata(user, "NEWKEY!", "newmappingvalue")
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 
     @Test
