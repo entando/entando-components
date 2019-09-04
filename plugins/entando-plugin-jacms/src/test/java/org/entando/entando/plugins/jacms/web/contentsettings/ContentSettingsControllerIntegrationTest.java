@@ -31,8 +31,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.List;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -42,11 +45,9 @@ public class ContentSettingsControllerIntegrationTest extends AbstractController
 
     @Test
     public void testGetContentSettingsUnauthorized() throws Exception {
-        ResultActions result = this.performGetContentSettings(null);
-
-        String result1 = result.andReturn().getResponse().getContentAsString();
-        System.out.println(result1);
-        result.andExpect(status().isUnauthorized());
+        performGetContentSettings(null)
+            .andDo(print())
+            .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -55,12 +56,8 @@ public class ContentSettingsControllerIntegrationTest extends AbstractController
                 .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.SUPERUSER)
                 .build();
 
-        ResultActions result = this.performGetContentSettings(user);
-
-        String content = result.andReturn().getResponse().getContentAsString();
-        System.out.println(content);
-
-        result
+        performGetContentSettings(user)
+            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.payload.metadata.size()", is(4)))
             .andExpect(jsonPath("$.payload.metadata.legend", Matchers.anything()))
@@ -84,12 +81,8 @@ public class ContentSettingsControllerIntegrationTest extends AbstractController
                 .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.SUPERUSER)
                 .build();
 
-        ResultActions result = this.performCreateMetadata(user, "newKey", "newMappingValue1,newMappingValue2");
-
-        String content = result.andReturn().getResponse().getContentAsString();
-        System.out.println(content);
-
-        result
+        performCreateMetadata(user, "newKey", "newMappingValue1,newMappingValue2")
+            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.payload.size()", is(5)))
             .andExpect(jsonPath("$.payload.legend", Matchers.anything()))
@@ -101,12 +94,8 @@ public class ContentSettingsControllerIntegrationTest extends AbstractController
             .andExpect(jsonPath("$.payload.newKey[1]", Matchers.equalTo("newMappingValue2")));
 
 
-        result = this.performRemoveMetadata(user, "newKey");
-
-        content = result.andReturn().getResponse().getContentAsString();
-        System.out.println(content);
-
-        result
+        performRemoveMetadata(user, "newKey")
+            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.payload.size()", is(4)));
 
@@ -118,37 +107,66 @@ public class ContentSettingsControllerIntegrationTest extends AbstractController
                 .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.SUPERUSER)
                 .build();
 
-        ResultActions result = this.performCreateCropRatio(user, "4:3");
+        performCreateCropRatio(user, "4:3")
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.payload.size()", is(1)))
+            .andExpect(jsonPath("$.payload[0]", Matchers.equalTo("4:3")));
 
-        String content = result.andReturn().getResponse().getContentAsString();
-        System.out.println(content);
+        performCreateCropRatio(user, "16:9")
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.payload.size()", is(2)))
+            .andExpect(jsonPath("$.payload[0]", Matchers.equalTo("4:3")))
+            .andExpect(jsonPath("$.payload[1]", Matchers.equalTo("16:9")));
 
-        result
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.payload.size()", is(1)))
-                .andExpect(jsonPath("$.payload[0]", Matchers.equalTo("4:3")));
+        performRemoveCropRatio(user, "4:3")
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.payload.size()", is(1)));
 
-        result = this.performCreateCropRatio(user, "16:9");
-        content = result.andReturn().getResponse().getContentAsString();
-        System.out.println(content);
+        performRemoveCropRatio(user, "16:9")
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.payload.size()", is(0)));
 
-        result
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.payload.size()", is(2)))
-                .andExpect(jsonPath("$.payload[0]", Matchers.equalTo("4:3")))
-                .andExpect(jsonPath("$.payload[1]", Matchers.equalTo("16:9")));
+    }
 
+    @Test
+    public void testCreateDuplicateCropRatios() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.SUPERUSER)
+                .build();
 
-        result = this.performRemoveCropRatio(user, "4:3");
-        result = this.performRemoveCropRatio(user, "16:9");
+        performCreateCropRatio(user, "4:3")
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.payload.size()", is(1)))
+            .andExpect(jsonPath("$.payload[0]", Matchers.equalTo("4:3")));
 
-        content = result.andReturn().getResponse().getContentAsString();
-        System.out.println(content);
+        performCreateCropRatio(user, "4:3")
+            .andDo(print())
+            .andExpect(status().isConflict());
 
-        result
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.payload.size()", is(0)));
+        performRemoveCropRatio(user, "4:3")
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.payload.size()", is(0)));
+    }
 
+    @Test
+    public void testCreateCropRatiosInvalidFormat() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.SUPERUSER)
+                .build();
+
+        performCreateCropRatio(user, "alfa,3")
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        performCreateCropRatio(user, "alfa:3")
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -157,25 +175,17 @@ public class ContentSettingsControllerIntegrationTest extends AbstractController
                 .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.SUPERUSER)
                 .build();
 
-        ResultActions result = this.performSetEditor(user, "none");
+        performSetEditor(user, "none")
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.payload.key", Matchers.equalTo("none")))
+            .andExpect(jsonPath("$.payload.label", Matchers.equalTo("None")));
 
-        String content = result.andReturn().getResponse().getContentAsString();
-        System.out.println(content);
-
-        result
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.payload.key", Matchers.equalTo("none")))
-                .andExpect(jsonPath("$.payload.label", Matchers.equalTo("None")));
-
-        result = this.performSetEditor(user, "fckeditor");
-        content = result.andReturn().getResponse().getContentAsString();
-        System.out.println(content);
-
-        result
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.payload.key", Matchers.equalTo("fckeditor")))
-                .andExpect(jsonPath("$.payload.label", Matchers.equalTo("CKEditor")));
-
+        performSetEditor(user, "fckeditor")
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.payload.key", Matchers.equalTo("fckeditor")))
+            .andExpect(jsonPath("$.payload.label", Matchers.equalTo("CKEditor")));
     }
 
     @Test
@@ -184,21 +194,14 @@ public class ContentSettingsControllerIntegrationTest extends AbstractController
                 .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.SUPERUSER)
                 .build();
 
-        ResultActions result = this.performReloadIndexes(user);
+        performReloadIndexes(user)
+            .andDo(print())
+            .andExpect(status().isOk());
 
-        String content = result.andReturn().getResponse().getContentAsString();
-        System.out.println(content);
-
-        result
-                .andExpect(status().isOk());
-
-        result = this.performGetContentSettings(user);
-        content = result.andReturn().getResponse().getContentAsString();
-        System.out.println(content);
-
-        result
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.payload.indexesStatus", Matchers.equalTo(1)));
+        performGetContentSettings(user)
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.payload.indexesStatus", Matchers.equalTo(1)));
     }
 
     @Test
@@ -207,21 +210,14 @@ public class ContentSettingsControllerIntegrationTest extends AbstractController
                 .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.SUPERUSER)
                 .build();
 
-        ResultActions result = this.performReloadReferences(user);
+        performReloadReferences(user)
+            .andDo(print())
+            .andExpect(status().isOk());
 
-        String content = result.andReturn().getResponse().getContentAsString();
-        System.out.println(content);
-
-        result
-                .andExpect(status().isOk());
-
-        result = this.performGetContentSettings(user);
-        content = result.andReturn().getResponse().getContentAsString();
-        System.out.println(content);
-
-        result
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.payload.referencesStatus", Matchers.equalTo(1)));
+        performGetContentSettings(user)
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.payload.referencesStatus", Matchers.equalTo(1)));
     }
 
     private String createAccessToken() throws Exception {

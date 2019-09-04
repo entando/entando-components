@@ -19,22 +19,25 @@ import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.baseconfig.SystemParamsUtils;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentModelReference;
 import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
 import com.agiletec.plugins.jacms.aps.system.services.searchengine.ICmsSearchEngineManager;
 import com.agiletec.plugins.jacms.aps.system.services.searchengine.LastReloadInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.RestServerError;
+import org.entando.entando.plugins.jacms.web.contentmodel.validator.ContentModelValidator;
 import org.entando.entando.plugins.jacms.web.contentsettings.model.ContentSettingsDto;
 import org.entando.entando.plugins.jacms.web.contentsettings.model.LastReloadInfoDto;
+import org.entando.entando.web.common.exceptions.ValidationConflictException;
+import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindingResult;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -140,6 +143,10 @@ public class ContentSettingsService {
 
     public List<String> listCropRatios() {
         String params = getSystemParams().get(JacmsSystemConstants.CONFIG_PARAM_ASPECT_RATIO);
+        if(params == null) {
+            return new ArrayList<>();
+        }
+
         return Arrays.stream(params.split(";"))
                 .filter(item -> item != null && !item.trim().isEmpty())
                 .collect(Collectors.toList());
@@ -147,8 +154,9 @@ public class ContentSettingsService {
 
     public List<String> addCropRatio(String ratio) {
         List<String> cropRatios = listCropRatios();
-        cropRatios.add(ratio);
+        validateCropRatio(cropRatios, ratio);
 
+        cropRatios.add(ratio);
         saveCropRatios(cropRatios);
 
         return listCropRatios();
@@ -201,6 +209,34 @@ public class ContentSettingsService {
         saveSystemParams(systemParams);
 
         return getEditor();
+    }
+
+    private BindingResult validateCropRatio(List<String> cropRatios, String ratio) {
+        BeanPropertyBindingResult errors = new BeanPropertyBindingResult(ratio, "contentSettings.ratio");
+
+        if (cropRatios.contains(ratio)) {
+            errors.reject("1", null, "contentsettings.ratio.duplicate");
+            throw new ValidationConflictException(errors);
+        }
+
+        String[] split = Optional.ofNullable(ratio)
+                .orElseThrow(() -> new RestServerError("Invalid crop ratio format", null))
+                .split(":");
+
+        if (split.length != 2) {
+            errors.reject("2", null, "contentsettings.ratio.invalid");
+            throw new ValidationGenericException(errors);
+        }
+
+        try {
+            Integer.valueOf(split[0]);
+            Integer.valueOf(split[1]);
+        } catch (NumberFormatException e) {
+            errors.reject("2", null, "contentsettings.ratio.invalid");
+            throw new ValidationGenericException(errors);
+        }
+
+        return errors;
     }
 
     private Map<String, String> getSystemParams() {
