@@ -15,13 +15,11 @@ package org.entando.entando.plugins.jacms.web.contentsettings;
 
 import com.agiletec.aps.system.services.role.Permission;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.entando.entando.plugins.jacms.aps.system.services.contentsettings.ContentSettingsService;
-import org.entando.entando.plugins.jacms.web.contentsettings.model.ContentSettingsCropRatioRequest;
-import org.entando.entando.plugins.jacms.web.contentsettings.model.ContentSettingsDto;
-import org.entando.entando.plugins.jacms.web.contentsettings.model.ContentSettingsEditorRequest;
-import org.entando.entando.plugins.jacms.web.contentsettings.model.ContentSettingsMetadataRequest;
+import org.entando.entando.plugins.jacms.web.contentsettings.model.*;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.slf4j.Logger;
@@ -67,7 +65,7 @@ public class ContentSettingsController {
     @PostMapping("/plugins/cms/contentSettings/metadata")
     @RestAccessControl(permission = Permission.SUPERUSER)
     public ResponseEntity<SimpleRestResponse<Map<String, List<String>>>> createMetadata(
-            @Valid @RequestBody ContentSettingsMetadataRequest request) {
+            @Valid @RequestBody CreateContentSettingsMetadataRequest request) {
         logger.debug("REST request - add new content settings metadata");
 
         return ResponseEntity.ok(new SimpleRestResponse<>(
@@ -82,7 +80,7 @@ public class ContentSettingsController {
     @DeleteMapping("/plugins/cms/contentSettings/metadata")
     @RestAccessControl(permission = Permission.SUPERUSER)
     public ResponseEntity<SimpleRestResponse<Map<String, List<String>>>> deleteMetadata(
-            @Valid @RequestBody ContentSettingsMetadataRequest request) {
+            @Valid @RequestBody DeleteContentSettingsMetadataRequest request) {
         logger.debug("REST request - delete content settings metadata");
 
         return ResponseEntity.ok(new SimpleRestResponse<>(
@@ -127,7 +125,7 @@ public class ContentSettingsController {
     @PutMapping("/plugins/cms/contentSettings/editor")
     @RestAccessControl(permission = Permission.SUPERUSER)
     public ResponseEntity<SimpleRestResponse<ContentSettingsDto.Editor>> setEditor(
-            @Valid @RequestBody ContentSettingsEditorRequest request) {
+            @ApiParam("Available editor codes: none, fckeditor") @Valid @RequestBody ContentSettingsEditorRequest request) {
         logger.debug("REST request - set content settings editor");
 
         return ResponseEntity.ok(new SimpleRestResponse<>(

@@ -1,15 +1,13 @@
 package org.entando.entando.plugins.jacms.web.contentsettings.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
 import javax.validation.constraints.NotNull;
 
-public class ContentSettingsMetadataRequest {
+public class CreateContentSettingsMetadataRequest {
 
     @NotNull
     private String key;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @NotNull
     private String mapping;
 
 

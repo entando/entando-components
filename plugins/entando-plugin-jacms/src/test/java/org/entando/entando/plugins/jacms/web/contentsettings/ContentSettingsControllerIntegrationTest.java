@@ -16,22 +16,17 @@ package org.entando.entando.plugins.jacms.web.contentsettings;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
-import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
-import com.agiletec.plugins.jacms.aps.system.services.searchengine.ICmsSearchEngineManager;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.entando.entando.plugins.jacms.web.contentsettings.model.ContentSettingsCropRatioRequest;
 import org.entando.entando.plugins.jacms.web.contentsettings.model.ContentSettingsEditorRequest;
-import org.entando.entando.plugins.jacms.web.contentsettings.model.ContentSettingsMetadataRequest;
+import org.entando.entando.plugins.jacms.web.contentsettings.model.CreateContentSettingsMetadataRequest;
+import org.entando.entando.plugins.jacms.web.contentsettings.model.DeleteContentSettingsMetadataRequest;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.hamcrest.Matchers;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
-
-import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -298,7 +293,7 @@ public class ContentSettingsControllerIntegrationTest extends AbstractController
         }
         String accessToken = mockOAuthInterceptor(user);
 
-        ContentSettingsMetadataRequest request = new ContentSettingsMetadataRequest();
+        CreateContentSettingsMetadataRequest request = new CreateContentSettingsMetadataRequest();
         request.setKey(key);
         request.setMapping(mapping);
 
@@ -317,7 +312,7 @@ public class ContentSettingsControllerIntegrationTest extends AbstractController
         }
         String accessToken = mockOAuthInterceptor(user);
 
-        ContentSettingsMetadataRequest request = new ContentSettingsMetadataRequest();
+        DeleteContentSettingsMetadataRequest request = new DeleteContentSettingsMetadataRequest();
         request.setKey(key);
 
         return mockMvc.perform(
