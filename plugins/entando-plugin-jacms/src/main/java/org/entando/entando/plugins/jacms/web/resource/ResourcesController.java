@@ -76,10 +76,14 @@ public class ResourcesController {
     @PostMapping("/plugins/cms/assets")
     @RestAccessControl(permission = Permission.CONTENT_EDITOR)
     public ResponseEntity<SimpleRestResponse<AssetDto>> createAsset(@RequestParam("type") String type, @RequestPart("file") MultipartFile file,
-                @RequestParam String group, @RequestParam String categories) {
+                @RequestParam String group, @RequestParam(required = false) String categories) {
         logger.debug("REST request - create new resource");
-        List<String> categoriesList = Arrays.stream(categories.split(","))
-                .map(String::trim).collect(Collectors.toList());
+
+        List<String> categoriesList = Arrays.stream(
+                    Optional.ofNullable(categories).orElse("").split(","))
+                .map(String::trim)
+                .filter(c -> c.length() > 0)
+                .collect(Collectors.toList());
 
         AssetDto result = service.createAsset(getResourceType(type), file, group, categoriesList);
         return ResponseEntity.ok(new SimpleRestResponse<>(result));
@@ -92,16 +96,17 @@ public class ResourcesController {
     @PostMapping("/plugins/cms/assets/{resourceId}")
     @RestAccessControl(permission = Permission.CONTENT_EDITOR)
     public ResponseEntity<SimpleRestResponse<AssetDto>> editAsset(@PathVariable("resourceId") String resourceId,
-            @RequestPart(value = "file", required = false) MultipartFile file, @RequestParam(required = false) String group,
-            @RequestParam(required = false) String categories, @RequestParam(required = false) String description) {
+            @RequestPart(value = "file", required = false) MultipartFile file, @RequestParam(required = false) String categories,
+            @RequestParam(required = false) String description) {
         logger.debug("REST request - edit image resource with id {}", resourceId);
 
-        List<String> categoriesList = Optional.ofNullable(categories)
-                .map(c -> Arrays.stream(c.split(","))
-                        .map(String::trim).collect(Collectors.toList()))
-                .orElse(Collections.emptyList());
+        List<String> categoriesList = Arrays.stream(
+                    Optional.ofNullable(categories).orElse("").split(","))
+                .map(String::trim)
+                .filter(c -> c.length() > 0)
+                .collect(Collectors.toList());
 
-        AssetDto result = service.editAsset(resourceId, file, description, group, categoriesList);
+        AssetDto result = service.editAsset(resourceId, file, description, categoriesList);
         return ResponseEntity.ok(new SimpleRestResponse<>(result));
     }
 
@@ -111,10 +116,10 @@ public class ResourcesController {
             @ApiResponse(code = 401, message = "Unauthorized")})
     @DeleteMapping("/plugins/cms/assets/{resourceId}")
     @RestAccessControl(permission = Permission.CONTENT_EDITOR)
-    public ResponseEntity deleteAsset(@PathVariable("resourceId") String resourceId) {
+    public ResponseEntity<SimpleRestResponse<Void>> deleteAsset(@PathVariable("resourceId") String resourceId) {
         logger.debug("REST request - delete resource with id {}", resourceId);
         service.deleteAsset(resourceId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new SimpleRestResponse<>(null));
     }
 
     public String getResourceType(String type) {
