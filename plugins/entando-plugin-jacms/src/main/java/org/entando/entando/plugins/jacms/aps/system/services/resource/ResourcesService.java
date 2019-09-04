@@ -13,6 +13,7 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.*;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.util.IImageDimensionReader;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanComparator;
+import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.plugins.jacms.web.resource.model.AssetDto;
 import org.entando.entando.plugins.jacms.web.resource.model.FileAssetDto;
@@ -35,6 +36,8 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class ResourcesService {
+    public static final String ERRCODE_NOT_FOUND = "1";
+
     @Autowired
     private IResourceManager resourceManager;
 
@@ -100,7 +103,7 @@ public class ResourcesService {
         try {
             ResourceInterface resource = resourceManager.loadResource(resourceId);
             if (resource == null) {
-                throw new RestServerError("plugins.jacms.resources.resourceManager.error.notFound", null);
+                throw new ResourceNotFoundException(ERRCODE_NOT_FOUND, "asset", resourceId);
             }
             resourceManager.deleteResource(resource);
         } catch (ApsSystemException e) {

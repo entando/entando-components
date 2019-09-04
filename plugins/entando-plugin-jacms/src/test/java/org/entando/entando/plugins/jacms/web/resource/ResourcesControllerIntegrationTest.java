@@ -456,6 +456,19 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
             .andExpect(jsonPath("$.payload.size()", is(3)));
     }
 
+    @Test
+    public void testDeleteResourceNotFound() throws Exception {
+        UserDetails user = createAccessToken();
+
+        performDeleteResource(user, "file", "99999")
+                .andDo(print())
+                .andExpect(status().isNotFound());
+
+        performDeleteResource(user, "image", "99999")
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
     /* Auxiliary methods */
 
     private UserDetails createAccessToken() throws Exception {
