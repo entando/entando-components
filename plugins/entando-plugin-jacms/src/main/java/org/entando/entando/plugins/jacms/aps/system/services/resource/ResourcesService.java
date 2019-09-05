@@ -13,17 +13,20 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.*;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.util.IImageDimensionReader;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanComparator;
+import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.plugins.jacms.web.resource.model.AssetDto;
 import org.entando.entando.plugins.jacms.web.resource.model.FileAssetDto;
 import org.entando.entando.plugins.jacms.web.resource.model.ImageAssetDto;
 import org.entando.entando.plugins.jacms.web.resource.model.ImageMetadataDto;
+import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.Filter;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -33,6 +36,8 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class ResourcesService {
+    public static final String ERRCODE_NOT_FOUND = "1";
+
     @Autowired
     private IResourceManager resourceManager;
 
@@ -82,8 +87,7 @@ public class ResourcesService {
             resourceFile.setDescr(file.getOriginalFilename());
             resourceFile.setMainGroup(group);
             resourceFile.setResourceType(resourceType);
-            resourceFile.setCategories(categories.stream()
-                .map(code -> categoryManager.getCategory(code)).collect(Collectors.toList()));
+            resourceFile.setCategories(convertCategories(categories));
 
             ResourceInterface resource = resourceManager.addResource(resourceFile);
             return convertResourceToDto(resourceType, resourceManager.loadResource(resource.getId()));
@@ -99,7 +103,7 @@ public class ResourcesService {
         try {
             ResourceInterface resource = resourceManager.loadResource(resourceId);
             if (resource == null) {
-                throw new RestServerError("plugins.jacms.resources.resourceManager.error.notFound", null);
+                throw new ResourceNotFoundException(ERRCODE_NOT_FOUND, "asset", resourceId);
             }
             resourceManager.deleteResource(resource);
         } catch (ApsSystemException e) {
@@ -107,11 +111,11 @@ public class ResourcesService {
         }
     }
 
-    public AssetDto editAsset(String resourceId, MultipartFile file, String description, String group, List<String> categories) {
+    public AssetDto editAsset(String resourceId, MultipartFile file, String description, List<String> categories) {
         try {
             ResourceInterface resource = resourceManager.loadResource(resourceId);
             if (resource == null) {
-                throw new RestServerError("plugins.jacms.resources.resourceManager.error.notFound", null);
+                throw new ResourceNotFoundException(ERRCODE_NOT_FOUND, "asset", resourceId);
             }
 
             BaseResourceDataBean resourceFile = new BaseResourceDataBean();
@@ -140,15 +144,10 @@ public class ResourcesService {
                 resourceFile.setDescr(resource.getDescription());
             }
 
-            if (group != null && !group.trim().isEmpty()) {
-                resourceFile.setMainGroup(group.trim());
-            } else {
-                resourceFile.setMainGroup(resource.getMainGroup());
-            }
+            resourceFile.setMainGroup(resource.getMainGroup());
 
             if (categories != null && categories.size() > 0) {
-                resourceFile.setCategories(categories.stream()
-                        .map(code -> categoryManager.getCategory(code)).collect(Collectors.toList()));
+                resourceFile.setCategories(convertCategories(categories));
             } else {
                 resourceFile.setCategories(resource.getCategories());
             }
@@ -164,6 +163,16 @@ public class ResourcesService {
     }
 
     /****** Auxiliary Methods ******/
+
+    private List<Category> convertCategories(List<String> categories) {
+        return categories.stream().map(code -> Optional.ofNullable(categoryManager.getCategory(code))
+                .orElseThrow(() -> {
+                    BeanPropertyBindingResult errors = new BeanPropertyBindingResult(code, "resources.category");
+                    errors.reject("1", null, "resources.category.notFound");
+                    return new ValidationGenericException(errors);
+                }))
+                .collect(Collectors.toList());
+    }
 
     private void validateMimeType(String resourceType, String mimeType) {
         mimeType = Optional.ofNullable(mimeType)

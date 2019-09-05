@@ -22,6 +22,7 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 
 import java.util.*;
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.startsWith;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -39,44 +41,32 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
 
     @Test
     public void testListImagesUnauthorized() throws Exception {
-        ResultActions result = this.performGetResources(null, "image", null);
-
-        String result1 = result.andReturn().getResponse().getContentAsString();
-        System.out.println(result1);
-        result.andExpect(status().isUnauthorized());
+        performGetResources(null, "image", null)
+            .andDo(print())
+            .andExpect(status().isUnauthorized());
     }
 
     @Test
     public void testListImagesWithoutFilter() throws Exception {
         UserDetails user = createAccessToken();
 
-        ResultActions result = this.performGetResources(user, "image", null);
-
-        String content = result.andReturn().getResponse().getContentAsString();
-        System.out.println(content);
-
-        result
+        performGetResources(user, "image", null)
+            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.payload.size()", is(3)))
             .andExpect(jsonPath("$.payload[0].versions.size()", is(4)))
             .andExpect(jsonPath("$.payload[1].versions.size()", is(4)))
-            .andExpect(jsonPath("$.payload[2].versions.size()", is(4)))
-            ;
+            .andExpect(jsonPath("$.payload[2].versions.size()", is(4)));
     }
 
     @Test
     public void testListFilesWithoutFilter() throws Exception {
         UserDetails user = createAccessToken();
 
-        ResultActions result = this.performGetResources(user, "file", null);
-
-        String content = result.andReturn().getResponse().getContentAsString();
-        System.out.println(content);
-
-        result
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.payload.size()", is(3)))
-        ;
+        performGetResources(user, "file", null)
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.payload.size()", is(3)));
     }
 
     @Test
@@ -86,16 +76,11 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
         params.put("page", "2");
         params.put("pageSize", "2");
 
-        ResultActions result = this.performGetResources(user, "image", params);
-
-        String content = result.andReturn().getResponse().getContentAsString();
-        System.out.println(content);
-
-        result
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.payload.size()", is(1)))
-                .andExpect(jsonPath("$.payload[0].versions.size()", is(4)))
-        ;
+        performGetResources(user, "image", params)
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.payload.size()", is(1)))
+            .andExpect(jsonPath("$.payload[0].versions.size()", is(4)));
     }
 
     @Test
@@ -105,15 +90,10 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
         params.put("page", "2");
         params.put("pageSize", "2");
 
-        ResultActions result = this.performGetResources(user, "file", params);
-
-        String content = result.andReturn().getResponse().getContentAsString();
-        System.out.println(content);
-
-        result
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.payload.size()", is(1)))
-        ;
+        performGetResources(user, "file", params)
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.payload.size()", is(1)));
     }
 
     @Test
@@ -123,17 +103,12 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
         params.put("filters[0].attribute", "group");
         params.put("filters[0].value", "customers");
 
-        ResultActions result = this.performGetResources(user, "image", params);
-
-        String content = result.andReturn().getResponse().getContentAsString();
-        System.out.println(content);
-
-        result
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.payload.size()", is(1)))
-                .andExpect(jsonPath("$.payload[0].versions.size()", is(4)))
-                .andExpect(jsonPath("$.payload.[0].id", is("82")))
-        ;
+        performGetResources(user, "image", params)
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.payload.size()", is(1)))
+            .andExpect(jsonPath("$.payload[0].versions.size()", is(4)))
+            .andExpect(jsonPath("$.payload.[0].id", is("82")));
     }
 
     @Test
@@ -143,16 +118,11 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
         params.put("filters[0].attribute", "group");
         params.put("filters[0].value", "customers");
 
-        ResultActions result = this.performGetResources(user, "file", params);
-
-        String content = result.andReturn().getResponse().getContentAsString();
-        System.out.println(content);
-
-        result
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.payload.size()", is(1)))
-                .andExpect(jsonPath("$.payload.[0].id", is("8")))
-        ;
+        performGetResources(user, "file", params)
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.payload.size()", is(1)))
+            .andExpect(jsonPath("$.payload.[0].id", is("8")));
     }
 
     @Test
@@ -162,16 +132,11 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
         params.put("filters[0].attribute", "categories");
         params.put("filters[0].value", "resCat1");
 
-        ResultActions result = this.performGetResources(user, "image", params);
-
-        String content = result.andReturn().getResponse().getContentAsString();
-        System.out.println(content);
-
-        result
+        performGetResources(user, "image", params)
+            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.payload.size()", is(1)))
-            .andExpect(jsonPath("$.payload[0].versions.size()", is(4)))
-        ;
+            .andExpect(jsonPath("$.payload[0].versions.size()", is(4)));
     }
 
     @Test
@@ -181,16 +146,11 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
         params.put("filters[0].attribute", "categories");
         params.put("filters[0].value", "resCat2");
 
-        ResultActions result = this.performGetResources(user, "file", params);
-
-        String content = result.andReturn().getResponse().getContentAsString();
-        System.out.println(content);
-
-        result
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.payload.size()", is(1)))
-                .andExpect(jsonPath("$.payload[0].id", is("8")))
-        ;
+        performGetResources(user, "file", params)
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.payload.size()", is(1)))
+            .andExpect(jsonPath("$.payload[0].id", is("8")));
     }
 
     @Test
@@ -200,15 +160,10 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
         params.put("filters[0].attribute", "categories");
         params.put("filters[0].value", "resCat2");
 
-        ResultActions result = this.performGetResources(user, "image", params);
-
-        String content = result.andReturn().getResponse().getContentAsString();
-        System.out.println(content);
-
-        result
+        performGetResources(user, "image", params)
+            .andDo(print())
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.payload.size()", is(0)))
-        ;
+            .andExpect(jsonPath("$.payload.size()", is(0)));
     }
 
     @Test
@@ -218,15 +173,10 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
         params.put("filters[0].attribute", "categories");
         params.put("filters[0].value", "resCat1");
 
-        ResultActions result = this.performGetResources(user, "file", params);
-
-        String content = result.andReturn().getResponse().getContentAsString();
-        System.out.println(content);
-
-        result
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.payload.size()", is(0)))
-        ;
+        performGetResources(user, "file", params)
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.payload.size()", is(0)));
     }
 
     @Test
@@ -235,74 +185,92 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
         String createdId = null;
 
         try {
-            ResultActions result = this.performCreateResource(user, "image", "free", Arrays.stream(new String[]{"resCat1, resCat2"}).collect(Collectors.toList()), "application/jpeg");
+            ResultActions result = performCreateResource(user, "image", "free", Arrays.stream(new String[]{"resCat1, resCat2"}).collect(Collectors.toList()), "application/jpeg")
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.id", Matchers.anything()))
+                .andExpect(jsonPath("$.payload.categories.size()", is(2)))
+                .andExpect(jsonPath("$.payload.categories[0]", is("resCat1")))
+                .andExpect(jsonPath("$.payload.categories[1]", is("resCat2")))
+                .andExpect(jsonPath("$.payload.group", is("free")))
+                .andExpect(jsonPath("$.payload.description", is("image_test.jpeg")))
+                .andExpect(jsonPath("$.payload.versions.size()", is(4)))
+                .andExpect(jsonPath("$.payload.versions[0].size", is("2 Kb")))
+                .andExpect(jsonPath("$.payload.versions[0].path", startsWith("/Entando/resources/cms/images/image_test")));
 
-            String content = result.andReturn().getResponse().getContentAsString();
-            System.out.println(content);
+            createdId = JsonPath.read(result.andReturn().getResponse().getContentAsString(), "$.payload.id");
 
-            createdId = JsonPath.read(content, "$.payload.id");
+            performGetResources(user, "image", null)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(4)));
 
-            result
+            List<String> categories = Arrays.stream(new String[]{"resCat1"}).collect(Collectors.toList());
+
+            performEditResource(user, "image", createdId, "new image description", categories, true)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.id", is(createdId)))
+                .andExpect(jsonPath("$.payload.categories.size()", is(1)))
+                .andExpect(jsonPath("$.payload.categories[0]", is("resCat1")))
+                .andExpect(jsonPath("$.payload.group", is("free")))
+                .andExpect(jsonPath("$.payload.description", is("new image description")))
+                .andExpect(jsonPath("$.payload.versions.size()", is(4)))
+                .andExpect(jsonPath("$.payload.versions[0].size", is("2 Kb")));
+                //.andExpect(jsonPath("$.payload.versions[0].path", startsWith("/Entando/resources/cms/images/image_test")));
+        } finally {
+            if (createdId != null) {
+                performDeleteResource(user, "image", createdId)
+                    .andDo(print())
+                    .andExpect(status().isOk());
+
+                performGetResources(user, "image", null)
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(3)));
+            }
+        }
+    }
+
+    @Test
+    public void testCreateEditDeleteImageResourceWithoutCategory() throws Exception {
+        UserDetails user = createAccessToken();
+        String createdId = null;
+
+        try {
+            ResultActions result = performCreateResource(user, "image", "free", null, "application/jpeg")
+                    .andDo(print())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.id", Matchers.anything()))
-                    .andExpect(jsonPath("$.payload.categories.size()", is(2)))
-                    .andExpect(jsonPath("$.payload.categories[0]", is("resCat1")))
-                    .andExpect(jsonPath("$.payload.categories[1]", is("resCat2")))
+                    .andExpect(jsonPath("$.payload.categories.size()", is(0)))
                     .andExpect(jsonPath("$.payload.group", is("free")))
                     .andExpect(jsonPath("$.payload.description", is("image_test.jpeg")))
                     .andExpect(jsonPath("$.payload.versions.size()", is(4)))
                     .andExpect(jsonPath("$.payload.versions[0].size", is("2 Kb")))
-                    .andExpect(jsonPath("$.payload.versions[0].path", startsWith("/Entando/resources/cms/images/image_test")))
-            ;
+                    .andExpect(jsonPath("$.payload.versions[0].path", startsWith("/Entando/resources/cms/images/image_test")));
 
-            result = this.performGetResources(user, "image", null);
+            createdId = JsonPath.read(result.andReturn().getResponse().getContentAsString(), "$.payload.id");
 
-            content = result.andReturn().getResponse().getContentAsString();
-            System.out.println(content);
-
-            result
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.payload.size()", is(4)))
-            ;
-
-            List<String> categories = Arrays.stream(new String[]{"resCat1"}).collect(Collectors.toList());
-
-            result = this.performEditResource(user, "image", createdId, "new image description", "customers", categories, true);
-
-            content = result.andReturn().getResponse().getContentAsString();
-            System.out.println(content);
-
-            result
+            performEditResource(user, "image", createdId, "new image description", null, true)
+                    .andDo(print())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.id", is(createdId)))
-                    .andExpect(jsonPath("$.payload.categories.size()", is(1)))
-                    .andExpect(jsonPath("$.payload.categories[0]", is("resCat1")))
-                    .andExpect(jsonPath("$.payload.group", is("customers")))
+                    .andExpect(jsonPath("$.payload.categories.size()", is(0)))
+                    .andExpect(jsonPath("$.payload.group", is("free")))
                     .andExpect(jsonPath("$.payload.description", is("new image description")))
                     .andExpect(jsonPath("$.payload.versions.size()", is(4)))
-                    .andExpect(jsonPath("$.payload.versions[0].size", is("2 Kb")))
-                    //.andExpect(jsonPath("$.payload.versions[0].path", startsWith("/Entando/resources/cms/images/image_test")))
-            ;
+                    .andExpect(jsonPath("$.payload.versions[0].size", is("2 Kb")));
+                    //.andExpect(jsonPath("$.payload.versions[0].path", startsWith("/Entando/resources/cms/images/image_test")));
         } finally {
             if (createdId != null) {
-                ResultActions result = this.performDeleteResource(user, "image", createdId);
+                performDeleteResource(user, "image", createdId)
+                        .andDo(print())
+                        .andExpect(status().isOk());
 
-                String content = result.andReturn().getResponse().getContentAsString();
-                System.out.println(content);
-
-                result
+                performGetResources(user, "image", null)
+                        .andDo(print())
                         .andExpect(status().isOk())
-                ;
-
-                result = this.performGetResources(user, "image", null);
-
-                content = result.andReturn().getResponse().getContentAsString();
-                System.out.println(content);
-
-                result
-                        .andExpect(status().isOk())
-                        .andExpect(jsonPath("$.payload.size()", is(3)))
-                ;
+                        .andExpect(jsonPath("$.payload.size()", is(3)));
             }
         }
     }
@@ -313,72 +281,47 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
         String createdId = null;
 
         try {
-            ResultActions result = this.performCreateResource(user, "file", "free", Arrays.stream(new String[]{"resCat1, resCat2"}).collect(Collectors.toList()), "application/pdf");
+            ResultActions result = performCreateResource(user, "file", "free", Arrays.stream(new String[]{"resCat1, resCat2"}).collect(Collectors.toList()), "application/pdf")
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.id", Matchers.anything()))
+                .andExpect(jsonPath("$.payload.categories.size()", is(2)))
+                .andExpect(jsonPath("$.payload.categories[0]", is("resCat1")))
+                .andExpect(jsonPath("$.payload.categories[1]", is("resCat2")))
+                .andExpect(jsonPath("$.payload.group", is("free")))
+                .andExpect(jsonPath("$.payload.description", is("file_test.jpeg")))
+                .andExpect(jsonPath("$.payload.size", is("2 Kb")))
+                .andExpect(jsonPath("$.payload.path", startsWith("/Entando/resources/cms/documents/file_test")));
 
-            String content = result.andReturn().getResponse().getContentAsString();
-            System.out.println(content);
-            createdId = JsonPath.read(content, "$.payload.id");
+            createdId = JsonPath.read(result.andReturn().getResponse().getContentAsString(), "$.payload.id");
 
-
-            result
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.payload.id", Matchers.anything()))
-                    .andExpect(jsonPath("$.payload.categories.size()", is(2)))
-                    .andExpect(jsonPath("$.payload.categories[0]", is("resCat1")))
-                    .andExpect(jsonPath("$.payload.categories[1]", is("resCat2")))
-                    .andExpect(jsonPath("$.payload.group", is("free")))
-                    .andExpect(jsonPath("$.payload.description", is("file_test.jpeg")))
-                    .andExpect(jsonPath("$.payload.size", is("2 Kb")))
-                    .andExpect(jsonPath("$.payload.path", startsWith("/Entando/resources/cms/documents/file_test")))
-            ;
-
-            result = this.performGetResources(user, "file", null);
-
-            content = result.andReturn().getResponse().getContentAsString();
-            System.out.println(content);
-
-            result
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.payload.size()", is(4)))
-            ;
+            performGetResources(user, "file", null)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(4)));
 
             List<String> categories = Arrays.stream(new String[]{"resCat1"}).collect(Collectors.toList());
 
-            result = this.performEditResource(user, "file", createdId, "new file description", "customers", categories, true);
-
-            content = result.andReturn().getResponse().getContentAsString();
-            System.out.println(content);
-
-            result
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.payload.id", is(createdId)))
-                    .andExpect(jsonPath("$.payload.categories.size()", is(1)))
-                    .andExpect(jsonPath("$.payload.categories[0]", is("resCat1")))
-                    .andExpect(jsonPath("$.payload.group", is("customers")))
-                    .andExpect(jsonPath("$.payload.description", is("new file description")))
-                    .andExpect(jsonPath("$.payload.size", is("2 Kb")))
-                    //.andExpect(jsonPath("$.payload.path", startsWith("/Entando/resources/cms/documents/file_test")))
-            ;
+            performEditResource(user, "file", createdId, "new file description", categories, true)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.id", is(createdId)))
+                .andExpect(jsonPath("$.payload.categories.size()", is(1)))
+                .andExpect(jsonPath("$.payload.categories[0]", is("resCat1")))
+                .andExpect(jsonPath("$.payload.group", is("free")))
+                .andExpect(jsonPath("$.payload.description", is("new file description")))
+                .andExpect(jsonPath("$.payload.size", is("2 Kb")));
+                //.andExpect(jsonPath("$.payload.path", startsWith("/Entando/resources/cms/documents/file_test")));
         } finally {
             if (createdId != null) {
-                ResultActions result = this.performDeleteResource(user, "file", createdId);
+                performDeleteResource(user, "file", createdId)
+                    .andDo(print())
+                    .andExpect(status().isOk());
 
-                String content = result.andReturn().getResponse().getContentAsString();
-                System.out.println(content);
-
-                result
-                        .andExpect(status().isOk())
-                ;
-
-                result = this.performGetResources(user, "file", null);
-
-                content = result.andReturn().getResponse().getContentAsString();
-                System.out.println(content);
-
-                result
-                        .andExpect(status().isOk())
-                        .andExpect(jsonPath("$.payload.size()", is(3)))
-                ;
+                performGetResources(user, "file", null)
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(3)));
             }
         }
     }
@@ -389,75 +332,49 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
         String createdId = null;
 
         try {
-            ResultActions result = this.performCreateResource(user, "image", "free", Arrays.stream(new String[]{"resCat1, resCat2"}).collect(Collectors.toList()), "application/jpeg");
+            ResultActions result = performCreateResource(user, "image", "free", Arrays.stream(new String[]{"resCat1, resCat2"}).collect(Collectors.toList()), "application/jpeg")
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.id", Matchers.anything()))
+                .andExpect(jsonPath("$.payload.categories.size()", is(2)))
+                .andExpect(jsonPath("$.payload.categories[0]", is("resCat1")))
+                .andExpect(jsonPath("$.payload.categories[1]", is("resCat2")))
+                .andExpect(jsonPath("$.payload.group", is("free")))
+                .andExpect(jsonPath("$.payload.description", is("image_test.jpeg")))
+                .andExpect(jsonPath("$.payload.versions.size()", is(4)))
+                .andExpect(jsonPath("$.payload.versions[0].size", is("2 Kb")))
+                .andExpect(jsonPath("$.payload.versions[0].path", startsWith("/Entando/resources/cms/images/image_test")));
 
-            String content = result.andReturn().getResponse().getContentAsString();
-            System.out.println(content);
+            createdId = JsonPath.read(result.andReturn().getResponse().getContentAsString(), "$.payload.id");
 
-            createdId = JsonPath.read(content, "$.payload.id");
-
-
-            result
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.payload.id", Matchers.anything()))
-                    .andExpect(jsonPath("$.payload.categories.size()", is(2)))
-                    .andExpect(jsonPath("$.payload.categories[0]", is("resCat1")))
-                    .andExpect(jsonPath("$.payload.categories[1]", is("resCat2")))
-                    .andExpect(jsonPath("$.payload.group", is("free")))
-                    .andExpect(jsonPath("$.payload.description", is("image_test.jpeg")))
-                    .andExpect(jsonPath("$.payload.versions.size()", is(4)))
-                    .andExpect(jsonPath("$.payload.versions[0].size", is("2 Kb")))
-                    .andExpect(jsonPath("$.payload.versions[0].path", startsWith("/Entando/resources/cms/images/image_test")))
-            ;
-
-            result = this.performGetResources(user, "image", null);
-
-            content = result.andReturn().getResponse().getContentAsString();
-            System.out.println(content);
-
-            result
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.payload.size()", is(4)))
-            ;
+            performGetResources(user, "image", null)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(4)));
 
             List<String> categories = Arrays.stream(new String[]{"resCat1"}).collect(Collectors.toList());
 
-            result = this.performEditResource(user, "image", createdId, "new image description", "customers", categories, false);
-
-            content = result.andReturn().getResponse().getContentAsString();
-            System.out.println(content);
-
-            result
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.payload.id", is(createdId)))
-                    .andExpect(jsonPath("$.payload.categories.size()", is(1)))
-                    .andExpect(jsonPath("$.payload.categories[0]", is("resCat1")))
-                    .andExpect(jsonPath("$.payload.group", is("customers")))
-                    .andExpect(jsonPath("$.payload.description", is("new image description")))
-                    .andExpect(jsonPath("$.payload.versions.size()", is(4)))
-                    .andExpect(jsonPath("$.payload.versions[0].size", is("2 Kb")))
-                    //.andExpect(jsonPath("$.payload.versions[0].path", startsWith("/Entando/resources/cms/images/image_test")))
-            ;
+            performEditResource(user, "image", createdId, "new image description", categories, false)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.id", is(createdId)))
+                .andExpect(jsonPath("$.payload.categories.size()", is(1)))
+                .andExpect(jsonPath("$.payload.categories[0]", is("resCat1")))
+                .andExpect(jsonPath("$.payload.group", is("free")))
+                .andExpect(jsonPath("$.payload.description", is("new image description")))
+                .andExpect(jsonPath("$.payload.versions.size()", is(4)))
+                .andExpect(jsonPath("$.payload.versions[0].size", is("2 Kb")));
+                //.andExpect(jsonPath("$.payload.versions[0].path", startsWith("/Entando/resources/cms/images/image_test")));
         } finally {
             if (createdId != null) {
-                ResultActions result = this.performDeleteResource(user, "image", createdId);
+                performDeleteResource(user, "image", createdId)
+                    .andDo(print())
+                    .andExpect(status().isOk());
 
-                String content = result.andReturn().getResponse().getContentAsString();
-                System.out.println(content);
-
-                result
-                        .andExpect(status().isOk())
-                ;
-
-                result = this.performGetResources(user, "image", null);
-
-                content = result.andReturn().getResponse().getContentAsString();
-                System.out.println(content);
-
-                result
-                        .andExpect(status().isOk())
-                        .andExpect(jsonPath("$.payload.size()", is(3)))
-                ;
+                performGetResources(user, "image", null)
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(3)));
             }
         }
     }
@@ -468,73 +385,47 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
         String createdId = null;
 
         try {
-            ResultActions result = this.performCreateResource(user, "file", "free", Arrays.stream(new String[]{"resCat1, resCat2"}).collect(Collectors.toList()), "application/pdf");
+            ResultActions result = performCreateResource(user, "file", "free", Arrays.stream(new String[]{"resCat1, resCat2"}).collect(Collectors.toList()), "application/pdf")
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.id", Matchers.anything()))
+                .andExpect(jsonPath("$.payload.categories.size()", is(2)))
+                .andExpect(jsonPath("$.payload.categories[0]", is("resCat1")))
+                .andExpect(jsonPath("$.payload.categories[1]", is("resCat2")))
+                .andExpect(jsonPath("$.payload.group", is("free")))
+                .andExpect(jsonPath("$.payload.description", is("file_test.jpeg")))
+                .andExpect(jsonPath("$.payload.size", is("2 Kb")))
+                .andExpect(jsonPath("$.payload.path", startsWith("/Entando/resources/cms/documents/file_test")));
 
-            String content = result.andReturn().getResponse().getContentAsString();
-            System.out.println(content);
+            createdId = JsonPath.read(result.andReturn().getResponse().getContentAsString(), "$.payload.id");
 
-            createdId = JsonPath.read(content, "$.payload.id");
-
-
-            result
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.payload.id", Matchers.anything()))
-                    .andExpect(jsonPath("$.payload.categories.size()", is(2)))
-                    .andExpect(jsonPath("$.payload.categories[0]", is("resCat1")))
-                    .andExpect(jsonPath("$.payload.categories[1]", is("resCat2")))
-                    .andExpect(jsonPath("$.payload.group", is("free")))
-                    .andExpect(jsonPath("$.payload.description", is("file_test.jpeg")))
-                    .andExpect(jsonPath("$.payload.size", is("2 Kb")))
-                    .andExpect(jsonPath("$.payload.path", startsWith("/Entando/resources/cms/documents/file_test")))
-            ;
-
-            result = this.performGetResources(user, "file", null);
-
-            content = result.andReturn().getResponse().getContentAsString();
-            System.out.println(content);
-
-            result
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.payload.size()", is(4)))
-            ;
+            performGetResources(user, "file", null)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(4)));
 
             List<String> categories = Arrays.stream(new String[]{"resCat1"}).collect(Collectors.toList());
 
-            result = this.performEditResource(user, "file", createdId, "new file description", "customers", categories, false);
-
-            content = result.andReturn().getResponse().getContentAsString();
-            System.out.println(content);
-
-            result
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.payload.id", is(createdId)))
-                    .andExpect(jsonPath("$.payload.categories.size()", is(1)))
-                    .andExpect(jsonPath("$.payload.categories[0]", is("resCat1")))
-                    .andExpect(jsonPath("$.payload.group", is("customers")))
-                    .andExpect(jsonPath("$.payload.description", is("new file description")))
-                    .andExpect(jsonPath("$.payload.size", is("2 Kb")))
-                    //.andExpect(jsonPath("$.payload.path", startsWith("/Entando/resources/cms/documents/file_test")))
-            ;
+            performEditResource(user, "file", createdId, "new file description", categories, false)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.id", is(createdId)))
+                .andExpect(jsonPath("$.payload.categories.size()", is(1)))
+                .andExpect(jsonPath("$.payload.categories[0]", is("resCat1")))
+                .andExpect(jsonPath("$.payload.group", is("free")))
+                .andExpect(jsonPath("$.payload.description", is("new file description")))
+                .andExpect(jsonPath("$.payload.size", is("2 Kb")));
+                //.andExpect(jsonPath("$.payload.path", startsWith("/Entando/resources/cms/documents/file_test")));
         } finally {
             if (createdId != null) {
-                ResultActions result = this.performDeleteResource(user, "file", createdId);
+                performDeleteResource(user, "file", createdId)
+                    .andDo(print())
+                    .andExpect(status().isOk());
 
-                String content = result.andReturn().getResponse().getContentAsString();
-                System.out.println(content);
-
-                result
-                        .andExpect(status().isOk())
-                ;
-
-                result = this.performGetResources(user, "file", null);
-
-                content = result.andReturn().getResponse().getContentAsString();
-                System.out.println(content);
-
-                result
-                        .andExpect(status().isOk())
-                        .andExpect(jsonPath("$.payload.size()", is(3)))
-                ;
+                performGetResources(user, "file", null)
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(3)));
             }
         }
     }
@@ -542,45 +433,53 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
     @Test
     public void testCreateImageResourceWithInvalidMimeType() throws Exception {
         UserDetails user = createAccessToken();
-        ResultActions result = this.performCreateResource(user, "image", "free", Arrays.stream(new String[]{"resCat1, resCat2"}).collect(Collectors.toList()), "application/pdf");
+        performCreateResource(user, "image", "free", Arrays.stream(new String[]{"resCat1, resCat2"}).collect(Collectors.toList()), "application/pdf")
+            .andDo(print())
+            .andExpect(status().is5xxServerError());
 
-        String content = result.andReturn().getResponse().getContentAsString();
-        System.out.println(content);
-
-
-        result.andExpect(status().is5xxServerError());
-
-        result = this.performGetResources(user, "image", null);
-
-        content = result.andReturn().getResponse().getContentAsString();
-        System.out.println(content);
-
-        result
+        performGetResources(user, "image", null)
+            .andDo(print())
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.payload.size()", is(3)))
-        ;
+            .andExpect(jsonPath("$.payload.size()", is(3)));
     }
 
     @Test
     public void testCreateFileResourceWithInvalidMimeType() throws Exception {
         UserDetails user = createAccessToken();
-        ResultActions result = this.performCreateResource(user, "file", "free", Arrays.stream(new String[]{"resCat1, resCat2"}).collect(Collectors.toList()), "application/jpeg");
+        performCreateResource(user, "file", "free", Arrays.stream(new String[]{"resCat1, resCat2"}).collect(Collectors.toList()), "application/jpeg")
+            .andDo(print())
+            .andExpect(status().is5xxServerError());
 
-        String content = result.andReturn().getResponse().getContentAsString();
-        System.out.println(content);
+        performGetResources(user, "file", null)
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.payload.size()", is(3)));
+    }
 
+    @Test
+    public void testEditResourceNotFound() throws Exception {
+        UserDetails user = createAccessToken();
 
-        result.andExpect(status().is5xxServerError());
+        performEditResource(user, "file", "999999", "new file description", null, false)
+            .andDo(print())
+            .andExpect(status().isNotFound());
 
-        result = this.performGetResources(user, "file", null);
+        performEditResource(user, "image", "999999", "new file description", null, false)
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
 
-        content = result.andReturn().getResponse().getContentAsString();
-        System.out.println(content);
+    @Test
+    public void testDeleteResourceNotFound() throws Exception {
+        UserDetails user = createAccessToken();
 
-        result
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.payload.size()", is(3)))
-        ;
+        performDeleteResource(user, "file", "99999")
+                .andDo(print())
+                .andExpect(status().isNotFound());
+
+        performDeleteResource(user, "image", "99999")
+                .andDo(print())
+                .andExpect(status().isNotFound());
     }
 
     /* Auxiliary methods */
@@ -648,15 +547,20 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
             file = new MockMultipartFile("file", "file_test.jpeg", mimeType, contents.getBytes());
         }
 
-        return mockMvc.perform(
-                multipart(path)
-                    .file(file)
-                    .param("group", group)
-                    .param("categories", String.join(",", categories))
-                    .header("Authorization", "Bearer " + accessToken));
+        MockHttpServletRequestBuilder request = multipart(path)
+                .file(file)
+                .param("group", group)
+                .header("Authorization", "Bearer " + accessToken);
+
+        if (categories != null) {
+            request.param("categories", String.join(",", categories));
+        }
+
+        return mockMvc.perform(request);
+
     }
 
-    private ResultActions performEditResource(UserDetails user, String type, String resourceId, String description, String group,
+    private ResultActions performEditResource(UserDetails user, String type, String resourceId, String description,
                               List<String> categories, boolean useFile) throws Exception {
         String path = String.format("/plugins/cms/assets/%s", resourceId, type);
 
@@ -691,10 +595,13 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
             request.file(file);
         }
 
-        request
-            .param("group", group)
-            .param("categories", String.join(",", categories != null ? categories : new ArrayList<>()))
-            .param("description", description);
+        if (categories != null) {
+            request.param("categories", String.join(",", categories));
+        }
+
+        if (description != null) {
+            request.param("description", description);
+        }
 
         return mockMvc.perform(request);
     }
