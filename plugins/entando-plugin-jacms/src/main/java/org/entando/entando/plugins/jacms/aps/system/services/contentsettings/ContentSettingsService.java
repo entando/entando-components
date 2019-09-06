@@ -26,15 +26,16 @@ import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.plugins.jacms.web.contentsettings.model.ContentSettingsDto;
 import org.entando.entando.plugins.jacms.web.contentsettings.model.LastReloadInfoDto;
+import org.entando.entando.web.common.exceptions.ValidationConflictException;
+import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BeanPropertyBindingResult;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -87,12 +88,10 @@ public class ContentSettingsService {
     public Map<String, List<String>> addMetadata(String key, String mapping) {
         Map<String, List<String>> metadata = listMetadata();
 
-        if (!StringUtils.isBlank(key) && !metadata.containsKey(key.trim())) {
-            if (!StringUtils.isBlank(mapping)) {
-                List<String> newMetadata = new ArrayList<>(Arrays.asList(mapping.trim().split(",")));
-                metadata.put(key.trim(), newMetadata);
-            }
-        }
+        validateMetadata(metadata, key, mapping);
+
+        List<String> newMetadata = new ArrayList<>(Arrays.asList(mapping.trim().split(",")));
+        metadata.put(key.trim(), newMetadata);
 
         saveMetadata(metadata);
 
@@ -140,6 +139,10 @@ public class ContentSettingsService {
 
     public List<String> listCropRatios() {
         String params = getSystemParams().get(JacmsSystemConstants.CONFIG_PARAM_ASPECT_RATIO);
+        if(params == null) {
+            return new ArrayList<>();
+        }
+
         return Arrays.stream(params.split(";"))
                 .filter(item -> item != null && !item.trim().isEmpty())
                 .collect(Collectors.toList());
@@ -147,8 +150,9 @@ public class ContentSettingsService {
 
     public List<String> addCropRatio(String ratio) {
         List<String> cropRatios = listCropRatios();
-        cropRatios.add(ratio);
+        validateCropRatio(cropRatios, ratio);
 
+        cropRatios.add(ratio);
         saveCropRatios(cropRatios);
 
         return listCropRatios();
@@ -201,6 +205,54 @@ public class ContentSettingsService {
         saveSystemParams(systemParams);
 
         return getEditor();
+    }
+
+    public void validateMetadata(Map<String,List<String>> metadata, String key, String mapping) {
+        BeanPropertyBindingResult errors = new BeanPropertyBindingResult(key, "contentSettings.metadata");
+
+        Pattern regex = Pattern.compile("[a-z0-9_]+");
+        if (StringUtils.isBlank(key) || StringUtils.isBlank(mapping) || !regex.matcher(key).matches()) {
+            errors.reject("3", null, "contentsettings.metadata.invalid");
+            throw new ValidationGenericException(errors);
+        }
+
+        for(String value : mapping.split(",")) {
+            if (!regex.matcher(value.trim()).matches()) {
+                errors.reject("3", null, "contentsettings.metadata.invalid");
+                throw new ValidationGenericException(errors);
+            }
+        }
+
+        if (metadata.containsKey(key)) {
+            errors.reject("4", null, "contentsettings.metadata.duplicate");
+            throw new ValidationConflictException(errors);
+        }
+    }
+
+    public void validateCropRatio(List<String> cropRatios, String ratio) {
+        BeanPropertyBindingResult errors = new BeanPropertyBindingResult(ratio, "contentSettings.ratio");
+
+        if (cropRatios.contains(ratio)) {
+            errors.reject("1", null, "contentsettings.ratio.duplicate");
+            throw new ValidationConflictException(errors);
+        }
+
+        String[] split = Optional.ofNullable(ratio)
+                .orElseThrow(() -> new RestServerError("Invalid crop ratio format", null))
+                .split(":");
+
+        if (split.length != 2) {
+            errors.reject("2", null, "contentsettings.ratio.invalid");
+            throw new ValidationGenericException(errors);
+        }
+
+        try {
+            Integer.valueOf(split[0]);
+            Integer.valueOf(split[1]);
+        } catch (NumberFormatException e) {
+            errors.reject("2", null, "contentsettings.ratio.invalid");
+            throw new ValidationGenericException(errors);
+        }
     }
 
     private Map<String, String> getSystemParams() {
