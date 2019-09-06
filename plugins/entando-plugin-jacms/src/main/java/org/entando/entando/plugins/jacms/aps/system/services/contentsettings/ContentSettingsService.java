@@ -207,7 +207,7 @@ public class ContentSettingsService {
         return getEditor();
     }
 
-    private void validateMetadata(Map<String,List<String>> metadata, String key, String mapping) {
+    public void validateMetadata(Map<String,List<String>> metadata, String key, String mapping) {
         BeanPropertyBindingResult errors = new BeanPropertyBindingResult(key, "contentSettings.metadata");
 
         Pattern regex = Pattern.compile("[a-z0-9_]+");
@@ -217,7 +217,7 @@ public class ContentSettingsService {
         }
 
         for(String value : mapping.split(",")) {
-            if (!regex.matcher(value).matches()) {
+            if (!regex.matcher(value.trim()).matches()) {
                 errors.reject("3", null, "contentsettings.metadata.invalid");
                 throw new ValidationGenericException(errors);
             }
@@ -229,7 +229,7 @@ public class ContentSettingsService {
         }
     }
 
-    private void validateCropRatio(List<String> cropRatios, String ratio) {
+    public void validateCropRatio(List<String> cropRatios, String ratio) {
         BeanPropertyBindingResult errors = new BeanPropertyBindingResult(ratio, "contentSettings.ratio");
 
         if (cropRatios.contains(ratio)) {
