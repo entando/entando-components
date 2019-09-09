@@ -435,7 +435,10 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
         UserDetails user = createAccessToken();
         performCreateResource(user, "image", "free", Arrays.stream(new String[]{"resCat1, resCat2"}).collect(Collectors.toList()), "application/pdf")
             .andDo(print())
-            .andExpect(status().is5xxServerError());
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.errors.size()", is(1)))
+            .andExpect(jsonPath("$.errors[0].code", is("plugins.jacms.resources.invalidMimeType")))
+            .andExpect(jsonPath("$.errors[0].message", is("File type not allowed")));
 
         performGetResources(user, "image", null)
             .andDo(print())
@@ -448,12 +451,14 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
         UserDetails user = createAccessToken();
         performCreateResource(user, "file", "free", Arrays.stream(new String[]{"resCat1, resCat2"}).collect(Collectors.toList()), "application/jpeg")
             .andDo(print())
-            .andExpect(status().is5xxServerError());
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.errors.size()", is(1)))
+            .andExpect(jsonPath("$.errors[0].code", is("plugins.jacms.resources.invalidMimeType")))
+            .andExpect(jsonPath("$.errors[0].message", is("File type not allowed")));
 
         performGetResources(user, "file", null)
             .andDo(print())
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.payload.size()", is(3)));
+            .andExpect(status().isOk());
     }
 
     @Test
