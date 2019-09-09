@@ -48,6 +48,7 @@ import com.agiletec.apsadmin.system.entity.AbstractApsEntityAction;
 import java.io.StringWriter;
 import java.math.BigDecimal;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.entando.entando.aps.system.services.dataobject.IDataObjectManager;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
@@ -565,6 +566,10 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
         dataModel.setDataType(typeCode);
         dataModel.setDescription("Model for " + containerId + " and " + taskId);
 
+
+        logger.debug("set dataObject on session",dataObject.toString());
+
+
         this.setDataObjectOnSession(dataObject);
 
         String urlParameters = "&configId=" + configId + "&containerId=" + containerId + "&taskId=" + taskId;
@@ -619,7 +624,8 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
                 || (field.getType().equalsIgnoreCase("TextArea"))
                 || (field.getType().equalsIgnoreCase("InputText"))
                 || (field.getType().equalsIgnoreCase("ListBox"))
-                || (field.getType().equalsIgnoreCase("RadioGroup"))) {
+                || (field.getType().equalsIgnoreCase("RadioGroup"))
+                || (field.getType().equalsIgnoreCase("MultipleSubForm"))) {
             MonoTextAttribute text = (MonoTextAttribute) this.getAttributePrototype("Monotext");
             text.setName(field.getName());
             text.setDefaultLangCode(this.getCurrentLang().getCode());
@@ -716,10 +722,19 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
 
     private void processField(KieProcessFormField field, String langCode) throws ApsSystemException {
         String bpmLabel = KieApiUtil.getFieldProperty(field, "label");
+        String fieldName = KieApiUtil.getI18nLabelProperty(field);
         if (org.apache.commons.lang.StringUtils.isNotBlank(bpmLabel)) {
-            String fieldName = KieApiUtil.getI18nLabelProperty(field);
             if (null == this.getI18nManager().getLabel(fieldName, langCode)) {
                 this.saveEntandoLabel(fieldName, bpmLabel);
+            }
+        } else {
+            if (null == this.getI18nManager().getLabel(fieldName, langCode)) {
+                fieldName = StringUtils.capitalize(field.getName().replace("_"," "));
+
+                int index =fieldName.lastIndexOf(" ");
+                fieldName = fieldName.substring(index);
+
+                this.saveEntandoLabel(fieldName, StringUtils.capitalize(field.getName().replace("_"," ")));
             }
         }
     }
@@ -868,7 +883,6 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
             newMap.put(entry.getKey().replaceAll(" ", REPLACE_SPACE_STRING), entry.getValue());
         }
         return newMap;
-
     }
 
     private String searchFieldInTheForm(String fieldName, KieProcessFormQueryResult form) {

@@ -54,10 +54,9 @@ public class DEComponentRatingResourceController implements DEComponentRatingRes
         DEComponentRatingRequest ratingRequest = new DEComponentRatingRequest();
         ratingRequest.setComponentId(componentId);
         ratingRequest.setReviewerId(reviewer);
-        ratingRequest.setExchangeId(exchangeId);
         ratingRequest.setRating(rating.getRating());
 
-        DEComponentRatingResult result = ratingService.rateComponent(ratingRequest);
+        DEComponentRatingResult result = ratingService.rateComponent(exchangeId, ratingRequest);
 
         SimpleRestResponse<DERatingsSummary> response = new SimpleRestResponse<>(null);
 

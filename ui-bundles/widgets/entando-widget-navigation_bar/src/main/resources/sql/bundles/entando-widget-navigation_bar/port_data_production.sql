@@ -9,7 +9,7 @@ INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode,
 
 INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('entando-widget-navigation_bar', 'entando-widget-navigation_bar', NULL, NULL, '<#assign wp=JspTaglibs["/aps-core"]>
 
-<@wp.headInfo type="JS" info="entando-misc-jquery/jquery-1.10.0.min.js" />
+<@wp.headInfo type="JS" info="entando-misc-jquery/jquery-3.4.1.min.js" />
 <@wp.headInfo type="JS" info="entando-misc-bootstrap/bootstrap.min.js" />
 
 <@wp.currentPage param="code" var="currentPageCode" />
@@ -39,7 +39,7 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
         <#list 0..(previousLevel - 1) as ignoreMe>
             </ul></li>
         </#list>
-                
+
 	</#if>
 </#if>
 
@@ -96,7 +96,7 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
     </#if>
 </#if>
 
-<li ${liClass} > 
+<li ${liClass} >
 	<a href="${aURL}"  ${aClassAndData} >
 				<!-- [ ${previousLevel} ] -->
 				${homeIcon}

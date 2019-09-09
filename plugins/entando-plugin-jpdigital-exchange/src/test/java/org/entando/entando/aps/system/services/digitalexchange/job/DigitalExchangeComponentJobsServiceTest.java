@@ -66,7 +66,7 @@ public class DigitalExchangeComponentJobsServiceTest {
         }
 
         assertThat(job.getStatus()).isEqualTo(JobStatus.ERROR);
-        assertThat(job.getErrorMessage()).isEqualTo(errorMsg);
+        assertThat(job.getErrorMessage()).isEqualTo(errorMsg.getBytes());
     }
 
     @Test(expected = ValidationConflictException.class)

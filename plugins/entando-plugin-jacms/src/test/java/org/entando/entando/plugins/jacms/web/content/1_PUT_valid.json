@@ -1,4 +1,4 @@
-{
+[{
     "id": "**MARKER**",
     "typeCode":"TST",
     "typeDescription":"Type for test",
@@ -103,4 +103,4 @@
             ]
         }
     ]
-}
+}]

@@ -36,7 +36,7 @@ public class DERatingService {
         this.client = client;
     }
 
-    public DEComponentRatingResult rateComponent(DEComponentRatingRequest ratingRequest) {
+    public DEComponentRatingResult rateComponent(String exchangeId, DEComponentRatingRequest ratingRequest) {
 
         SimpleDigitalExchangeCall<DERatingsSummary> call = new SimpleDigitalExchangeCall<>(
                 HttpMethod.POST, new ParameterizedTypeReference<SimpleRestResponse<DERatingsSummary>>() {
@@ -55,7 +55,7 @@ public class DERatingService {
             return Optional.empty();
         });
 
-        SimpleRestResponse<DERatingsSummary> response = client.getSingleResponse(ratingRequest.getExchangeId(), call);
+        SimpleRestResponse<DERatingsSummary> response = client.getSingleResponse(exchangeId, call);
 
         if (result.isRatingSupported()) {
             result.setRatingsSummary(response.getPayload());

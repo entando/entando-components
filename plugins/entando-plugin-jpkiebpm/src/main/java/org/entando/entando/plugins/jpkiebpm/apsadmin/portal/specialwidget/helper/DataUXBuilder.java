@@ -23,26 +23,28 @@ THE SOFTWARE.
  */
 package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.util.ServletContextAware;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateExceptionHandler;
+
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.function.Function;
 import javax.servlet.ServletContext;
+
 import org.springframework.stereotype.Service;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverride;
@@ -61,7 +63,7 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
     private static String DATE_FORMAT_PATTERN = "yyyy-MM-dd hh:mm";
 
     private static final Logger logger = LoggerFactory.getLogger(DataUXBuilder.class);
-    
+
     private IKieFormOverrideManager formOverrideManager;
     private Map<String, String> typeMapping = new HashMap<>();
     private Map<String, String> valueMapping = new HashMap<>();
@@ -89,6 +91,7 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         this.typeMapping.put("RadioGroup", "radio");
         this.typeMapping.put("MultipleInput", "number");
         this.typeMapping.put("MultipleSelector", "text");
+        this.typeMapping.put("MultipleSubForm", "text");
         this.typeMapping.put("Document", "text");
 
         this.valueMapping.put("InputText", "$data.%s.text");
@@ -105,6 +108,7 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         this.valueMapping.put("MultipleSelector", "$data.%s.text");
         this.valueMapping.put("MultipleInput", "$data.%s.text");
         this.valueMapping.put("Document", "$data.%s.text");
+        this.valueMapping.put("MultipleSubForm", "$data.%s.text");
 
         cfg.setDefaultEncoding("UTF-8");
 
@@ -164,10 +168,8 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         String sectionName;
 
         for (KieProcessFormField field : kpfr.getFields()) {
-            logger.debug("getSections field.getName() {}", field.getName());
             field.getProperties().forEach(p -> {
                 logger.debug("   field property {} {}", p.getName(), p.getValue());
-
             });
 
             Section tempSection = new Section();
@@ -205,7 +207,7 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
                 logger.debug("--> add section with name {}", sectionName);
             }
 
-        }       
+        }
 
         List<KieProcessFormQueryResult> subForms = kpfr.getNestedForms();
         if (null != subForms && !subForms.isEmpty()) {
@@ -222,7 +224,10 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
     }
 
     private T addField(KieProcessFormField field, KieFormOverride formOverride) throws Exception {
+
+
         logger.debug("------------------------------------");
+
         logger.debug("Field getId          -> {}", field.getId());
         logger.debug("Field getName        -> {}", field.getName());
         logger.debug("Field getPosition    -> {}", field.getPosition());
@@ -234,7 +239,7 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
         T inputField;
         switch (field.getType()) {
             case "TextBox":
-                logger.debug("{} recognized as TextBox, inputField set to TextField",field.getName());
+                logger.debug("{} recognized as TextBox, inputField set to TextField", field.getName());
                 inputField = (T) new TextField();
                 break;
             case "TextArea":
@@ -281,13 +286,23 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
                 logger.debug("{} inputField not recognized, inputField set to default InputField", field.getName());
                 inputField = (T) new InputField();
         }
-        logger.info("adding default properties to inputField");
 
         String fieldName = field.getName();
         String fieldTypeHMTL = this.typeMapping.get(field.getType());
         String fieldTypePAM = field.getType();
 
         String fieldValueExpr = this.valueMapping.get(field.getType());
+        String fieldSpan = field.getProperty("span").getValue();
+        Integer fieldSpanInt;
+
+
+        if (StringUtils.isBlank(fieldSpan)){
+            fieldSpan = "12";
+            fieldSpanInt=12;
+        }
+        else{
+            fieldSpanInt = Integer.parseInt(fieldSpan);
+        }
 
         String fieldValue = (null != fieldValueExpr) ? String.format(fieldValueExpr, fieldName) : "";
         //fieldValue is the Velocity String
@@ -304,14 +319,39 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
             readOnly = Boolean.parseBoolean(field.getProperty("readOnly").getValue());
         }
 
+        boolean openRow=false;
+        boolean closeRow=false;
+
+        // Check if the field span count is equal to 12 and close the current row and open a new one.
+        // This is based on the bootstrap 3 grid system of 12 columns per row
+        if (fieldSpanInt==12) {
+            openRow = true;
+            closeRow = true;
+        }
+        else {
+            if (null != field.getProperty("openRow")) {
+                openRow = Boolean.parseBoolean(field.getProperty("openRow").getValue());
+            }
+
+            if (null != field.getProperty("closeRow")) {
+                closeRow = Boolean.parseBoolean(field.getProperty("closeRow").getValue());
+            }
+        }
         String placeHolder = field.getProperty("placeHolder").getValue();
+
         inputField.setId(field.getId());
         inputField.setName(fieldName);
         inputField.setValue(fieldValue);
         inputField.setRequired(required);
         inputField.setTypePAM(fieldTypePAM);
         inputField.setTypeHTML(fieldTypeHMTL);
+        inputField.setSpan(fieldSpan);
         inputField.setReadOnly(readOnly);
+
+
+        inputField.setOpenRow(openRow);
+        inputField.setCloseRow(closeRow);
+
 
         if (inputField instanceof DatePickerField) {
             logger.debug("inputField instanceof DatePickerField, adding custom properties");
@@ -387,14 +427,33 @@ public class DataUXBuilder<T extends InputField> implements ServletContextAware 
                 opt.setValue(f);
                 selectOption.add(opt);
             }
-
             multipleSelector.setOptions(selectOption);
             multipleSelector.setMaxDropdownElements(maxDropdownElements);
             multipleSelector.setMaxElementsOnTitle(maxElementsOnTitle);
             multipleSelector.setAllowClearSelection(allowClearSelection);
             multipleSelector.setAllowFilter(allowFilter);
         }
+        if (inputField instanceof MultipleSubFormField) {
+            logger.debug("inputField instanceof MultipleSubFormField, adding custom properties");
+            MultipleSubFormField multipleSubFormField = (MultipleSubFormField) inputField;
 
+
+            JSONArray columnsLabels = new JSONArray();
+
+            JSONObject props = new JSONObject(field.getProperty("columnsMeta").getValue());
+
+            Iterator<String> keys = props.keys();
+            while (keys.hasNext()) {
+                JSONObject columnLabel = new JSONObject();
+                String key = keys.next();
+                Object value = props.get(key);
+                logger.debug(" multipleSubFormField columnsMeta value {}",value);
+                columnLabel.put("title", value);
+                columnsLabels.put(columnLabel);
+            }
+
+            multipleSubFormField.setColumns(columnsLabels.toString());
+        }
         if (inputField instanceof TextField) {
             logger.debug("inputField instanceof TextField, adding custom properties");
             TextField textField = (TextField) inputField;

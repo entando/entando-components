@@ -16,6 +16,8 @@ package org.entando.entando.aps.system.jpa.servdb;
 import com.agiletec.aps.system.SystemConstants;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.entando.entando.aps.system.jpa.ByteArrayStringSerializer;
 import org.entando.entando.aps.system.services.digitalexchange.job.JobStatus;
 import org.entando.entando.aps.system.services.digitalexchange.job.JobType;
 
@@ -97,8 +99,10 @@ public class DigitalExchangeJob implements Serializable {
     @Column(name = COL_JOB_TYPE)
     private JobType jobType;
 
+    @Lob
     @Column(name = COL_ERROR_MESSAGE)
-    private String errorMessage;
+    @JsonSerialize(using = ByteArrayStringSerializer.class)
+    private byte[] errorMessage;
 
     @PrePersist
     protected void onCreate() {
@@ -178,11 +182,11 @@ public class DigitalExchangeJob implements Serializable {
         this.status = status;
     }
 
-    public String getErrorMessage() {
+    public byte[] getErrorMessage() {
         return errorMessage;
     }
 
-    public void setErrorMessage(String errorMessage) {
+    public void setErrorMessage(byte[] errorMessage) {
         this.errorMessage = errorMessage;
     }
 
