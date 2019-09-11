@@ -103,6 +103,12 @@ public class ContentSettingsService {
     public Map<String, List<String>> removeMetadata(String key)  {
         Map<String, List<String>> metadata = listMetadata();
 
+        if (!metadata.containsKey(key)) {
+            final BeanPropertyBindingResult errors = new BeanPropertyBindingResult(key, "contentSettings.metadata");
+            errors.reject(ERRCODE_NOT_FOUND_METADATA, "plugins.jacms.contentsettings.error.metadata.notFound");
+            throw new ValidationGenericException(errors);
+        }
+
         if (!StringUtils.isBlank(key)) {
             metadata.remove(key.trim());
         }
@@ -164,6 +170,13 @@ public class ContentSettingsService {
     public List<String> removeCropRatio(String ratio) {
         List<String> cropRatios = listCropRatios();
 
+        if (!cropRatios.contains(ratio)) {
+            final BeanPropertyBindingResult errors = new BeanPropertyBindingResult(ratio, "contentSettings.ratio");
+            errors.reject(ERRCODE_NOT_FOUND_CROP_RATIO, "plugins.jacms.contentsettings.error.cropRatio.notFound");
+            throw new ValidationGenericException(errors);
+        }
+
+
         cropRatios.remove(ratio);
 
         saveCropRatios(cropRatios);
@@ -217,19 +230,19 @@ public class ContentSettingsService {
 
         Pattern regex = Pattern.compile("[a-z0-9_]+");
         if (StringUtils.isBlank(key) || StringUtils.isBlank(mapping) || !regex.matcher(key).matches()) {
-            errors.reject(ERRCODE_INVALID_METADATA, "contentsettings.metadata.invalid");
+            errors.reject(ERRCODE_INVALID_METADATA, "plugins.jacms.contentsettings.error.metadata.invalid");
             throw new ValidationGenericException(errors);
         }
 
         for(String value : mapping.split(",")) {
             if (!regex.matcher(value.trim()).matches()) {
-                errors.reject(ERRCODE_INVALID_METADATA, "contentsettings.metadata.invalid");
+                errors.reject(ERRCODE_INVALID_METADATA, "plugins.jacms.contentsettings.error.metadata.invalid");
                 throw new ValidationGenericException(errors);
             }
         }
 
         if (metadata.containsKey(key)) {
-            errors.reject(ERRCODE_CONFLICT_METADATA, "contentsettings.metadata.duplicate");
+            errors.reject(ERRCODE_CONFLICT_METADATA, "plugins.jacms.contentsettings.error.metadata.conflict");
             throw new ValidationConflictException(errors);
         }
     }
@@ -238,19 +251,19 @@ public class ContentSettingsService {
         final BeanPropertyBindingResult errors = new BeanPropertyBindingResult(ratio, "contentSettings.ratio");
 
         if (cropRatios.contains(ratio)) {
-            errors.reject(ERRCODE_CONFLICT_CROP_RATIO, "contentsettings.ratio.duplicate");
+            errors.reject(ERRCODE_CONFLICT_CROP_RATIO, "plugins.jacms.contentsettings.error.cropRatio.conflict");
             throw new ValidationConflictException(errors);
         }
 
         String[] split = Optional.ofNullable(ratio)
                 .orElseThrow(() -> {
-                    errors.reject(ERRCODE_INVALID_CROP_RATIO, "contentsettings.ratio.invalid");
-                    return new ValidationConflictException(errors);
+                    errors.reject(ERRCODE_INVALID_CROP_RATIO, "plugins.jacms.contentsettings.error.cropRatio.invalid");
+                    return new ValidationGenericException(errors);
                 })
                 .split(":");
 
         if (split.length != 2) {
-            errors.reject(ERRCODE_INVALID_CROP_RATIO, "contentsettings.ratio.invalid");
+            errors.reject(ERRCODE_INVALID_CROP_RATIO, "plugins.jacms.contentsettings.error.cropRatio.invalid");
             throw new ValidationGenericException(errors);
         }
 
@@ -258,7 +271,7 @@ public class ContentSettingsService {
             Integer.valueOf(split[0]);
             Integer.valueOf(split[1]);
         } catch (NumberFormatException e) {
-            errors.reject(ERRCODE_INVALID_CROP_RATIO, "contentsettings.ratio.invalid");
+            errors.reject(ERRCODE_INVALID_CROP_RATIO, "plugins.jacms.contentsettings.error.cropRatio.invalid");
             throw new ValidationGenericException(errors);
         }
     }

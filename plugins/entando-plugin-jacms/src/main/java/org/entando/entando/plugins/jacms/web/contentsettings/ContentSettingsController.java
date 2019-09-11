@@ -40,6 +40,8 @@ public class ContentSettingsController {
     public static final String ERRCODE_CONFLICT_METADATA = "3";
     public static final String ERRCODE_INVALID_CROP_RATIO = "4";
     public static final String ERRCODE_CONFLICT_CROP_RATIO = "5";
+    public static final String ERRCODE_NOT_FOUND_CROP_RATIO = "6";
+    public static final String ERRCODE_NOT_FOUND_METADATA = "7";
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -115,13 +117,12 @@ public class ContentSettingsController {
             @ApiResponse(code = 401, message = "Unauthorized")})
     @DeleteMapping("/plugins/cms/contentSettings/cropRatios")
     @RestAccessControl(permission = Permission.SUPERUSER)
-    public ResponseEntity<SimpleRestResponse<List<String>>> deleteCropRatio(
+    public ResponseEntity<SimpleRestResponse<Map>> deleteCropRatio(
             @Valid @RequestBody ContentSettingsCropRatioRequest request) {
         logger.debug("REST request - delete content settings crop ratio");
 
-        return ResponseEntity.ok(new SimpleRestResponse<>(
-                service.removeCropRatio(request.getRatio().trim())
-        ));
+        service.removeCropRatio(request.getRatio().trim());
+        return ResponseEntity.ok(new SimpleRestResponse<>(new HashMap()));
     }
 
     @ApiOperation(value = "PUT ContentSettingsEditor", nickname = "putContentSettingsEditor", tags = {"content-settings-controller"})

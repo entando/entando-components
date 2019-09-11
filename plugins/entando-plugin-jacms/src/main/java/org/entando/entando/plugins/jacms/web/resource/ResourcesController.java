@@ -38,10 +38,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -121,10 +118,10 @@ public class ResourcesController {
             @ApiResponse(code = 401, message = "Unauthorized")})
     @DeleteMapping("/plugins/cms/assets/{resourceId}")
     @RestAccessControl(permission = Permission.CONTENT_EDITOR)
-    public ResponseEntity<SimpleRestResponse<Void>> deleteAsset(@PathVariable("resourceId") String resourceId) {
+    public ResponseEntity<SimpleRestResponse<Map>> deleteAsset(@PathVariable("resourceId") String resourceId) {
         logger.debug("REST request - delete resource with id {}", resourceId);
         service.deleteAsset(resourceId);
-        return ResponseEntity.ok(new SimpleRestResponse<>(null));
+        return ResponseEntity.ok(new SimpleRestResponse<>(new HashMap()));
     }
 
     public String getResourceType(String type) {
