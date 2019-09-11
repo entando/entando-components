@@ -47,6 +47,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @RestController
 public class ResourcesController {
+    public static final String ERRCODE_RESOURCE_NOT_FOUND = "1";
+    public static final String ERRCODE_CATEGORY_NOT_FOUND = "2";
+    public static final String ERRCODE_GROUP_NOT_FOUND = "3";
+    public static final String ERRCODE_INVALID_FILE_TYPE = "4";
+    public static final String ERRCODE_INVALID_RESOURCE_TYPE = "5";
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
