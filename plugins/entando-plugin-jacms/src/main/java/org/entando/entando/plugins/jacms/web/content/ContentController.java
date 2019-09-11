@@ -56,11 +56,14 @@ public class ContentController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    public static final String ERRCODE_CONTENT_NOT_FOUND = "1";
     public static final String ERRCODE_REFERENCED_ONLINE_CONTENT = "2";
     public static final String ERRCODE_UNAUTHORIZED_CONTENT = "3";
+    public static final String ERRCODE_STATUS_INVALID = "4";
     public static final String ERRCODE_DELETE_PUBLIC_PAGE = "5";
     public static final String ERRCODE_INVALID_MODEL = "6";
     public static final String ERRCODE_INVALID_LANG_CODE = "7";
+    public static final String ERRCODE_CONTENT_REFERENCES = "8";
 
     @Autowired
     private HttpSession httpSession;

@@ -66,6 +66,9 @@ import org.springframework.validation.BindingResult;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.entando.entando.plugins.jacms.web.content.ContentController.ERRCODE_CONTENT_NOT_FOUND;
+import static org.entando.entando.plugins.jacms.web.content.ContentController.ERRCODE_CONTENT_REFERENCES;
+
 public class ContentService extends AbstractEntityService<Content, ContentDto>
         implements IContentService,
         GroupServiceUtilizer<ContentDto>, CategoryServiceUtilizer<ContentDto>,
@@ -73,10 +76,6 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
         ApplicationContextAware {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
-
-    private static final String ERRCODE_CONTENT_NOT_FOUND = "1";
-    private static final String ERRCODE_STATUS_INVALID = "3";
-    private static final String ERRCODE_CONTENT_REFERENCES = "5";
 
     private ILangManager langManager;
     private IContentManager contentManager;
