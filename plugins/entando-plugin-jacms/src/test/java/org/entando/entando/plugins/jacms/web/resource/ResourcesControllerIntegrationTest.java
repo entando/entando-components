@@ -37,8 +37,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class ResourcesControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
-    private ObjectMapper mapper = new ObjectMapper();
-
     @Test
     public void testListImagesUnauthorized() throws Exception {
         performGetResources(null, "image", null)
@@ -437,7 +435,7 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
             .andDo(print())
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.errors.size()", is(1)))
-            .andExpect(jsonPath("$.errors[0].code", is("plugins.jacms.resources.invalidMimeType")))
+            .andExpect(jsonPath("$.errors[0].code", is("4")))
             .andExpect(jsonPath("$.errors[0].message", is("File type not allowed")));
 
         performGetResources(user, "image", null)
@@ -453,7 +451,7 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
             .andDo(print())
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.errors.size()", is(1)))
-            .andExpect(jsonPath("$.errors[0].code", is("plugins.jacms.resources.invalidMimeType")))
+            .andExpect(jsonPath("$.errors[0].code", is("4")))
             .andExpect(jsonPath("$.errors[0].message", is("File type not allowed")));
 
         performGetResources(user, "file", null)
