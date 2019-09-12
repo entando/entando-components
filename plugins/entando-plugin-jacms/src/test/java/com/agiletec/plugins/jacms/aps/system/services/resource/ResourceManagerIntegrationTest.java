@@ -391,9 +391,9 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
         assertEquals(4, utilizers.size());
 
         utilizers = ((GroupUtilizer) this.resourceManager).getGroupUtilizers("customers");
-        assertEquals(1, utilizers.size());
-        String resourceId = (String) utilizers.get(0);
-        assertEquals("82", resourceId);
+        assertEquals(2, utilizers.size());
+        assertEquals("8", utilizers.get(0));
+        assertEquals("82", utilizers.get(1));
     }
 
     private List<String> getAllGroupCodes() {

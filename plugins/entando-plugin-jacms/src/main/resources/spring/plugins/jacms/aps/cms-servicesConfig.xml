@@ -45,8 +45,8 @@
         <property name="searchEngineManager" ref="jacmsSearchEngineManager" />
         <property name="langManager" ref="LangManager" />
     </bean>
-	
-    <bean id="jacmPageServiceWrapper" 
+
+    <bean id="jacmPageServiceWrapper"
           class="org.entando.entando.plugins.jacms.aps.system.services.page.CmsPageServiceWrapper" />
 
     <context:component-scan base-package="org.entando.entando.plugins.jacms"  />

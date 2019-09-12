@@ -1,4 +1,4 @@
-{
+[{
     "id":"anything",
     "typeCode":"TST",
     "typeDescription":"Type for test",
@@ -88,4 +88,4 @@
             ]
         }
     ]
-}
+}]
