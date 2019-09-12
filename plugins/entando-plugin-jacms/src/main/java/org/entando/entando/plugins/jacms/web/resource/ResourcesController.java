@@ -14,9 +14,12 @@
 package org.entando.entando.plugins.jacms.web.resource;
 
 import com.agiletec.aps.system.services.role.Permission;
+import com.agiletec.aps.system.services.user.UserDetails;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.plugins.jacms.aps.system.services.resource.ResourcesService;
 import org.entando.entando.plugins.jacms.web.resource.model.AssetDto;
@@ -34,25 +37,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import javax.servlet.http.HttpSession;
+import java.util.*;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @RestController
 public class ResourcesController {
+    public static final String ERRCODE_RESOURCE_NOT_FOUND = "1";
+    public static final String ERRCODE_CATEGORY_NOT_FOUND = "2";
+    public static final String ERRCODE_GROUP_NOT_FOUND = "3";
+    public static final String ERRCODE_INVALID_FILE_TYPE = "4";
+    public static final String ERRCODE_INVALID_RESOURCE_TYPE = "5";
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final ResourcesService service;
-    private final ResourcesValidator resourceValidator;
-
-    @Autowired
-    public ResourcesController(ResourcesService service, ResourcesValidator resourceValidator) {
-        this.service = service;
-        this.resourceValidator = resourceValidator;
-    }
+    @NonNull private final ResourcesService service;
+    @NonNull private final ResourcesValidator resourceValidator;
+    @NonNull private final HttpSession httpSession;
 
     @ApiOperation(value = "LIST Resources", nickname = "listResources", tags = {"resources-controller"})
     @ApiResponses(value = {
@@ -85,7 +87,7 @@ public class ResourcesController {
                 .filter(c -> c.length() > 0)
                 .collect(Collectors.toList());
 
-        AssetDto result = service.createAsset(getResourceType(type), file, group, categoriesList);
+        AssetDto result = service.createAsset(getResourceType(type), file, group, categoriesList, (UserDetails) httpSession.getAttribute("user"));
         return ResponseEntity.ok(new SimpleRestResponse<>(result));
     }
 
@@ -116,10 +118,10 @@ public class ResourcesController {
             @ApiResponse(code = 401, message = "Unauthorized")})
     @DeleteMapping("/plugins/cms/assets/{resourceId}")
     @RestAccessControl(permission = Permission.CONTENT_EDITOR)
-    public ResponseEntity<SimpleRestResponse<Void>> deleteAsset(@PathVariable("resourceId") String resourceId) {
+    public ResponseEntity<SimpleRestResponse<Map>> deleteAsset(@PathVariable("resourceId") String resourceId) {
         logger.debug("REST request - delete resource with id {}", resourceId);
         service.deleteAsset(resourceId);
-        return ResponseEntity.ok(new SimpleRestResponse<>(null));
+        return ResponseEntity.ok(new SimpleRestResponse<>(new HashMap()));
     }
 
     public String getResourceType(String type) {

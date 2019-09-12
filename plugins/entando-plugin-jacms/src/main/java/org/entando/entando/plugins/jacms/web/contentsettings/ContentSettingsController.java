@@ -29,11 +29,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 public class ContentSettingsController {
+    public static final String ERRCODE_INVALID_EDITOR = "1";
+    public static final String ERRCODE_INVALID_METADATA = "2";
+    public static final String ERRCODE_CONFLICT_METADATA = "3";
+    public static final String ERRCODE_INVALID_CROP_RATIO = "4";
+    public static final String ERRCODE_CONFLICT_CROP_RATIO = "5";
+    public static final String ERRCODE_NOT_FOUND_CROP_RATIO = "6";
+    public static final String ERRCODE_NOT_FOUND_METADATA = "7";
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -109,13 +117,12 @@ public class ContentSettingsController {
             @ApiResponse(code = 401, message = "Unauthorized")})
     @DeleteMapping("/plugins/cms/contentSettings/cropRatios")
     @RestAccessControl(permission = Permission.SUPERUSER)
-    public ResponseEntity<SimpleRestResponse<List<String>>> deleteCropRatio(
+    public ResponseEntity<SimpleRestResponse<Map>> deleteCropRatio(
             @Valid @RequestBody ContentSettingsCropRatioRequest request) {
         logger.debug("REST request - delete content settings crop ratio");
 
-        return ResponseEntity.ok(new SimpleRestResponse<>(
-                service.removeCropRatio(request.getRatio().trim())
-        ));
+        service.removeCropRatio(request.getRatio().trim());
+        return ResponseEntity.ok(new SimpleRestResponse<>(new HashMap()));
     }
 
     @ApiOperation(value = "PUT ContentSettingsEditor", nickname = "putContentSettingsEditor", tags = {"content-settings-controller"})
@@ -139,10 +146,10 @@ public class ContentSettingsController {
             @ApiResponse(code = 401, message = "Unauthorized")})
     @PostMapping("/plugins/cms/contentSettings/reloadIndexes")
     @RestAccessControl(permission = Permission.SUPERUSER)
-    public ResponseEntity<SimpleRestResponse<String>> reloadIndexes() {
+    public ResponseEntity<SimpleRestResponse<Map>> reloadIndexes() {
         logger.debug("REST request - reload indexes");
         service.reloadContentsIndex();
-        return ResponseEntity.ok(new SimpleRestResponse<>("")); //TODO how to return with no result?
+        return ResponseEntity.ok(new SimpleRestResponse<>(new HashMap()));
     }
 
     @ApiOperation(value = "POST Reload References", nickname = "postReloadReferences", tags = {"content-settings-controller"})
@@ -151,9 +158,9 @@ public class ContentSettingsController {
             @ApiResponse(code = 401, message = "Unauthorized")})
     @PostMapping("/plugins/cms/contentSettings/reloadReferences")
     @RestAccessControl(permission = Permission.SUPERUSER)
-    public ResponseEntity<SimpleRestResponse<String>> reloadReferences() {
+    public ResponseEntity<SimpleRestResponse<Map>> reloadReferences() {
         logger.debug("REST request - reload references");
         service.reloadContentsReference();
-        return ResponseEntity.ok(new SimpleRestResponse<>("")); //TODO how to return with no result?
+        return ResponseEntity.ok(new SimpleRestResponse<>(new HashMap()));
     }
 }

@@ -3,14 +3,18 @@ package org.entando.entando.plugins.jacms.aps.system.services.resource;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
-import com.agiletec.aps.system.common.tree.TreeNode;
 import com.agiletec.aps.system.exception.ApsException;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.ICategoryManager;
+import com.agiletec.aps.system.services.group.Group;
+import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.*;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.util.IImageDimensionReader;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanComparator;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
@@ -33,10 +37,14 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.entando.entando.plugins.jacms.web.resource.ResourcesController.*;
+
+@Getter
+@Setter
 @Slf4j
 @Service
 public class ResourcesService {
-    public static final String ERRCODE_NOT_FOUND = "1";
+    public static final String PERMISSION_MANAGE_RESOURCES = "manageResources";
 
     @Autowired
     private IResourceManager resourceManager;
@@ -46,6 +54,9 @@ public class ResourcesService {
 
     @Autowired
     private IImageDimensionReader imageDimensionManager;
+
+    @Autowired
+    private IAuthorizationManager authorizationManager;
 
     @Value("#{'${jacms.imageResource.allowedExtensions}'.split(',')}")
     private List<String> imageAllowedExtensions;
@@ -74,10 +85,11 @@ public class ResourcesService {
         return pagedResults;
     }
 
-    public AssetDto createAsset(String resourceType, MultipartFile file, String group, List<String> categories) {
+    public AssetDto createAsset(String resourceType, MultipartFile file, String group, List<String> categories, UserDetails user) {
         BaseResourceDataBean resourceFile = new BaseResourceDataBean();
 
         validateMimeType(resourceType, file.getContentType());
+        validateGroup(user, group);
 
         try {
             resourceFile.setInputStream(file.getInputStream());
@@ -103,7 +115,7 @@ public class ResourcesService {
         try {
             ResourceInterface resource = resourceManager.loadResource(resourceId);
             if (resource == null) {
-                throw new ResourceNotFoundException(ERRCODE_NOT_FOUND, "asset", resourceId);
+                throw new ResourceNotFoundException(ERRCODE_RESOURCE_NOT_FOUND, "asset", resourceId);
             }
             resourceManager.deleteResource(resource);
         } catch (ApsSystemException e) {
@@ -115,7 +127,7 @@ public class ResourcesService {
         try {
             ResourceInterface resource = resourceManager.loadResource(resourceId);
             if (resource == null) {
-                throw new ResourceNotFoundException(ERRCODE_NOT_FOUND, "asset", resourceId);
+                throw new ResourceNotFoundException(ERRCODE_RESOURCE_NOT_FOUND, "asset", resourceId);
             }
 
             BaseResourceDataBean resourceFile = new BaseResourceDataBean();
@@ -168,18 +180,33 @@ public class ResourcesService {
         return categories.stream().map(code -> Optional.ofNullable(categoryManager.getCategory(code))
                 .orElseThrow(() -> {
                     BeanPropertyBindingResult errors = new BeanPropertyBindingResult(code, "resources.category");
-                    errors.reject("1", null, "resources.category.notFound");
+                    errors.reject(ERRCODE_CATEGORY_NOT_FOUND, "plugins.jacms.category.error.notFound");
                     return new ValidationGenericException(errors);
                 }))
                 .collect(Collectors.toList());
     }
 
-    private void validateMimeType(String resourceType, String mimeType) {
-        mimeType = Optional.ofNullable(mimeType)
+    public void validateGroup(UserDetails user, String group) {
+        List<Group> groups = authorizationManager.getGroupsByPermission(user, PERMISSION_MANAGE_RESOURCES);
+
+        for(Group g : groups) {
+            if (g.getAuthority().equals(group)) {
+                return;
+            }
+        }
+
+        BeanPropertyBindingResult errors = new BeanPropertyBindingResult(group, "resources.group");
+        errors.reject(ERRCODE_GROUP_NOT_FOUND, "plugins.jacms.group.error.notFound");
+        throw new ValidationGenericException(errors);
+    }
+
+    public void validateMimeType(String resourceType, final String mimeType) {
+        String type = Optional.ofNullable(mimeType)
                 .map(t -> t.split("/")[1])
                 .orElseThrow(() -> {
-                    log.error("Invalid mime type");
-                    return new RestServerError("plugins.jacms.resources.invalidMimeType", null);
+                    BeanPropertyBindingResult errors = new BeanPropertyBindingResult(mimeType, "resources.file.type");
+                    errors.reject(ERRCODE_INVALID_FILE_TYPE, "plugins.jacms.resources.invalidMimeType");
+                    return new ValidationGenericException(errors);
                 });
 
         List<String> allowedExtensions;
@@ -188,13 +215,15 @@ public class ResourcesService {
         } else if ("Attach".equals(resourceType)){
             allowedExtensions = fileAllowedExtensions;
         } else {
-            log.error("File type not allowed");
-            throw new RestServerError("plugins.jacms.resources.invalidResourceType", null);
+            BeanPropertyBindingResult errors = new BeanPropertyBindingResult(mimeType, "resources.file.type");
+            errors.reject(ERRCODE_INVALID_RESOURCE_TYPE, "plugins.jacms.resources.invalidResourceType");
+            throw new ValidationGenericException(errors);
         }
 
-        if (!allowedExtensions.contains(mimeType)) {
-            log.error("Invalid mime type");
-            throw new RestServerError("plugins.jacms.resources.invalidMimeType", null);
+        if (!allowedExtensions.contains(type)) {
+            BeanPropertyBindingResult errors = new BeanPropertyBindingResult(mimeType, "resources.file.type");
+            errors.reject(ERRCODE_INVALID_FILE_TYPE, "plugins.jacms.resources.invalidMimeType");
+            throw new ValidationGenericException(errors);
         }
     }
 
@@ -291,7 +320,9 @@ public class ResourcesService {
             return convertFileResourceToDto((AttachResource) resource);
         } else {
             log.error("Resource type not allowed");
-            throw new RestServerError("plugins.jacms.resources.invalidResourceType", null);
+            BeanPropertyBindingResult errors = new BeanPropertyBindingResult(resourceType, "resources.file.type");
+            errors.reject(ERRCODE_INVALID_RESOURCE_TYPE, "plugins.jacms.resources.invalidResourceType");
+            throw new ValidationGenericException(errors);
         }
     }
 

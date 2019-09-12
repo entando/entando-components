@@ -38,6 +38,8 @@ import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import static org.entando.entando.plugins.jacms.web.contentsettings.ContentSettingsController.*;
+
 @Service
 public class ContentSettingsService {
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -81,7 +83,7 @@ public class ContentSettingsService {
         try {
             resourceManager.updateMetadataMapping(metadata);
         } catch (ApsSystemException ex) {
-            throw new RestServerError("Error persisting metadata", ex);
+            throw new RestServerError("plugins.jacms.contentsettings.error.metadata.save", ex);
         }
     }
 
@@ -101,6 +103,12 @@ public class ContentSettingsService {
     public Map<String, List<String>> removeMetadata(String key)  {
         Map<String, List<String>> metadata = listMetadata();
 
+        if (!metadata.containsKey(key)) {
+            final BeanPropertyBindingResult errors = new BeanPropertyBindingResult(key, "contentSettings.metadata");
+            errors.reject(ERRCODE_NOT_FOUND_METADATA, "plugins.jacms.contentsettings.error.metadata.notFound");
+            throw new ValidationGenericException(errors);
+        }
+
         if (!StringUtils.isBlank(key)) {
             metadata.remove(key.trim());
         }
@@ -114,7 +122,7 @@ public class ContentSettingsService {
         try {
             searchEngineManager.startReloadContentsReferences();
         } catch (ApsSystemException ex) {
-            throw new RestServerError("Error starting reload references", ex);
+            throw new RestServerError("plugins.jacms.contentsettings.error.reloadReference", ex);
         }
 
         logger.info("Reload contents index started");
@@ -143,7 +151,7 @@ public class ContentSettingsService {
             return new ArrayList<>();
         }
 
-        return Arrays.stream(params.split(";"))
+        return Arrays.stream(Optional.ofNullable(params).orElse("").split(";"))
                 .filter(item -> item != null && !item.trim().isEmpty())
                 .collect(Collectors.toList());
     }
@@ -153,6 +161,7 @@ public class ContentSettingsService {
         validateCropRatio(cropRatios, ratio);
 
         cropRatios.add(ratio);
+
         saveCropRatios(cropRatios);
 
         return listCropRatios();
@@ -160,6 +169,13 @@ public class ContentSettingsService {
 
     public List<String> removeCropRatio(String ratio) {
         List<String> cropRatios = listCropRatios();
+
+        if (!cropRatios.contains(ratio)) {
+            final BeanPropertyBindingResult errors = new BeanPropertyBindingResult(ratio, "contentSettings.ratio");
+            errors.reject(ERRCODE_NOT_FOUND_CROP_RATIO, "plugins.jacms.contentsettings.error.cropRatio.notFound");
+            throw new ValidationGenericException(errors);
+        }
+
 
         cropRatios.remove(ratio);
 
@@ -180,7 +196,7 @@ public class ContentSettingsService {
             String xmlParams = SystemParamsUtils.getNewXmlParams(getConfigParameter(), systemParams);
             configManager.updateConfigItem(SystemConstants.CONFIG_ITEM_PARAMS, xmlParams);
         } catch (Exception ex) {
-            throw new RestServerError("Error persisting crop ratios", ex);
+            throw new RestServerError("plugins.jacms.contentsettings.error.cropRatio.save", ex);
         }
     }
 
@@ -198,7 +214,9 @@ public class ContentSettingsService {
         try {
             editor = ContentSettingsDto.Editor.fromValue(key);
         } catch (IllegalArgumentException ex) {
-            throw new RestServerError("Invalid editor value", ex);
+            BeanPropertyBindingResult errors = new BeanPropertyBindingResult(key, "contentSettings.editor");
+            errors.reject(ERRCODE_INVALID_EDITOR, "plugins.jacms.contentsettings.error.invalidEditor");
+            throw new ValidationGenericException(errors);
         }
 
         systemParams.put("hypertextEditor", editor.getKey());
@@ -212,37 +230,40 @@ public class ContentSettingsService {
 
         Pattern regex = Pattern.compile("[a-z0-9_]+");
         if (StringUtils.isBlank(key) || StringUtils.isBlank(mapping) || !regex.matcher(key).matches()) {
-            errors.reject("3", null, "contentsettings.metadata.invalid");
+            errors.reject(ERRCODE_INVALID_METADATA, "plugins.jacms.contentsettings.error.metadata.invalid");
             throw new ValidationGenericException(errors);
         }
 
         for(String value : mapping.split(",")) {
             if (!regex.matcher(value.trim()).matches()) {
-                errors.reject("3", null, "contentsettings.metadata.invalid");
+                errors.reject(ERRCODE_INVALID_METADATA, "plugins.jacms.contentsettings.error.metadata.invalid");
                 throw new ValidationGenericException(errors);
             }
         }
 
         if (metadata.containsKey(key)) {
-            errors.reject("4", null, "contentsettings.metadata.duplicate");
+            errors.reject(ERRCODE_CONFLICT_METADATA, "plugins.jacms.contentsettings.error.metadata.conflict");
             throw new ValidationConflictException(errors);
         }
     }
 
     public void validateCropRatio(List<String> cropRatios, String ratio) {
-        BeanPropertyBindingResult errors = new BeanPropertyBindingResult(ratio, "contentSettings.ratio");
+        final BeanPropertyBindingResult errors = new BeanPropertyBindingResult(ratio, "contentSettings.ratio");
 
         if (cropRatios.contains(ratio)) {
-            errors.reject("1", null, "contentsettings.ratio.duplicate");
+            errors.reject(ERRCODE_CONFLICT_CROP_RATIO, "plugins.jacms.contentsettings.error.cropRatio.conflict");
             throw new ValidationConflictException(errors);
         }
 
         String[] split = Optional.ofNullable(ratio)
-                .orElseThrow(() -> new RestServerError("Invalid crop ratio format", null))
+                .orElseThrow(() -> {
+                    errors.reject(ERRCODE_INVALID_CROP_RATIO, "plugins.jacms.contentsettings.error.cropRatio.invalid");
+                    return new ValidationGenericException(errors);
+                })
                 .split(":");
 
         if (split.length != 2) {
-            errors.reject("2", null, "contentsettings.ratio.invalid");
+            errors.reject(ERRCODE_INVALID_CROP_RATIO, "plugins.jacms.contentsettings.error.cropRatio.invalid");
             throw new ValidationGenericException(errors);
         }
 
@@ -250,7 +271,7 @@ public class ContentSettingsService {
             Integer.valueOf(split[0]);
             Integer.valueOf(split[1]);
         } catch (NumberFormatException e) {
-            errors.reject("2", null, "contentsettings.ratio.invalid");
+            errors.reject(ERRCODE_INVALID_CROP_RATIO, "plugins.jacms.contentsettings.error.cropRatio.invalid");
             throw new ValidationGenericException(errors);
         }
     }
@@ -259,7 +280,7 @@ public class ContentSettingsService {
         try {
             return SystemParamsUtils.getParams(getConfigParameter());
         } catch (Exception ex) {
-            throw new RestServerError("Error loading system params", ex);
+            throw new RestServerError("plugins.jacms.contentsettings.error.systemParams.read", ex);
         }
     }
 
