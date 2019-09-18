@@ -8,11 +8,14 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KiePro
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessProperty;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.pamSeven.PamProcessQueryFormResult;
 import org.entando.entando.plugins.jprestapi.aps.core.helper.JAXBHelper;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class TestApiTaskInterface extends TestCase {
@@ -181,6 +184,74 @@ public class TestApiTaskInterface extends TestCase {
         }
 
         assertEquals("50", age);
+    }
+
+
+    @Test
+    public void testUnrollKeys() {
+
+
+        System.out.println(getTestString());
+        JSONObject obj = new JSONObject(getTestString());
+
+        JSONObject topMap = obj.getJSONObject("task-input-data");
+
+        Map<String, Object> newValues = new HashMap<>();
+        int mapIndex = 0;
+        for(String topKey : topMap.keySet()) {
+
+            if(topMap.get(topKey) instanceof JSONArray) {
+
+                JSONArray values = (JSONArray)topMap.get(topKey);
+
+
+                for(Object val : values) {
+                    if(val instanceof JSONObject) {
+                        mapIndex++;
+                        for(String childKey : ((JSONObject) val).keySet()) {
+                            newValues.put(mapIndex+"_"+topKey+"_"+childKey, ((JSONObject) val).get(childKey));
+                        }
+                    }
+                }
+            }
+        }
+
+        for(String key : newValues.keySet()){
+            topMap.put(key, newValues.get(key));
+        }
+
+
+        System.out.println(topMap.toString());
+    }
+    private String getTestString() {
+
+
+        String test = "{" +
+
+                "  \"task-input-data\": {" +
+                "\"TaskName\": \"PreparazionesistemiperPersonalizzazioni\"," +
+                "\"NodeName\": \"Preparazione sistemi per Personalizzazioni \"," +
+                "    \"lista_customizzazioni\": [" +
+                "{" +
+                "   \"customizationID\": \"string\"," +
+                "       \"customizationNote\": \"string\"," +
+                "   \"customizationType\": [" +
+                "\"string0\",\"string1\"" +
+                "]" +
+                "}," +
+                "{" +
+                "\"customizationID\": \"string2\"," +
+                "\"customizationNote\": \"string2\"," +
+                "\"customizationType\": [" +
+                "\"string0\",\"string1\"" +
+                "]" +
+                "}" +
+                "]," +
+                "\"Skippable\": \"true\"," +
+                "   \"GroupId\": \"customization\"" +
+                "} }";
+
+        return test;
     }
 
 }

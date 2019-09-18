@@ -26,20 +26,19 @@ package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPage;
+import com.agiletec.aps.system.services.user.User;
 import com.agiletec.aps.util.ApsProperties;
-import java.util.ArrayList;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieTask;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-import java.util.StringTokenizer;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.plugins.jpkiebpm.aps.system.KieBpmSystemConstants;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.BpmWidgetInfo;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieTask;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 public class BpmTaskListDatatableWidgetAction extends BpmDatatableWidgetAction {
 
@@ -83,27 +82,66 @@ public class BpmTaskListDatatableWidgetAction extends BpmDatatableWidgetAction {
         this.showCompleteButton = showCompleteButton;
     }
 
-   
+
     @Override
     protected void loadFieldIntoDatatableFromBpm(String containerId, String procId) throws ApsSystemException {
         HashMap<String, String> opt = new HashMap<>();
-        opt.put("user", DEMO_USER);
+
+        String username = ((User)this.getRequest().getSession().getAttribute("currentUser")).getUsername();
+        opt.put("user", username);
+
         KieBpmConfig config = super.getFormManager().getKieServerConfigurations().get(this.getKnowledgeSourcePath());
-        List<KieTask> task = super.getFormManager().getHumanTaskList(config, null, opt);
+        List<KieTask> tasks = super.getFormManager().getHumanTaskList(config, null, opt);
 
         Set<String> variableFields = super.getFormManager().getProcessVariables(config, containerId, procId);
 
         List<String> fields = new ArrayList<>();
         fields.addAll(variableFields);
 
-        //TODO To be replaced by an actual call.
-        if (!task.isEmpty()) {
-            StringTokenizer tokenizer = new StringTokenizer(task.get(0).toString(), ",");
+
+        for(KieTask task : tasks) {
+
+            //This task list comes from the pot-owners call which will return tasks outside of the configure container.
+            //Skip those since they'll break when making the details call
+            if (task.getContainerId()==null || !task.getContainerId().equals(containerId)) {
+                continue;
+            }
+            JSONObject taskData = super.getFormManager().getTaskFormData(config, containerId, task.getId(), null);
+            JSONObject inputData = taskData.getJSONObject("task-input-data");
+
+            Map<String, Object> newValues = new HashMap<>();
+            int mapIndex = 0;
+            for(String topKey : inputData.keySet()) {
+
+                if(inputData.get(topKey) instanceof JSONArray) {
+
+                    JSONArray values = (JSONArray)inputData.get(topKey);
+                    for(Object val : values) {
+                        if(val instanceof JSONObject) {
+                            mapIndex++;
+                            for(String childKey : ((JSONObject) val).keySet()) {
+                                newValues.put(mapIndex+"_"+topKey+"_"+childKey, ((JSONObject) val).get(childKey));
+                            }
+                        }
+                    }
+                }
+            }
+
+            for(String key : newValues.keySet()){
+                fields.add(key);
+                inputData.put(key, newValues.get(key));
+            }
+            //TODO To be replaced by an actual call.
+
+            StringTokenizer tokenizer = new StringTokenizer(task.toString(), ",");
             while (tokenizer.hasMoreTokens()) {
                 final String name = tokenizer.nextToken().trim();
                 fields.add(name);
             }
+
         }
+
+
         loadDataIntoFieldDatatable(fields);
     }
 
@@ -126,7 +164,7 @@ public class BpmTaskListDatatableWidgetAction extends BpmDatatableWidgetAction {
     @Override
     protected void loadWidgetInfo() {
         super.loadWidgetInfo();
-        
+
         final String widgetInfoId = this.getWidget().getConfig().getProperty(KieBpmSystemConstants.WIDGET_PARAM_INFO_ID);
 
         if (StringUtils.isNotBlank(widgetInfoId)) {
@@ -142,8 +180,8 @@ public class BpmTaskListDatatableWidgetAction extends BpmDatatableWidgetAction {
                     this.setRedirectOnClickRow(false);
                     this.setRedirectDetailsPage("");
                 }
-                
-                
+
+
                 String propertyShowClaimButton = widgetInfo.getConfigDraft().getProperty(KieBpmSystemConstants.WIDGET_PARAM_SHOW_CLAIM_BUTTON);
                 if (StringUtils.isNotBlank(propertyShowClaimButton)) {
                     this.setShowClaimButton(Boolean.valueOf(propertyShowClaimButton));
@@ -151,7 +189,7 @@ public class BpmTaskListDatatableWidgetAction extends BpmDatatableWidgetAction {
                 {
                     this.setShowClaimButton(false);
                 }
-                
+
                 String propertyShowCompleteButton = widgetInfo.getConfigDraft().getProperty(KieBpmSystemConstants.WIDGET_PARAM_SHOW_COMPLETE_BUTTON);
                 if (StringUtils.isNotBlank(propertyShowCompleteButton)) {
                     this.setShowCompleteButton(Boolean.valueOf(propertyShowCompleteButton));
@@ -165,12 +203,12 @@ public class BpmTaskListDatatableWidgetAction extends BpmDatatableWidgetAction {
             }
         }
     }
-    
+
     /**
-    * Return a plain list of the free pages in the portal.
-    *
-    * @return the list of the free pages of the portal.
-    */
+     * Return a plain list of the free pages in the portal.
+     *
+     * @return the list of the free pages of the portal.
+     */
     public List<IPage> getFreePages() {
         IPage root = this.getPageManager().getOnlineRoot();
         List<IPage> pages = new ArrayList<>();

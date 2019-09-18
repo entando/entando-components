@@ -5,6 +5,7 @@
 
 <jpkie:datatable widgetConfigInfoIdVar="configId"/>
 <c:set var="id" value="${configId}"/>
+<c:set var="accessToken" value="${Session.currentUser.accessToken}"/>
 
 <jpkie:tasklistwidgetinfo redirectOnClickRowVar="redirectOnClickRowVar"/>
 <jpkie:tasklistwidgetinfo redirectDetailsPageVar="redirectDetailsPageVar"/>
@@ -167,10 +168,6 @@
         });
     };
 
-
-
-
-
     function openDetailsPage(containerId, taskId)
     {
         var context = "<wp:info key="systemParam" paramName="applicationBaseURL" />";
@@ -187,14 +184,14 @@
     function appendTaskData(urlTaskData){
         $("#bpm-task-data").empty();
 
-                $.when(
+        $.when(
                 $.get(urlTaskData, function (data) {
                     var jsonKieTaskData = data.response.result;
                     jsonKieTaskData.mainForm.method = "none";
                     org.entando.form.dynamicFormInfo = new org.entando.form.DynamicForm(jsonKieTaskData);
                     $("#bpm-task-data").dform(org.entando.form.dynamicFormInfo.json);
                 })
-                ).done(
+        ).done(
                 function(){
                     var formFields = $("#bpm-task-data form").children().detach();
                     var taskDataTitle="<br/><br/><h2 id=\"task-data-title\"> Task data </h2>";
@@ -204,162 +201,177 @@
     }
 
     function claimTask(ev, configId, dataTaskId, context){
-            var configId =${configId};
+        var configId =${configId};
 
-                ev.preventDefault();
-                var postData = {
-                    claimTask: {
-                        taskId: dataTaskId,
-                        configId:  configId
+        ev.preventDefault();
+        var postData = {
+            claimTask: {
+                taskId: dataTaskId,
+                configId:  configId
+            }
+        };
+
+
+
+        var action = context + "claimTask.json";
+
+        $.ajax({
+            url: action,
+            beforeSend: function (xhr) {
+                var accessToken = "${sessionScope.currentUser.accessToken}";
+                if (accessToken) {
+                    xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+                }
+            },
+            type: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify(postData),
+            dataType: 'json',
+            success: function (data) {
+                $.toast({
+                    heading: 'Success',
+                    text: 'Task '+dataTaskId+ ' claimed successfully!',
+                    showHideTransition: 'slide',
+                    icon: 'success',
+                    allowToastClose : true,
+                    hideAfter : 5000,
+                    stack : 5,
+                    textAlign : 'left',
+                    position : 'top-right'
+                });
+                refreshDataTable();
+                return data;
+            },
+            error: function () {
+                $.toast({
+                    heading: 'Error',
+                    text: 'Failed to claim task '+dataTaskId+ ' ',
+                    showHideTransition: 'fade',
+                    icon: 'error',
+                    allowToastClose : true,
+                    hideAfter : 5000,
+                    stack : 5,
+                    textAlign : 'left',
+                    position : 'top-right'
+                })
+
+            }
+        });
+
+    }
+
+    function  loadDataTable(idTable) {
+        var configId =${configId};
+        var context = "<wp:info key="systemParam" paramName="applicationBaseURL" />legacyapi/rs/<wp:info key="currentLang"/>/jpkiebpm/";
+        var url = context + "tasks.json?configId=${id}";
+        var extraBtns = [
+            <c:if test="${showClaimButtonVar == 'true'}">
+            {
+                html: '<button type="button" class="class-open-bpm-task-list-modal-form-details btn btn-success btn-sm" style="margin-right:10px;">Claim</button>',
+                onClick: function (ev, data) {
+                    if (data.status=='Ready') {
+                        claimTask(ev, configId, data.id, context);
                     }
-                };
-
-
-
-                var action = context + "claimTask.json";
-
-                $.ajax({
-                    url: action,
-                    type: 'post',
-                    contentType: 'application/json',
-                    data: JSON.stringify(postData),
-                    dataType: 'json',
-                    success: function (data) {
+                    else {
                         $.toast({
-                            heading: 'Success',
-                            text: 'Task '+dataTaskId+ ' claimed successfully!',
+                            heading: 'Information',
+                            text: 'Task with '+data.id +' is already claimed. Only tasks in Ready can be claimed.',
                             showHideTransition: 'slide',
-                            icon: 'success',
+                            icon: 'info',
                             allowToastClose : true,
                             hideAfter : 5000,
                             stack : 5,
                             textAlign : 'left',
                             position : 'top-right'
                         });
-                        refreshDataTable();
-                        return data;
-                    },
-                    error: function () {
-                        $.toast({
-                            heading: 'Error',
-                            text: 'Failed to claim task '+dataTaskId+ ' ',
-                            showHideTransition: 'fade',
-                            icon: 'error',
-                            allowToastClose : true,
-                            hideAfter : 5000,
-                            stack : 5,
-                            textAlign : 'left',
-                            position : 'top-right'
-                        })
-
                     }
-                });
-
-    }
-
-    function  loadDataTable(idTable) {
-    	    var configId =${configId};
-            var context = "<wp:info key="systemParam" paramName="applicationBaseURL" />legacyapi/rs/<wp:info key="currentLang"/>/jpkiebpm/";
-            var url = context + "tasks.json?configId=${id}";
-            var extraBtns = [
-            <c:if test="${showClaimButtonVar == 'true'}">
-            {
-                html: '<button type="button" class="class-open-bpm-task-list-modal-form-details btn btn-success btn-sm" style="margin-right:10px;">Claim</button>',
-                    onClick: function (ev, data) {
-                        if (data.status=='Ready') {
-                            claimTask(ev, configId, data.id, context);
-                        }
-                        else {
-                            $.toast({
-                                heading: 'Information',
-                                text: 'Task with '+data.id +' is already claimed. Only tasks in Ready can be claimed.',
-                                showHideTransition: 'slide',
-                                icon: 'info',
-                                allowToastClose : true,
-                                hideAfter : 5000,
-                                stack : 5,
-                                textAlign : 'left',
-                                position : 'top-right'
-                            });
-                        }
-                    }
+                }
             },
             </c:if>
             <c:if test="${showCompleteButtonVar == 'true'}">
             {
                 html: '<button type="button" class="class-open-bpm-task-list-modal-form-details btn btn-success btn-sm" style="margin-right:10px;">Complete</button>',
-                    onClick: function (ev, data) {
-                        openModalForm(ev, configId, data, context);
-                    }
+                onClick: function (ev, data) {
+                    openModalForm(ev, configId, data, context);
+                }
             },
             </c:if>
             {
-            html: '<button type="button" class=" class-open-bpm-task-list-modal-diagram-details btn btn-info btn-sm ">Diagram</button>',
-                    onClick: function (event, rowData) {
+                html: '<button type="button" class=" class-open-bpm-task-list-modal-diagram-details btn btn-info btn-sm ">Diagram</button>',
+                onClick: function (event, rowData) {
                     var url = context + "diagram.json?configId=" + configId + "&processInstanceId=" + rowData.processInstanceId;
-                        $('#bpm-task-list-modal-diagram-data').attr("src","");
-                            $.get(url, function (data) {
-                            $.when(
-                                    $('#bpm-task-list-modal-diagram-data').attr("src", "data:image/svg+xml;utf8," + encodeURIComponent(data.response.result))).done(
+                    $('#bpm-task-list-modal-diagram-data').attr("src","");
+                    $.get(url, function (data) {
+                        $.when(
+                                $('#bpm-task-list-modal-diagram-data').attr("src", "data:image/svg+xml;utf8," + encodeURIComponent(data.response.result))).done(
                                 function(){
                                     optModal.title = "BPM Process Diagram";
-                                            optModal.show.effect = "fold";
-                                            $('#bpm-task-list-modal-diagram').dialog(optModal);
-                                    });
-                            });
-                    }
-            }
-            ];
-
-
-            var extraConfig = {
-                  <c:if test="${redirectOnClickRowVar == 'true'}">
-                    buttons: extraBtns,
-                        onClickRow: function (event, rowData) {
-                        openDetailsPage(rowData.containerId , rowData.id);
-                        }
-                    </c:if>
-                    <c:if test="${redirectOnClickRowVar == 'false'}">
-                    buttons: extraBtns,
-                        onClickRow: function (ev, rowData) {
-                            $('#bpm-task-list-modal-data-table-tbody').empty();
-
-                            var url = context + "taskDetail.json?configId=" + configId +"&containerId=" + rowData.containerId + "&taskId=" + rowData.id;
-                            $.get(url, function (data) {
-                                $('#bpm-task-list-modal-data-table-tbody').append(getTemplateTaskDetail(data.response.result.mainForm));
-                                optModal.title = "BPM Data";
-                                $('#bpm-task-list-modal-data').dialog(optModal);
+                                    optModal.show.effect = "fold";
+                                    $('#bpm-task-list-modal-diagram').dialog(optModal);
                                 });
-                            }
-                    </c:if>
-               };
+                    });
+                }
+            }
+        ];
 
+
+        var extraConfig = {
+            <c:if test="${redirectOnClickRowVar == 'true'}">
+            buttons: extraBtns,
+            onClickRow: function (event, rowData) {
+                openDetailsPage(this.parentContainerId , rowData.id);
+            }
+            </c:if>
+            <c:if test="${redirectOnClickRowVar == 'false'}">
+            buttons: extraBtns,
+            onClickRow: function (ev, rowData) {
+                $('#bpm-task-list-modal-data-table-tbody').empty();
+
+                var url = context + "taskDetail.json?configId=" + configId +"&containerId=" + rowData.containerId + "&taskId=" + rowData.id;
                 $.get(url, function (data) {
-                    var items = data.response.result.taskList.list || [];
-                        items = Array.isArray(items) ? items : [items];
-                        items = items.map(function (item) {
-                        item['activated'] = new Date(item['activated']).toLocaleString();
-                        item['created'] = new Date(item['created']).toLocaleString();
-                            const reduceKeyValuePairs = pairs => pairs.reduce((acc, pair) => ({
-                                    ...acc,
-                                    [pair.key]: pair.value,
-                        }), {});
-                            const kvpWithEntryField = {
-                                    ...item,
-                            ...reduceKeyValuePairs(item.processVariables.entry)
-                        };
-                            const {
-                                    processVariables,
-                            ...dest
-                        } = kvpWithEntryField;
-                            return dest;
-                        });
-                        var containerId = data.response.result.taskList.containerId;
-
-                        extraConfig.columnDefinition = data.response.result.taskList["datatable-field-definition"].fields;
-                        org.entando.datatable.CustomDatatable(items, idTable, extraConfig, containerId);
+                    $('#bpm-task-list-modal-data-table-tbody').append(getTemplateTaskDetail(data.response.result.mainForm));
+                    optModal.title = "BPM Data";
+                    $('#bpm-task-list-modal-data').dialog(optModal);
                 });
+            }
+            </c:if>
         };
+
+        $.get({
+            url,
+            beforeSend: function (xhr) {
+                var accessToken = "${sessionScope.currentUser.accessToken}";
+                if (accessToken) {
+                    xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+                }
+            }
+        }, function (data) {
+            var items = data.response.result.taskList.list || [];
+            items = Array.isArray(items) ? items : [items];
+            items = items.map(function (item) {
+                item['activated'] = new Date(item['activated']).toLocaleString();
+                item['created'] = new Date(item['created']).toLocaleString();
+                const reduceKeyValuePairs = pairs => pairs.reduce((acc, pair) => ({
+                        ...acc,
+                        [pair.key]: pair.value,
+            }), {});
+                const kvpWithEntryField = {
+                        ...item,
+                ...reduceKeyValuePairs(item.processVariables.entry)
+            };
+                const {
+                        processVariables,
+                ...dest
+            } = kvpWithEntryField;
+                return dest;
+            });
+            var containerId = data.response.result.taskList.containerId;
+
+            extraConfig.columnDefinition = data.response.result.taskList["datatable-field-definition"].fields;
+            extraConfig.parentContainerId = data.response.result.taskList["containerId"]
+            org.entando.datatable.CustomDatatable(items, idTable, extraConfig, containerId);
+        });
+    };
 
     $(document).ready(function () {
         loadDataTable('#data-table-task-list');

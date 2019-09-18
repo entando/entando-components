@@ -25,6 +25,7 @@ package org.entando.entando.plugins.jpkiebpm.aps.system.services.api;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.user.User;
 import com.agiletec.aps.util.ApsProperties;
 import org.apache.commons.lang.StringUtils;
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
@@ -44,6 +45,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.ta
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FSIDemoHelper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,10 +56,6 @@ import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.task.KieApiClaimTask;	
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiFields;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.model.form.KieApiFieldset;
 
 public class ApiTaskInterface extends KieApiManager {
 
@@ -306,9 +304,13 @@ public class ApiTaskInterface extends KieApiManager {
                     String knowledgetSource = (String) config.get(KieBpmSystemConstants.WIDGET_INFO_PROP_KIE_SOURCE_ID);
                     KieBpmConfig bpmConfig = this.getKieFormManager().getKieServerConfigurations().get(knowledgetSource);
 
+                    String userName = null;
+                    if(properties.get("apiMethod:user") !=null) {
+                        userName = ((User)properties.get("apiMethod:user")).getUsername();
+                    }
                     JAXBTaskList taskList = new JAXBTaskList();
                     this.setElementDatatableFieldDefinition(config, taskList);
-                    this.setElementList(bpmConfig, config, taskList);
+                    this.setElementList(userName, bpmConfig, config, taskList);
                     taskList.setContainerId(config.getProperty("containerId"));
                     taskList.setProcessId(config.getProperty("processId"));
                     taskList.setConfigId(bpmConfig.getId());
@@ -318,21 +320,24 @@ public class ApiTaskInterface extends KieApiManager {
 
                     ExecutorService executorService = Executors.newFixedThreadPool(10);
                     List<Callable<JAXBTask>> tasksCallables = new ArrayList<>();
-                    for(JAXBTask task : taskList.getList()) {
-                        Long processId = task.getProcessInstanceId();
 
-                        Callable<JAXBTask> taskCallable = () -> {
-                            Map<String, String> vars = this.getKieFormManager().getProcessVariableInstances(bpmConfig, processId+"");
-                            task.setProcessVariables(vars);
-                            return task;
-                        };
+                    if(taskList!=null && taskList.getList()!=null) {
+                        for (JAXBTask task : taskList.getList()) {
+                            Long processId = task.getProcessInstanceId();
 
-                        tasksCallables.add(taskCallable);
+                            Callable<JAXBTask> taskCallable = () -> {
+                                Map<String, String> vars = this.getKieFormManager().getProcessVariableInstances(bpmConfig, processId + "");
+                                task.setProcessVariables(vars);
+                                return task;
+                            };
 
+                            tasksCallables.add(taskCallable);
+
+                        }
+
+                        executorService.invokeAll(tasksCallables);
+                        executorService.shutdown();
                     }
-
-                    executorService.invokeAll(tasksCallables);
-                    executorService.shutdown();
                     return taskList;
                 }
             } catch (Exception e) {
@@ -442,17 +447,39 @@ public class ApiTaskInterface extends KieApiManager {
         JSONObject taskData = this.getKieFormManager().getTaskFormData(bpmConfig, containerId, Long.valueOf(taskIdString), null);
         JSONObject inputData = taskData.getJSONObject("task-input-data");
 
+        Map<String, Object> newValues = new HashMap<>();
+        int mapIndex = 0;
+        for(String topKey : inputData.keySet()) {
+
+            if(inputData.get(topKey) instanceof JSONArray) {
+
+                JSONArray values = (JSONArray)inputData.get(topKey);
+                for(Object val : values) {
+                    if(val instanceof JSONObject) {
+                        mapIndex++;
+                        for(String childKey : ((JSONObject) val).keySet()) {
+                            newValues.put(mapIndex+"_"+topKey+"_"+childKey, ((JSONObject) val).get(childKey));
+                        }
+                    }
+                }
+            }
+        }
+
+        for(String key : newValues.keySet()){
+            inputData.put(key, newValues.get(key));
+        }
+
         mergeTaskData(inputData, processForm);
 
-        // In order to avoid duplications of input fields remove all the form fields  
+        // In order to avoid duplications of input fields remove all the form fields
         // and nestedForms of the processForm to return only the Task Data readonly fields
         // processForm.getFields().clear();
         // processForm.getNestedForms().clear();
 
         if (null == processForm) {
             String msg = String.format("No form found with containerId %s and taskId %s does not exist", containerId, taskIdString);
-          throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, msg, Response.Status.CONFLICT);
-      //       logger.info("null == processForm {}",msg);
+            throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, msg, Response.Status.CONFLICT);
+            //       logger.info("null == processForm {}",msg);
         }
         else {
             if (null!=processForm.getFields()) {
@@ -463,7 +490,7 @@ public class ApiTaskInterface extends KieApiManager {
             }
         }
         String processId = processForm.getHolders().get(0).getValue();
-         try {
+        try {
             this.setLabels(processForm, langCode);
             form = KieApiUtil.createForm(processForm, this.getI18nManager(), langCode, this.getFormOverridesMap(widgetInfoId));
             form.setTaskId(taskIdString);
@@ -520,7 +547,7 @@ public class ApiTaskInterface extends KieApiManager {
                     fieldsList.add(apifield);
                 } catch (Exception ex) {
                     logger.error("Error adding task data field{}", ex);
-                    
+
                 }
             }
 
@@ -636,7 +663,7 @@ public class ApiTaskInterface extends KieApiManager {
         }
     }
 
-    public void claimTask(KieApiClaimTask claimTask) throws ApiException {
+    public void claimTask(KieApiClaimTask claimTask, Properties properties) throws ApiException {
 
         final String configId = claimTask.getConfigId();
         if (null != configId) {
@@ -650,9 +677,12 @@ public class ApiTaskInterface extends KieApiManager {
                     KieBpmConfig bpmConfig = this.getKieFormManager().getKieServerConfigurations().get(knowledgetSource);
                     String containerId = config.getProperty("containerId");
                     String taskId = claimTask.getTaskId();
-                    
-                    //TODO Check the user passed to the API
+
+
                     String username = bpmConfig.getUsername();
+                    if(properties.get("apiMethod:user") !=null) {
+                        username = ((User)properties.get("apiMethod:user")).getUsername();
+                    }
 
                     this.getKieFormManager().claimTask(bpmConfig, containerId, taskId, username);
                 }
@@ -682,7 +712,7 @@ public class ApiTaskInterface extends KieApiManager {
         String holderValue = holder.getValue();
         String formName = form.getHolders().get(0).getId();
         String holderType = holder.getType();
-        
+
         logger.debug("holderValue {}", holderValue);
         logger.debug("holderType {}", holderType);
 
@@ -778,18 +808,28 @@ public class ApiTaskInterface extends KieApiManager {
         return fieldMandatory.containsKey(fieldName);
     }
 
-    private void setElementList(KieBpmConfig bpmConfig, final ApsProperties config, JAXBTaskList taskList) throws ApsSystemException {
+    private void setElementList(String userName, KieBpmConfig bpmConfig, final ApsProperties config, JAXBTaskList taskList) throws ApsSystemException {
         String groups = config.getProperty("groups");
+
         if (groups != null) {
             groups = groups.replace(" ", "");
-            final List<JAXBTask> list = new ArrayList<>();
-            final List<KieTask> rawList = this.getKieFormManager().getHumanTaskList(bpmConfig, groups, null);
-            for (final KieTask task : rawList) {
-                task.setConfigId(bpmConfig.getId());
-                list.add(new JAXBTask(task));
-            }
-            taskList.setList(list);
+
         }
+
+        final List<JAXBTask> list = new ArrayList<>();
+        Map<String, String> opts = null;
+        if(userName !=null && !userName.isEmpty()) {
+            opts =new HashMap<>();
+            opts.put("user", userName);
+        }
+
+        final List<KieTask> rawList = this.getKieFormManager().getHumanTaskList(bpmConfig, groups, opts);
+        for (final KieTask task : rawList) {
+            task.setConfigId(bpmConfig.getId());
+            list.add(new JAXBTask(task));
+        }
+        taskList.setList(list);
+
     }
 
     private void startTasks(KieBpmConfig bpmConfig, List<KieTask> list, HashMap<String, String> opt) {
@@ -834,7 +874,7 @@ public class ApiTaskInterface extends KieApiManager {
         List<KieProcessFormField> fields = form.getFields();
         Map<String, KieProcessFormField> fieldMap = new HashMap<>();
         for (KieProcessFormField field : fields) {
-        
+
             if (field.getName().contains("_")) {
                 //Store both with and without the underscore. No clear way to know which one is coming back from KIE
                 fieldMap.put(field.getName().split("_")[1], field);
@@ -862,11 +902,11 @@ public class ApiTaskInterface extends KieApiManager {
     }
 
     private void filterTasksByProcessId(JAXBTaskList taskList, String processDefId) {
-        if (taskList.getList() != null) {
-            List<JAXBTask> filteredTasks = taskList.getList().stream()
-                    .filter(task -> task.getProcessDefinitionId().equals(processDefId))
-                    .collect(Collectors.toList());
-            taskList.setList(filteredTasks);
-        }
+//        if (taskList.getList() != null) {
+//            List<JAXBTask> filteredTasks = taskList.getList().stream()
+//                    .filter(task -> task.getProcessDefinitionId().equals(processDefId))
+//                    .collect(Collectors.toList());
+//            taskList.setList(filteredTasks);
+//        }
     }
 }
