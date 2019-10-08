@@ -55,7 +55,7 @@ public interface ContentTypeResource {
         @ApiResponse(code = 401, message = "Unauthorized"),
         @ApiResponse(code = 403, message = "Forbidden")})
     @DeleteMapping("/plugins/cms/contentTypes/{code}")
-    ResponseEntity<Void> delete(@ApiParam(value = "code", required = true) @PathVariable("code") String code);
+    ResponseEntity<SimpleRestResponse<Map>> delete(@ApiParam(value = "code", required = true) @PathVariable("code") String code);
 
     @ApiOperation(
             value = "getAllContentTypes",
