@@ -13,6 +13,7 @@
  */
 package org.entando.entando.plugins.jacms.web.content;
 
+import static org.hamcrest.CoreMatchers.is;
 import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
@@ -161,6 +162,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
                     .accept(MediaType.APPLICATION_JSON_UTF8))
                     .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(0)))
                     .andReturn();
             Assert.assertNull(this.contentManager.getEntityPrototype(typeCode));
         } catch (Exception e) {
@@ -542,6 +544,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(0)))
                 .andReturn();
     }
 
