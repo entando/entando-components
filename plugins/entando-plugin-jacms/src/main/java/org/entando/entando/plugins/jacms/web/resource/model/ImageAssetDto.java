@@ -10,6 +10,8 @@ import java.util.Map;
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 public class ImageAssetDto extends AssetDto {
+    public static final String RESOURCE_TYPE = "image";
+
     private List<ImageMetadataDto> versions;
 
     private Map<String, String> metadata;
@@ -17,7 +19,7 @@ public class ImageAssetDto extends AssetDto {
     @Builder
     public ImageAssetDto(String id, String name, String description, Date createdAt, Date updatedAt,
              @Singular List<ImageMetadataDto> versions, String group, @Singular List<String> categories, Map<String,String> metadata) {
-        super(id, name, description, createdAt, updatedAt, group, categories);
+        super(id, RESOURCE_TYPE, name, description, createdAt, updatedAt, group, categories);
         this.versions = versions;
         this.metadata = metadata;
     }

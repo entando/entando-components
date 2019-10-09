@@ -62,11 +62,11 @@ public class ResourcesController {
             @ApiResponse(code = 401, message = "Unauthorized")})
     @GetMapping("/plugins/cms/assets")
     @RestAccessControl(permission = Permission.CONTENT_EDITOR)
-    public ResponseEntity<PagedRestResponse<AssetDto>> listAssets(@RequestParam("type") String type, RestListRequest requestList) {
+    public ResponseEntity<PagedRestResponse<AssetDto>> listAssets(@RequestParam(value = "type", required = false) String type, RestListRequest requestList) {
         logger.debug("REST request - list image resources");
 
         resourceValidator.validateRestListRequest(requestList, AssetDto.class);
-        PagedMetadata<AssetDto> result = service.listAssets(getResourceType(type), requestList);
+        PagedMetadata<AssetDto> result = service.listAssets(type, requestList);
         resourceValidator.validateRestListResult(requestList, result);
         return ResponseEntity.ok(new PagedRestResponse<>(result));
     }
@@ -77,8 +77,9 @@ public class ResourcesController {
             @ApiResponse(code = 401, message = "Unauthorized")})
     @PostMapping("/plugins/cms/assets")
     @RestAccessControl(permission = Permission.CONTENT_EDITOR)
-    public ResponseEntity<SimpleRestResponse<AssetDto>> createAsset(@RequestParam("type") String type, @RequestPart("file") MultipartFile file,
-                @RequestParam String group, @RequestParam(required = false) String categories) {
+    public ResponseEntity<SimpleRestResponse<AssetDto>> createAsset(@RequestParam("type") String type,
+            @RequestPart("file") MultipartFile file,@RequestParam String group,
+            @RequestParam(required = false) String categories) {
         logger.debug("REST request - create new resource");
 
         List<String> categoriesList = Arrays.stream(
@@ -87,7 +88,7 @@ public class ResourcesController {
                 .filter(c -> c.length() > 0)
                 .collect(Collectors.toList());
 
-        AssetDto result = service.createAsset(getResourceType(type), file, group, categoriesList, (UserDetails) httpSession.getAttribute("user"));
+        AssetDto result = service.createAsset(type, file, group, categoriesList, (UserDetails) httpSession.getAttribute("user"));
         return ResponseEntity.ok(new SimpleRestResponse<>(result));
     }
 
@@ -122,15 +123,5 @@ public class ResourcesController {
         logger.debug("REST request - delete resource with id {}", resourceId);
         service.deleteAsset(resourceId);
         return ResponseEntity.ok(new SimpleRestResponse<>(new HashMap()));
-    }
-
-    public String getResourceType(String type) {
-        if ("image".equals(type)) {
-            return "Image";
-        } else if ("file".equals(type)) {
-            return "Attach";
-        } else {
-            throw new RestServerError(String.format("Invalid resource type: %s", type), null);
-        }
     }
 }
