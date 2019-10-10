@@ -130,7 +130,7 @@ public class ContentTypeResourceControllerTest {
 
     @Test
     public void deleteContentTypeShouldCallServiceAndReturnOkStatus() {
-        ResponseEntity<Void> response = controller.delete("ABC");
+        ResponseEntity<SimpleRestResponse<Map>> response = controller.delete("ABC");
         verify(service).delete("ABC");
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
