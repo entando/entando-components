@@ -13,6 +13,15 @@
  */
 package org.entando.entando.plugins.jacms.web.contentsettings;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
@@ -20,19 +29,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.entando.entando.plugins.jacms.web.contentsettings.model.ContentSettingsCropRatioRequest;
 import org.entando.entando.plugins.jacms.web.contentsettings.model.ContentSettingsEditorRequest;
 import org.entando.entando.plugins.jacms.web.contentsettings.model.CreateContentSettingsMetadataRequest;
-import org.entando.entando.plugins.jacms.web.contentsettings.model.DeleteContentSettingsMetadataRequest;
+import org.entando.entando.plugins.jacms.web.contentsettings.model.EditContentSettingsMetadataRequest;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ContentSettingsControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
@@ -71,7 +74,7 @@ public class ContentSettingsControllerIntegrationTest extends AbstractController
     }
 
     @Test
-    public void testCreateAndRemoveMetadata() throws Exception {
+    public void testCreateEditAndRemoveMetadata() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.SUPERUSER)
                 .build();
@@ -87,6 +90,17 @@ public class ContentSettingsControllerIntegrationTest extends AbstractController
             .andExpect(jsonPath("$.payload.newkey.size()", is(2)))
             .andExpect(jsonPath("$.payload.newkey[0]", Matchers.equalTo("newmappingvalue1")))
             .andExpect(jsonPath("$.payload.newkey[1]", Matchers.equalTo("newmappingvalue2")));
+
+        performEditMetadata(user, "newkey", "newmappingvalue2")
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(5)))
+                .andExpect(jsonPath("$.payload.legend", Matchers.anything()))
+                .andExpect(jsonPath("$.payload.alt", Matchers.anything()))
+                .andExpect(jsonPath("$.payload.title", Matchers.anything()))
+                .andExpect(jsonPath("$.payload.description", Matchers.anything()))
+                .andExpect(jsonPath("$.payload.newkey.size()", is(1)))
+                .andExpect(jsonPath("$.payload.newkey[0]", Matchers.equalTo("newmappingvalue2")));
 
 
         performRemoveMetadata(user, "newkey")
@@ -121,6 +135,28 @@ public class ContentSettingsControllerIntegrationTest extends AbstractController
     }
 
     @Test
+    public void testEditNonExistentMetadata() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.SUPERUSER)
+                .build();
+
+        performEditMetadata(user, "invalid", "newmappingvalue3")
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void testRemoveNonExistentMetadata() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.SUPERUSER)
+                .build();
+
+        performRemoveMetadata(user, "invalid")
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     public void testCreateInvalidMetadata() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.SUPERUSER)
@@ -152,7 +188,7 @@ public class ContentSettingsControllerIntegrationTest extends AbstractController
     }
 
     @Test
-    public void testCreateAndRemoveCropRatios() throws Exception {
+    public void testCreateEditAndRemoveCropRatios() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.SUPERUSER)
                 .build();
@@ -163,22 +199,30 @@ public class ContentSettingsControllerIntegrationTest extends AbstractController
             .andExpect(jsonPath("$.payload.size()", is(1)))
             .andExpect(jsonPath("$.payload[0]", Matchers.equalTo("4:3")));
 
+        performEditCropRatio(user, "4:3", "8:6")
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(1)))
+                .andExpect(jsonPath("$.payload[0]", Matchers.equalTo("8:6")));
+
         performCreateCropRatio(user, "16:9")
             .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.payload.size()", is(2)))
-            .andExpect(jsonPath("$.payload[0]", Matchers.equalTo("4:3")))
+            .andExpect(jsonPath("$.payload[0]", Matchers.equalTo("8:6")))
             .andExpect(jsonPath("$.payload[1]", Matchers.equalTo("16:9")));
 
         performRemoveCropRatio(user, "4:3")
             .andDo(print())
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.payload.size()", is(1)));
+            .andExpect(status().isNotFound());
+
+        performRemoveCropRatio(user, "8:6")
+                .andDo(print())
+                .andExpect(status().isOk());
 
         performRemoveCropRatio(user, "16:9")
             .andDo(print())
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.payload.size()", is(0)));
+            .andExpect(status().isOk());
 
     }
 
@@ -305,21 +349,34 @@ public class ContentSettingsControllerIntegrationTest extends AbstractController
                     .accept(MediaType.APPLICATION_JSON_UTF8));
     }
 
-    private ResultActions performRemoveMetadata(UserDetails user, String key) throws Exception {
-        String path = "/plugins/cms/contentSettings/metadata";
+    private ResultActions performEditMetadata(UserDetails user, String key, String mapping) throws Exception {
+        String path = "/plugins/cms/contentSettings/metadata/" + key;
         if (null == user) {
             return mockMvc.perform(get(path));
         }
         String accessToken = mockOAuthInterceptor(user);
 
-        DeleteContentSettingsMetadataRequest request = new DeleteContentSettingsMetadataRequest();
-        request.setKey(key);
+        EditContentSettingsMetadataRequest request = new EditContentSettingsMetadataRequest();
+        request.setMapping(mapping);
+
+        return mockMvc.perform(
+                put(path)
+                    .header("Authorization", "Bearer " + accessToken)
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .content(mapper.writeValueAsString(request))
+                    .accept(MediaType.APPLICATION_JSON_UTF8));
+    }
+
+    private ResultActions performRemoveMetadata(UserDetails user, String key) throws Exception {
+        String path = "/plugins/cms/contentSettings/metadata/" + key;
+        if (null == user) {
+            return mockMvc.perform(get(path));
+        }
+        String accessToken = mockOAuthInterceptor(user);
 
         return mockMvc.perform(
                 delete(path)
                     .header("Authorization", "Bearer " + accessToken)
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
-                    .content(mapper.writeValueAsString(request))
                     .accept(MediaType.APPLICATION_JSON_UTF8));
     }
 
@@ -341,21 +398,34 @@ public class ContentSettingsControllerIntegrationTest extends AbstractController
                     .accept(MediaType.APPLICATION_JSON_UTF8));
     }
 
-    private ResultActions performRemoveCropRatio(UserDetails user, String ratio) throws Exception {
-        String path = "/plugins/cms/contentSettings/cropRatios";
+    private ResultActions performEditCropRatio(UserDetails user, String ratio, String newRatio) throws Exception {
+        String path = "/plugins/cms/contentSettings/cropRatios/" + ratio;
         if (null == user) {
             return mockMvc.perform(get(path));
         }
         String accessToken = mockOAuthInterceptor(user);
 
         ContentSettingsCropRatioRequest request = new ContentSettingsCropRatioRequest();
-        request.setRatio(ratio);
+        request.setRatio(newRatio);
+
+        return mockMvc.perform(
+                put(path)
+                    .header("Authorization", "Bearer " + accessToken)
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .content(mapper.writeValueAsString(request))
+                    .accept(MediaType.APPLICATION_JSON_UTF8));
+    }
+
+    private ResultActions performRemoveCropRatio(UserDetails user, String ratio) throws Exception {
+        String path = "/plugins/cms/contentSettings/cropRatios/" + ratio;
+        if (null == user) {
+            return mockMvc.perform(get(path));
+        }
+        String accessToken = mockOAuthInterceptor(user);
 
         return mockMvc.perform(
                 delete(path)
                     .header("Authorization", "Bearer " + accessToken)
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
-                    .content(mapper.writeValueAsString(request))
                     .accept(MediaType.APPLICATION_JSON_UTF8));
     }
 

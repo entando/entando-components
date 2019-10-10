@@ -23,6 +23,7 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
 import com.agiletec.plugins.jacms.aps.system.services.searchengine.ICmsSearchEngineManager;
 import com.agiletec.plugins.jacms.aps.system.services.searchengine.LastReloadInfo;
 import org.apache.commons.lang3.StringUtils;
+import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.plugins.jacms.web.contentsettings.model.ContentSettingsDto;
 import org.entando.entando.plugins.jacms.web.contentsettings.model.LastReloadInfoDto;
@@ -91,6 +92,21 @@ public class ContentSettingsService {
         Map<String, List<String>> metadata = listMetadata();
 
         validateMetadata(metadata, key, mapping);
+        validateMetadataNotExists(metadata, key);
+
+        List<String> newMetadata = new ArrayList<>(Arrays.asList(mapping.trim().split(",")));
+        metadata.put(key.trim(), newMetadata);
+
+        saveMetadata(metadata);
+
+        return metadata;
+    }
+
+    public Map<String, List<String>> editMetadata(String key, String mapping) {
+        Map<String, List<String>> metadata = listMetadata();
+
+        validateMetadata(metadata, key, mapping);
+        validateMetadataExists(metadata, key);
 
         List<String> newMetadata = new ArrayList<>(Arrays.asList(mapping.trim().split(",")));
         metadata.put(key.trim(), newMetadata);
@@ -103,11 +119,7 @@ public class ContentSettingsService {
     public Map<String, List<String>> removeMetadata(String key)  {
         Map<String, List<String>> metadata = listMetadata();
 
-        if (!metadata.containsKey(key)) {
-            final BeanPropertyBindingResult errors = new BeanPropertyBindingResult(key, "contentSettings.metadata");
-            errors.reject(ERRCODE_NOT_FOUND_METADATA, "plugins.jacms.contentsettings.error.metadata.notFound");
-            throw new ValidationGenericException(errors);
-        }
+        validateMetadataExists(metadata, key);
 
         if (!StringUtils.isBlank(key)) {
             metadata.remove(key.trim());
@@ -159,8 +171,22 @@ public class ContentSettingsService {
     public List<String> addCropRatio(String ratio) {
         List<String> cropRatios = listCropRatios();
         validateCropRatio(cropRatios, ratio);
+        validateCropRatioNotExists(cropRatios, ratio);
 
         cropRatios.add(ratio);
+
+        saveCropRatios(cropRatios);
+
+        return listCropRatios();
+    }
+
+    public List<String> editCropRatio(String ratio, String newRatio) {
+        List<String> cropRatios = listCropRatios();
+        validateCropRatio(cropRatios, ratio);
+        validateCropRatioExists(cropRatios, ratio);
+
+        cropRatios.remove(ratio);
+        cropRatios.add(newRatio);
 
         saveCropRatios(cropRatios);
 
@@ -170,13 +196,7 @@ public class ContentSettingsService {
     public List<String> removeCropRatio(String ratio) {
         List<String> cropRatios = listCropRatios();
 
-        if (!cropRatios.contains(ratio)) {
-            final BeanPropertyBindingResult errors = new BeanPropertyBindingResult(ratio, "contentSettings.ratio");
-            errors.reject(ERRCODE_NOT_FOUND_CROP_RATIO, "plugins.jacms.contentsettings.error.cropRatio.notFound");
-            throw new ValidationGenericException(errors);
-        }
-
-
+        validateCropRatioExists(cropRatios, ratio);
         cropRatios.remove(ratio);
 
         saveCropRatios(cropRatios);
@@ -240,6 +260,10 @@ public class ContentSettingsService {
                 throw new ValidationGenericException(errors);
             }
         }
+    }
+
+    public void validateMetadataNotExists(Map<String,List<String>> metadata, String key) {
+        BeanPropertyBindingResult errors = new BeanPropertyBindingResult(key, "contentSettings.metadata");
 
         if (metadata.containsKey(key)) {
             errors.reject(ERRCODE_CONFLICT_METADATA, "plugins.jacms.contentsettings.error.metadata.conflict");
@@ -247,13 +271,14 @@ public class ContentSettingsService {
         }
     }
 
+    public void validateMetadataExists(Map<String,List<String>> metadata, String key) {
+        if (!metadata.containsKey(key)) {
+            throw new ResourceNotFoundException(ERRCODE_NOT_FOUND_METADATA, "metadata", key);
+        }
+    }
+
     public void validateCropRatio(List<String> cropRatios, String ratio) {
         final BeanPropertyBindingResult errors = new BeanPropertyBindingResult(ratio, "contentSettings.ratio");
-
-        if (cropRatios.contains(ratio)) {
-            errors.reject(ERRCODE_CONFLICT_CROP_RATIO, "plugins.jacms.contentsettings.error.cropRatio.conflict");
-            throw new ValidationConflictException(errors);
-        }
 
         String[] split = Optional.ofNullable(ratio)
                 .orElseThrow(() -> {
@@ -273,6 +298,21 @@ public class ContentSettingsService {
         } catch (NumberFormatException e) {
             errors.reject(ERRCODE_INVALID_CROP_RATIO, "plugins.jacms.contentsettings.error.cropRatio.invalid");
             throw new ValidationGenericException(errors);
+        }
+    }
+
+    public void validateCropRatioNotExists(List<String> cropRatios, String ratio) {
+        final BeanPropertyBindingResult errors = new BeanPropertyBindingResult(ratio, "contentSettings.ratio");
+
+        if (cropRatios.contains(ratio)) {
+            errors.reject(ERRCODE_CONFLICT_CROP_RATIO, "plugins.jacms.contentsettings.error.cropRatio.conflict");
+            throw new ValidationConflictException(errors);
+        }
+    }
+
+    public void validateCropRatioExists(List<String> cropRatios, String ratio) {
+        if (!cropRatios.contains(ratio)) {
+            throw new ResourceNotFoundException(ERRCODE_NOT_FOUND_CROP_RATIO, "cropRatio", ratio);
         }
     }
 

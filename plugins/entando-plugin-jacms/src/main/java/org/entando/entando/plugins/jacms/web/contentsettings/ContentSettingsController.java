@@ -18,20 +18,29 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.validation.Valid;
 import org.entando.entando.plugins.jacms.aps.system.services.contentsettings.ContentSettingsService;
-import org.entando.entando.plugins.jacms.web.contentsettings.model.*;
+import org.entando.entando.plugins.jacms.web.contentsettings.model.ContentSettingsCropRatioRequest;
+import org.entando.entando.plugins.jacms.web.contentsettings.model.ContentSettingsDto;
+import org.entando.entando.plugins.jacms.web.contentsettings.model.ContentSettingsEditorRequest;
+import org.entando.entando.plugins.jacms.web.contentsettings.model.CreateContentSettingsMetadataRequest;
+import org.entando.entando.plugins.jacms.web.contentsettings.model.EditContentSettingsMetadataRequest;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class ContentSettingsController {
@@ -81,18 +90,32 @@ public class ContentSettingsController {
         ));
     }
 
+    @ApiOperation(value = "EDIT ContentSettingsMetadata", nickname = "editContentSettingsMetadata", tags = {"content-settings-controller"})
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Created"),
+            @ApiResponse(code = 401, message = "Unauthorized")})
+    @PutMapping("/plugins/cms/contentSettings/metadata/{key}")
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    public ResponseEntity<SimpleRestResponse<Map<String, List<String>>>> editMetadata(@PathVariable String key,
+            @Valid @RequestBody EditContentSettingsMetadataRequest request) {
+        logger.debug("REST request - add new content settings metadata");
+
+        return ResponseEntity.ok(new SimpleRestResponse<>(
+                service.editMetadata(key, request.getMapping().trim())
+        ));
+    }
+
     @ApiOperation(value = "DELETE ContentSettingsMetadata", nickname = "deleteContentSettingsMetadata", tags = {"content-settings-controller"})
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created"),
             @ApiResponse(code = 401, message = "Unauthorized")})
-    @DeleteMapping("/plugins/cms/contentSettings/metadata")
+    @DeleteMapping("/plugins/cms/contentSettings/metadata/{key}")
     @RestAccessControl(permission = Permission.SUPERUSER)
-    public ResponseEntity<SimpleRestResponse<Map<String, List<String>>>> deleteMetadata(
-            @Valid @RequestBody DeleteContentSettingsMetadataRequest request) {
-        logger.debug("REST request - delete content settings metadata");
+    public ResponseEntity<SimpleRestResponse<Map<String, List<String>>>> deleteMetadata(@PathVariable String key) {
+        logger.debug("REST request - delete content settings metadata: {}", key);
 
         return ResponseEntity.ok(new SimpleRestResponse<>(
-                service.removeMetadata(request.getKey().trim())
+                service.removeMetadata(key.trim())
         ));
     }
 
@@ -111,17 +134,31 @@ public class ContentSettingsController {
         ));
     }
 
+    @ApiOperation(value = "EDIT ContentSettingsCropRatio", nickname = "editContentSettingsCropRatio", tags = {"content-settings-controller"})
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Updated"),
+            @ApiResponse(code = 401, message = "Unauthorized")})
+    @PutMapping("/plugins/cms/contentSettings/cropRatios/{ratio}")
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    public ResponseEntity<SimpleRestResponse<List<String>>> editCropRatio(@PathVariable String ratio,
+            @Valid @RequestBody ContentSettingsCropRatioRequest request) {
+        logger.debug("REST request - edit content settings crop ratio: {}", ratio);
+
+        return ResponseEntity.ok(new SimpleRestResponse<>(
+                service.editCropRatio(ratio, request.getRatio().trim())
+        ));
+    }
+
     @ApiOperation(value = "DELETE ContentSettingsCropRatio", nickname = "deleteContentSettingsCropRatio", tags = {"content-settings-controller"})
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created"),
             @ApiResponse(code = 401, message = "Unauthorized")})
-    @DeleteMapping("/plugins/cms/contentSettings/cropRatios")
+    @DeleteMapping("/plugins/cms/contentSettings/cropRatios/{ratio}")
     @RestAccessControl(permission = Permission.SUPERUSER)
-    public ResponseEntity<SimpleRestResponse<Map>> deleteCropRatio(
-            @Valid @RequestBody ContentSettingsCropRatioRequest request) {
-        logger.debug("REST request - delete content settings crop ratio");
+    public ResponseEntity<SimpleRestResponse<Map>> deleteCropRatio(@PathVariable String ratio) {
+        logger.debug("REST request - delete content settings crop ratio: {}", ratio);
 
-        service.removeCropRatio(request.getRatio().trim());
+        service.removeCropRatio(ratio.trim());
         return ResponseEntity.ok(new SimpleRestResponse<>(new HashMap()));
     }
 
