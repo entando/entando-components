@@ -113,4 +113,15 @@ public interface ResourceDataBean {
     public void setMetadata(Map<String,String> metadata);
 
 
+    /**
+     * Returns he owner of the resource
+     * @return The owner's username
+     */
+    public String getOwner();
+
+    /**
+     * Sets the owner of the resource
+     * @param owner The owner's username
+     */
+    public void setOwner(String owner);
 }

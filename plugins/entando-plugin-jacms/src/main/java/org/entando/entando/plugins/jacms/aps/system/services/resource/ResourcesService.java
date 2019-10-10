@@ -112,6 +112,7 @@ public class ResourcesService {
             resourceFile.setMainGroup(group);
             resourceFile.setResourceType(convertResourceType(type));
             resourceFile.setCategories(convertCategories(categories));
+            resourceFile.setOwner(user.getUsername());
 
             ResourceInterface resource = resourceManager.addResource(resourceFile);
             return convertResourceToDto(resourceManager.loadResource(resource.getId()));
@@ -146,6 +147,7 @@ public class ResourcesService {
             resourceFile.setResourceType(resource.getType());
             resourceFile.setResourceId(resourceId);
             resourceFile.setMetadata(resource.getMetadata());
+            resourceFile.setOwner(resource.getOwner());
 
 
             if (file != null) {
@@ -277,6 +279,9 @@ public class ResourcesService {
                 case "group":
                     attr = IResourceManager.RESOURCE_MAIN_GROUP_FILTER_KEY;
                     break;
+                case "owner":
+                    attr = IResourceManager.RESOURCE_OWNER_FILTER_KEY;
+                    break;
                 default:
                     log.warn("Invalid filter attribute: " + filter.getAttribute());
                     continue;
@@ -305,6 +310,8 @@ public class ResourcesService {
             key = IResourceManager.RESOURCE_CREATION_DATE_FILTER_KEY;
         } else if ("name".equals(groupBy)) {
             key = IResourceManager.RESOURCE_FILENAME_FILTER_KEY;
+        } else if ("owner".equals(groupBy)) {
+            key = IResourceManager.RESOURCE_OWNER_FILTER_KEY;
         }
 
         EntitySearchFilter filter = new EntitySearchFilter(key, false);
@@ -355,7 +362,8 @@ public class ResourcesService {
                 .version(ImageMetadataDto.builder()
                         .path(resource.getImagePath("0"))
                         .size(resource.getDefaultInstance().getFileLength())
-                        .build());
+                        .build())
+                .owner(resource.getOwner());
 
         for (ImageResourceDimension dimensions : getImageDimensions()) {
             ResourceInstance instance = resource.getInstance(dimensions.getIdDim(), null);
@@ -387,6 +395,7 @@ public class ResourcesService {
                 .size(resource.getDefaultInstance().getFileLength())
                 .categories(resource.getCategories().stream()
                         .map(Category::getCode).collect(Collectors.toList()))
+                .owner(resource.getOwner())
                 .build();
     }
 

@@ -41,6 +41,7 @@ public class BaseResourceDataBean implements ResourceDataBean {
     private Map<String, String> metadata = new HashMap<String, String>();
     private InputStream inputStream;
     private int fileSize;
+    private String owner;
     
     public BaseResourceDataBean() {
     }
@@ -173,4 +174,13 @@ public class BaseResourceDataBean implements ResourceDataBean {
         this.metadata = metadata;
     }
 
+    @Override
+    public String getOwner() {
+        return owner;
+    }
+
+    @Override
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
 }

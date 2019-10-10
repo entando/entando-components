@@ -300,6 +300,7 @@ public class ResourceManager extends AbstractService implements IResourceManager
         resource.setMasterFileName(bean.getFileName());
         resource.setId(bean.getResourceId());
         resource.setMetadata(bean.getMetadata());
+        resource.setOwner(bean.getOwner());
         return resource;
     }
 
@@ -426,6 +427,7 @@ public class ResourceManager extends AbstractService implements IResourceManager
         resource.setMainGroup(resourceVo.getMainGroup());
         resource.setCreationDate(resourceVo.getCreationDate());
         resource.setLastModified(resourceVo.getLastModified());
+        resource.setOwner(resourceVo.getOwner());
         return resource;
     }
 
