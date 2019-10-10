@@ -307,8 +307,8 @@ public class ResourcesService {
             key = IResourceManager.RESOURCE_FILENAME_FILTER_KEY;
         }
 
-        EntitySearchFilter filter = new EntitySearchFilter(key, false);
-        filter.setOrder(requestList.getDirection().equals("desc") ?
+        EntitySearchFilter filter = new EntitySearchFilter(key, true);
+        filter.setOrder(requestList.getDirection().equals(EntitySearchFilter.DESC_ORDER) ?
                 EntitySearchFilter.DESC_ORDER : EntitySearchFilter.ASC_ORDER);
 
         return filter;
