@@ -170,7 +170,7 @@ public class TestMultipleResourceAction extends ApsAdminBaseTestCase {
         }
         params.put("resourceTypeCode", action.getResourceTypeCode());
 
-        assertEquals(1, action.getCategoryCodes().size());
+        assertEquals(2, action.getCategoryCodes().size());
         assertTrue(action.getCategoryCodes().contains("resCat1"));
 
         this.initAction("/do/jacms/Resource", "removeCategory");
