@@ -190,6 +190,25 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
     }
 
     @Test
+    public void testFilterResourcesByGroupAndCategories() throws Exception {
+        UserDetails user = createAccessToken();
+        Map<String,String> params = new HashMap<>();
+        params.put("filters[0].attribute", "group");
+        params.put("filters[0].value", "free");
+        params.put("filters[1].attribute", "categories");
+        params.put("filters[1].value", "resCat1");
+        params.put("filters[2].attribute", "categories");
+        params.put("filters[2].value", "resCat3");
+
+        performGetResources(user, "image", params)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(1)))
+                .andExpect(jsonPath("$.payload.[0].id", is("44")))
+                .andExpect(jsonPath("$.payload.[0].type", is("image")));
+    }
+
+    @Test
     public void testCreateEditDeleteImageResource() throws Exception {
         UserDetails user = createAccessToken();
         String createdId = null;

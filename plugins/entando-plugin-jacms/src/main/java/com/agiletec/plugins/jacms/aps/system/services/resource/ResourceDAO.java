@@ -230,7 +230,6 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
             FieldSearchFilter filterToAdd = new FieldSearchFilter(IResourceManager.RESOURCE_FILENAME_FILTER_KEY, filename, true);
             filters = super.addFilter(filters, filterToAdd);
         }
-        filters = this.addGroupFilter(filters, groupCodes);
         if (filters.length == 0) {
             return null;
         }
@@ -285,12 +284,12 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
         try {
             stat = conn.prepareStatement(query);
             int index = 0;
-            index = this.addMetadataFieldFilterStatementBlock(filters, index, stat);
             if (null != categories && categories.size() > 0) {
                 for (String category : categories) {
                     stat.setString(++index, category);
                 }
             }
+            index = this.addMetadataFieldFilterStatementBlock(filters, index, stat);
         } catch (Throwable t) {
             logger.error("Error while creating the statement", t);
             throw new RuntimeException("Error while creating the statement", t);
