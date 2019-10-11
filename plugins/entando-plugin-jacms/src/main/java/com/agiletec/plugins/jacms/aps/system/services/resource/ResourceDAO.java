@@ -308,9 +308,12 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
     private StringBuffer createBaseQueryBlock(FieldSearchFilter[] filters, boolean selectAll, List<String> categories) {
         StringBuffer query = super.createBaseQueryBlock(filters, selectAll);
 
-        for(int i = 0; i < categories.size(); i++) {
-            query.append(String.format("INNER JOIN resourcerelations res%d ON resources.resid = res%d.resid AND res%d.refcategory= ? ",
-                    i, i, i));
+        if (categories != null) {
+            for (int i = 0; i < categories.size(); i++) {
+                query.append(String.format(
+                        "INNER JOIN resourcerelations res%d ON resources.resid = res%d.resid AND res%d.refcategory= ? ",
+                        i, i, i));
+            }
         }
         return query;
     }
