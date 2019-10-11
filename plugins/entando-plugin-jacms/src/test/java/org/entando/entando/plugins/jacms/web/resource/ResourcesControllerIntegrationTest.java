@@ -139,6 +139,8 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
         Map<String,String> params = new HashMap<>();
         params.put("filters[0].attribute", "categories");
         params.put("filters[0].value", "resCat1");
+        params.put("filters[1].attribute", "categories");
+        params.put("filters[1].value", "resCat3");
 
         performGetResources(user, "image", params)
             .andDo(print())
