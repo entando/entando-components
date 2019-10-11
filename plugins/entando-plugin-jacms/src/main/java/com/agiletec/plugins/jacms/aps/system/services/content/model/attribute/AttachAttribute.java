@@ -87,4 +87,9 @@ public class AttachAttribute extends AbstractResourceAttribute {
 		return buffer.toString();
 	}
 
+	@Override
+	public boolean isSearchableOptionSupported() {
+		return true;
+	}
+
 }

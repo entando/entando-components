@@ -246,16 +246,272 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
     }
 
     @Test
-    public void testGetAttribute() throws Exception {
+    public void testGetAttachAttribute() throws Exception {
         mockMvc.perform(
-                get("/plugins/cms/contentTypeAttributes/{code}", "Text")
+                get("/plugins/cms/contentTypeAttributes/{code}", "Attach")
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 //                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.payload.code").value("Attach"))
+                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andReturn();
+    }
+
+    @Test
+    public void testGetBooleanAttribute() throws Exception {
+        mockMvc.perform(
+                get("/plugins/cms/contentTypeAttributes/{code}", "Boolean")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                //                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.payload.code").value("Boolean"))
+                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(false))
+                .andReturn();
+    }
+
+    @Test
+    public void testGetCheckBoxAttribute() throws Exception {
+        mockMvc.perform(
+                get("/plugins/cms/contentTypeAttributes/{code}", "CheckBox")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                //                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.payload.code").value("CheckBox"))
+                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(false))
+                .andReturn();
+    }
+
+    @Test
+    public void testGetCompositeAttribute() throws Exception {
+        mockMvc.perform(
+                get("/plugins/cms/contentTypeAttributes/{code}", "Composite")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                //                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.payload.code").value("Composite"))
+                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(false))
+                .andReturn();
+    }
+
+    @Test
+    public void testGetDateAttribute() throws Exception {
+        mockMvc.perform(
+                get("/plugins/cms/contentTypeAttributes/{code}", "Date")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                //                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.payload.code").value("Date"))
+                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andReturn();
+    }
+
+    @Test
+    public void testGetEnumeratorAttribute() throws Exception {
+        mockMvc.perform(
+                get("/plugins/cms/contentTypeAttributes/{code}", "Enumerator")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                //                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.payload.code").value("Enumerator"))
+                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andReturn();
+    }
+
+    @Test
+    public void testGetEnumeratorMapAttribute() throws Exception {
+        mockMvc.perform(
+                get("/plugins/cms/contentTypeAttributes/{code}", "EnumeratorMap")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                //                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.payload.code").value("EnumeratorMap"))
+                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andReturn();
+    }
+
+    @Test
+    public void testGetHypertextAttribute() throws Exception {
+        mockMvc.perform(
+                get("/plugins/cms/contentTypeAttributes/{code}", "Hypertext")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                //                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.payload.code").value("Hypertext"))
+                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andReturn();
+    }
+
+    @Test
+    public void testGetImageAttribute() throws Exception {
+        mockMvc.perform(
+                get("/plugins/cms/contentTypeAttributes/{code}", "Image")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                //                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.payload.code").value("Image"))
+                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andReturn();
+    }
+
+    @Test
+    public void testGetLinkAttribute() throws Exception {
+        mockMvc.perform(
+                get("/plugins/cms/contentTypeAttributes/{code}", "Link")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                //                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.payload.code").value("Link"))
+                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andReturn();
+    }
+
+    @Test
+    public void testGetListAttribute() throws Exception {
+        mockMvc.perform(
+                get("/plugins/cms/contentTypeAttributes/{code}", "List")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                //                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.payload.code").value("List"))
+                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(false))
+                .andReturn();
+    }
+
+    @Test
+    public void testGetLongtextAttribute() throws Exception {
+        mockMvc.perform(
+                get("/plugins/cms/contentTypeAttributes/{code}", "Longtext")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                //                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.payload.code").value("Longtext"))
+                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andReturn();
+    }
+
+    @Test
+    public void testGetMonolistAttribute() throws Exception {
+        mockMvc.perform(
+                get("/plugins/cms/contentTypeAttributes/{code}", "Monolist")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                //                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.payload.code").value("Monolist"))
+                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(false))
+                .andReturn();
+    }
+
+    @Test
+    public void testGetMonotextAttribute() throws Exception {
+        mockMvc.perform(
+                get("/plugins/cms/contentTypeAttributes/{code}", "Monotext")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                //                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.payload.code").value("Monotext"))
+                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andReturn();
+    }
+
+    @Test
+    public void testGetNumberAttribute() throws Exception {
+        mockMvc.perform(
+                get("/plugins/cms/contentTypeAttributes/{code}", "Number")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                //                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.payload.code").value("Number"))
+                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andReturn();
+    }
+
+    @Test
+    public void testGetTextAttribute() throws Exception {
+        mockMvc.perform(
+                get("/plugins/cms/contentTypeAttributes/{code}", "Text")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                //                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("Text"))
+                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andReturn();
+    }
+
+    @Test
+    public void testGetThreeStateAttribute() throws Exception {
+        mockMvc.perform(
+                get("/plugins/cms/contentTypeAttributes/{code}", "ThreeState")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                //                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.payload.code").value("ThreeState"))
+                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(false))
+                .andReturn();
+    }
+
+    @Test
+    public void testGetTimestampAttribute() throws Exception {
+        mockMvc.perform(
+                get("/plugins/cms/contentTypeAttributes/{code}", "Timestamp")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                //                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.payload.code").value("Timestamp"))
+                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
                 .andReturn();
     }
 
