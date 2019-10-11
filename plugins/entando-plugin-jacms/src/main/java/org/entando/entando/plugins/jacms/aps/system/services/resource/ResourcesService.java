@@ -256,6 +256,7 @@ public class ResourcesService {
             );
         }
 
+        List<String> groups = new ArrayList<>();
         for (Filter filter : Optional.ofNullable(requestList.getFilters()).orElse(new Filter[]{})) {
             String attr;
             boolean useLikeOption = false;
@@ -275,8 +276,8 @@ public class ResourcesService {
                     attr = IResourceManager.RESOURCE_MODIFY_DATE_FILTER_KEY;
                     break;
                 case "group":
-                    attr = IResourceManager.RESOURCE_MAIN_GROUP_FILTER_KEY;
-                    break;
+                    groups.add(filter.getValue());
+                    continue;
                 default:
                     log.warn("Invalid filter attribute: " + filter.getAttribute());
                     continue;
@@ -284,6 +285,12 @@ public class ResourcesService {
 
             filters.add(
                 new FieldSearchFilter(attr, filter.getValue(), useLikeOption)
+            );
+        }
+
+        if (groups.size() > 0) {
+            filters.add(
+                new FieldSearchFilter(IResourceManager.RESOURCE_MAIN_GROUP_FILTER_KEY, groups, false)
             );
         }
 
