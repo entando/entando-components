@@ -15,6 +15,8 @@ import java.util.Map;
 public abstract class AssetDto {
     private String id;
 
+    private String type;
+
     private String name;
 
     private String description;
@@ -28,4 +30,6 @@ public abstract class AssetDto {
     private String group;
 
     private List<String> categories;
+
+    private String owner;
 }

@@ -68,6 +68,16 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
     }
 
     @Test
+    public void testListAllTypesWithoutFilter() throws Exception {
+        UserDetails user = createAccessToken();
+
+        performGetResources(user, null, null)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(6)));
+    }
+
+    @Test
     public void testFilterImagesByPage() throws Exception {
         UserDetails user = createAccessToken();
         Map<String,String> params = new HashMap<>();
@@ -178,6 +188,21 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
     }
 
     @Test
+    public void testFilterResourceByOwner() throws Exception {
+        UserDetails user = createAccessToken();
+        Map<String,String> params = new HashMap<>();
+        params.put("filters[0].attribute", "owner");
+        params.put("filters[0].value", "rocky");
+
+        performGetResources(user, "image", params)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(1)))
+                .andExpect(jsonPath("$.payload[0].id", is("22")))
+                .andExpect(jsonPath("$.payload[0].type", is("image")));
+    }
+
+    @Test
     public void testCreateEditDeleteImageResource() throws Exception {
         UserDetails user = createAccessToken();
         String createdId = null;
@@ -192,6 +217,7 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
                 .andExpect(jsonPath("$.payload.categories[1]", is("resCat2")))
                 .andExpect(jsonPath("$.payload.group", is("free")))
                 .andExpect(jsonPath("$.payload.description", is("image_test.jpeg")))
+                .andExpect(jsonPath("$.payload.owner", is("jack_bauer")))
                 .andExpect(jsonPath("$.payload.versions.size()", is(4)))
                 .andExpect(jsonPath("$.payload.versions[0].size", is("2 Kb")))
                 .andExpect(jsonPath("$.payload.versions[0].path", startsWith("/Entando/resources/cms/images/image_test")));
@@ -212,6 +238,7 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
                 .andExpect(jsonPath("$.payload.categories.size()", is(1)))
                 .andExpect(jsonPath("$.payload.categories[0]", is("resCat1")))
                 .andExpect(jsonPath("$.payload.group", is("free")))
+                .andExpect(jsonPath("$.payload.owner", is("jack_bauer")))
                 .andExpect(jsonPath("$.payload.description", is("new image description")))
                 .andExpect(jsonPath("$.payload.versions.size()", is(4)))
                 .andExpect(jsonPath("$.payload.versions[0].size", is("2 Kb")));
@@ -492,7 +519,12 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
     }
 
     private ResultActions performGetResources(UserDetails user, String type, Map<String,String> params) throws Exception {
-        String path = "/plugins/cms/assets?type=" + type;
+        String path = "/plugins/cms/assets";
+
+        if (type != null) {
+            path += "?type=" + type;
+        }
+
         for (String key : Optional.ofNullable(params).orElse(new HashMap<>()).keySet()) {
             path += String.format("&%s=%s", key, params.get(key));
         }
@@ -521,7 +553,7 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
     }
 
     private ResultActions performCreateResource(UserDetails user, String type, String group, List<String> categories, String mimeType) throws Exception {
-        String path = String.format("/plugins/cms/assets?type=%s", type);
+        String path = String.format("/plugins/cms/assets", type);
 
         if (null == user) {
             return mockMvc.perform(get(path));
@@ -544,7 +576,7 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
                 "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x";
 
         MockMultipartFile file;
-        if (type.equals("image")) {
+        if ("image".equals(type)) {
             file = new MockMultipartFile("file", "image_test.jpeg", mimeType, contents.getBytes());
         } else {
             file = new MockMultipartFile("file", "file_test.jpeg", mimeType, contents.getBytes());
@@ -555,12 +587,15 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
                 .param("group", group)
                 .header("Authorization", "Bearer " + accessToken);
 
+        if (type != null) {
+            request.param("type", type);
+        }
+
         if (categories != null) {
             request.param("categories", String.join(",", categories));
         }
 
         return mockMvc.perform(request);
-
     }
 
     private ResultActions performEditResource(UserDetails user, String type, String resourceId, String description,

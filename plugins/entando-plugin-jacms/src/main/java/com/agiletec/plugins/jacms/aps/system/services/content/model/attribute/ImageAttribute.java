@@ -54,5 +54,10 @@ public class ImageAttribute extends AbstractResourceAttribute {
 	protected String getDefaultPath() {
 		return this.getImagePath("0");
 	}
+
+	@Override
+	public boolean isSearchableOptionSupported() {
+		return true;
+	}
 	
 }

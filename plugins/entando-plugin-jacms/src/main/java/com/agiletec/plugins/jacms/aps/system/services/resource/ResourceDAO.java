@@ -89,6 +89,7 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
                     ? resource.getCreationDate() : new Date();
             stat.setTimestamp(7, new java.sql.Timestamp(creationDate.getTime()));
             stat.setTimestamp(8, new java.sql.Timestamp(creationDate.getTime()));
+            stat.setString(9, resource.getOwner());
             stat.executeUpdate();
         } catch (Throwable t) {
             logger.error("Error adding resource record", t);
@@ -352,6 +353,7 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
                 resourceVo.setMasterFileName(res.getString(5));
                 resourceVo.setCreationDate(res.getTimestamp(6));
                 resourceVo.setLastModified(res.getTimestamp(7));
+                resourceVo.setOwner(res.getString(8));
             }
         } catch (Exception t) {
             logger.error("Errore loading resource {}", id, t);
@@ -471,11 +473,11 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
     }
 
     private final String LOAD_RESOURCE_VO
-            = "SELECT restype, descr, maingroup, resourcexml, masterfilename, creationdate, lastmodified FROM resources WHERE resid = ? ";
+            = "SELECT restype, descr, maingroup, resourcexml, masterfilename, creationdate, lastmodified, owner FROM resources WHERE resid = ? ";
 
     private final String ADD_RESOURCE
-            = "INSERT INTO resources (resid, restype, descr, maingroup, resourcexml, masterfilename, creationdate, lastmodified) "
-            + "VALUES ( ? , ? , ? , ? , ? , ? , ? , ? )";
+            = "INSERT INTO resources (resid, restype, descr, maingroup, resourcexml, masterfilename, creationdate, lastmodified, owner) "
+            + "VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ?)";
 
     private final String UPDATE_RESOURCE
             = "UPDATE resources SET restype = ? , descr = ? , maingroup = ? , resourcexml = ? , masterfilename = ? , lastmodified = ? WHERE resid = ? ";

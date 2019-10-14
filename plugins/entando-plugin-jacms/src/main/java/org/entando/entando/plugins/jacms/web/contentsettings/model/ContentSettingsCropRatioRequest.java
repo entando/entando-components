@@ -8,6 +8,6 @@ import javax.validation.constraints.NotEmpty;
 @Getter@Setter
 public class ContentSettingsCropRatioRequest {
 
-        @NotEmpty
+    @NotEmpty
     private String ratio;
 }
