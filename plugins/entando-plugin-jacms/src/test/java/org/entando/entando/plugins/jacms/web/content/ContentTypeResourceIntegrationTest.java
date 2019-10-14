@@ -162,7 +162,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
                     .accept(MediaType.APPLICATION_JSON_UTF8))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.payload.size()", is(0)))
+                    .andExpect(jsonPath("$.payload.contentTypeCode", is(typeCode)))
                     .andReturn();
             Assert.assertNull(this.contentManager.getEntityPrototype(typeCode));
         } catch (Exception e) {
