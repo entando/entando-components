@@ -45,6 +45,8 @@ public interface IResourceManager {
 
     public static final String RESOURCE_MODIFY_DATE_FILTER_KEY = "lastmodified";
 
+    public static final String RESOURCE_OWNER_FILTER_KEY = "owner";
+
     public static final int STATUS_READY = 0;
     public static final int STATUS_RELOADING_RESOURCE_MAIN_FILENAME_IN_PROGRESS = 1;
     public static final int STATUS_RELOADING_RESOURCE_INSTANCES_IN_PROGRESS = 2;

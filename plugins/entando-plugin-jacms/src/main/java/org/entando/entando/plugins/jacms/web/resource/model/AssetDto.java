@@ -30,4 +30,6 @@ public abstract class AssetDto {
     private String group;
 
     private List<String> categories;
+
+    private String owner;
 }

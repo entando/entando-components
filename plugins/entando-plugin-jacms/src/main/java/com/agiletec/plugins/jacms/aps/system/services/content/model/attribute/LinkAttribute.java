@@ -134,21 +134,9 @@ public class LinkAttribute extends TextAttribute implements IReferenceableAttrib
         return destination;
     }
 
-    /**
-     * Sovrascrittura del metodo della classe astratta da cui deriva. Poichè
-     * questo tipo di attributo non può mai essere "searchable", restituisce
-     * sempre false.
-     *
-     * @return Restituisce sempre false
-     */
-    @Override
-    public boolean isSearchable() {
-        return false;
-    }
-
     @Override
     public boolean isSearchableOptionSupported() {
-        return false;
+        return true;
     }
 
     @Override

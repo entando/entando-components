@@ -18,8 +18,8 @@ public class FileAssetDto extends AssetDto {
 
     @Builder
     public FileAssetDto(String id, String name, String description, Date createdAt, Date updatedAt,
-                         String group, @Singular List<String> categories, String size, String path) {
-        super(id, RESOURCE_TYPE, name, description, createdAt, updatedAt, group, categories);
+                         String group, @Singular List<String> categories, String size, String path, String owner) {
+        super(id, RESOURCE_TYPE, name, description, createdAt, updatedAt, group, categories, owner);
         this.size = size;
         this.path = path;
     }
