@@ -62,7 +62,8 @@ public class ResourcesController {
             @ApiResponse(code = 401, message = "Unauthorized")})
     @GetMapping("/plugins/cms/assets")
     @RestAccessControl(permission = Permission.CONTENT_EDITOR)
-    public ResponseEntity<PagedRestResponse<AssetDto>> listAssets(@RequestParam(value = "type", required = false) String type, RestListRequest requestList) {
+    public ResponseEntity<PagedRestResponse<AssetDto>> listAssets(@RequestParam(value = "type", required = false) String type,
+            RestListRequest requestList) {
         logger.debug("REST request - list image resources");
 
         resourceValidator.validateRestListRequest(requestList, AssetDto.class);
@@ -88,7 +89,7 @@ public class ResourcesController {
                 .filter(c -> c.length() > 0)
                 .collect(Collectors.toList());
 
-        AssetDto result = service.createAsset(type, file, group, categoriesList, (UserDetails) httpSession.getAttribute("user"));
+        AssetDto result = service.createAsset(type, file, group, categoriesList, extractCurrentUser());
         return ResponseEntity.ok(new SimpleRestResponse<>(result));
     }
 
@@ -123,5 +124,9 @@ public class ResourcesController {
         logger.debug("REST request - delete resource with id {}", resourceId);
         service.deleteAsset(resourceId);
         return ResponseEntity.ok(new SimpleRestResponse<>(new HashMap()));
+    }
+
+    protected UserDetails extractCurrentUser() {
+        return (UserDetails) this.httpSession.getAttribute("user");
     }
 }

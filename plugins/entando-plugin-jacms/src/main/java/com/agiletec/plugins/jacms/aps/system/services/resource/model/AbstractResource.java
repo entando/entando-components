@@ -37,6 +37,7 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
     private List<Category> categories;
     private String folder;
     private String protectedBaseURL;
+    private String owner;
 
     private String allowedExtensions;
 
@@ -62,6 +63,7 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
         this.setCreationDate(null);
         this.setMetadata(new HashMap<>());
         this.setLastModified(null);
+        this.setOwner(null);
     }
 
     /**
@@ -517,4 +519,13 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
         this.metadataIgnoreKeys = metadataIgnoreKeys;
     }
 
+    @Override
+    public String getOwner() {
+        return owner;
+    }
+
+    @Override
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
 }
