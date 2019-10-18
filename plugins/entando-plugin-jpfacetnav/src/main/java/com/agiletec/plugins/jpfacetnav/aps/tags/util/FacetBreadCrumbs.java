@@ -45,19 +45,19 @@ public class FacetBreadCrumbs {
 		this.setFacetRoot(facetRoot);
 		this.setRequiredFacet(requiredFacet);
 		ITreeNode requiredNode = facetManager.getNode(requiredFacet);
-		this.addBreadCrumbsNode(requiredNode);
+		this.addBreadCrumbsNode(requiredNode, facetManager);
 	}
 
 	/**
 	 * Add bread crumbs node
 	 * @param node 
 	 */
-	private void addBreadCrumbsNode(ITreeNode node) {
+	private void addBreadCrumbsNode(ITreeNode node, ITreeNodeManager facetManager) {
 		this.getBreadCrumbs().add(0, node.getCode());
 		if (node.getCode().equals(this.getFacetRoot())) return;
-		ITreeNode parentNode = node.getParent();
+		ITreeNode parentNode = facetManager.getNode(node.getParentCode());
 		if (null != parentNode && !parentNode.getCode().equals(node.getCode())) {
-			this.addBreadCrumbsNode(parentNode);
+			this.addBreadCrumbsNode(parentNode, facetManager);
 		}
 	}
 
@@ -103,6 +103,6 @@ public class FacetBreadCrumbs {
 
 	private String _requiredFacet;
 	private String _facetRoot;
-	private List<String> _breadCrumbs = new ArrayList<String>();
+	private List<String> _breadCrumbs = new ArrayList<>();
 
 }
