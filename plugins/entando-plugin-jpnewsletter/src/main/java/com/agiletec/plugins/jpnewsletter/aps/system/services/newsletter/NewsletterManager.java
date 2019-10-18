@@ -50,6 +50,7 @@ import com.agiletec.aps.system.services.authorization.Authorization;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.category.Category;
+import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.keygenerator.IKeyGeneratorManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
@@ -513,7 +514,7 @@ public class NewsletterManager extends AbstractService
 
 	private List<String> extractProfileAttributesForContent(Content content, Properties subscriptions) {
 		Collection<String> categories = this.extractCategoryCodes(content);
-		List<String> profileAttributes = new ArrayList<String>();
+		List<String> profileAttributes = new ArrayList<>();
 		for (String categoryCode : categories) {
 			String attributeName = subscriptions.getProperty(categoryCode);
 			if (attributeName != null) {
@@ -536,7 +537,7 @@ public class NewsletterManager extends AbstractService
 
 	private List<String> extractUserGroupNames(String username) throws ApsSystemException {
 		List<Authorization> authorizations = this.getAuthorizationManager().getUserAuthorizations(username);
-		List<String> groupNames = new ArrayList<String>();
+		List<String> groupNames = new ArrayList<>();
 		if (null != authorizations) {
 			for (int i = 0; i < authorizations.size(); i++) {
 				Authorization authorization = authorizations.get(i);
@@ -568,7 +569,7 @@ public class NewsletterManager extends AbstractService
 	}
 
 	private Set<String> extractCategoryCodes(Content content) {
-		Set<String> categoryCodes = new HashSet<String>();
+		Set<String> categoryCodes = new HashSet<>();
 		Iterator<Category> categoryIter = content.getCategories().iterator();
 		while (categoryIter.hasNext()) {
 			Category category = categoryIter.next();
@@ -579,7 +580,7 @@ public class NewsletterManager extends AbstractService
 
 	private void addCategoryCode(Category category, Set<String> codes) {
 		codes.add(category.getCode());
-		Category parentCategory = (Category) category.getParent();
+		Category parentCategory = this.getCategoryManager().getCategory(category.getParentCode());
 		if (null != parentCategory && !parentCategory.getCode().equals(parentCategory.getParentCode())) {
 			this.addCategoryCode(parentCategory, codes);
 		}
@@ -636,7 +637,7 @@ public class NewsletterManager extends AbstractService
 	}
 
 	protected List<String> intersectContentIds(List<String> contentIds, List<String> intersectedContentIds) {
-		List<String> intersection = new ArrayList<String>();
+		List<String> intersection = new ArrayList<>();
 		if (intersectedContentIds.size() > 0 && contentIds.size() > 0) {
 			for (String contentId : intersectedContentIds) {
 				if (contentIds.remove(contentId)) {
@@ -1055,6 +1056,14 @@ public class NewsletterManager extends AbstractService
 		this._keyGeneratorManager = keyGeneratorManager;
 	}
 
+    public ICategoryManager getCategoryManager() {
+        return categoryManager;
+    }
+
+    public void setCategoryManager(ICategoryManager categoryManager) {
+        this.categoryManager = categoryManager;
+    }
+    
 	protected INewsletterDAO getNewsletterDAO() {
 		return _newsletterDAO;
 	}
@@ -1085,6 +1094,7 @@ public class NewsletterManager extends AbstractService
 	private ILangManager _langManager;
 	private IContentRenderer _contentRenderer;
 	private ConfigInterface _configManager;
+    private ICategoryManager categoryManager;
 	private INewsletterDAO _newsletterDAO;
 	private INewsletterSearcherDAO _newsletterSearcherDAO;
 	private IKeyGeneratorManager _keyGeneratorManager;

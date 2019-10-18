@@ -1,68 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-		xmlns:context="http://www.springframework.org/schema/context"
-		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 	
-	<bean id="jpnewsletterSubMenu" class="com.agiletec.apsadmin.system.plugin.PluginSubMenuContainer" >
-		<property name="subMenuFilePath"><value>/WEB-INF/plugins/jpnewsletter/apsadmin/jsp/common/template/subMenu.jsp</value></property>
-	</bean>
+    <bean id="jpnewsletterSubMenu" class="com.agiletec.apsadmin.system.plugin.PluginSubMenuContainer" >
+        <property name="subMenuFilePath">
+            <value>/WEB-INF/plugins/jpnewsletter/apsadmin/jsp/common/template/subMenu.jsp</value>
+        </property>
+    </bean>
 	
-	<bean id="jpnewsletterNewsletterFinderAction" scope="prototype" 
-			class="com.agiletec.plugins.jpnewsletter.apsadmin.newsletter.NewsletterFinderAction" 
-			parent="abstractBaseAction" >
-		<property name="entityActionHelper" ref="jacmsContentActionHelper" />
-		<property name="contentManager" ref="jacmsContentManager"/>
-		<property name="groupManager" ref="GroupManager"/>
-		<property name="categoryManager" ref="CategoryManager"/>
-		<property name="newsletterManager" ref="jpnewsletterNewsletterManager"/>
-	</bean>
+    <bean id="jpnewsletterNewsletterFinderAction" scope="prototype" 
+              class="com.agiletec.plugins.jpnewsletter.apsadmin.newsletter.NewsletterFinderAction" 
+              parent="abstractBaseAction" >
+        <property name="entityActionHelper" ref="jacmsContentActionHelper" />
+        <property name="contentManager" ref="jacmsContentManager"/>
+        <property name="groupManager" ref="GroupManager"/>
+        <property name="categoryManager" ref="CategoryManager"/>
+        <property name="newsletterManager" ref="jpnewsletterNewsletterManager"/>
+    </bean>
 	
-	<bean id="jpnewsletterNewsletterAction" scope="prototype" 
-			class="com.agiletec.plugins.jpnewsletter.apsadmin.newsletter.NewsletterAction" 
-			parent="abstractBaseAction" >
-		<property name="contentManager" ref="jacmsContentManager"/>
-		<property name="newsletterManager" ref="jpnewsletterNewsletterManager"/>
-	</bean>
+    <bean id="jpnewsletterNewsletterAction" scope="prototype" 
+              class="com.agiletec.plugins.jpnewsletter.apsadmin.newsletter.NewsletterAction" 
+              parent="abstractBaseAction" >
+        <property name="contentManager" ref="jacmsContentManager"/>
+        <property name="newsletterManager" ref="jpnewsletterNewsletterManager"/>
+        <property name="categoryManager" ref="CategoryManager" />
+    </bean>
 	
-	<bean id="jpnewsletterNewsletterQueueAction" scope="prototype" 
-			class="com.agiletec.plugins.jpnewsletter.apsadmin.newsletter.NewsletterQueueAction" 
-			parent="abstractBaseAction" >
-		<property name="newsletterManager" ref="jpnewsletterNewsletterManager"/>
-		<property name="contentManager" ref="jacmsContentManager"/>
-	</bean>
+    <bean id="jpnewsletterNewsletterQueueAction" scope="prototype" 
+              class="com.agiletec.plugins.jpnewsletter.apsadmin.newsletter.NewsletterQueueAction" 
+              parent="abstractBaseAction" >
+        <property name="newsletterManager" ref="jpnewsletterNewsletterManager"/>
+        <property name="contentManager" ref="jacmsContentManager"/>
+    </bean>
 	
-	<bean id="jpnewsletterNewsletterConfigAction" scope="prototype" 
-			class="com.agiletec.plugins.jpnewsletter.apsadmin.config.NewsletterConfigAction" 
-			parent="abstractBaseAction" >
-		<property name="newsletterManager" ref="jpnewsletterNewsletterManager" />
-		<property name="categoryManager" ref="CategoryManager" />
-		<property name="profileManager" ref="UserProfileManager" />
-		<property name="contentManager" ref="jacmsContentManager" />
-		<property name="contentModelManager" ref="jacmsContentModelManager" />
-		<property name="mailManager" ref="jpmailMailManager" />
-		<property name="pageManager" ref="PageManager" />
-	</bean>
+    <bean id="jpnewsletterNewsletterConfigAction" scope="prototype" 
+              class="com.agiletec.plugins.jpnewsletter.apsadmin.config.NewsletterConfigAction" 
+              parent="abstractBaseAction" >
+        <property name="newsletterManager" ref="jpnewsletterNewsletterManager" />
+        <property name="categoryManager" ref="CategoryManager" />
+        <property name="profileManager" ref="UserProfileManager" />
+        <property name="contentManager" ref="jacmsContentManager" />
+        <property name="contentModelManager" ref="jacmsContentModelManager" />
+        <property name="mailManager" ref="jpmailMailManager" />
+        <property name="pageManager" ref="PageManager" />
+    </bean>
 	
-	<bean id="jpnewsletterContentTypeConfigAction" scope="prototype" 
-			class="com.agiletec.plugins.jpnewsletter.apsadmin.config.ContentTypeConfigAction" 
-			parent="abstractBaseAction" >
-		<property name="newsletterManager" ref="jpnewsletterNewsletterManager" />
-		<property name="contentManager" ref="jacmsContentManager" />
-		<property name="contentModelManager" ref="jacmsContentModelManager" />
-	</bean>
+    <bean id="jpnewsletterContentTypeConfigAction" scope="prototype" 
+              class="com.agiletec.plugins.jpnewsletter.apsadmin.config.ContentTypeConfigAction" 
+              parent="abstractBaseAction" >
+        <property name="newsletterManager" ref="jpnewsletterNewsletterManager" />
+        <property name="contentManager" ref="jacmsContentManager" />
+        <property name="contentModelManager" ref="jacmsContentModelManager" />
+    </bean>
 	
-	<bean id="jpnewsletterSubscriberFinderAction" scope="prototype"
-			class="com.agiletec.plugins.jpnewsletter.apsadmin.subscriber.SubscriberFinderAction"
-			parent="abstractBaseAction">
-		<property name="newsletterManager" ref="jpnewsletterNewsletterManager" />
-	</bean>
+    <bean id="jpnewsletterSubscriberFinderAction" scope="prototype"
+              class="com.agiletec.plugins.jpnewsletter.apsadmin.subscriber.SubscriberFinderAction"
+              parent="abstractBaseAction">
+        <property name="newsletterManager" ref="jpnewsletterNewsletterManager" />
+    </bean>
 	
-	<bean id="jpnewsletterSubscriberAction" scope="prototype"
-			class="com.agiletec.plugins.jpnewsletter.apsadmin.subscriber.SubscriberAction"
-			parent="abstractBaseAction">
-		<property name="newsletterManager" ref="jpnewsletterNewsletterManager" />
-	</bean>
+    <bean id="jpnewsletterSubscriberAction" scope="prototype"
+              class="com.agiletec.plugins.jpnewsletter.apsadmin.subscriber.SubscriberAction"
+              parent="abstractBaseAction">
+        <property name="newsletterManager" ref="jpnewsletterNewsletterManager" />
+    </bean>
 	
 </beans>
