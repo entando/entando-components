@@ -97,7 +97,7 @@ public class IdeaTagListTag extends TagSupport {
 						boolean okForRoot = false;
 						boolean okForLeaf = false;
 						if (filterByRootNode) {
-							if (cat.isChildOf(serviceCatagoryRoot)) {
+							if (cat.isChildOf(serviceCatagoryRoot, categoryManager)) {
 								okForRoot = true;
 							}
 						} else {

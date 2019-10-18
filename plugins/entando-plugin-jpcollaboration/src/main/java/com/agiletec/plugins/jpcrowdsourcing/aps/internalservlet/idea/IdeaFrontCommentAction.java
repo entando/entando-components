@@ -105,7 +105,7 @@ public class IdeaFrontCommentAction extends BaseAction {
 	 * @return
 	 */
 	public List<Category> getSpecialCategories(Idea idea) {
-		List<Category> categories = new ArrayList<Category>();
+		List<Category> categories = new ArrayList<>();
 		List<String> commentCategories = idea.getTags();
 		if (null != commentCategories) {
 			Iterator<String> it = commentCategories.iterator();
@@ -113,7 +113,7 @@ public class IdeaFrontCommentAction extends BaseAction {
 				Category cat = this.getCategoryManager().getCategory(it.next());
 				if (null != cat) {
 					String rootCode = this.getIdeaManager().getCategoryRoot();
-					if (cat.isChildOf(rootCode) && (null == cat.getChildrenCodes() || cat.getChildrenCodes().length == 0)) {
+					if (cat.isChildOf(rootCode, this.getCategoryManager()) && (null == cat.getChildrenCodes() || cat.getChildrenCodes().length == 0)) {
 						categories.add(cat);
 					}
 				}

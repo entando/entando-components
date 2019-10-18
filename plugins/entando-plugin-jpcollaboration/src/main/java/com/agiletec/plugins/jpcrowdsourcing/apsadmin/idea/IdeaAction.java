@@ -144,7 +144,7 @@ public class IdeaAction extends BaseAction {
 				if (!completeTitle) {
 					catSmall.setTitle(cat.getTitles().getProperty(langCode));
 				} else {
-					catSmall.setTitle(cat.getFullTitle(langCode));
+					catSmall.setTitle(cat.getFullTitle(langCode, this.getCategoryManager()));
 				}
 				categories.add(catSmall);
 			}
