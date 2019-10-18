@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.renderer.EntityWrapper;
+import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.renderer.BaseContentRenderer;
 import com.agiletec.plugins.jpblog.aps.system.services.blog.IBlogManager;
@@ -41,6 +42,11 @@ import com.agiletec.plugins.jpcontentfeedback.aps.system.services.contentfeedbac
 public class BlogContentRenderer extends BaseContentRenderer {
 
 	private static final Logger _logger =  LoggerFactory.getLogger(BlogContentRenderer.class);
+
+	private IRatingManager _ratingManager;
+	private ICommentManager _commentManager;
+    private ICategoryManager categoryManager;
+	private IBlogManager _blogManager;
 	
 	@Override
 	protected EntityWrapper getEntityWrapper(IApsEntity entity) {
@@ -56,11 +62,12 @@ public class BlogContentRenderer extends BaseContentRenderer {
 		}
 		List<String> specialCategoriesRootCodes = this.getBlogManager().getSpecialCategories();
 		wrapper.setSpecialCategoriesRootCodes(specialCategoriesRootCodes);
-		return wrapper;
+		wrapper.setCategoryManager(this.getCategoryManager());
+        return wrapper;
 	}
 	
 	private List<String> getComments(String contentId) {
-		List<String> comments = new ArrayList<String>();
+		List<String> comments = new ArrayList<>();
 		try {
 			CommentSearchBean commentSearchBean = new CommentSearchBean();
 			commentSearchBean.setContentId(contentId);
@@ -129,7 +136,11 @@ public class BlogContentRenderer extends BaseContentRenderer {
 		return _blogManager;
 	}
 
-	private IRatingManager _ratingManager;
-	private ICommentManager _commentManager;
-	private IBlogManager _blogManager;
+    public ICategoryManager getCategoryManager() {
+        return categoryManager;
+    }
+    public void setCategoryManager(ICategoryManager categoryManager) {
+        this.categoryManager = categoryManager;
+    }
+    
 }
