@@ -15,6 +15,7 @@ package com.agiletec.plugins.jacms.aps.system.services.searchengine;
 
 import com.agiletec.aps.system.common.tree.ITreeNode;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.category.ICategoryManager;
 
 import java.io.File;
 import java.util.Collection;
@@ -55,6 +56,8 @@ public interface ISearcherDAO {
      */
 	public List<String> searchContentsId(SearchEngineFilter[] filters, 
 			Collection<ITreeNode> categories, Collection<String> allowedGroups) throws ApsSystemException;
+    
+    public void setCategoryManager(ICategoryManager categoryManager);
 	
     public void close();
 	

@@ -148,7 +148,7 @@ public class TestPageAction extends ApsAdminBaseTestCase {
 
         Widget[] widgets = new Widget[pageModel.getFrames().length];//
         widgets[0] = widgetToAdd;
-        Page pageToAdd = PageTestUtil.createPage(pageCode, parentPage, "customers", metadata, widgets);
+        Page pageToAdd = PageTestUtil.createPage(pageCode, parentPage.getCode(), "customers", metadata, widgets);
         try {
             pageManager.addPage(pageToAdd);
 

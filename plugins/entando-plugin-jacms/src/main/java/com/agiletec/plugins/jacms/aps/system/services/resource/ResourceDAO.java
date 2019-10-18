@@ -30,6 +30,7 @@ import com.agiletec.aps.system.common.AbstractSearcherDAO;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.Category;
+import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceRecordVO;
 import java.util.Arrays;
@@ -47,6 +48,38 @@ import org.springframework.cache.annotation.Cacheable;
 public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
 
     private static final Logger logger = LoggerFactory.getLogger(ResourceDAO.class);
+    
+    private ICategoryManager categoryManager;
+
+    private final String LOAD_RESOURCE_VO
+            = "SELECT restype, descr, maingroup, resourcexml, masterfilename, creationdate, lastmodified, owner FROM resources WHERE resid = ? ";
+
+    private final String ADD_RESOURCE
+            = "INSERT INTO resources (resid, restype, descr, maingroup, resourcexml, masterfilename, creationdate, lastmodified, owner) "
+            + "VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ?)";
+
+    private final String UPDATE_RESOURCE
+            = "UPDATE resources SET restype = ? , descr = ? , maingroup = ? , resourcexml = ? , masterfilename = ? , lastmodified = ? WHERE resid = ? ";
+
+    private final String DELETE_CONTENTS_REFERENCE
+            = "DELETE FROM contentrelations WHERE refresource = ? ";
+
+    private final String DELETE_RESOURCE
+            = "DELETE FROM resources WHERE resid = ? ";
+
+    private final String ADD_RESOURCE_REL_RECORD
+            = "INSERT INTO resourcerelations (resid, refcategory) VALUES ( ? , ? )";
+
+    private final String DELETE_RESOURCE_REL_RECORD
+            = "DELETE FROM resourcerelations WHERE resid = ? ";
+
+    protected ICategoryManager getCategoryManager() {
+        return categoryManager;
+    }
+
+    public void setCategoryManager(ICategoryManager categoryManager) {
+        this.categoryManager = categoryManager;
+    }
 
     /**
      * Carica una risorsa nel db.
@@ -415,11 +448,11 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
     }
 
     private void addCategoryCode(ResourceInterface resource, Category category, Set<String> codes) {
-        if (category.getCode().equals(category.getParent().getCode())) {
+        if (category.getCode().equals(category.getParentCode())) {
             return;
         }
         codes.add(category.getCode());
-        Category parentCategory = (Category) category.getParent();
+        Category parentCategory = this.getCategoryManager().getCategory(category.getParentCode());
         if (null != parentCategory) {
             this.addCategoryCode(resource, parentCategory, codes);
         }
@@ -471,27 +504,5 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
     protected String getTableFieldName(String metadataFieldKey) {
         return metadataFieldKey;
     }
-
-    private final String LOAD_RESOURCE_VO
-            = "SELECT restype, descr, maingroup, resourcexml, masterfilename, creationdate, lastmodified, owner FROM resources WHERE resid = ? ";
-
-    private final String ADD_RESOURCE
-            = "INSERT INTO resources (resid, restype, descr, maingroup, resourcexml, masterfilename, creationdate, lastmodified, owner) "
-            + "VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ?)";
-
-    private final String UPDATE_RESOURCE
-            = "UPDATE resources SET restype = ? , descr = ? , maingroup = ? , resourcexml = ? , masterfilename = ? , lastmodified = ? WHERE resid = ? ";
-
-    private final String DELETE_CONTENTS_REFERENCE
-            = "DELETE FROM contentrelations WHERE refresource = ? ";
-
-    private final String DELETE_RESOURCE
-            = "DELETE FROM resources WHERE resid = ? ";
-
-    private final String ADD_RESOURCE_REL_RECORD
-            = "INSERT INTO resourcerelations (resid, refcategory) VALUES ( ? , ? )";
-
-    private final String DELETE_RESOURCE_REL_RECORD
-            = "DELETE FROM resourcerelations WHERE resid = ? ";
 
 }

@@ -19,6 +19,7 @@ import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
 import com.agiletec.aps.system.common.util.EntityAttributeIterator;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.Category;
+import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.lang.*;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.ResourceAttributeInterface;
 import org.apache.lucene.analysis.Analyzer;
@@ -39,7 +40,10 @@ public class IndexerDAO implements IIndexerDAO {
 	private static final Logger _logger = LoggerFactory.getLogger(IndexerDAO.class);
 
 	private Directory dir;
+    
 	private ILangManager langManager;
+    
+    private ICategoryManager categoryManager;
 
 	/**
 	 * Inizializzazione dell'indicizzatore.
@@ -127,8 +131,9 @@ public class IndexerDAO implements IIndexerDAO {
 			return;
 		}
 		document.add(new StringField(CONTENT_CATEGORY_FIELD_NAME, 
-				categoryToIndex.getPath(CONTENT_CATEGORY_SEPARATOR, false), Field.Store.YES));
-		this.indexCategory(document, categoryToIndex.getParent());
+				categoryToIndex.getPath(CONTENT_CATEGORY_SEPARATOR, false, this.getCategoryManager()), Field.Store.YES));
+        Category parentCategory = this.getCategoryManager().getCategory(categoryToIndex.getParentCode());
+		this.indexCategory(document, parentCategory);
 	}
 	
     private void indexAttribute(Document document,
@@ -218,5 +223,13 @@ public class IndexerDAO implements IIndexerDAO {
 	public void setLangManager(ILangManager langManager) {
 		this.langManager = langManager;
 	}
+
+    public ICategoryManager getCategoryManager() {
+        return categoryManager;
+    }
+    @Override
+    public void setCategoryManager(ICategoryManager categoryManager) {
+        this.categoryManager = categoryManager;
+    }
 
 }

@@ -98,7 +98,6 @@ public class TestPageActionReferences extends ApsAdminBaseTestCase {
         Page page = new Page();
         Page parent = (Page) this.pageManager.getDraftRoot();
         page.setParentCode(parent.getCode());
-        page.setParent(parent);
         page.setTitle("it", code);
         page.setTitle("en", code);
         page.setGroup(Group.FREE_GROUP_NAME);

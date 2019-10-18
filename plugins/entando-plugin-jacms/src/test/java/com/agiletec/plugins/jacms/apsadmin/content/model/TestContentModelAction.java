@@ -329,7 +329,6 @@ public class TestContentModelAction extends ApsAdminBaseTestCase {
         page.setCode("referencing_page");
         page.setTitle("en", "Test");
         page.setTitle("it", "Test");
-        page.setParent(root);
         page.setParentCode(root.getCode());
         page.setGroup(root.getGroup());
 
