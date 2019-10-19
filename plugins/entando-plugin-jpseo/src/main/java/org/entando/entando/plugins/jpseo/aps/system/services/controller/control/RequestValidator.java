@@ -169,7 +169,7 @@ public class RequestValidator extends com.agiletec.aps.system.services.controlle
 			//if(tempPage.getParentCode().equals(rootCode)) return tempPage;
 			//la pagina è di livello superiore al primo e il path è corretto
 			String fullPath = matcher.group(2).substring(1).trim();
-			String createdlFullPath = PageUtils.getFullPath(tempPage, "/").toString();
+			String createdlFullPath = PageUtils.getFullPath(this.getPageManager(), tempPage, "/").toString();
 			if (createdlFullPath.equals(fullPath) ){
 				page = tempPage;
 			}

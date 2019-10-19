@@ -60,6 +60,7 @@ public class PageInfoTag extends com.agiletec.aps.tags.PageInfoTag {
             IPage page = pageManager.getOnlinePage(this.getPageCode());
             if (null == page) {
                 _logger.error("Required info for null page : inserted code '{}'", this.getPageCode());
+                return EVAL_PAGE;
             }
             if (this.getInfo() == null || this.getInfo().equals(CODE_INFO)) {
                 this.setValue(page.getCode());
@@ -72,7 +73,7 @@ public class PageInfoTag extends com.agiletec.aps.tags.PageInfoTag {
             } else if (this.getInfo().equals(OWNER_INFO)) {
                 this.extractPageOwner(page, reqCtx);
             } else if (this.getInfo().equals(CHILD_OF_INFO)) {
-                this.extractIsChildOfTarget(page);
+                this.extractIsChildOfTarget(page, pageManager);
             } else if (this.getInfo().equals(HAS_CHILD)) {
                 boolean hasChild = false;
                 String[] childrenCodes = page.getChildrenCodes();
