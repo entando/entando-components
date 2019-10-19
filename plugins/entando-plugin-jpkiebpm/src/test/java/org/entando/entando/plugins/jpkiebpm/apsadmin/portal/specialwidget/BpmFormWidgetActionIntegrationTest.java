@@ -300,7 +300,6 @@ public class BpmFormWidgetActionIntegrationTest extends ApsAdminBaseTestCase {
         page.setCode(pageCode);
         page.setTitle("en", pageCode);
         page.setTitle("it", pageCode);
-        page.setParent(root);
         page.setParentCode(root.getCode());
         page.setGroup(root.getGroup());
 
