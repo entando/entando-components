@@ -331,7 +331,7 @@ public class PageConfigurationControllerWidgetsIntegrationTest extends AbstractC
     protected Page createPage(String pageCode) {
         IPage parentPage = pageManager.getDraftPage("service");
         PageModel pageModel = parentPage.getMetadata().getModel();
-        PageMetadata metadata = PageTestUtil.createPageMetadata(pageModel.getCode(), true, pageCode + "_title", null, null, false, null, null);
+        PageMetadata metadata = PageTestUtil.createPageMetadata(pageModel, true, pageCode + "_title", null, null, false, null, null);
         ApsProperties config = PageTestUtil.createProperties("temp", "tempValue", "contentId", "ART11");
         Widget widgetToAdd = PageTestUtil.createWidget("content_viewer", config, this.widgetTypeManager);
         Widget[] widgets = {widgetToAdd};
