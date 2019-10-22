@@ -80,9 +80,9 @@ public class SeoMappingManager extends AbstractService implements ISeoMappingMan
 			} else {
 				System.out.println("jpseo: ignoring EXTERNAL event");
 			}
-			SeoChangedEvent sevent = new SeoChangedEvent();
-			event.setOperationCode(SeoChangedEvent.PAGE_CHANGED_EVENT);
-			this.notifyEvent(sevent);
+			SeoChangedEvent seoEvent = new SeoChangedEvent();
+			seoEvent.setOperationCode(SeoChangedEvent.PAGE_CHANGED_EVENT);
+			this.notifyEvent(seoEvent);
 		} catch (Throwable t) {
 			_logger.error("Error updating mapping from page changed", t);
 		}
