@@ -39,7 +39,9 @@ import org.entando.entando.plugins.jacms.aps.system.services.content.IContentSer
 import org.entando.entando.plugins.jacms.web.content.validator.ContentStatusRequest;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
+
 import static org.hamcrest.CoreMatchers.is;
+
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
@@ -52,10 +54,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import org.apache.commons.lang.StringUtils;
 
 public class ContentControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
@@ -76,9 +82,14 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         String result1 = result.andReturn().getResponse().getContentAsString();
         System.out.println(result1);
         result.andExpect(status().isOk());
+        String html1 = JsonPath.read(result1, "$.payload.html");
+        Assert.assertTrue(!StringUtils.isBlank(html1));
+        
         result.andExpect(MockMvcResultMatchers.jsonPath("$.payload.html", Matchers.anything()));
         result = this.performGetContent("ART180", "11", true, null, true, user);
         String result2 = result.andReturn().getResponse().getContentAsString();
+        String html2 = JsonPath.read(result2, "$.payload.html");
+        Assert.assertTrue(!StringUtils.isBlank(html2));
         System.out.println(result2);
 
         result.andExpect(status().isOk());
@@ -87,20 +98,27 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         String result1_copy = result.andReturn().getResponse().getContentAsString();
         System.out.println(result1_copy);
         result.andExpect(status().isOk());
-        Assert.assertEquals(result1, result1_copy);
+        String htmlCopy = JsonPath.read(result1_copy, "$.payload.html");
+        Assert.assertTrue(!StringUtils.isBlank(htmlCopy));
+        Assert.assertEquals(html1, htmlCopy);
+        
         result = this.performGetContent("ART180", "list", true, null, true, user);
         result.andExpect(MockMvcResultMatchers.jsonPath("$.payload.html", Matchers.anything()));
         String result2_copy = result.andReturn().getResponse().getContentAsString();
         System.out.println(result2);
+        String html2Copy = JsonPath.read(result2_copy, "$.payload.html");
+        Assert.assertTrue(!StringUtils.isBlank(html2Copy));
         result.andExpect(status().isOk());
-        Assert.assertEquals(result2, result2_copy);
+        Assert.assertTrue(!StringUtils.isBlank(html2Copy));
+        Assert.assertEquals(html2, html2Copy);
 
         result = this.performGetContent("ART180", "list", true, "en", true, user);
         result.andExpect(MockMvcResultMatchers.jsonPath("$.payload.html", Matchers.anything()));
         String result2_copy_en = result.andReturn().getResponse().getContentAsString();
         System.out.println(result2_copy_en);
+        String html2Copy_en = JsonPath.read(result2_copy_en, "$.payload.html");
         result.andExpect(status().isOk());
-        Assert.assertNotEquals(result2_copy_en, result2_copy);
+        Assert.assertNotEquals(html2Copy_en, html2Copy);
     }
 
     @Test
