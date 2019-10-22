@@ -55,7 +55,7 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
             assertTrue(resource instanceof ImageResource);
             assertTrue(resource.isMultiInstance());
             assertEquals(resource.getDescription(), "logo");
-            assertEquals(resource.getCategories().size(), 1);
+            assertEquals(resource.getCategories().size(), 2);
             assertNotNull(resource.getMetadata());
             assertEquals(23, resource.getMetadata().size());
 
@@ -78,7 +78,7 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
             ResourceInterface resource = this.resourceManager.loadResource("44");
             assertTrue(resource instanceof ImageResource);
             assertEquals(resource.getDescription(), "logo");
-            assertEquals(resource.getCategories().size(), 1);
+            assertEquals(resource.getCategories().size(), 2);
             assertTrue(resource.isMultiInstance());
             oldCategories = resource.getCategories();
             oldDescr = resource.getDescription();
