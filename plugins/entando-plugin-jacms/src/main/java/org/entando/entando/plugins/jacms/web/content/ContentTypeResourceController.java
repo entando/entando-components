@@ -56,7 +56,7 @@ public class ContentTypeResourceController implements ContentTypeResource {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private static final String CONTENT_TYPE_CODE = "contentTypeCode";
+    public static final String CONTENT_TYPE_CODE = "contentTypeCode";
     private static final String ATTRIBUTE_CODE = "attributeCode";
     private static final String MOVEMENT = "movement";
 
@@ -95,7 +95,11 @@ public class ContentTypeResourceController implements ContentTypeResource {
     public ResponseEntity<SimpleRestResponse<Map>> delete(@PathVariable("code") String code) {
         logger.debug("REST request - delete content type {}", code);
         service.delete(code);
-        return ResponseEntity.ok(new SimpleRestResponse<>(new HashMap<>()));
+
+        Map<String, String> metadata = ImmutableMap.of(
+                CONTENT_TYPE_CODE, code
+        );
+        return ResponseEntity.ok(new SimpleRestResponse<>(metadata));
     }
 
     @Override

@@ -31,6 +31,7 @@ import java.net.URISyntaxException;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.entando.entando.plugins.jacms.web.content.ContentTypeResourceController.CONTENT_TYPE_CODE;
 import static org.entando.entando.plugins.jacms.web.contentmodel.util.RestControllerTestUtil.createNonEmptyPagedMetadata;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -134,6 +135,7 @@ public class ContentTypeResourceControllerTest {
         verify(service).delete("ABC");
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().getPayload().get(CONTENT_TYPE_CODE)).isEqualTo("ABC");
     }
 
     @Test
