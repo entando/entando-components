@@ -712,7 +712,7 @@
     <div class="form-horizontal">
         <div class="form-group">
             <div class="col-sm-12 margin-small-vertical">
-                <input id="submit" type="submit" value="Submit" class="btn btn-primary pull-right">
+                <input id="submit" type="submit" value="<s:property value="%{getText('label.' + resourceTypeCode + '.new')}" escapeXml="true" />" class="btn btn-primary pull-right">
             </div>
         </div>
     </div>
