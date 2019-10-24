@@ -252,8 +252,8 @@
                 </div>
                 <div class="col-sm-10">
                     <select name="category" id="rss_chn_category" class="form-control">
-                        <s:iterator var="availableCategories" value="categoryVar">
-                            <option value=""><s:text name="jprss.label.selectCategory" /></option>
+                        <option value=""><s:text name="jprss.label.selectCategory" /></option>
+                        <s:iterator value="availableCategories" var="categoryVar">
                             <option <s:if test="%{category == #categoryVar.code}">selected="selected"</s:if> 
                                 value="<s:property value="#categoryVar.code"/>"><s:property value="%{getShortFullTitle(#categoryVar, currentLang.code)}"/></option>
                         </s:iterator>

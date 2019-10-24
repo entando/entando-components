@@ -347,8 +347,8 @@
                                 <div class="row">
                                     <div class="col-xs-5">
                                         <select name="categoryCode" id="jpnewsletter_catlist" class="form-control">
-                                            <s:iterator var="categories" value="categoryVar">
-                                                <option value=""><s:text name="label.all" /></option>
+                                            <option value=""><s:text name="label.all" /></option>
+                                            <s:iterator value="categories" var="categoryVar">
                                                 <option <s:if test="%{categoryCode == #categoryVar.code}">selected="selected"</s:if> 
                                                     value="<s:property value="#categoryVar.code"/>"><s:property value="%{getFullTitle(#categoryVar, currentLang.code)}"/></option>
                                             </s:iterator>
@@ -462,8 +462,8 @@
                             </label>
                             <div class="col-sm-10">
                                 <select name="newsletterConfig.subscriptionPageCode" id="pageLink" class="form-control">
-                                    <s:iterator var="confirmSubscriptionPages" value="pageVar">
-                                        <option value=""><s:text name="label.none" /></option>
+                                    <option value=""><s:text name="label.none" /></option>
+                                    <s:iterator value="confirmSubscriptionPages" var="pageVar">
                                         <option <s:if test="%{newsletterConfig.subscriptionPageCode == #pageVar.code}">selected="selected"</s:if> 
                                             value="<s:property value="#pageVar.code"/>"><s:property value="%{getShortFullTitle(#pageVar, currentLang.code)}"/></option>
                                     </s:iterator>
@@ -530,8 +530,8 @@
                             </label>
                             <div class="col-sm-10">
                                 <select name="newsletterConfig.unsubscriptionPageCode" id="pageLink" class="form-control">
-                                    <s:iterator var="confirmUnsubscriptionPages" value="pageVar">
-                                        <option value=""><s:text name="label.none" /></option>
+                                    <option value=""><s:text name="label.none" /></option>
+                                    <s:iterator value="confirmUnsubscriptionPages" var="pageVar">
                                         <option <s:if test="%{newsletterConfig.subscriptionPageCode == #pageVar.code}">selected="selected"</s:if> 
                                             value="<s:property value="#pageVar.code"/>"><s:property value="%{getShortFullTitle(#pageVar, currentLang.code)}"/></option>
                                     </s:iterator>

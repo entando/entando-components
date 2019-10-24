@@ -15,10 +15,10 @@
         <div class="col-xs-10">
             <s:if test="#freeViewerPagesVar.size() > 0">
                 <select name="viewPageCode" id="viewPageCode" class="form-control">
-                    <s:iterator var="#freeViewerPagesVar" value="pageVar">
-                        <option value=""><s:text name="label.choose" /></option>
+                    <option value=""><s:text name="label.choose" /></option>
+                    <s:iterator value="#freeViewerPagesVar" var="pageVar">
                         <option <s:if test="%{#entityType.viewPage == #pageVar.code}">selected="selected"</s:if> 
-                            value="<s:property value="#pageVar.code"/>"><s:property value="%{getShortFullTitle(#pageVar, currentLang.code)}"/></option>
+                            value="<s:property value="#pageVar.code"/>"><s:property value="%{getFullTitle(#pageVar, currentLang.code)}"/></option>
                     </s:iterator>
                 </select>
             </s:if>

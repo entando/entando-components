@@ -218,8 +218,8 @@
                             </label>
                             <div class="col-sm-10">
                                 <select name="pageLink" id="pageLink" class="form-control">
-                                    <s:iterator var="pages" value="pageVar">
-                                        <option value=""><s:text name="label.none" /></option>
+                                    <option value=""><s:text name="label.none" /></option>
+                                    <s:iterator value="pages" var="pageVar">
                                         <option <s:if test="%{widget.config.get('pageLink') == #pageVar.code}">selected="selected"</s:if> 
                                             value="<s:property value="#pageVar.code"/>"><s:property value="%{getShortFullTitle(#pageVar, currentLang.code)}"/></option>
                                     </s:iterator>

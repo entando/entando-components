@@ -38,8 +38,8 @@
                     </label>
                     <div class="col-sm-10 input-group">
                         <select name="catCode" id="catCode" class="form-control">
-                            <s:iterator var="systemCategories" value="categoryVar">
-                                <option value=""><s:text name="label.all" /></option>
+                            <option value=""><s:text name="label.all" /></option>
+                            <s:iterator value="systemCategories" var="categoryVar">
                                 <option <s:if test="%{catCode == #categoryVar.code}">selected="selected"</s:if> 
                                     value="<s:property value="#categoryVar.code"/>"><s:property value="%{getShortFullTitle(#categoryVar, currentLang.code)}"/></option>
                             </s:iterator>

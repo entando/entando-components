@@ -92,8 +92,8 @@
                             <s:text name="label.userFilterCategory" />
                         </label>
                         <select name="userFilterCategoryCode" id="userFilterCategoryCode" class="form-control">
-                            <s:iterator var="categories" value="categoryVar">
-                                <option value=""><s:text name="label.all" /></option>
+                            <option value=""><s:text name="label.all" /></option>
+                            <s:iterator value="categories" var="categoryVar">
                                 <option <s:if test="%{userFilterCategoryCode == #categoryVar.code}">selected="selected"</s:if> 
                                     value="<s:property value="#categoryVar.code"/>"><s:property value="%{getShortFullTitle(#categoryVar, currentLang.code)}"/></option>
                             </s:iterator>

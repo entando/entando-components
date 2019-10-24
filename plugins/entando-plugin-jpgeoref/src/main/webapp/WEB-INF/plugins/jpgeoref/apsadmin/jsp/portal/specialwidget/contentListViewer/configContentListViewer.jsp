@@ -97,8 +97,8 @@
                                 <label for="category"><s:text name="label.categories" /></label>
                                 <div class="input-group">
                                     <select name="categoryCode" id="category" class="form-control">
-                                        <s:iterator var="categories" value="categoryVar">
-                                            <option value=""><s:text name="label.all" /></option>
+                                        <option value=""><s:text name="label.all" /></option>
+                                        <s:iterator value="categories" var="categoryVar">
                                             <option <s:if test="%{categoryCode == #categoryVar.code}">selected="selected"</s:if> 
                                                 value="<s:property value="#categoryVar.code"/>"><s:property value="%{getShortFullTitle(#categoryVar, currentLang.code)}"/></option>
                                         </s:iterator>
@@ -303,8 +303,8 @@
                                 <div class="form-group">
                                     <label for="pageLink" ><s:text name="label.link.page" /></label>
                                     <select name="pageLink" id="pageLink" class="form-control">
-                                        <s:iterator var="pages" value="pageVar">
-                                            <option value=""><s:text name="label.select" /></option>
+                                        <option value=""><s:text name="label.select" /></option>
+                                        <s:iterator value="pages" var="pageVar">
                                             <option <s:if test="%{widget.config.get('pageLink') == #pageVar.code}">selected="selected"</s:if> 
                                                 value="<s:property value="#pageVar.code"/>"><s:property value="%{getShortFullTitle(#pageVar, currentLang.code)}"/></option>
                                         </s:iterator>

@@ -243,8 +243,8 @@
             </label>
             <div class="col-sm-10">
                 <select name="config.activationPageCode" id="activationPageCode" class="form-control">
-                    <s:iterator var="activationPages" value="pageVar">
-                        <option value=""><s:text name="note.choose" /></option>
+                    <option value=""><s:text name="note.choose" /></option>
+                    <s:iterator value="activationPages" var="pageVar">
                         <option <s:if test="%{config.activationPageCode == #pageVar.code}">selected="selected"</s:if> 
                             value="<s:property value="#pageVar.code"/>"><s:property value="%{getShortFullTitle(#pageVar, currentLang.code)}"/></option>
                     </s:iterator>
@@ -330,8 +330,8 @@
             </label>
             <div class="col-sm-10">
                 <select name="config.reactivationPageCode" id="reactivationPageCode" class="form-control">
-                    <s:iterator var="reactivationPages" value="pageVar">
-                        <option value=""><s:text name="note.choose" /></option>
+                    <option value=""><s:text name="note.choose" /></option>
+                    <s:iterator value="reactivationPages" var="pageVar">
                         <option <s:if test="%{config.activationPageCode == #pageVar.code}">selected="selected"</s:if> 
                             value="<s:property value="#pageVar.code"/>"><s:property value="%{getShortFullTitle(#pageVar, currentLang.code)}"/></option>
                     </s:iterator>
