@@ -103,7 +103,7 @@
                     </s:if>
                     <s:if test="%{content.categories.size() > 0}">
                         <s:iterator value="content.categories" var="contentCategory">
-                            <s:property value="#content.defaultFullTitle"/>&#32;
+                            <s:property value="%{getDefaultFullTitle(#contentCategory)}"/>&#32;
                         </s:iterator>
                     </s:if>
                 </td>

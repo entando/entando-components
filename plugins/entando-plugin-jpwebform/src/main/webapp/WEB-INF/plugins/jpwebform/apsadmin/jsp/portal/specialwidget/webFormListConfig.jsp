@@ -83,7 +83,6 @@
                             </div>                    
                         </div>
                     </fieldset>
-
                     <fieldset class="col-xs-12">
                         <legend class="accordion_toggler"><s:text name="jpwebform.specialwidget.title.extraOption" /></legend>
                         <div class="accordion_element">
@@ -100,13 +99,16 @@
                                     <wpsf:textfield name="title_%{#lang.code}" id="title_%{#lang.code}" value="%{showlet.config.get('title_' + #lang.code)}" cssClass="form-control" />
                                 </div>
                             </s:iterator>
-
                             <div class="form-group">
                                 <label for="pageLink" ><s:text name="jpwebform.specialwidget.label.link.page" /></label>
-                                <wpsf:select list="pages" name="pageLink" id="pageLink" listKey="code" listValue="getShortFullTitle(currentLang.code)" 
-                                             value="%{showlet.config.get('pageLink')}" headerKey="" headerValue="- %{getText('label.select')} -" cssClass="form-control"/>
+                                <select name="pageLink" id="pageLink" class="form-control">
+                                    <s:iterator var="pages" value="pageVar">
+                                        <option value=""><s:text name="label.select" /></option>
+                                        <option <s:if test="%{widget.config.get('pageLink') == #pageVar.code}">selected="selected"</s:if> 
+                                            value="<s:property value="#pageVar.code"/>"><s:property value="%{getShortFullTitle(#pageVar, currentLang.code)}"/></option>
+                                    </s:iterator>
+                                </select>
                             </div>
-
                             <s:iterator var="lang" value="langs">
                                 <div class="form-group">
                                     <label for="linkDescr_<s:property value="#lang.code" />" class="control-label">
@@ -116,16 +118,13 @@
                             </s:iterator>
                         </div>
                     </fieldset>
-
                     <fieldset class="col-xs-12">
                         <legend><s:text name="jpwebform.specialwidget.title.publishingOptions" /></legend>
-
                         <div class="form-group">
                             <label for="maxElemForItem"><s:text name="jpwebform.specialwidget.label.maxElementsForItem" /></label>
                             <wpsf:select name="maxElemForItem" id="maxElemForItem" value="%{getShowlet().getConfig().get('maxElemForItem')}" 
                                          headerKey="" headerValue="%{getText('label.all')}" list="#{1:1,2:2,3:3,4:4,5:5,6:6,7:7,8:8,9:9,10:10,15:15,20:20}" cssClass="form-control" />
                         </div>
-
                         <div class="form-group">
                             <label for="maxElements"><s:text name="jpwebform.specialwidget.label.maxElements" /></label>
                             <wpsf:select name="maxElements" id="maxElements" value="%{getShowlet().getConfig().get('maxElements')}" 

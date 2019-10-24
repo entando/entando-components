@@ -178,14 +178,13 @@
                                         <span class="label label-info">
                                             <span class="icon fa fa-tag"></span>
                                             &#32;
-                                            <abbr title="<s:property value="#resourceCategory.getFullTitle(currentLang.code)"/>">
-                                            <s:property value="#resourceCategory.getShortFullTitle(currentLang.code)"/>
+                                            <abbr title="<s:property value="%{getFullTitle(#resourceCategory, currentLang.code)}"/>">
+                                            <s:property value="%{getShortFullTitle(#resourceCategory, currentLang.code)}"/>
                                         </abbr>
                                         &#32;
                                         <button type="button" class="btn btn-link"
-                                                onclick="categoriesAjax.removeCategory('removeCategory', '<s:property
-                                                        value="#resourceCategory.code"/>')"
-                                                title="<s:property value="%{getText('label.remove') + ' ' + #resourceCategory.defaultFullTitle}" />">
+                                                onclick="categoriesAjax.removeCategory('removeCategory', '<s:property value="#resourceCategory.code"/>')" 
+                                                title="<s:property value="%{getText('label.remove') + ' ' + getDefaultFullTitle(#resourceCategory)}" />">
                                             <span class="pficon pficon-close white"></span>
                                             <span class="sr-only">x</span>
                                         </button>

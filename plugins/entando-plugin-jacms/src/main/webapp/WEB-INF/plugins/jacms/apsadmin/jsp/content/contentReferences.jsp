@@ -63,16 +63,14 @@
                                             <div class="btn-group btn-group-xs">
                                                 <a class="btn btn-default"
                                                    href="<s:url namespace="/do/Page" action="viewTree"><s:param name="selectedNode" value="#currentPageVar.code" /></s:url>"
-                                                   title="<s:text name="note.goToSomewhere" />:&#32;<s:property value="%{#currentPageVar.getFullTitle(currentLang.code)}" />"><span class="icon fa fa-folder"></span><span class="sr-only"><s:text name="note.goToSomewhere" />:&#32;<s:property value="%{#currentPageVar.getFullTitle(currentLang.code)}" /></span></a>
+                                                   title="<s:text name="note.goToSomewhere" />:&#32;<s:property value="%{getFullTitle(#currentPageVar, currentLang.code)}" />"><span class="icon fa fa-folder"></span><span class="sr-only"><s:text name="note.goToSomewhere" />:&#32;<s:property value="%{getFullTitle(#currentPageVar, currentLang.code)}" /></span></a>
                                                 <a class="btn btn-default"
                                                    href="<s:url namespace="/do/Page" action="configure"><s:param name="pageCode" value="#currentPageVar.code" /></s:url>"
-                                                   title="<s:text name="title.configPage" />:&#32;<s:property value="%{#currentPageVar.getFullTitle(currentLang.code)}" />"><span class="icon fa fa-cog"></span><span class="sr-only"><s:text name="title.configPage" />:&#32;<s:property value="%{#currentPageVar.getFullTitle(currentLang.code)}" /></span></a>
+                                                   title="<s:text name="title.configPage" />:&#32;<s:property value="%{getFullTitle(#currentPageVar, currentLang.code)}" />"><span class="icon fa fa-cog"></span><span class="sr-only"><s:text name="title.configPage" />:&#32;<s:property value="%{getFullTitle(#currentPageVar, currentLang.code)}" /></span></a>
                                             </div>
                                         </s:if>
                                     </td>
-                                    <td>
-                                        <s:property value="%{#currentPageVar.getFullTitle(currentLang.code)}" />
-                                    </td>
+                                    <td><s:property value="%{getFullTitle(#currentPageVar, currentLang.code)}" /></td>
                                 </tr>
                             </s:iterator>
                         </table>

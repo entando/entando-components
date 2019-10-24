@@ -346,9 +346,13 @@
                             <div class="col-sm-10">
                                 <div class="row">
                                     <div class="col-xs-5">
-                                        <wpsf:select id="jpnewsletter_catlist" name="categoryCode" list="categories"
-                                                     listKey="code" listValue="getFullTitle(currentLang.code)"
-                                                     cssClass="form-control" />
+                                        <select name="categoryCode" id="jpnewsletter_catlist" class="form-control">
+                                            <s:iterator var="categories" value="categoryVar">
+                                                <option value=""><s:text name="label.all" /></option>
+                                                <option <s:if test="%{categoryCode == #categoryVar.code}">selected="selected"</s:if> 
+                                                    value="<s:property value="#categoryVar.code"/>"><s:property value="%{getFullTitle(#categoryVar, currentLang.code)}"/></option>
+                                            </s:iterator>
+                                        </select>
                                         <span for="jpnewsletter_hour" class="help help-block">
                                             <s:text name="jpnewsletter.category" />
                                         </span>
@@ -457,11 +461,13 @@
                                 <s:text name="jpnewsletter.email.page" />
                             </label>
                             <div class="col-sm-10">
-                                <wpsf:select list="confirmSubscriptionPages"
-                                             name="newsletterConfig.subscriptionPageCode"
-                                             id="newsletterConfig_subscriptionPageCode" listKey="code"
-                                             listValue="getShortFullTitle(currentLang.code)" headerKey=""
-                                             headerValue="%{getText('label.none')}" cssClass="form-control" />
+                                <select name="newsletterConfig.subscriptionPageCode" id="pageLink" class="form-control">
+                                    <s:iterator var="confirmSubscriptionPages" value="pageVar">
+                                        <option value=""><s:text name="label.none" /></option>
+                                        <option <s:if test="%{newsletterConfig.subscriptionPageCode == #pageVar.code}">selected="selected"</s:if> 
+                                            value="<s:property value="#pageVar.code"/>"><s:property value="%{getShortFullTitle(#pageVar, currentLang.code)}"/></option>
+                                    </s:iterator>
+                                </select>
                             </div>
                         </div>
                         <div class="form-group">
@@ -523,11 +529,13 @@
                                 <s:text name="jpnewsletter.email.page" />
                             </label>
                             <div class="col-sm-10">
-                                <wpsf:select list="confirmUnsubscriptionPages"
-                                             name="newsletterConfig.unsubscriptionPageCode"
-                                             id="newsletterConfig_unsubscriptionPageCode" listKey="code"
-                                             listValue="getShortFullTitle(currentLang.code)" headerKey=""
-                                             headerValue="%{getText('label.none')}" cssClass="form-control" />
+                                <select name="newsletterConfig.unsubscriptionPageCode" id="pageLink" class="form-control">
+                                    <s:iterator var="confirmUnsubscriptionPages" value="pageVar">
+                                        <option value=""><s:text name="label.none" /></option>
+                                        <option <s:if test="%{newsletterConfig.subscriptionPageCode == #pageVar.code}">selected="selected"</s:if> 
+                                            value="<s:property value="#pageVar.code"/>"><s:property value="%{getShortFullTitle(#pageVar, currentLang.code)}"/></option>
+                                    </s:iterator>
+                                </select>
                             </div>
                         </div>
                         <div class="form-group">
