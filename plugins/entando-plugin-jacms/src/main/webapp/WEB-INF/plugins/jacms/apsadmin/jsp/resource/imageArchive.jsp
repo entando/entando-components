@@ -151,7 +151,6 @@
                 </a>
             </div>
         </s:else>
-
         <div class="toolbar-pf">
             <div class="toolbar-pf-action-right mt-10">
                 <div class="form-group toolbar-pf-view-selector" id="TabList">
@@ -182,6 +181,8 @@
                         <wpsf:hidden name="treeNodesToOpen" value="%{#treeNodeToOpenVar}"/>
                     </s:iterator>
                 </s:if>
+                <wpsf:hidden name="groupBy" />
+                <wpsf:hidden name="order" />
                 <wpsf:hidden name="contentOnSessionMarker"/>
                 </p>
 
@@ -294,6 +295,8 @@
                         <wpsf:hidden name="treeNodesToOpen" value="%{#treeNodeToOpenVar}"/>
                     </s:iterator>
                 </s:if>
+                <wpsf:hidden name="groupBy" />
+                <wpsf:hidden name="order" />
                 <wpsf:hidden name="contentOnSessionMarker"/>
                 </p>
                 <wpsa:subset source="resources" count="10" objectName="groupResource" advanced="true" offset="5">

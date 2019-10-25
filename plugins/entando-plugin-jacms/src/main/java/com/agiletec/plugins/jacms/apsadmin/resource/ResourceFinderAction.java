@@ -13,6 +13,8 @@
  */
 package com.agiletec.plugins.jacms.apsadmin.resource;
 
+import static com.opensymphony.xwork2.Action.SUCCESS;
+
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.services.category.Category;
@@ -52,6 +54,7 @@ public class ResourceFinderAction extends AbstractResourceAction {
     private boolean openCollapsed = false;
 
     private String lastOrder;
+    private String order;
     private String lastGroupBy;
     private String groupBy;
 
@@ -96,11 +99,14 @@ public class ResourceFinderAction extends AbstractResourceAction {
 
     protected EntitySearchFilter getOrderFilter() {
         String groupBy = this.getGroupBy();
-        String order = "ASC";
+        String order = this.getOrder();
         if (!StringUtils.isBlank(this.getLastGroupBy())
                 && this.getLastGroupBy().equals(this.getGroupBy())
                 && !StringUtils.isBlank(this.getLastOrder())) {
             order = (this.getLastOrder().equals("ASC")) ? "DESC" : "ASC";
+        }
+        if (null == order) {
+            order = "ASC";
         }
         String key = null;
         if (StringUtils.isBlank(groupBy) || groupBy.equals("descr")) {
@@ -112,6 +118,9 @@ public class ResourceFinderAction extends AbstractResourceAction {
         } else {
             key = IResourceManager.RESOURCE_DESCR_FILTER_KEY;
         }
+        this.setOrder(order);
+        this.setLastOrder(order);
+        this.setLastGroupBy(groupBy);
         EntitySearchFilter filter = new EntitySearchFilter(key, false);
         if (StringUtils.isBlank(order)) {
             filter.setOrder(EntitySearchFilter.ASC_ORDER);
@@ -239,6 +248,14 @@ public class ResourceFinderAction extends AbstractResourceAction {
 
     public void setLastOrder(String order) {
         this.lastOrder = order;
+    }
+
+    public String getOrder() {
+        return order;
+    }
+
+    public void setOrder(String order) {
+        this.order = order;
     }
 
     public String getLastGroupBy() {
