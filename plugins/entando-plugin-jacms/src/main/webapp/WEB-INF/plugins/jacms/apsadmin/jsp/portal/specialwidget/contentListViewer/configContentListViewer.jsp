@@ -186,13 +186,14 @@
                                 <div class="col-sm-10">
 
                                     <div class="input-group">
-                                        <wpsf:select name="categoryCode" id="category" list="categories"
-                                                     listKey="code" listValue="getShortFullTitle(currentLang.code)"
-                                                     headerKey="" headerValue="%{getText('label.all')}"
-                                                     cssClass="form-control" />
-
+                                        <select name="categoryCode" id="category" class="form-control">
+                                            <option value=""><s:text name="label.all" /></option>
+                                            <s:iterator value="categories" var="categoryVar">
+                                                <option <s:if test="%{categoryCode == #categoryVar.code}">selected="selected"</s:if> 
+                                                    value="<s:property value="#categoryVar.code"/>"><s:property value="%{getShortFullTitle(#categoryVar, currentLang.code)}"/></option>
+                                            </s:iterator>
+                                        </select>
                                         <span class="input-group-btn">
-
                                             <wpsf:submit type="button" action="addCategory" cssClass="btn btn-primary">
                                                 <span class="icon fa fa-plus"></span>
                                             </wpsf:submit>
@@ -208,12 +209,12 @@
 
                                                 <span class="label label-default label-tag label-sm">
                                                     <span class="icon fa fa-tag"></span>&#32;
-                                                    <span title="<s:property value="#showletCategory.getFullTitle(currentLang.code)"/>">
-                                                    <s:property value="#showletCategory.getShortFullTitle(currentLang.code)" /></span>&#32;
+                                                    <span title="<s:property value="%{getFullTitle(#showletCategory, currentLang.code)}"/>">
+                                                    <s:property value="%{getShortFullTitle(#showletCategory, currentLang.code)}" /></span>&#32;
                                                     <wpsa:actionParam action="removeCategory" var="actionName" >
                                                         <wpsa:actionSubParam name="categoryCode" value="%{#categoryCodeVar}" />
                                                     </wpsa:actionParam>
-                                                    <wpsf:submit type="button" action="%{#actionName}" title="%{getText('label.remove') + ' ' + #showletCategory.getFullTitle(currentLang.code)}" cssClass="btn btn-tag">
+                                                    <wpsf:submit type="button" action="%{#actionName}" title="%{getText('label.remove') + ' ' + getFullTitle(#showletCategory, currentLang.code)}" cssClass="btn btn-tag">
                                                     <span class="icon fa fa-times"></span>
                                                 </wpsf:submit>
                                             </span>
@@ -399,12 +400,13 @@
                                             <s:text name="label.page" />
                                         </label>
                                         <div class="col-sm-10">
-                                            <wpsf:select list="pages" name="pageLink"
-                                                         id="pageLink" listKey="code"
-                                                         listValue="getShortFullTitle(currentLang.code)"
-                                                         value="%{widget.config.get('pageLink')}" headerKey=""
-                                                         headerValue="%{getText('label.none')}"
-                                                         cssClass="form-control" />
+                                            <select name="pageLink" id="pageLink" class="form-control">
+                                                <option value=""><s:text name="label.none" /></option>
+                                                <s:iterator value="pages" var="pageVar">
+                                                    <option <s:if test="%{widget.config.get('pageLink') == #pageVar.code}">selected="selected"</s:if> 
+                                                        value="<s:property value="#pageVar.code"/>"><s:property value="%{getShortFullTitle(#pageVar, currentLang.code)}"/></option>
+                                                </s:iterator>
+                                            </select>
                                         </div>
                                     </div>
                                 </s:if>
@@ -468,7 +470,7 @@
                                                                 <s:text name="label.category" />
                                                                 <s:if test="null != #userFilter['categoryCode']">
                                                                     <s:set var="userFilterCategoryRoot" value="%{getCategory(#userFilter['categoryCode'])}"></s:set>
-                                                                    (<s:property value="#userFilterCategoryRoot.getFullTitle(currentLang.code)"/>)
+                                                                    (<s:property value="%{getFullTitle(#userFilterCategoryRoot, currentLang.code)}"/>)
                                                                 </s:if>
                                                             </s:elseif>
                                                         </s:if>

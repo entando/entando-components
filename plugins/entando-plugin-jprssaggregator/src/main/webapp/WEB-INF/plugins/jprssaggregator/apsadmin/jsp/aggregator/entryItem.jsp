@@ -208,11 +208,11 @@
                             <s:set var="contentCategory" value="%{getCategory(#contentCategory.key)}"></s:set>
                                 <div class="label label-default label-tag label-sm">
                                     <span class="icon fa fa-tag"></span>&#32;
-                                    <span title="<s:property value="#contentCategory.getFullTitle(currentLang.code)"/>"><s:property value="#contentCategory.getShortFullTitle(currentLang.code)" /></span>&#32;
+                                    <span title="<s:property value="%{getFullTitle(#contentCategory, currentLang.code)}"/>"><s:property value="%{getShortFullTitle(#contentCategory, currentLang.code)}" /></span>&#32;
                                 <wpsa:actionParam action="removeCategory" var="actionName" >
                                     <wpsa:actionSubParam name="categoryCode" value="%{#contentCategory.code}" />
                                 </wpsa:actionParam>
-                                <wpsf:submit type="button" action="%{#actionName}" title="%{getText('label.remove') + ' ' + #contentCategory.defaultFullTitle}" cssClass="btn btn-tag btn-link">
+                                <wpsf:submit type="button" action="%{#actionName}" title="%{getText('label.remove') + ' ' + getDefaultFullTitle(#contentCategory)}" cssClass="btn btn-tag btn-link">
                                     <span class="icon fa fa-times"></span>
                                     <span class="sr-only">x</span>
                                 </wpsf:submit>

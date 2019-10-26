@@ -1,47 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-		xmlns:context="http://www.springframework.org/schema/context"
-		xmlns:jee="http://www.springframework.org/schema/jee"
-		xmlns:aop="http://www.springframework.org/schema/aop"
-		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd 
 			http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
 			http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd" >
 	
-	<aop:aspectj-autoproxy />
+    <aop:aspectj-autoproxy />
 	
-	<bean id="jpversioningVersioningManager" class="com.agiletec.plugins.jpversioning.aps.system.services.versioning.VersioningManager" 
-			parent="abstractService" >
-		<property name="contentManager" ref="jacmsContentManager" />
-		<property name="categoryManager" ref="CategoryManager" />
-		<property name="configManager" ref="BaseConfigManager" />
-		<property name="versioningDAO" >
-			<bean class="com.agiletec.plugins.jpversioning.aps.system.services.versioning.VersioningDAO">
-				<property name="dataSource" ref="portDataSource" />
-			</bean>
-		</property>
-		<property name="xmlAttributeRootElementName" value="content" />
-		<property name="entityHandler">
-			<bean class="com.agiletec.plugins.jacms.aps.system.services.content.parse.ContentHandler" />
-		</property>
-	</bean>
+    <bean id="jpversioningVersioningManager" class="com.agiletec.plugins.jpversioning.aps.system.services.versioning.VersioningManager" 
+              parent="abstractService" >
+        <property name="contentManager" ref="jacmsContentManager" />
+        <property name="categoryManager" ref="CategoryManager" />
+        <property name="configManager" ref="BaseConfigManager" />
+        <property name="versioningDAO" >
+            <bean class="com.agiletec.plugins.jpversioning.aps.system.services.versioning.VersioningDAO">
+                <property name="dataSource" ref="portDataSource" />
+            </bean>
+        </property>
+        <property name="xmlAttributeRootElementName" value="content" />
+        <property name="entityHandler">
+            <bean class="com.agiletec.plugins.jacms.aps.system.services.content.parse.ContentHandler" />
+        </property>
+    </bean>
 	
-	<bean id="jpversioningTrashedResourceManager" class="com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager" 
-			parent="abstractService" >
-		<property name="categoryManager" ref="CategoryManager" />
-		<property name="resourceManager" ref="jacmsResourceManager" />
-		<property name="trashedResourceDAO" >
-			<bean class="com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceDAO">
-				<property name="dataSource" ref="portDataSource" />
-			</bean>
-		</property>
-		<property name="resourceDAO" >
-			<bean class="com.agiletec.plugins.jacms.aps.system.services.resource.ResourceDAO">
-				<property name="dataSource" ref="portDataSource" />
-			</bean>
-		</property>
-		<property name="storageManager" ref="StorageManager" />
-	</bean>
+    <bean id="jpversioningTrashedResourceManager" class="com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager" 
+              parent="abstractService" >
+        <property name="categoryManager" ref="CategoryManager" />
+        <property name="resourceManager" ref="jacmsResourceManager" />
+        <property name="trashedResourceDAO" >
+            <bean class="com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceDAO">
+                <property name="dataSource" ref="portDataSource" />
+            </bean>
+        </property>
+        <property name="resourceDAO" >
+            <bean class="com.agiletec.plugins.jacms.aps.system.services.resource.ResourceDAO">
+                <property name="dataSource" ref="portDataSource" />
+                <property name="dataSourceClassName"><value>${portDataSourceClassName}</value></property>
+                <property name="categoryManager" ref="CategoryManager" />
+            </bean>
+        </property>
+        <property name="storageManager" ref="StorageManager" />
+    </bean>
 	
 </beans>

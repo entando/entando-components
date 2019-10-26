@@ -14,10 +14,13 @@
             <s:text name="name.viewPageCode" /></label>
         <div class="col-xs-10">
             <s:if test="#freeViewerPagesVar.size() > 0">
-                <wpsf:select name="viewPageCode" id="viewPageCode" list="#freeViewerPagesVar" listKey="code"
-                             listValue="%{getShortFullTitle(currentLang.code)}"
-                             value="%{#entityType.viewPage}" cssClass="form-control"
-                             headerKey="" headerValue="%{getText('note.choose')}" />
+                <select name="viewPageCode" id="viewPageCode" class="form-control">
+                    <option value=""><s:text name="label.choose" /></option>
+                    <s:iterator value="#freeViewerPagesVar" var="pageVar">
+                        <option <s:if test="%{#entityType.viewPage == #pageVar.code}">selected="selected"</s:if> 
+                            value="<s:property value="#pageVar.code"/>"><s:property value="%{getFullTitle(#pageVar, currentLang.code)}"/></option>
+                    </s:iterator>
+                </select>
             </s:if>
             <s:else>
                 <s:text name="label.none" />

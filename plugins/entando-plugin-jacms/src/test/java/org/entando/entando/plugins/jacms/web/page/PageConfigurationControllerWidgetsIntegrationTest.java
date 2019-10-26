@@ -334,7 +334,8 @@ public class PageConfigurationControllerWidgetsIntegrationTest extends AbstractC
         PageMetadata metadata = PageTestUtil.createPageMetadata(pageModel, true, pageCode + "_title", null, null, false, null, null);
         ApsProperties config = PageTestUtil.createProperties("temp", "tempValue", "contentId", "ART11");
         Widget widgetToAdd = PageTestUtil.createWidget("content_viewer", config, this.widgetTypeManager);
-        Widget[] widgets = {widgetToAdd};
+        Widget[] widgets = new Widget[pageModel.getFrames().length];
+        widgets[0] = widgetToAdd;
         Page pageToAdd = PageTestUtil.createPage(pageCode, parentPage.getCode(), "free", metadata, widgets);
         return pageToAdd;
     }
