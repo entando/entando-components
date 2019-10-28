@@ -170,13 +170,14 @@ public class SeoMappingManager extends AbstractService implements ISeoMappingMan
             FieldSearchFilter[] filters = {filterCode, filterLang};
             List<String> codes = this.searchFriendlyCode(filters);
             if (null != codes && !codes.isEmpty()) {
-                _logger.warn("There are already mapping with friendly code '{}' for lang '{}'", filterCode, filterLang);
                 for (int j = 0; j < codes.size(); j++) {
                     FriendlyCodeVO codeVo = this.getCacheWrapper().getMappingByFriendlyCode(codes.get(j));
-                    _logger.warn("Mapping : code '{}' - contentId '{}' - pageCode '{}' - langCode '{}'", 
-                            codeVo.getFriendlyCode(), codeVo.getContentId(), codeVo.getPageCode(), codeVo.getLangCode());
+                    if (null == codeVo.getContentId() || !contentId.equals(codeVo.getContentId())) {
+                        _logger.warn("Mapping : code '{}' - contentId '{}' - pageCode '{}' - langCode '{}'", 
+                                codeVo.getFriendlyCode(), codeVo.getContentId(), codeVo.getPageCode(), codeVo.getLangCode());
+                        contentFriendlyCode.getFriendlyCodes().remove(langCode);
+                    }
                 }
-                contentFriendlyCode.getFriendlyCodes().remove(langCode);
             }
         }
 		return contentFriendlyCode;
