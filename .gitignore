@@ -15,4 +15,4 @@ plugins/entando-plugin-jpkiebpm/entando-dev.log
 .idea
 *.iml
 plugins/entando-plugin-jpkiebpm/entando-dev.log
-
+*.bak
