@@ -71,8 +71,12 @@ public class CmsPageUtil {
      * page.
      */
     public static boolean isContentPublishableOnPageDraft(Content publishingContent, IPage page) {
+        if (null == page) {
+            logger.error("Null page");
+            return false;
+        }
         if (page.isOnlineInstance()) {
-            logger.warn("this check expects a draft instance of the page");
+            logger.warn("this check expects a draft instance of the page {}", page.getCode());
             return false;
         }
         return isContentPublishableOnPage(publishingContent, page);
