@@ -172,8 +172,8 @@ public class SeoMappingManager extends AbstractService implements ISeoMappingMan
             if (null != codes && !codes.isEmpty()) {
                 for (int j = 0; j < codes.size(); j++) {
                     FriendlyCodeVO codeVo = this.getCacheWrapper().getMappingByFriendlyCode(codes.get(j));
-                    if (null == codeVo.getContentId() || !contentId.equals(codeVo.getContentId())) {
-                        _logger.warn("Mapping : code '{}' - contentId '{}' - pageCode '{}' - langCode '{}'", 
+                    if (null != codeVo && (null == codeVo.getContentId() || !contentId.equals(codeVo.getContentId()))) {
+                        _logger.warn("Already existing mapping : code '{}' - contentId '{}' - pageCode '{}' - langCode '{}'", 
                                 codeVo.getFriendlyCode(), codeVo.getContentId(), codeVo.getPageCode(), codeVo.getLangCode());
                         contentFriendlyCode.getFriendlyCodes().remove(langCode);
                     }
