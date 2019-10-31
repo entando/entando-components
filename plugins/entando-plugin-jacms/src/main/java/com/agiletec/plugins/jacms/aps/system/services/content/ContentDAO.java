@@ -69,7 +69,7 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 	private final String DELETE_WORK_CONTENT_SEARCH_RECORD = "DELETE FROM workcontentsearch WHERE contentid = ? ";
 
 	private final String ADD_CONTENT_REL_RECORD = "INSERT INTO contentrelations "
-			+ "(contentid, refpage, refcontent, refresource, refcategory, refgroup) " + "VALUES ( ? , ? , ? , ? , ? , ? )";
+			+ "(contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ( ? , ? , ? , ? , ? , ? )";
 
 	private final String ADD_WORK_CONTENT_REL_RECORD = "INSERT INTO workcontentrelations (contentid, refcategory) VALUES ( ? , ? )";
 
@@ -95,34 +95,34 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 			+ " RIGHT JOIN contentrelations ON contents.contentid = contentrelations.contentid WHERE refcategory = ? "
 			+ "ORDER BY contents.contentid";
 
-	private final String LOAD_CONTENTS_VO_MAIN_BLOCK = "SELECT contents.contentid, contents.contenttype, contents.descr, contents.status, "
-			+ "contents.workxml, contents.created, contents.lastmodified, contents.onlinexml, contents.maingroup, "
-			+ "contents.currentversion, contents.firsteditor, contents.lasteditor " + "FROM contents ";
+	private final String LOAD_CONTENTS_VO_MAIN_BLOCK = "SELECT contents.contentid, contents.contenttype, contents.descr, "
+            + "contents.status, contents.workxml, contents.created, contents.lastmodified, contents.onlinexml, contents.published, "
+            + "contents.sync, contents.maingroup, contents.currentversion, contents.firsteditor, contents.lasteditor FROM contents ";
 
 	private final String LOAD_CONTENT_VO = LOAD_CONTENTS_VO_MAIN_BLOCK + " WHERE contents.contentid = ? ";
 
 	private final String ADD_CONTENT = "INSERT INTO contents (contentid, contenttype, descr, status, workxml, "
-			+ "created, lastmodified, maingroup, currentversion, firsteditor, lasteditor) "
-			+ "VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ?)";
+			+ "created, lastmodified, sync, maingroup, currentversion, firsteditor, lasteditor) "
+			+ "VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ?, ?)";
 
 	private final String INSERT_ONLINE_CONTENT = "UPDATE contents SET contenttype = ? , descr = ? , status = ? , "
-			+ "workxml = ? , lastmodified = ? , onlinexml = ? , maingroup = ? , currentversion = ? , lasteditor = ? "
+			+ "workxml = ? , lastmodified = ? , onlinexml = ? , published = ?, sync = ? , maingroup = ? , currentversion = ? , lasteditor = ? "
 			+ "WHERE contentid = ? ";
 
 	private final String INSERT_ONLINE_CONTENT_WITHOUT_DATE = "UPDATE contents SET contenttype = ? , descr = ? , status = ? , "
-			+ "workxml = ? , onlinexml = ? , maingroup = ? , currentversion = ? , lasteditor = ? " + "WHERE contentid = ? ";
+			+ "workxml = ? , onlinexml = ? , published = ? , sync = ? , maingroup = ? , currentversion = ? , lasteditor = ? " + "WHERE contentid = ? ";
 
-	private final String REMOVE_ONLINE_CONTENT = "UPDATE contents SET onlinexml = ? , status = ? , "
-			+ "workxml = ? , lastmodified = ? , currentversion = ? , lasteditor = ? WHERE contentid = ? ";
+	private final String REMOVE_ONLINE_CONTENT = "UPDATE contents SET onlinexml = ? , published = ? , sync = ? , "
+            + "status = ? , workxml = ? , lastmodified = ? , currentversion = ? , lasteditor = ? WHERE contentid = ? ";
 
-	private final String REMOVE_ONLINE_CONTENT_WITHOUT_DATE = "UPDATE contents SET onlinexml = ? , status = ? , "
-			+ "workxml = ? , currentversion = ? , lasteditor = ? WHERE contentid = ? ";
+	private final String REMOVE_ONLINE_CONTENT_WITHOUT_DATE = "UPDATE contents SET onlinexml = ? , published = ? , sync = ? , "
+            + "status = ? , workxml = ? , currentversion = ? , lasteditor = ? WHERE contentid = ? ";
 
 	private final String UPDATE_CONTENT = "UPDATE contents SET contenttype = ? , descr = ? , status = ? , "
-			+ "workxml = ? , lastmodified = ? , maingroup = ? , currentversion = ? , lasteditor = ? " + "WHERE contentid = ? ";
+			+ "workxml = ? , sync = ? , lastmodified = ? , maingroup = ? , currentversion = ? , lasteditor = ? " + "WHERE contentid = ? ";
 
 	private final String UPDATE_CONTENT_WITHOUT_DATE = "UPDATE contents SET contenttype = ? , descr = ? , status = ? , "
-			+ "workxml = ? , maingroup = ? , currentversion = ? , lasteditor = ? " + "WHERE contentid = ? ";
+			+ "workxml = ? , sync = ? , maingroup = ? , currentversion = ? , lasteditor = ? " + "WHERE contentid = ? ";
 
 	private final String LOAD_ALL_CONTENTS_ID = "SELECT contentid FROM contents";
 
@@ -134,13 +134,14 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 
 	private final String DELETE_WORK_ATTRIBUTE_ROLE_RECORD = "DELETE FROM workcontentattributeroles WHERE contentid = ? ";
 
-	private static final String COUNT_OFFLINE_CONTENTS = "SELECT count(contentid) FROM contents " + "WHERE onlinexml IS NULL";
+	private static final String COUNT_OFFLINE_CONTENTS = 
+            "SELECT count(contents.contentid) from contents WHERE contents.sync = 0 and onlinexml is null";
 
-	private static final String COUNT_ONLINE_CONTENTS = "SELECT count(contentid) FROM contents "
-			+ "WHERE onlinexml IS NOT NULL AND onlinexml = workxml";
+	private static final String COUNT_ONLINE_CONTENTS = 
+            "SELECT count(contentid) from contents WHERE contents.sync = 1";
 
-	private static final String COUNT_ONLINE_CONTENTS_WITH_DIFFS = "SELECT count(contentid) FROM contents "
-			+ "WHERE onlinexml IS NOT NULL AND onlinexml <> workxml";
+	private static final String COUNT_ONLINE_CONTENTS_WITH_DIFFS = 
+            "SELECT count(contents.contentid) from contents WHERE contents.sync = 0 and onlinexml is not null";
 
 	private final String LOAD_LAST_MODIFIED = LOAD_CONTENTS_VO_MAIN_BLOCK + "order by contents.lastmodified desc";
     
