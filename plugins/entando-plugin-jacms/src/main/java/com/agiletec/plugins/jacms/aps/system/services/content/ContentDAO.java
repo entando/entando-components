@@ -13,6 +13,7 @@
  */
 package com.agiletec.plugins.jacms.aps.system.services.content;
 
+import com.agiletec.aps.system.SystemConstants;
 import java.sql.BatchUpdateException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -37,11 +38,11 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.util.DateConverter;
-import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.CmsAttributeReference;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentRecordVO;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.IReferenceableAttribute;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * DAO class for objects of type content.
@@ -103,19 +104,19 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 
 	private final String ADD_CONTENT = "INSERT INTO contents (contentid, contenttype, descr, status, workxml, "
 			+ "created, lastmodified, sync, maingroup, currentversion, firsteditor, lasteditor) "
-			+ "VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ?, ?)";
+			+ "VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ?)";
 
 	private final String INSERT_ONLINE_CONTENT = "UPDATE contents SET contenttype = ? , descr = ? , status = ? , "
-			+ "workxml = ? , lastmodified = ? , onlinexml = ? , published = ?, sync = ? , maingroup = ? , currentversion = ? , lasteditor = ? "
+			+ "workxml = ? , lastmodified = ? , onlinexml = ? , published = ? , sync = ? , maingroup = ? , currentversion = ? , lasteditor = ? "
 			+ "WHERE contentid = ? ";
 
 	private final String INSERT_ONLINE_CONTENT_WITHOUT_DATE = "UPDATE contents SET contenttype = ? , descr = ? , status = ? , "
-			+ "workxml = ? , onlinexml = ? , published = ? , sync = ? , maingroup = ? , currentversion = ? , lasteditor = ? " + "WHERE contentid = ? ";
+			+ "workxml = ? , onlinexml = ? , sync = ? , maingroup = ? , currentversion = ? , lasteditor = ? " + "WHERE contentid = ? ";
 
 	private final String REMOVE_ONLINE_CONTENT = "UPDATE contents SET onlinexml = ? , published = ? , sync = ? , "
             + "status = ? , workxml = ? , lastmodified = ? , currentversion = ? , lasteditor = ? WHERE contentid = ? ";
 
-	private final String REMOVE_ONLINE_CONTENT_WITHOUT_DATE = "UPDATE contents SET onlinexml = ? , published = ? , sync = ? , "
+	private final String REMOVE_ONLINE_CONTENT_WITHOUT_DATE = "UPDATE contents SET onlinexml = ? , sync = ? , "
             + "status = ? , workxml = ? , currentversion = ? , lasteditor = ? WHERE contentid = ? ";
 
 	private final String UPDATE_CONTENT = "UPDATE contents SET contenttype = ? , descr = ? , status = ? , "
@@ -142,8 +143,8 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 
 	private static final String COUNT_ONLINE_CONTENTS_WITH_DIFFS = 
             "SELECT count(contents.contentid) from contents WHERE contents.sync = 0 and onlinexml is not null";
-
-	private final String LOAD_LAST_MODIFIED = LOAD_CONTENTS_VO_MAIN_BLOCK + "order by contents.lastmodified desc";
+    
+    private static final String LOAD_LAST_MODIFIED_DATE  = "SELECT MAX(lastmodified) FROM contents";
     
     private ICategoryManager categoryManager;
 
@@ -154,24 +155,24 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 
 	@Override
 	protected ApsEntityRecord createEntityRecord(ResultSet res) throws Throwable {
-		ContentRecordVO contentVo = new ContentRecordVO();
-		contentVo.setId(res.getString(1));
-		contentVo.setTypeCode(res.getString(2));
-		contentVo.setDescription(res.getString(3));
-		contentVo.setStatus(res.getString(4));
-		String xmlWork = res.getString(5);
-		contentVo.setCreate(DateConverter.parseDate(res.getString(6), JacmsSystemConstants.CONTENT_METADATA_DATE_FORMAT));
-		contentVo.setModify(DateConverter.parseDate(res.getString(7), JacmsSystemConstants.CONTENT_METADATA_DATE_FORMAT));
-		String xmlOnLine = res.getString(8);
-		contentVo.setOnLine(null != xmlOnLine && xmlOnLine.length() > 0);
-		contentVo.setSync(xmlWork.equals(xmlOnLine));
-		String mainGroupCode = res.getString(9);
-		contentVo.setMainGroupCode(mainGroupCode);
+        ContentRecordVO contentVo = new ContentRecordVO();
+		contentVo.setId(res.getString("contentid"));
+		contentVo.setTypeCode(res.getString("contenttype"));
+		contentVo.setDescription(res.getString("descr"));
+		contentVo.setStatus(res.getString("status"));
+		String xmlWork = res.getString("workxml");
+		contentVo.setCreate(DateConverter.parseDate(res.getString("created"), SystemConstants.DATA_TYPE_METADATA_DATE_FORMAT));
+		contentVo.setModify(DateConverter.parseDate(res.getString("lastmodified"), SystemConstants.DATA_TYPE_METADATA_DATE_FORMAT));
+		contentVo.setPublish(DateConverter.parseDate(res.getString("published"), SystemConstants.DATA_TYPE_METADATA_DATE_FORMAT));
+		String xmlOnLine = res.getString("onlinexml");
+		contentVo.setOnLine(!StringUtils.isBlank(xmlOnLine));
+		contentVo.setSync(res.getInt("sync") == 1);
+		contentVo.setMainGroupCode(res.getString("maingroup"));
 		contentVo.setXmlWork(xmlWork);
 		contentVo.setXmlOnLine(xmlOnLine);
-		contentVo.setVersion(res.getString(10));
-		contentVo.setFirstEditor(res.getString(11));
-		contentVo.setLastEditor(res.getString(12));
+		contentVo.setVersion(res.getString("currentversion"));
+		contentVo.setFirstEditor(res.getString("firsteditor"));
+		contentVo.setLastEditor(res.getString("lasteditor"));
 		return contentVo;
 	}
 
@@ -185,7 +186,7 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 	protected String getAddEntityRecordQuery() {
 		return ADD_CONTENT;
 	}
-
+    
 	@Override
 	protected void buildAddEntityStatement(IApsEntity entity, PreparedStatement stat) throws Throwable {
 		Content content = (Content) entity;
@@ -194,13 +195,14 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 		stat.setString(3, content.getDescription());
 		stat.setString(4, content.getStatus());
 		stat.setString(5, content.getXML());
-		String currentDate = DateConverter.getFormattedDate(new Date(), JacmsSystemConstants.CONTENT_METADATA_DATE_FORMAT);
+		String currentDate = DateConverter.getFormattedDate(new Date(), SystemConstants.DATA_TYPE_METADATA_DATE_FORMAT);
 		stat.setString(6, currentDate);
 		stat.setString(7, currentDate);
-		stat.setString(8, content.getMainGroup());
-		stat.setString(9, content.getVersion());
-		stat.setString(10, content.getFirstEditor());
-		stat.setString(11, content.getLastEditor());
+		stat.setInt(8, 0);
+		stat.setString(9, content.getMainGroup());
+		stat.setString(10, content.getVersion());
+		stat.setString(11, content.getFirstEditor());
+		stat.setString(12, content.getLastEditor());
 	}
 
 	@Override
@@ -271,8 +273,9 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 		stat.setString(index++, content.getDescription());
 		stat.setString(index++, content.getStatus());
 		stat.setString(index++, content.getXML());
+		stat.setInt(index++, 0);
 		if (updateDate) {
-			stat.setString(index++, DateConverter.getFormattedDate(new Date(), JacmsSystemConstants.CONTENT_METADATA_DATE_FORMAT));
+			stat.setString(index++, DateConverter.getFormattedDate(new Date(), SystemConstants.DATA_TYPE_METADATA_DATE_FORMAT));
 		}
 		stat.setString(index++, content.getMainGroup());
 		stat.setString(index++, content.getVersion());
@@ -359,10 +362,15 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 			stat.setString(index++, content.getStatus());
 			String xml = content.getXML();
 			stat.setString(index++, xml);
+            String cuttentDateString = DateConverter.getFormattedDate(new Date(), SystemConstants.DATA_TYPE_METADATA_DATE_FORMAT);
 			if (updateDate) {
-				stat.setString(index++, DateConverter.getFormattedDate(new Date(), JacmsSystemConstants.CONTENT_METADATA_DATE_FORMAT));
+				stat.setString(index++, cuttentDateString);
 			}
 			stat.setString(index++, xml);
+            if (updateDate) {
+				stat.setString(index++, cuttentDateString);
+			}
+            stat.setInt(index++, 1);
 			stat.setString(index++, content.getMainGroup());
 			stat.setString(index++, content.getVersion());
 			stat.setString(index++, content.getLastEditor());
@@ -493,10 +501,13 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 			}
 			int index = 1;
 			stat.setString(index++, null);
+			stat.setString(index++, null);
+			stat.setInt(index++, 0);
 			stat.setString(index++, content.getStatus());
 			stat.setString(index++, content.getXML());
+            String cuttentDateString = DateConverter.getFormattedDate(new Date(), SystemConstants.DATA_TYPE_METADATA_DATE_FORMAT);
 			if (updateDate) {
-				stat.setString(index++, DateConverter.getFormattedDate(new Date(), JacmsSystemConstants.CONTENT_METADATA_DATE_FORMAT));
+				stat.setString(index++, cuttentDateString);
 			}
 			stat.setString(index++, content.getVersion());
 			stat.setString(index++, content.getLastEditor());
@@ -726,7 +737,7 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 
 	protected List<String> getUtilizers(String referencedObjectCode, String query) throws Throwable {
 		Connection conn = null;
-		List<String> contentIds = new ArrayList<String>();
+		List<String> contentIds = new ArrayList<>();
 		PreparedStatement stat = null;
 		ResultSet res = null;
 		try {
@@ -757,7 +768,7 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 			int online = this.loadContentStatus(conn, COUNT_ONLINE_CONTENTS);
 			int offline = this.loadContentStatus(conn, COUNT_OFFLINE_CONTENTS);
 			int withDiffs = this.loadContentStatus(conn, COUNT_ONLINE_CONTENTS_WITH_DIFFS);
-			Date lastModified = this.loadContentStatusLastModified(conn, LOAD_LAST_MODIFIED);
+			Date lastModified = this.loadContentStatusLastModified(conn, LOAD_LAST_MODIFIED_DATE);
 			status = new ContentsStatus();
 			status.setDraft(offline);
 			status.setOnline(online);
@@ -783,7 +794,8 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 				count = res.getInt(1);
 			}
 		} catch (Throwable t) {
-			_logger.error("Error loading contents status. If you are runing Entando backed by Apache Derby it's a known issue");
+            _logger.error("Error loading contents status ", t);
+			throw new RuntimeException("Error loading contents status", t);
 		} finally {
 			closeDaoResources(res, stat);
 		}
@@ -798,8 +810,8 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 			stat = conn.prepareStatement(query);
 			res = stat.executeQuery();
 			if (res.next()) {
-				String lastMod = res.getString("lastmodified");
-				lastModified = DateConverter.parseDate(lastMod, JacmsSystemConstants.CONTENT_METADATA_DATE_FORMAT);
+				String lastMod = res.getString(1);
+				lastModified = DateConverter.parseDate(lastMod, SystemConstants.DATA_TYPE_METADATA_DATE_FORMAT);
 			}
 		} catch (Throwable t) {
 			_logger.error("Error loading contents status last modified date", t);

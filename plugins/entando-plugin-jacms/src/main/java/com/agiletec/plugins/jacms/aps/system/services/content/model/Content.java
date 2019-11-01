@@ -38,6 +38,7 @@ public class Content extends ApsEntity {
 
     private Date created;
     private Date lastModified;
+    private Date published;
 
     private String version;
     private String firstEditor;
@@ -220,6 +221,14 @@ public class Content extends ApsEntity {
 
     public void setLastModified(Date lastModified) {
         this.lastModified = lastModified;
+    }
+
+    public Date getPublished() {
+        return published;
+    }
+
+    public void setPublished(Date published) {
+        this.published = published;
     }
 
     public String getVersion() {

@@ -213,6 +213,9 @@ public class ContentManager extends ApsEntityManager
                     if (null == content.getLastModified()) {
                         content.setLastModified(contentVo.getModify());
                     }
+                    if (null == content.getPublished()) {
+                        content.setPublished(contentVo.getPublish());
+                    }
                     if (null == content.getStatus()) {
                         content.setStatus(contentVo.getStatus());
                     }
