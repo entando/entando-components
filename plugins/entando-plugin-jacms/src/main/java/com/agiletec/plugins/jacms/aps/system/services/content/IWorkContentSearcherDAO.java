@@ -16,7 +16,6 @@ package com.agiletec.plugins.jacms.aps.system.services.content;
 import java.util.Collection;
 import java.util.List;
 
-import com.agiletec.aps.system.common.entity.IEntitySearcherDAO;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 
 /**
@@ -24,7 +23,7 @@ import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
  * riservato al caricamento/ricerca lista di contenuti nell'area di lavoro.
  * @author E.Santoboni
  */
-public interface IWorkContentSearcherDAO extends IEntitySearcherDAO {
+public interface IWorkContentSearcherDAO extends IContentSearcherDAO {
 	
 	/**
 	 * Carica una lista di identificativi di contenuti in base ai parametri immessi.
@@ -38,8 +37,5 @@ public interface IWorkContentSearcherDAO extends IEntitySearcherDAO {
 	public List<String> loadContentsId(EntitySearchFilter[] filters, Collection<String> userGroupCodes);
         
 	public List<String> loadContentsId(String[] categories, EntitySearchFilter[] filters, Collection<String> userGroupCodes);
-	
-	public List<String> loadContentsId(String[] categories, 
-			boolean orClauseCategoryFilter, EntitySearchFilter[] filters, Collection<String> userGroupCodes);
 	
 }

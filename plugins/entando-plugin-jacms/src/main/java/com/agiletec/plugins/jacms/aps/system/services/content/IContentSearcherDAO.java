@@ -13,12 +13,20 @@
  */
 package com.agiletec.plugins.jacms.aps.system.services.content;
 
-import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
+import com.agiletec.aps.system.common.entity.IEntitySearcherDAO;
+import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
+import java.util.Collection;
+import java.util.List;
 
-public interface IContentUpdaterDAO {
-	
-	public void reloadWorkContentCategoryReferences(Content content);
-	
-	public void reloadPublicContentCategoryReferences(Content content);
-	
+/**
+ * @author E.Santoboni
+ */
+public interface IContentSearcherDAO extends IEntitySearcherDAO {
+    
+    public int countContents(String[] categories, boolean orClauseCategoryFilter, 
+            EntitySearchFilter[] filters, Collection<String> userGroupCodes);
+    
+    public List<String> loadContentsId(String[] categories, boolean orClauseCategoryFilter, 
+            EntitySearchFilter[] filters, Collection<String> userGroupCodes);
+    
 }

@@ -16,7 +16,6 @@ package com.agiletec.plugins.jacms.aps.system.services.content;
 import java.util.Collection;
 import java.util.List;
 
-import com.agiletec.aps.system.common.entity.IEntitySearcherDAO;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 
 /**
@@ -24,7 +23,7 @@ import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
  * riservato al caricamento/ricerca lista di contenuti pubblici.
  * @author E.Santoboni
  */
-public interface IPublicContentSearcherDAO extends IEntitySearcherDAO {
+public interface IPublicContentSearcherDAO extends IContentSearcherDAO {
 	
 	/**
 	 * Carica una lista di identificativi di contenuti publici in base ai parametri immessi.

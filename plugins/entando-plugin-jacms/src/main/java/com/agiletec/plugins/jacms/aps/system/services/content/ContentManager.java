@@ -16,6 +16,7 @@ package com.agiletec.plugins.jacms.aps.system.services.content;
 import com.agiletec.aps.system.*;
 import com.agiletec.aps.system.common.entity.*;
 import com.agiletec.aps.system.common.entity.model.*;
+import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.CategoryUtilizer;
 import com.agiletec.aps.system.services.group.GroupUtilizer;
@@ -448,7 +449,7 @@ public class ContentManager extends ApsEntityManager
     public List<String> loadPublicContentsId(String contentType, String[] categories, boolean orClauseCategoryFilter,
             EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException {
         try {
-            return publicContentSearcherDAO.loadPublicContentsId(contentType, categories, orClauseCategoryFilter, filters, userGroupCodes);
+            return this.getPublicContentSearcherDAO().loadPublicContentsId(contentType, categories, orClauseCategoryFilter, filters, userGroupCodes);
         } catch (Throwable t) {
             logger.error(ERROR_WHILE_LOADING_CONTENTS, t);
             throw new ApsSystemException(ERROR_WHILE_LOADING_CONTENTS, t);
@@ -465,22 +466,11 @@ public class ContentManager extends ApsEntityManager
     public List<String> loadPublicContentsId(String[] categories, boolean orClauseCategoryFilter,
             EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException {
         try {
-            return publicContentSearcherDAO.loadPublicContentsId(categories, orClauseCategoryFilter, filters, userGroupCodes);
+            return this.getPublicContentSearcherDAO().loadPublicContentsId(categories, orClauseCategoryFilter, filters, userGroupCodes);
         } catch (Throwable t) {
             logger.error(ERROR_WHILE_LOADING_CONTENTS, t);
             throw new ApsSystemException(ERROR_WHILE_LOADING_CONTENTS, t);
         }
-    }
-
-    /**
-     * @deprecated From jAPS 2.0 version 2.0.9. Use loadWorkContentsId or
-     * loadPublicContentsId
-     */
-    @Override
-    @Deprecated
-    public List<String> loadContentsId(String[] categories, EntitySearchFilter[] filters,
-            Collection<String> userGroupCodes, boolean onlyOwner) throws ApsSystemException {
-        throw new ApsSystemException("'loadContentsId' method deprecated From jAPS 2.0 version 2.0.9. Use loadWorkContentsId or loadPublicContentsId");
     }
 
     @Override
@@ -497,7 +487,7 @@ public class ContentManager extends ApsEntityManager
     public List<String> loadWorkContentsId(String[] categories, boolean orClauseCategoryFilter,
             EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException {
         try {
-            return workContentSearcherDAO.loadContentsId(categories, orClauseCategoryFilter, filters, userGroupCodes);
+            return this.getWorkContentSearcherDAO().loadContentsId(categories, orClauseCategoryFilter, filters, userGroupCodes);
         } catch (Throwable t) {
             logger.error("Error while loading work contents", t);
             throw new ApsSystemException("Error while loading work contents", t);
@@ -505,9 +495,33 @@ public class ContentManager extends ApsEntityManager
     }
 
     @Override
+    public SearcherDaoPaginatedResult<String> getPaginatedWorkContentsId(String[] categories, boolean orClauseCategoryFilter, EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException {
+        return this.getGroups(categories, orClauseCategoryFilter, filters, userGroupCodes, this.getWorkContentSearcherDAO());
+    }
+
+    @Override
+    public SearcherDaoPaginatedResult<String> getPaginatedPublicContentsId(String[] categories, boolean orClauseCategoryFilter, EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException {
+        return this.getGroups(categories, orClauseCategoryFilter, filters, userGroupCodes, this.getPublicContentSearcherDAO());
+    }
+    
+    public SearcherDaoPaginatedResult<String> getGroups(String[] categories, boolean orClauseCategoryFilter, 
+            EntitySearchFilter[] filters, Collection<String> userGroupCodes, IContentSearcherDAO searcherDao) throws ApsSystemException {
+        SearcherDaoPaginatedResult<String> pagedResult = null;
+        try {
+            int count = searcherDao.countContents(categories, orClauseCategoryFilter, filters, userGroupCodes);
+            List<String> contentsId = searcherDao.loadContentsId(categories, orClauseCategoryFilter, filters, userGroupCodes);
+            pagedResult = new SearcherDaoPaginatedResult<>(count, contentsId);
+        } catch (Throwable t) {
+            logger.error("Error searching paginated contents id", t);
+            throw new ApsSystemException("Error searching paginated contents id", t);
+        }
+        return pagedResult;
+    }
+    
+    @Override
     public List getPageUtilizers(String pageCode) throws ApsSystemException {
         try {
-            return contentDAO.getPageUtilizers(pageCode);
+            return this.getContentDAO().getPageUtilizers(pageCode);
         } catch (Throwable t) {
             throw new ApsSystemException("Error while loading referenced contents : page " + pageCode, t);
         }
@@ -516,7 +530,7 @@ public class ContentManager extends ApsEntityManager
     @Override
     public List getContentUtilizers(String contentId) throws ApsSystemException {
         try {
-            return contentDAO.getContentUtilizers(contentId);
+            return this.getContentDAO().getContentUtilizers(contentId);
         } catch (Throwable t) {
             throw new ApsSystemException("Error while loading referenced contents : content " + contentId, t);
         }
@@ -525,7 +539,7 @@ public class ContentManager extends ApsEntityManager
     @Override
     public List<String> getGroupUtilizers(String groupName) throws ApsSystemException {
         try {
-            return contentDAO.getGroupUtilizers(groupName);
+            return this.getContentDAO().getGroupUtilizers(groupName);
         } catch (Throwable t) {
             throw new ApsSystemException("Error while loading referenced contents : group " + groupName, t);
         }
@@ -534,7 +548,7 @@ public class ContentManager extends ApsEntityManager
     @Override
     public List getResourceUtilizers(String resourceId) throws ApsSystemException {
         try {
-            return contentDAO.getResourceUtilizers(resourceId);
+            return this.getContentDAO().getResourceUtilizers(resourceId);
         } catch (Throwable t) {
             throw new ApsSystemException("Error while loading referenced contents : resource " + resourceId, t);
         }
@@ -543,7 +557,7 @@ public class ContentManager extends ApsEntityManager
     @Override
     public List getCategoryUtilizers(String resourceId) throws ApsSystemException {
         try {
-            return contentDAO.getCategoryUtilizers(resourceId);
+            return this.getContentDAO().getCategoryUtilizers(resourceId);
         } catch (Throwable t) {
             throw new ApsSystemException("Error while loading referenced contents : category " + resourceId, t);
         }
@@ -584,7 +598,7 @@ public class ContentManager extends ApsEntityManager
         try {
             status = this.getContentDAO().loadContentStatus();
         } catch (Throwable t) {
-            logger.error("error in getContentsStatus");
+            logger.error("error in getContentsStatus", t);
         }
         return status;
     }
