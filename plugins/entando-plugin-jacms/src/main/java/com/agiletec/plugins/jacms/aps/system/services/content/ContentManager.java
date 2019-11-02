@@ -199,6 +199,7 @@ public class ContentManager extends ApsEntityManager
                     content.setDescription(contentVo.getDescription());
                     content.setOnLine(contentVo.isOnLine());
                     content.setMainGroup(contentVo.getMainGroupCode());
+                    content.setSync(contentVo.isSync());
                     if (null == content.getVersion()) {
                         content.setVersion(contentVo.getVersion());
                     }

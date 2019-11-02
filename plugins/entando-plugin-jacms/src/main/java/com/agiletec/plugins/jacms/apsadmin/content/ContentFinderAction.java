@@ -33,6 +33,7 @@ import com.agiletec.aps.system.common.entity.model.ApsEntity;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.SmallEntityType;
+import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.group.Group;
@@ -47,6 +48,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentRecordVO;
 import com.agiletec.plugins.jacms.apsadmin.content.helper.IContentActionHelper;
+import java.util.stream.Collectors;
 
 /**
  * Action per la ricerca contenuti.
@@ -134,28 +136,23 @@ public class ContentFinderAction extends AbstractApsEntityFinderAction {
     public List<ContentJO> getLastUpdateContentResponse() {
         List<ContentJO> response = null;
         try {
-
-            EntitySearchFilter modifyOrder = new EntitySearchFilter(IContentManager.CONTENT_MODIFY_DATE_FILTER_KEY,
-                    false);
+            List<String> groupCodes = this.getGroupManager().getGroups().stream().map(group -> group.getName()).collect(Collectors.toList());
+            EntitySearchFilter modifyOrder = new EntitySearchFilter(IContentManager.CONTENT_MODIFY_DATE_FILTER_KEY, false);
             modifyOrder.setOrder(EntitySearchFilter.DESC_ORDER);
-
-            List<String> ids = this.getContentManager().searchId(new EntitySearchFilter[]{modifyOrder});
+            EntitySearchFilter paginationFilter = new EntitySearchFilter(this.getLastUpdateResponseSize(), 0);
+            EntitySearchFilter[] filters = {modifyOrder, paginationFilter};
+            SearcherDaoPaginatedResult<String> paginatedContentsId = this.getContentManager().getPaginatedWorkContentsId(null, false, filters, groupCodes);
+            List<String> ids = paginatedContentsId.getList();
             if (null != ids && !ids.isEmpty()) {
-                if (this.getLastUpdateResponseSize() > ids.size() - 1) {
-                    this.setLastUpdateResponseSize(ids.size() - 1);
-                }
-                List<String> subList = ids.subList(0, this.getLastUpdateResponseSize());
-                response = new ArrayList<ContentJO>();
-                Iterator<String> sublist = subList.iterator();
+                response = new ArrayList<>();
+                Iterator<String> sublist = ids.iterator();
                 while (sublist.hasNext()) {
                     String contentId = sublist.next();
                     Content content = this.getContentManager().loadContent(contentId, false);
-                    ContentRecordVO vo = this.getContentManager().loadContentVO(contentId);
-                    ContentJO contentJO = new ContentJO(content, vo);
+                    ContentJO contentJO = new ContentJO(content);
                     response.add(contentJO);
                 }
             }
-
         } catch (Throwable t) {
             logger.error("Error loading last updated content response", t);
             throw new RuntimeException("Error loading last updated content response", t);
