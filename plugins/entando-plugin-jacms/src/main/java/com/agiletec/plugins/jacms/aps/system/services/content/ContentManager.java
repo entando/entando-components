@@ -496,15 +496,15 @@ public class ContentManager extends ApsEntityManager
 
     @Override
     public SearcherDaoPaginatedResult<String> getPaginatedWorkContentsId(String[] categories, boolean orClauseCategoryFilter, EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException {
-        return this.getGroups(categories, orClauseCategoryFilter, filters, userGroupCodes, this.getWorkContentSearcherDAO());
+        return this.getPaginatedContentsId(categories, orClauseCategoryFilter, filters, userGroupCodes, this.getWorkContentSearcherDAO());
     }
 
     @Override
     public SearcherDaoPaginatedResult<String> getPaginatedPublicContentsId(String[] categories, boolean orClauseCategoryFilter, EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException {
-        return this.getGroups(categories, orClauseCategoryFilter, filters, userGroupCodes, this.getPublicContentSearcherDAO());
+        return this.getPaginatedContentsId(categories, orClauseCategoryFilter, filters, userGroupCodes, this.getPublicContentSearcherDAO());
     }
     
-    public SearcherDaoPaginatedResult<String> getGroups(String[] categories, boolean orClauseCategoryFilter, 
+    private SearcherDaoPaginatedResult<String> getPaginatedContentsId(String[] categories, boolean orClauseCategoryFilter, 
             EntitySearchFilter[] filters, Collection<String> userGroupCodes, IContentSearcherDAO searcherDao) throws ApsSystemException {
         SearcherDaoPaginatedResult<String> pagedResult = null;
         try {
