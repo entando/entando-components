@@ -55,7 +55,7 @@ public class MessageSearcherDAO extends AbstractEntitySearcherDAO implements IMe
 	@Override
 	public List<String> searchId(EntitySearchFilter[] filters, boolean answered) throws ApsSystemException {
 		Connection conn = null;
-		List<String> idList = new ArrayList<String>();
+		List<String> idList = new ArrayList<>();
 		PreparedStatement stat = null;
 		ResultSet result = null;
 		try {
@@ -89,14 +89,13 @@ public class MessageSearcherDAO extends AbstractEntitySearcherDAO implements IMe
 		}
 		return stat;
 	}
-
+    
+    @Override
 	protected String createQueryString(EntitySearchFilter[] filters, boolean selectAll, boolean answered) {
-		StringBuffer query = this.createBaseQueryBlock(filters, selectAll);
+		StringBuffer query = this.createBaseQueryBlock(filters, false, selectAll);
 		boolean hasAppendWhereClause = this.appendFullAttributeFilterQueryBlocks(filters, query, false);
 		hasAppendWhereClause = this.appendMetadataFieldFilterQueryBlocks(filters, query, hasAppendWhereClause);
-
 		this.appendAnsweredFilterQueryBlocks(answered, query, hasAppendWhereClause);
-
 		appendOrderQueryBlocks(filters, query, false);
 		return query.toString();
 	}
