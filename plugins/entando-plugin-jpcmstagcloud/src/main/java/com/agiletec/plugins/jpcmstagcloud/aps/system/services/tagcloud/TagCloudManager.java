@@ -49,7 +49,7 @@ import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.aps.util.DateConverter;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
-import com.agiletec.plugins.jacms.aps.system.services.content.IPublicContentSearcherDAO;
+import com.agiletec.plugins.jacms.aps.system.services.content.IContentSearcherDAO;
 import com.agiletec.plugins.jacms.aps.system.services.content.event.PublicContentChangedEvent;
 import com.agiletec.plugins.jacms.aps.system.services.content.event.PublicContentChangedObserver;
 import com.agiletec.plugins.jpcmstagcloud.aps.system.JpcmstagcloudSystemConstants;
@@ -132,7 +132,7 @@ public class TagCloudManager extends AbstractService
 				String[] childrenCodes = root.getChildrenCodes();
 				for (int i = 0; i < childrenCodes.length; i++) {
 					Category child = this.getCategoryManager().getCategory(childrenCodes[i]);
-					List<String> contentsId = this.getTagCloudDAO().loadPublicContentsId(new String[]{child.getCode()}, filters, userGroupCodes);
+					List<String> contentsId = this.getTagCloudDAO().loadContentsId(new String[]{child.getCode()}, false, filters, userGroupCodes);
 					cloudInfosSmall.put(child.getCode(), new Integer(contentsId.size()));
 				}
 			}
@@ -280,11 +280,11 @@ public class TagCloudManager extends AbstractService
 		this._configManager = configManager;
 	}
 
-	protected IPublicContentSearcherDAO getTagCloudDAO() {
+	protected IContentSearcherDAO getTagCloudDAO() {
 		return _tagCloudDAO;
 	}
 
-	public void setTagCloudDAO(IPublicContentSearcherDAO tagCloudDAO) {
+	public void setTagCloudDAO(IContentSearcherDAO tagCloudDAO) {
 		this._tagCloudDAO = tagCloudDAO;
 	}
 
@@ -297,6 +297,6 @@ public class TagCloudManager extends AbstractService
 	private IGroupManager _groupManager;
 	private ConfigInterface _configManager;
 
-	private IPublicContentSearcherDAO _tagCloudDAO;
+	private IContentSearcherDAO _tagCloudDAO;
 
 }

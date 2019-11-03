@@ -114,10 +114,10 @@ public class BlogDAO extends PublicContentSearcherDAO implements IBlogDAO {
 	//*/
 	@Override
 	public Map<String, Integer> getOccurrences(List<String> contentTypeCodes, List<String> facetNodeCodes, List<String> userGroupCodes) {
-		Set<String> groupCodes = new HashSet<String>();
+		Set<String> groupCodes = new HashSet<>();
 		if (null != userGroupCodes) groupCodes.addAll(userGroupCodes);
 		groupCodes.add(Group.FREE_GROUP_NAME);
-		Map<String, Integer> occurrences = new HashMap<String, Integer>();
+		Map<String, Integer> occurrences = new HashMap<>();
 		Connection conn = null;
 		PreparedStatement stat = null;
 		ResultSet result = null;
