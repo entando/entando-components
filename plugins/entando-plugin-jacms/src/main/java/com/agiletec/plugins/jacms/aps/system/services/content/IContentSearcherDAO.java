@@ -29,4 +29,7 @@ public interface IContentSearcherDAO extends IEntitySearcherDAO {
     public List<String> loadContentsId(String[] categories, boolean orClauseCategoryFilter, 
             EntitySearchFilter[] filters, Collection<String> userGroupCodes);
     
+    public List<String> loadContentsId(String contentType, String[] categories, 
+            boolean orClauseCategoryFilter, EntitySearchFilter[] filters, Collection<String> userGroupCodes);
+    
 }

@@ -67,6 +67,16 @@ public abstract class AbstractContentSearcherDAO extends AbstractEntitySearcherD
     }
     
     @Override
+	public List<String> loadContentsId(String contentType, String[] categories, boolean orClauseCategoryFilter, 
+			EntitySearchFilter[] filters, Collection<String> userGroupCodes) {
+		if (!StringUtils.isBlank(contentType)) {
+			EntitySearchFilter typeFilter = new EntitySearchFilter(IContentManager.ENTITY_TYPE_CODE_FILTER_KEY, false, contentType, false);
+			filters = this.addFilter(filters, typeFilter);
+		}
+		return this.loadContentsId(categories, orClauseCategoryFilter, filters, userGroupCodes);
+	}
+    
+    @Override
     public List<String> loadContentsId(String[] categories, 
 			boolean orClauseCategoryFilter, EntitySearchFilter[] filters, Collection<String> userGroupCodes) {
 		List<String> contentsId = new ArrayList<>();

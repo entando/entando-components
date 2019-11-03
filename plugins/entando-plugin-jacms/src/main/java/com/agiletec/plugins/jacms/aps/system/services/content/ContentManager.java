@@ -44,9 +44,9 @@ public class ContentManager extends ApsEntityManager
 
     private IContentDAO contentDAO;
 
-    private IWorkContentSearcherDAO workContentSearcherDAO;
+    private IContentSearcherDAO workContentSearcherDAO;
 
-    private IPublicContentSearcherDAO publicContentSearcherDAO;
+    private IContentSearcherDAO publicContentSearcherDAO;
 
     private IContentUpdaterService contentUpdaterService;
 
@@ -450,7 +450,7 @@ public class ContentManager extends ApsEntityManager
     public List<String> loadPublicContentsId(String contentType, String[] categories, boolean orClauseCategoryFilter,
             EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException {
         try {
-            return this.getPublicContentSearcherDAO().loadPublicContentsId(contentType, categories, orClauseCategoryFilter, filters, userGroupCodes);
+            return this.getPublicContentSearcherDAO().loadContentsId(contentType, categories, orClauseCategoryFilter, filters, userGroupCodes);
         } catch (Throwable t) {
             logger.error(ERROR_WHILE_LOADING_CONTENTS, t);
             throw new ApsSystemException(ERROR_WHILE_LOADING_CONTENTS, t);
@@ -467,7 +467,7 @@ public class ContentManager extends ApsEntityManager
     public List<String> loadPublicContentsId(String[] categories, boolean orClauseCategoryFilter,
             EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException {
         try {
-            return this.getPublicContentSearcherDAO().loadPublicContentsId(categories, orClauseCategoryFilter, filters, userGroupCodes);
+            return this.getPublicContentSearcherDAO().loadContentsId(categories, orClauseCategoryFilter, filters, userGroupCodes);
         } catch (Throwable t) {
             logger.error(ERROR_WHILE_LOADING_CONTENTS, t);
             throw new ApsSystemException(ERROR_WHILE_LOADING_CONTENTS, t);
@@ -632,19 +632,19 @@ public class ContentManager extends ApsEntityManager
         return this.getContentDAO();
     }
 
-    protected IWorkContentSearcherDAO getWorkContentSearcherDAO() {
+    protected IContentSearcherDAO getWorkContentSearcherDAO() {
         return workContentSearcherDAO;
     }
 
-    public void setWorkContentSearcherDAO(IWorkContentSearcherDAO workContentSearcherDAO) {
+    public void setWorkContentSearcherDAO(IContentSearcherDAO workContentSearcherDAO) {
         this.workContentSearcherDAO = workContentSearcherDAO;
     }
 
-    public IPublicContentSearcherDAO getPublicContentSearcherDAO() {
+    public IContentSearcherDAO getPublicContentSearcherDAO() {
         return publicContentSearcherDAO;
     }
 
-    public void setPublicContentSearcherDAO(IPublicContentSearcherDAO publicContentSearcherDAO) {
+    public void setPublicContentSearcherDAO(IContentSearcherDAO publicContentSearcherDAO) {
         this.publicContentSearcherDAO = publicContentSearcherDAO;
     }
 

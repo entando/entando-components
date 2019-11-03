@@ -28,32 +28,11 @@ import org.slf4j.LoggerFactory;
 /**
  * @author E.Santoboni
  */
-public class PublicContentSearcherDAO extends AbstractContentSearcherDAO implements IPublicContentSearcherDAO {
+public class PublicContentSearcherDAO extends AbstractContentSearcherDAO implements IContentSearcherDAO {
 	
 	private static final Logger _logger =  LoggerFactory.getLogger(PublicContentSearcherDAO.class);
 	
 	@Override
-	public List<String> loadPublicContentsId(String contentType, String[] categories, EntitySearchFilter[] filters, Collection<String> userGroupCodes) {
-		return this.loadPublicContentsId(contentType, categories, false, filters, userGroupCodes);
-	}
-	
-	@Override
-	public List<String> loadPublicContentsId(String contentType, String[] categories, boolean orClauseCategoryFilter, 
-			EntitySearchFilter[] filters, Collection<String> userGroupCodes) {
-		if (contentType != null && contentType.trim().length()>0) {
-			EntitySearchFilter typeFilter = new EntitySearchFilter(IContentManager.ENTITY_TYPE_CODE_FILTER_KEY, false, contentType, false);
-			filters = this.addFilter(filters, typeFilter);
-		}
-		return this.loadPublicContentsId(categories, orClauseCategoryFilter, filters, userGroupCodes);
-	}
-	
-	@Override
-	public List<String> loadPublicContentsId(String[] categories, 
-			EntitySearchFilter[] filters, Collection<String> userGroupCodes) {
-		return this.loadPublicContentsId(categories, false, filters, userGroupCodes);
-	}
-    
-    @Override
     public List<String> loadContentsId(String[] categories, 
 			boolean orClauseCategoryFilter, EntitySearchFilter[] filters, Collection<String> userGroupCodes) {
         Set<String> groupCodes = new HashSet<>();
@@ -65,12 +44,6 @@ public class PublicContentSearcherDAO extends AbstractContentSearcherDAO impleme
 		filters = this.addFilter(filters, onLineFilter);
         return super.loadContentsId(categories, orClauseCategoryFilter, filters, groupCodes);
     }
-	
-	@Override
-	public List<String> loadPublicContentsId(String[] categories, 
-			boolean orClauseCategoryFilter, EntitySearchFilter[] filters, Collection<String> userGroupCodes) {
-        return this.loadContentsId(categories, orClauseCategoryFilter, filters, userGroupCodes);
-	}
 	
 	@Override
 	protected void addGroupsQueryBlock(StringBuffer query, Collection<String> userGroupCodes) {

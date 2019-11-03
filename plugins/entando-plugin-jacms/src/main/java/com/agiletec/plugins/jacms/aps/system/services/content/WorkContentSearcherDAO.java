@@ -24,19 +24,9 @@ import org.slf4j.LoggerFactory;
 /**
  * @author E.Santoboni
  */
-public class WorkContentSearcherDAO extends AbstractContentSearcherDAO implements IWorkContentSearcherDAO {
+public class WorkContentSearcherDAO extends AbstractContentSearcherDAO implements IContentSearcherDAO {
 	
 	private static final Logger _logger =  LoggerFactory.getLogger(WorkContentSearcherDAO.class);
-	
-	@Override
-	public List<String> loadContentsId(EntitySearchFilter[] filters, Collection<String> userGroupCodes) {
-		return this.loadContentsId(null, false, filters, userGroupCodes);
-	}
-	
-	@Override
-	public List<String> loadContentsId(String[] categories, EntitySearchFilter[] filters, Collection<String> userGroupCodes) {
-		return this.loadContentsId(categories, false, filters, userGroupCodes);
-	}
 	
 	@Override
 	public List<String> loadContentsId(String[] categories, boolean orClauseCategoryFilter, 
