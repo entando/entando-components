@@ -193,7 +193,7 @@ public class ContentController {
 
     @RestAccessControl(permission = Permission.CONTENT_EDITOR)
     @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<List<ContentDto>>> updateContent(
+    public ResponseEntity<SimpleRestResponse<List<ContentDto>>> updateContents(
             @Valid @RequestBody List<ContentDto> bodyRequest, BindingResult bindingResult) {
         logger.debug("Update content -> {}", bodyRequest);
         if (bindingResult.hasErrors()) {
@@ -216,7 +216,7 @@ public class ContentController {
 
     @RestAccessControl(permission = Permission.CONTENT_EDITOR)
     @RequestMapping(value = "/{code}/status", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse<ContentDto, Map<String, String>>> updatePageStatus(@PathVariable String code,
+    public ResponseEntity<RestResponse<ContentDto, Map<String, String>>> updateContentStatus(@PathVariable String code,
             @Valid @RequestBody ContentStatusRequest contentStatusRequest, BindingResult bindingResult) {
         logger.debug("changing status for content {} with request {}", code, contentStatusRequest);
         Map<String, String> metadata = new HashMap<>();
@@ -247,7 +247,7 @@ public class ContentController {
 
     @RestAccessControl(permission = Permission.CONTENT_EDITOR)
     @RequestMapping(method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<?>> deleteContent(@RequestBody List<String> codes) {
+    public ResponseEntity<SimpleRestResponse<?>> deleteContents(@RequestBody List<String> codes) {
         logger.debug("Deleting contents -> {}", codes);
 
         UserDetails userDetails = this.extractCurrentUser();
