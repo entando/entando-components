@@ -169,7 +169,7 @@ public class ContentAction extends com.agiletec.plugins.jacms.apsadmin.content.C
 		try {
 			Content content = this.getContent();
             if (null == content) {
-                _logger.error("Null content on session");
+                _logger.warn("Null content on session");
                 return items;
             }
 			String statusDescrKey = "name.contentStatus." +content.getStatus();
