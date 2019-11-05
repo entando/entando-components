@@ -114,10 +114,10 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
             stat = conn.prepareStatement(ADD_RESOURCE);
             stat.setString(1, resource.getId());
             stat.setString(2, resource.getType());
-            stat.setString(3, resource.getDescription());
+            stat.setString(3, resource.getDescription().trim());
             stat.setString(4, resource.getMainGroup());
             stat.setString(5, resource.getXML());
-            stat.setString(6, resource.getMasterFileName());
+            stat.setString(6, resource.getMasterFileName().trim());
             Date creationDate = (null != resource.getCreationDate())
                     ? resource.getCreationDate() : new Date();
             stat.setTimestamp(7, new java.sql.Timestamp(creationDate.getTime()));
@@ -166,10 +166,10 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
         try {
             stat = conn.prepareStatement(UPDATE_RESOURCE);
             stat.setString(1, resource.getType());
-            stat.setString(2, resource.getDescription());
+            stat.setString(2, resource.getDescription().trim());
             stat.setString(3, resource.getMainGroup());
             stat.setString(4, resource.getXML());
-            stat.setString(5, resource.getMasterFileName());
+            stat.setString(5, resource.getMasterFileName().trim());
             if (null != resource.getLastModified()) {
                 stat.setTimestamp(6, new java.sql.Timestamp(resource.getLastModified().getTime()));
             } else {
@@ -457,21 +457,11 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
             this.addCategoryCode(resource, parentCategory, codes);
         }
     }
-
+    
     protected void deleteRecordsById(String resourceId, String query, Connection conn) {
-        PreparedStatement stat = null;
-        try {
-            stat = conn.prepareStatement(query);
-            stat.setString(1, resourceId);
-            stat.executeUpdate();
-        } catch (Exception t) {
-            logger.error("Error deleting resource records for resource {}", resourceId, t);
-            throw new RuntimeException("Error deleting resource records for resource " + resourceId, t);
-        } finally {
-            closeDaoResources(null, stat);
-        }
+        super.executeQueryWithoutResultset(conn, query, resourceId);
     }
-
+    
     /* ESTENSIONE SPOSTAMENTO NODI */
     @Override
     public void updateResourceRelations(ResourceInterface resource) {
