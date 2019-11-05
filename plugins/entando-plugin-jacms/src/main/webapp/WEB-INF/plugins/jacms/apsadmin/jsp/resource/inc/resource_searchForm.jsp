@@ -22,7 +22,7 @@
                         <s:text name="label.search.by" />
                     </label>
                     <div class="col-sm-9">
-                        <wpsf:textfield name="text" id="text" cssClass="form-control"  title="%{getText('label.search.by')+' '+getText('label.description')}" placeholder="%{getText('label.name')}"/>
+                        <wpsf:textfield name="text" id="text" cssClass="form-control"  title="%{getText('label.search.by')+' '+getText('label.description')}" placeholder="%{getText('label.description')}"/>
                     </div>
                 </s:form>
             </div>
