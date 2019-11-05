@@ -33,6 +33,7 @@ import com.agiletec.aps.system.common.tree.ITreeNode;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.category.Category;
+import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.UserDetails;
@@ -159,6 +160,8 @@ public class TestTagCloudManager extends ApsPluginBaseTestCase {
 			contentDao.setDataSource(dataSource);
 			ILangManager langManager = (ILangManager) this.getService(SystemConstants.LANGUAGE_MANAGER);
 			contentDao.setLangManager(langManager);
+            ICategoryManager categoryManager = (ICategoryManager) this.getService(SystemConstants.CATEGORY_MANAGER);
+			contentDao.setCategoryManager(categoryManager);
 			this._contentDao = contentDao;
 
 			ConfigInterface configManager = (ConfigInterface) this.getService(SystemConstants.BASE_CONFIG_MANAGER);
@@ -167,10 +170,12 @@ public class TestTagCloudManager extends ApsPluginBaseTestCase {
 			throw new Exception(t);
 		}
 	}
+    
 	private ITagCloudManager _tagCloudManager;
 	private IContentDAO _contentDao;
 	private IContentManager _contentManager;
 	private IUserManager _userManager;
+    
 	private String TEST_CONFIG = "<Params>"
 			+ "<Param name=\"urlStyle\">classic</Param>"
 			+ "<Param name=\"hypertextEditor\">fckeditor</Param>"
@@ -193,4 +198,5 @@ public class TestTagCloudManager extends ApsPluginBaseTestCase {
 			+ "<Param name=\"jpcmstagcloud_categoryRoot\" >home</Param>"
 			+ "</ExtraParams>"
 			+ "</Params>";
+    
 }

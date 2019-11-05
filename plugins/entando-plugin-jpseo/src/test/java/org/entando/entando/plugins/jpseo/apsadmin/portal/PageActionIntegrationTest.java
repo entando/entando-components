@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
 import org.entando.entando.plugins.jpseo.apsadmin.ApsAdminPluginBaseTestCase;
 
 import com.agiletec.aps.system.SystemConstants;
@@ -46,12 +45,13 @@ public class PageActionIntegrationTest extends ApsAdminPluginBaseTestCase {
 		super.setUp();
 		this.init();
 	}
-
+    
 	public void testEditPage_1() throws Throwable {
 		String selectedPageCode = "pagina_1";
 		String result = this.executeActionOnPage(selectedPageCode, "admin", "edit", null);
 		assertEquals(Action.SUCCESS, result);
 		IPage page = this._pageManager.getDraftPage(selectedPageCode);
+        assertTrue(page.getMetadata() instanceof SeoPageMetadata);
 		PageAction action = (PageAction) this.getAction();
 		assertEquals(action.getStrutsAction(), ApsAdminSystemConstants.EDIT);
 		assertEquals(page.getCode(), action.getPageCode());
@@ -62,7 +62,7 @@ public class PageActionIntegrationTest extends ApsAdminPluginBaseTestCase {
 		assertEquals("Pagina 1", action.getTitles().getProperty("it"));
 		assertEquals("Page 1", action.getTitles().getProperty("en"));
 	}
-
+    
 	public void testEditPage_2() throws Throwable {
 		String selectedPageCode = "seo_page_1";
 		String result = this.executeActionOnPage(selectedPageCode, "admin", "edit", null);
@@ -121,8 +121,6 @@ public class PageActionIntegrationTest extends ApsAdminPluginBaseTestCase {
 	}
 
 	private String executeActionOnPage(String selectedPageCode, String username, String actionName, Map<String, String> params) throws Throwable {
-		if (StringUtils.isNotBlank(username)) {
-		}
 		this.setUserOnSession(username);
 		this.initAction("/do/Page", actionName);
 		this.addParameter("selectedNode", selectedPageCode);
@@ -132,7 +130,7 @@ public class PageActionIntegrationTest extends ApsAdminPluginBaseTestCase {
 		String result = this.executeAction();
 		return result;
 	}
-
+    
 	public void testValidateSavePage() throws Throwable {
 		String pageCode = "pagina_test";
 		String longPageCode = "very_long_page_code__very_long_page_code";
@@ -185,7 +183,7 @@ public class PageActionIntegrationTest extends ApsAdminPluginBaseTestCase {
 			throw t;
 		}
 	}
-
+    
 	public void testSavePage_1() throws Throwable {
 		String pageCode = "seo_test_1";
 		assertNull(this._pageManager.getDraftPage(pageCode));
@@ -218,7 +216,7 @@ public class PageActionIntegrationTest extends ApsAdminPluginBaseTestCase {
 			this._pageManager.deletePage(pageCode);
 		}
 	}
-
+    
 	public void testSavePage_2() throws Throwable {
 		String pageCode = "seo_test_2";
 		assertNull(this._pageManager.getDraftPage(pageCode));
@@ -269,7 +267,7 @@ public class PageActionIntegrationTest extends ApsAdminPluginBaseTestCase {
 			this._pageManager.deletePage(pageCode);
 		}
 	}
-    
+
     private Map<String, String> createParamForTest(String pageCode) {
         IPage root = this._pageManager.getDraftRoot();
         Map<String, String> params = new HashMap<>();
