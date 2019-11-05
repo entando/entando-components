@@ -77,7 +77,7 @@ public class MessageSearcherDAO extends AbstractEntitySearcherDAO implements IMe
 	}
 
 	protected PreparedStatement buildStatement(EntitySearchFilter[] filters, boolean selectAll, boolean answered, Connection conn) {
-		String query = this.createQueryString(filters, selectAll, answered);
+		String query = this.createMessageQueryString(filters, selectAll, answered);
 		PreparedStatement stat = null;
 		try {
 			stat = conn.prepareStatement(query);
@@ -90,8 +90,7 @@ public class MessageSearcherDAO extends AbstractEntitySearcherDAO implements IMe
 		return stat;
 	}
     
-    @Override
-	protected String createQueryString(EntitySearchFilter[] filters, boolean selectAll, boolean answered) {
+	protected String createMessageQueryString(EntitySearchFilter[] filters, boolean selectAll, boolean answered) {
 		StringBuffer query = this.createBaseQueryBlock(filters, false, selectAll);
 		boolean hasAppendWhereClause = this.appendFullAttributeFilterQueryBlocks(filters, query, false);
 		hasAppendWhereClause = this.appendMetadataFieldFilterQueryBlocks(filters, query, hasAppendWhereClause);

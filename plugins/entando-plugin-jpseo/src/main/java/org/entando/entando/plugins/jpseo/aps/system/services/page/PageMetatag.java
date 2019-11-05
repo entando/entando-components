@@ -45,7 +45,9 @@ public class PageMetatag implements Serializable {
     
     @Override
     public PageMetatag clone() {
-        return new PageMetatag(this.getLangCode(), this.getKey(), this.getValue());
+        PageMetatag meta = new PageMetatag(this.getLangCode(), this.getKey(), this.getValue());
+        meta.setKeyAttribute(this.getKeyAttribute());
+        return meta;
     }
 
     @Override

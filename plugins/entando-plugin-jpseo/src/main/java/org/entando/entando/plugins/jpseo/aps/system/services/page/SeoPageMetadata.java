@@ -28,6 +28,8 @@ import com.agiletec.aps.util.ApsProperties;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * This is the representation of a portal page metadata
@@ -43,6 +45,27 @@ public class SeoPageMetadata extends PageMetadata implements Serializable {
     private String friendlyCode;
 
     private Map<String, Map<String, PageMetatag>> complexParameters;
+    
+    public SeoPageMetadata() {
+        
+    }
+    
+     public SeoPageMetadata(PageMetadata original) {
+        this.setGroup(original.getGroup());
+        ApsProperties titles = new ApsProperties();
+        titles.putAll(original.getTitles());
+        this.setTitles(titles);
+        Set<String> extraGroups = original.getExtraGroups();
+        if (extraGroups != null) {
+            this.setExtraGroups(new TreeSet<>(extraGroups));
+        }
+        this.setModel(original.getModel());
+        this.setShowable(original.isShowable());
+        this.setUseExtraTitles(original.isUseExtraTitles());
+        this.setMimeType(original.getMimeType());
+        this.setCharset(original.getCharset());
+        this.setUpdatedAt(original.getUpdatedAt());
+    }
     
     @Override
     public SeoPageMetadata clone() {
@@ -75,6 +98,7 @@ public class SeoPageMetadata extends PageMetadata implements Serializable {
             }
             spm.setComplexParameters(cloneComplex);
         }
+        spm.setFriendlyCode(this.getFriendlyCode());
         return spm;
     }
 
