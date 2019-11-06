@@ -571,6 +571,32 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
     }
 
     @Test
+    public void testListAttributesFromContentType() throws Exception {
+        String typeCode = "TX5";
+        try {
+            List<EntityTypeAttributeFullDto> contentTypeAttribute = this.createContentTypeAttributes(typeCode);
+
+            mockMvc.perform(
+                    get("/plugins/cms/contentTypes/{contentCode}/attributes", typeCode)
+                            .header("Authorization", "Bearer " + accessToken)
+                            .contentType(MediaType.APPLICATION_JSON_UTF8)
+                            .accept(MediaType.APPLICATION_JSON_UTF8))
+                    //                .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(jsonPath("$.payload.size()").value(2))
+                    .andExpect(jsonPath("$.payload[0].code").value("MyAttribute1"))
+                    .andExpect(jsonPath("$.payload[1].code").value("MyAttribute2"))
+                    .andReturn();
+        } finally {
+            if (null != this.contentManager.getEntityPrototype(typeCode)) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype(typeCode);
+            }
+            Assert.assertNull(this.contentManager.getEntityPrototype(typeCode));
+        }
+    }
+
+    @Test
     public void testUpdateAttributeFromContentType() throws Exception {
         String typeCode = "TX6";
         try {
