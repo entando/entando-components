@@ -237,7 +237,7 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
                 result.removeIf(i -> !fullTextResult.contains(i));
             }
             List<String> sublist = requestList.getSublist(result);
-            PagedMetadata<ContentDto> pagedMetadata = new PagedMetadata<>(requestList, sublist.size());
+            PagedMetadata<ContentDto> pagedMetadata = new PagedMetadata<>(requestList, result.size());
             List<ContentDto> masterList = new ArrayList<>();
             for (String contentId : sublist) {
                 masterList.add(this.buildContentDto(contentId, online,
