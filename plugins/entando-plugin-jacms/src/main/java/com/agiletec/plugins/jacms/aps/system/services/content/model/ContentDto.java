@@ -13,6 +13,8 @@
  */
 package com.agiletec.plugins.jacms.aps.system.services.content.model;
 
+import com.agiletec.aps.system.common.entity.model.IApsEntity;
+import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -22,6 +24,7 @@ import java.util.Date;
 import java.util.Map;
 import org.entando.entando.web.common.json.JsonDateDeserializer;
 import org.entando.entando.web.common.json.JsonDateSerializer;
+import org.springframework.validation.BindingResult;
 
 public class ContentDto extends EntityDto implements Serializable {
 
@@ -164,6 +167,15 @@ public class ContentDto extends EntityDto implements Serializable {
 
     public void setReferences(Map<String, Boolean> references) {
         this.references = references;
+    }
+
+    @Override
+    public void fillEntity(IApsEntity prototype, ICategoryManager categoryManager, BindingResult bindingResult) {
+        super.fillEntity(prototype, categoryManager, bindingResult);
+
+        Content content = (Content) prototype;
+        content.setFirstEditor(getFirstEditor());
+        content.setLastEditor(getLastEditor());
     }
 
 }

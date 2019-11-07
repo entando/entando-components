@@ -371,6 +371,8 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
             throw new ResourcePermissionsException(bindingResult);
         }
         request.setId(null);
+        request.setFirstEditor(user.getUsername());
+        request.setLastEditor(user.getUsername());
         return this.addEntity(JacmsSystemConstants.CONTENT_MANAGER, request, bindingResult);
     }
 
@@ -378,6 +380,7 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
     public ContentDto updateContent(ContentDto request, UserDetails user, BindingResult bindingResult) {
         this.checkContentExists(request.getId());
         this.checkContentAuthorization(user, request.getId(), false, true, bindingResult);
+        request.setLastEditor(user.getUsername());
         return super.updateEntity(JacmsSystemConstants.CONTENT_MANAGER, request, bindingResult);
     }
 
