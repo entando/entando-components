@@ -23,6 +23,7 @@ import com.google.common.collect.ImmutableMap;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.validation.Valid;
@@ -148,6 +149,16 @@ public class ContentTypeResourceController implements ContentTypeResource {
         logger.debug("REST request - get content type attributes {}", attributeCode);
         AttributeTypeDto attributeTypeDto = service.getAttributeType(attributeCode);
         return ResponseEntity.ok(new SimpleRestResponse<>(attributeTypeDto));
+    }
+
+    @Override
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    public ResponseEntity<RestResponse<List<EntityTypeAttributeFullDto>, Map>> getContentTypeAttributes(
+            @PathVariable String contentTypeCode) {
+        logger.debug("REST request - get content type {} attributes", contentTypeCode);
+        List<EntityTypeAttributeFullDto> dtos = service.getContentTypeAttributes(contentTypeCode);
+        Map<String, String> metadata = ImmutableMap.of(CONTENT_TYPE_CODE, contentTypeCode);
+        return ResponseEntity.ok(new RestResponse<>(dtos, metadata));
     }
 
     @Override
