@@ -53,6 +53,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -127,8 +129,11 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             result.andExpect(jsonPath("$.metaData.size()", is(0)));
 
             ResultActions result2 = this.executeContentPost("1_POST_valid.json", accessToken, status().isOk());
+            result2.andDo(print());
             result2.andExpect(jsonPath("$.payload.size()", is(1)));
             result2.andExpect(jsonPath("$.payload[0].id", Matchers.anything()));
+            result2.andExpect(jsonPath("$.payload[0].firstEditor", is("jack_bauer")));
+            result2.andExpect(jsonPath("$.payload[0].lastEditor", is("jack_bauer")));
             result2.andExpect(jsonPath("$.errors.size()", is(0)));
             result2.andExpect(jsonPath("$.metaData.size()", is(0)));
             String bodyResult = result2.andReturn().getResponse().getContentAsString();
@@ -160,6 +165,8 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             result4.andExpect(jsonPath("$.payload[0].attributes[0].elements.size()", is(0)));
             result4.andExpect(jsonPath("$.payload[0].attributes[0].compositeelements.size()", is(0)));
             result4.andExpect(jsonPath("$.payload[0].attributes[0].listelements", Matchers.anything()));
+            result4.andExpect(jsonPath("$.payload[0].firstEditor", is("jack_bauer")));
+            result4.andExpect(jsonPath("$.payload[0].lastEditor", is("jack_bauer")));
             newContent = this.contentManager.loadContent(newContentId, false);
             date = (Date) newContent.getAttribute("Date").getValue();
             Assert.assertEquals("2018-03-21", DateConverter.getFormattedDate(date, "yyyy-MM-dd"));
