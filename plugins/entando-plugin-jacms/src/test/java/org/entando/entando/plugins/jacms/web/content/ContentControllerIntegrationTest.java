@@ -338,6 +338,29 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
     }
 
     @Test
+    public void testGetContentsPaginated() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents?page=1&pageSize=2")
+                        .param("sort", IContentManager.CONTENT_CREATION_DATE_FILTER_KEY)
+                        .param("direction", FieldSearchFilter.DESC_ORDER)
+                        .param("filter[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filter[0].operator", "eq")
+                        .param("filter[0].value", "EVN")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+        result
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(2)))
+                .andExpect(jsonPath("$.metaData.page", is(1)))
+                .andExpect(jsonPath("$.metaData.pageSize", is(2)))
+                .andExpect(jsonPath("$.metaData.totalItems", is(11)))
+                .andExpect(jsonPath("$.metaData.lastPage", is(6)));
+    }
+
+    @Test
     public void testGetContentsByGuestUser() throws Exception {
         ResultActions result = mockMvc
                 .perform(get("/plugins/cms/contents")
