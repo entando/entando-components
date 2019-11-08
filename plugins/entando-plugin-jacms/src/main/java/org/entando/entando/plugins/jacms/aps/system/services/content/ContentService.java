@@ -448,6 +448,21 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
             throw new RestServerError("error in update page content", e);
         }
     }
+    
+    @Override
+    public List<ContentDto> updateContentsStatus(List<String> codes, String status, UserDetails user) {
+        return codes.stream()
+                .map(code -> {
+                    try {
+                        return updateContentStatus(code, status, user);
+                    } catch (Exception e) {
+                        logger.error("Error in updating content(code: {}) status {}", code, e);
+                        return null;
+                    }
+                })
+                .filter(content -> content != null)
+                .collect(Collectors.toList());
+    }
 
     @Override
     public PagedMetadata<?> getContentReferences(String code, String managerName, UserDetails user, RestListRequest requestList) {

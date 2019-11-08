@@ -36,6 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.entando.entando.plugins.jacms.aps.system.services.content.IContentService;
+import org.entando.entando.plugins.jacms.web.content.validator.BatchContentStatusRequest;
 import org.entando.entando.plugins.jacms.web.content.validator.ContentStatusRequest;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
@@ -246,6 +247,178 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         } finally {
             if (null != newContentId) {
                 Content newContent = this.contentManager.loadContent(newContentId, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != this.contentManager.getEntityPrototype("TST")) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("TST");
+            }
+        }
+    }
+
+    @Test
+    public void testUpdateContents() throws Exception {
+        String newContentId = null;
+        try {
+            Assert.assertNull(this.contentManager.getEntityPrototype("TST"));
+            String accessToken = this.createAccessToken();
+
+            this.executeContentTypePost("1_POST_type_valid.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype("TST"));
+
+            ResultActions result = this.executeContentPost("1_POST_valid.json", accessToken, status().isOk());
+            result.andExpect(jsonPath("$.payload.size()", is(1)));
+            result.andExpect(jsonPath("$.payload[0].id", Matchers.anything()));
+            result.andExpect(jsonPath("$.errors.size()", is(0)));
+            result.andExpect(jsonPath("$.metaData.size()", is(0)));
+            String bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
+            Content newContent = this.contentManager.loadContent(newContentId, false);
+            Assert.assertNotNull(newContent);
+            Content newPublicContent = this.contentManager.loadContent(newContentId, true);
+            Assert.assertNull(newPublicContent);
+
+            BatchContentStatusRequest batchContentStatusRequest = new BatchContentStatusRequest();
+            batchContentStatusRequest.setStatus("published");
+            batchContentStatusRequest.getCodes().add(newContentId);
+
+            result = mockMvc
+                    .perform(put("/plugins/cms/contents/status")
+                            .content(mapper.writeValueAsString(batchContentStatusRequest))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isOk());
+            newPublicContent = this.contentManager.loadContent(newContentId, true);
+            Assert.assertNotNull(newPublicContent);
+
+            batchContentStatusRequest.setStatus("draft");
+            result = mockMvc
+                    .perform(put("/plugins/cms/contents/{code}/status", newContentId)
+                            .content(mapper.writeValueAsString(batchContentStatusRequest))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isOk());
+            newPublicContent = this.contentManager.loadContent(newContentId, true);
+            Assert.assertNull(newPublicContent);
+
+            result = mockMvc
+                    .perform(delete("/plugins/cms/contents")
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .content(mapper.writeValueAsString(new String[] { newContentId }))
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isOk());
+            result.andExpect(jsonPath("$.payload.size()", is(1)));
+            result.andExpect(jsonPath("$.payload[0]", is(newContentId)));
+            Assert.assertNull(this.contentManager.loadContent(newContentId, false));
+        } finally {
+            if (null != newContentId) {
+                Content newContent = this.contentManager.loadContent(newContentId, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != this.contentManager.getEntityPrototype("TST")) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("TST");
+            }
+        }
+    }
+
+    @Test
+    public void testUpdateContentsBatch() throws Exception {
+        String newContentId1 = null;
+        String newContentId2 = null;
+        String newContentId3 = null;
+        try {
+            Assert.assertNull(this.contentManager.getEntityPrototype("TST"));
+            String accessToken = this.createAccessToken();
+
+            this.executeContentTypePost("1_POST_type_valid.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype("TST"));
+
+            BatchContentStatusRequest batchContentStatusRequest = new BatchContentStatusRequest();
+            batchContentStatusRequest.setStatus("published");
+
+            ResultActions result = this.executeContentPost("1_POST_valid.json", accessToken, status().isOk());
+            String bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId1 = JsonPath.read(bodyResult, "$.payload[0].id");
+            Content newContent = this.contentManager.loadContent(newContentId1, false);
+            Assert.assertNotNull(newContent);
+            Content newPublicContent = this.contentManager.loadContent(newContentId1, true);
+            Assert.assertNull(newPublicContent);
+
+            batchContentStatusRequest.getCodes().add(newContentId1);
+
+            result = this.executeContentPost("1_POST_valid.json", accessToken, status().isOk());
+            bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId2 = JsonPath.read(bodyResult, "$.payload[0].id");
+
+            batchContentStatusRequest.getCodes().add(newContentId2);
+
+            result = this.executeContentPost("1_POST_valid.json", accessToken, status().isOk());
+            bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId3 = JsonPath.read(bodyResult, "$.payload[0].id");
+
+            batchContentStatusRequest.getCodes().add(newContentId3);
+
+            batchContentStatusRequest.getCodes().stream().forEach(code -> {
+                try {
+                    Assert.assertNotNull(this.contentManager.loadContent(code, false));
+                    Assert.assertNull(this.contentManager.loadContent(code, true));
+                } catch (Exception e) {
+                    Assert.fail();
+                }
+            });
+
+            result = mockMvc
+                    .perform(put("/plugins/cms/contents/status")
+                            .content(mapper.writeValueAsString(batchContentStatusRequest))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isOk());
+
+            batchContentStatusRequest.getCodes().stream().forEach(code -> {
+                try {
+                    Assert.assertNotNull(this.contentManager.loadContent(code, false));
+                    Assert.assertNotNull(this.contentManager.loadContent(code, true));
+                } catch (Exception e) {
+                    Assert.fail();
+                }
+            });
+
+            batchContentStatusRequest.setStatus("draft");
+
+            result = mockMvc
+                    .perform(put("/plugins/cms/contents/status")
+                            .content(mapper.writeValueAsString(batchContentStatusRequest))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isOk());
+
+            batchContentStatusRequest.getCodes().stream().forEach(code -> {
+                try {
+                    Assert.assertNotNull(this.contentManager.loadContent(code, false));
+                    Assert.assertNull(this.contentManager.loadContent(code, true));
+                } catch (Exception e) {
+                    Assert.fail();
+                }
+            });
+
+        } finally {
+            if (null != newContentId1) {
+                Content newContent = this.contentManager.loadContent(newContentId1, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != newContentId2) {
+                Content newContent = this.contentManager.loadContent(newContentId2, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != newContentId3) {
+                Content newContent = this.contentManager.loadContent(newContentId3, false);
                 if (null != newContent) {
                     this.contentManager.deleteContent(newContent);
                 }

@@ -37,6 +37,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
+import org.entando.entando.plugins.jacms.web.content.validator.BatchContentStatusRequest;
 import org.entando.entando.plugins.jacms.web.content.validator.ContentStatusRequest;
 import org.entando.entando.plugins.jacms.web.content.validator.RestContentListRequest;
 import org.entando.entando.web.common.model.PagedMetadata;
@@ -227,6 +229,24 @@ public class ContentController {
         ContentDto contentDto = this.getContentService().updateContentStatus(code, contentStatusRequest.getStatus(), this.extractCurrentUser());
         metadata.put("status", contentStatusRequest.getStatus());
         return new ResponseEntity<>(new RestResponse<>(contentDto, metadata), HttpStatus.OK);
+    }
+
+    @RestAccessControl(permission = Permission.CONTENT_EDITOR)
+    @RequestMapping(value = "/status", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RestResponse<List<ContentDto>, Map<String, String>>> updateContentsStatus(
+            @Valid @RequestBody BatchContentStatusRequest batchContentStatusRequest, BindingResult bindingResult) {
+        logger.debug("changing status for contents with request {}", batchContentStatusRequest);
+        Map<String, String> metadata = new HashMap<>();
+        //field validations
+        if (bindingResult.hasErrors()) {
+            throw new ValidationGenericException(bindingResult);
+        }
+
+        List<ContentDto> response = this.getContentService().updateContentsStatus(batchContentStatusRequest.getCodes(),
+                batchContentStatusRequest.getStatus(), this.extractCurrentUser());
+        metadata.put("status", batchContentStatusRequest.getStatus());
+
+        return new ResponseEntity<>(new RestResponse<>(response, metadata), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.CONTENT_EDITOR)
