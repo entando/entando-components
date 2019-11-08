@@ -94,7 +94,7 @@ public class NewsletterSearcherDAO extends PublicContentSearcherDAO implements I
 	
 	protected String createQueryString(String[] contentTypes, EntitySearchFilter[] filters, 
 			String[] categories, Collection<String> groupsForSelect) {
-		StringBuffer query = this.createBaseQueryBlock(filters, false);
+		StringBuffer query = this.createBaseQueryBlock(filters, false, false);
 		for (int i = 0; i < contentTypes.length; i++) {
 			if (i == 0) {
 				query.append(" WHERE (");

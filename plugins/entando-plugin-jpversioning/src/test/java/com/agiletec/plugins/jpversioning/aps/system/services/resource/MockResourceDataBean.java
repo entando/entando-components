@@ -43,6 +43,7 @@ public class MockResourceDataBean implements ResourceDataBean {
     private File _file;
     private List<Category> _categories = new ArrayList<Category>();
     private String _mimeType;
+    private String owner;
     Map<String, String> metadata;
 
     @Override
@@ -144,6 +145,21 @@ public class MockResourceDataBean implements ResourceDataBean {
     @Override
     public Map<String, String> getMetadata() {
         return metadata;
+    }
+
+    @Override
+    public void setMetadata(Map<String,String> metadata) {
+        this.metadata = metadata;
+    }
+
+    @Override
+    public String getOwner() {
+        return owner;
+    }
+
+    @Override
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
 }

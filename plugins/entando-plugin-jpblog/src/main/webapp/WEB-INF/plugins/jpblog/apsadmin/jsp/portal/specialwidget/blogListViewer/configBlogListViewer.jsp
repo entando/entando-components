@@ -275,15 +275,13 @@
                                         <s:text name="label.link.page" />
                                     </label>
                                     <div class="col-sm-10 input-group">
-                                        <wpsf:select list="pages"
-                                                     name="pageLink"
-                                                     id="pageLink"
-                                                     listKey="code"
-                                                     listValue="getShortFullTitle(currentLang.code)"
-                                                     value="%{showlet.config.get('pageLink')}"
-                                                     headerKey=""
-                                                     headerValue="- %{getText('label.select')} -"
-                                                     cssClass="form-control"/>
+                                        <select name="pageLink" id="pageLink" class="form-control">
+                                            <option value=""><s:text name="label.select" /></option>
+                                            <s:iterator value="pages" var="pageVar">
+                                                <option <s:if test="%{widget.config.get('pageLink') == #pageVar.code}">selected="selected"</s:if> 
+                                                    value="<s:property value="#pageVar.code"/>"><s:property value="%{getShortFullTitle(#pageVar, currentLang.code)}"/></option>
+                                            </s:iterator>
+                                        </select>
                                     </div>
                                 </div>
 
@@ -353,7 +351,7 @@
                                                                     <s:text name="label.category" />
                                                                     <s:if test="null != #userFilter['categoryCode']">
                                                                         <s:set var="userFilterCategoryRoot" value="%{getCategory(#userFilter['categoryCode'])}"></s:set>
-                                                                        (<s:property value="#userFilterCategoryRoot.getFullTitle(currentLang.code)"/>)
+                                                                        (<s:property value="%{getFullTitle(#userFilterCategoryRoot, currentLang.code)}"/>)
                                                                     </s:if>
                                                                 </s:elseif>
                                                             </s:if>

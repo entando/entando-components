@@ -58,6 +58,7 @@ public class CurrentPageTag extends com.agiletec.aps.tags.CurrentPageTag {
         Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
         try {
             IPage page = (IPage) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE);
+            IPageManager pageManager = (IPageManager) ApsWebApplicationUtils.getBean(SystemConstants.PAGE_MANAGER, this.pageContext);
             if (this.getParam() == null || this.getParam().equals(TITLE_INFO)) {
                 this.extractPageTitle(page, currentLang, reqCtx);
             } else if (this.getParam().equals(DESCRIPTION_INFO)) {
@@ -67,13 +68,11 @@ public class CurrentPageTag extends com.agiletec.aps.tags.CurrentPageTag {
             } else if (this.getParam().equals(OWNER_INFO)) {
                 this.extractPageOwner(page, reqCtx);
             } else if (this.getInfo().equals(CHILD_OF_INFO)) {
-                this.extractIsChildOfTarget(page);
+                this.extractIsChildOfTarget(page, pageManager);
             } else if (this.getInfo().equals(HAS_CHILD)) {
                 boolean hasChild = false;
                 String[] childrenCodes = page.getChildrenCodes();
                 if (null != page.getChildrenCodes()) {
-                    IPageManager pageManager
-                            = (IPageManager) ApsWebApplicationUtils.getBean(SystemConstants.PAGE_MANAGER, this.pageContext);
                     for (String childrenCode : childrenCodes) {
                         IPage child = pageManager.getOnlinePage(childrenCode);
                         if (null != child) {

@@ -44,8 +44,8 @@
                                 <wpsa:actionParam action="removeContentType" var="actionName">
                                     <wpsa:actionSubParam name="contentTypeCode" value="%{#currentContentTypeCode}" />
                                 </wpsa:actionParam>
-                                <wpsf:submit type="button" action="%{#actionName}"
-                                    title="%{getText('label.remove') + ' ' + #currentContentTypeCode.defaultFullTitle}"
+                                <wpsf:submit type="button" action="%{#actionName}" 
+                                    title="%{getText('label.remove') + ' ' + getDefaultFullTitle(#currentContentTypeCode)}"
                                     cssClass="btn btn-link">
                                     <span class="pficon pficon-close white"></span>
                                     <span class="sr-only">x</span>

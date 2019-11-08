@@ -195,6 +195,11 @@ public class CmsHypertextAttribute extends HypertextAttribute implements IRefere
         this.pageManager = pageManager;
     }
 
+    @Override
+    public boolean isSearchableOptionSupported() {
+        return true;
+    }
+
     private transient IContentManager contentManager;
     private transient IPageManager pageManager;
 

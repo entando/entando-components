@@ -283,7 +283,7 @@ public class AggregatorAction extends AbstractTreeAction {
 			Category category = this.getCategoryManager().getCategory(categoryCode);
 			if (null != category && !category.getCode().equals(category.getParentCode())) { 
 				ApsProperties currentCats = this.getCategories();
-				currentCats.put(category.getCode(), category.getFullTitle());
+				currentCats.put(category.getCode(), category.getFullTitle(this.getCategoryManager()));
 				this.setXmlCategories(currentCats.toXml());
 			}
 		} catch (Throwable t) {

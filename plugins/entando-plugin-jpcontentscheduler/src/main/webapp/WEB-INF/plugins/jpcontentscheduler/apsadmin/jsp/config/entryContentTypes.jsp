@@ -244,8 +244,8 @@
                                 <span class="label label-info">
                                     <span class="icon fa fa-tag"></span>
                                     &#32;
-                                    <abbr title="<s:property value="#contentTypeCategory.getFullTitle(currentLang.code)"/>">
-                                        <s:property value="#contentTypeCategory.getShortFullTitle(currentLang.code)" />
+                                    <abbr title="<s:property value="%{getFullTitle(#contentTypeCategory, currentLang.code)}"/>">
+                                        <s:property value="%{getShortFullTitle(#contentTypeCategory, currentLang.code)}" />
                                     </abbr>
                                     &#32;
                                     <wpsf:hidden name="categoryCodes" value="%{#contentTypeCategory.code}"/>
@@ -253,7 +253,7 @@
                                         <wpsa:actionSubParam name="categoryCode" value="%{#contentTypeCategory.code}" />
                                     </wpsa:actionParam>
                                     <wpsf:submit type="button" action="%{#actionName}"
-                                        title="%{getText('label.remove') + ' ' + #contentTypeCategory.defaultFullTitle}"
+                                        title="%{getText('label.remove') + ' ' + getDefaultFullTitle(#contentTypeCategory)}"
                                         cssClass="btn btn-link">
                                         <span class="pficon pficon-close white"></span>
                                         <span class="sr-only">x</span>

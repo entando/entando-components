@@ -70,6 +70,12 @@ public class Resource {
 			dataType = DataType.DATE, 
 			canBeNull = true)
 	private Date _lastModified;
+
+	@DatabaseField(columnName = "owner",
+			dataType = DataType.STRING,
+			width = 128,
+			canBeNull = true)
+	private String _owner;
 	
 	public static final String TABLE_NAME = "resources";
 	
@@ -85,6 +91,7 @@ CREATE TABLE resources
   masterfilename character varying(100) NOT NULL,
   creationdate date,
   lastmodified date,
+  owner character varying(128),
   CONSTRAINT resources_pkey PRIMARY KEY (resid )
 )
  */

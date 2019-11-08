@@ -19,6 +19,7 @@
 		<property name="contentRenderer" ref="jacmsBaseContentRenderer" />
 		<property name="configManager" ref="BaseConfigManager"/>
 		<property name="keyGeneratorManager" ref="KeyGeneratorManager" />
+		<property name="categoryManager" ref="CategoryManager" />
 		<property name="newsletterDAO" >
 			<bean class="com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.NewsletterDAO">
 				<property name="dataSource" ref="servDataSource" />

@@ -18,9 +18,9 @@ import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import org.entando.entando.plugins.jacms.aps.system.services.content.IContentService;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+
+import java.util.*;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpSession;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.web.common.annotation.RestAccessControl;
@@ -56,11 +56,13 @@ public class ContentController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    public static final String ERRCODE_CONTENT_NOT_FOUND = "1";
     public static final String ERRCODE_REFERENCED_ONLINE_CONTENT = "2";
     public static final String ERRCODE_UNAUTHORIZED_CONTENT = "3";
-    public static final String ERRCODE_DELETE_PUBLIC_PAGE = "5";
-    public static final String ERRCODE_INVALID_MODEL = "6";
-    public static final String ERRCODE_INVALID_LANG_CODE = "7";
+    public static final String ERRCODE_DELETE_PUBLIC_PAGE = "4";
+    public static final String ERRCODE_INVALID_MODEL = "5";
+    public static final String ERRCODE_INVALID_LANG_CODE = "6";
+    public static final String ERRCODE_CONTENT_REFERENCES = "7";
 
     @Autowired
     private HttpSession httpSession;
@@ -150,26 +152,33 @@ public class ContentController {
 
     @RestAccessControl(permission = Permission.CONTENT_EDITOR)
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<ContentDto>> addContent(@Valid @RequestBody ContentDto bodyRequest, BindingResult bindingResult) {
+    public ResponseEntity<SimpleRestResponse<List<ContentDto>>> addContent(@Valid @RequestBody List<ContentDto> bodyRequest, BindingResult bindingResult) {
         logger.debug("Add new content -> {}", bodyRequest);
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         }
-        this.getContentValidator().validate(bodyRequest, bindingResult);
-        if (bindingResult.hasErrors()) {
-            throw new ValidationGenericException(bindingResult);
-        }
-        ContentDto response = this.getContentService().addContent(bodyRequest, this.extractCurrentUser(), bindingResult);
-        if (bindingResult.hasErrors()) {
-            throw new ValidationGenericException(bindingResult);
-        }
+
+        List<ContentDto> response = bodyRequest.stream()
+            .map(content -> {
+                this.getContentValidator().validate(content, bindingResult);
+                if (bindingResult.hasErrors()) {
+                    throw new ValidationGenericException(bindingResult);
+                }
+                ContentDto result = this.getContentService().addContent(content, this.extractCurrentUser(), bindingResult);
+                if (bindingResult.hasErrors()) {
+                    throw new ValidationGenericException(bindingResult);
+                }
+                return result;
+            })
+            .collect(Collectors.toList());
+
         return new ResponseEntity<>(new SimpleRestResponse<>(response), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.CONTENT_EDITOR)
     @RequestMapping(value = "/{code}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<ContentDto>> updateContent(@PathVariable String code,
-            @Valid @RequestBody ContentDto bodyRequest, BindingResult bindingResult) {
+                                                                        @Valid @RequestBody ContentDto bodyRequest, BindingResult bindingResult) {
         logger.debug("Update content -> {}", bodyRequest);
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
@@ -179,6 +188,29 @@ public class ContentController {
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         }
+        return new ResponseEntity<>(new SimpleRestResponse<>(response), HttpStatus.OK);
+    }
+
+    @RestAccessControl(permission = Permission.CONTENT_EDITOR)
+    @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SimpleRestResponse<List<ContentDto>>> updateContent(
+            @Valid @RequestBody List<ContentDto> bodyRequest, BindingResult bindingResult) {
+        logger.debug("Update content -> {}", bodyRequest);
+        if (bindingResult.hasErrors()) {
+            throw new ValidationGenericException(bindingResult);
+        }
+
+        UserDetails userDetails = this.extractCurrentUser();
+        List<ContentDto> response = bodyRequest.stream()
+            .map(content -> {
+                ContentDto result = this.getContentService().updateContent(content, userDetails, bindingResult);
+                if (bindingResult.hasErrors()) {
+                    throw new ValidationGenericException(bindingResult);
+                }
+                return result;
+            })
+            .collect(Collectors.toList());
+
         return new ResponseEntity<>(new SimpleRestResponse<>(response), HttpStatus.OK);
     }
 
@@ -210,6 +242,19 @@ public class ContentController {
         this.getContentService().deleteContent(code, this.extractCurrentUser());
         Map<String, String> payload = new HashMap<>();
         payload.put("code", code);
+        return new ResponseEntity<>(new SimpleRestResponse<>(payload), HttpStatus.OK);
+    }
+
+    @RestAccessControl(permission = Permission.CONTENT_EDITOR)
+    @RequestMapping(method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SimpleRestResponse<?>> deleteContent(@RequestBody List<String> codes) {
+        logger.debug("Deleting contents -> {}", codes);
+
+        UserDetails userDetails = this.extractCurrentUser();
+        List<String> payload = codes.stream()
+            .peek(code -> this.getContentService().deleteContent(code, userDetails))
+            .collect(Collectors.toList());
+
         return new ResponseEntity<>(new SimpleRestResponse<>(payload), HttpStatus.OK);
     }
 

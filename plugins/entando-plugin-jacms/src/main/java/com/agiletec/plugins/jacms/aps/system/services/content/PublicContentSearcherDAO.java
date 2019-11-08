@@ -13,9 +13,7 @@
  */
 package com.agiletec.plugins.jacms.aps.system.services.content;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -30,94 +28,22 @@ import org.slf4j.LoggerFactory;
 /**
  * @author E.Santoboni
  */
-public class PublicContentSearcherDAO extends AbstractContentSearcherDAO implements IPublicContentSearcherDAO {
+public class PublicContentSearcherDAO extends AbstractContentSearcherDAO implements IContentSearcherDAO {
 	
 	private static final Logger _logger =  LoggerFactory.getLogger(PublicContentSearcherDAO.class);
 	
 	@Override
-	public List<String> loadPublicContentsId(String contentType, String[] categories, EntitySearchFilter[] filters, Collection<String> userGroupCodes) {
-		return this.loadPublicContentsId(contentType, categories, false, filters, userGroupCodes);
-	}
-	
-	@Override
-	public List<String> loadPublicContentsId(String contentType, String[] categories, boolean orClauseCategoryFilter, 
-			EntitySearchFilter[] filters, Collection<String> userGroupCodes) {
-		if (contentType != null && contentType.trim().length()>0) {
-			EntitySearchFilter typeFilter = new EntitySearchFilter(IContentManager.ENTITY_TYPE_CODE_FILTER_KEY, false, contentType, false);
-			filters = this.addFilter(filters, typeFilter);
-		}
-		return this.loadPublicContentsId(categories, orClauseCategoryFilter, filters, userGroupCodes);
-	}
-	
-	@Override
-	public List<String> loadPublicContentsId(String[] categories, 
-			EntitySearchFilter[] filters, Collection<String> userGroupCodes) {
-		return this.loadPublicContentsId(categories, false, filters, userGroupCodes);
-	}
-	
-	@Override
-	public List<String> loadPublicContentsId(String[] categories, 
+    public List<String> loadContentsId(String[] categories, 
 			boolean orClauseCategoryFilter, EntitySearchFilter[] filters, Collection<String> userGroupCodes) {
-		Set<String> groupCodes = new HashSet<String>();
+        Set<String> groupCodes = new HashSet<>();
 		if (null != userGroupCodes) {
 			groupCodes.addAll(userGroupCodes);
 		}
 		groupCodes.add(Group.FREE_GROUP_NAME);
 		EntitySearchFilter onLineFilter = new EntitySearchFilter(IContentManager.CONTENT_ONLINE_FILTER_KEY, false);
 		filters = this.addFilter(filters, onLineFilter);
-		List<String> contentsId = new ArrayList<String>();
-		Connection conn = null;
-		PreparedStatement stat = null;
-		ResultSet result = null;
-		try {
-			conn = this.getConnection();
-			stat = this.buildStatement(filters, categories, orClauseCategoryFilter, groupCodes, false, conn);
-			result = stat.executeQuery();
-            while (result.next()) {
-                String id = result.getString(this.getMasterTableIdFieldName());
-                if (!contentsId.contains(id)) {
-                    contentsId.add(id);
-                }
-            }
-            //this.flowResult(contentsId, filters, result);
-		} catch (Throwable t) {
-			_logger.error("Error loading contents id list",  t);
-			throw new RuntimeException("Error loading contents id list", t);
-			//processDaoException(t, "Errore in caricamento lista id contenuti", "loadContentsId");
-		} finally {
-			closeDaoResources(result, stat, conn);
-		}
-		return contentsId;
-	}
-	
-	@Override
-	protected PreparedStatement buildStatement(EntitySearchFilter[] filters, 
-			String[] categories, boolean orClauseCategoryFilter, 
-			Collection<String> userGroupCodes, boolean selectAll, Connection conn) {
-		Collection<String> groupsForSelect = this.getGroupsForSelect(userGroupCodes);
-		String query = this.createQueryString(filters, categories, orClauseCategoryFilter, groupsForSelect, selectAll);
-		//System.out.println("QUERY : " + query);
-		PreparedStatement stat = null;
-		try {
-			stat = conn.prepareStatement(query);
-			int index = 0;
-			index = super.addAttributeFilterStatementBlock(filters, index, stat);
-			index = this.addMetadataFieldFilterStatementBlock(filters, index, stat);
-			if (groupsForSelect != null) {
-				index = this.addGroupStatementBlock(groupsForSelect, index, stat);
-			}
-			if (categories != null) {
-				for (int i=0; i<categories.length; i++) {
-					stat.setString(++index, categories[i]);
-				}
-			}
-		} catch (Throwable t) {
-			_logger.error("Error creating statement",  t);
-			throw new RuntimeException("Error creating statement", t);
-			//processDaoException(t, "Errore in fase di creazione statement", "buildStatement");
-		}
-		return stat;
-	}
+        return super.loadContentsId(categories, orClauseCategoryFilter, filters, groupCodes);
+    }
 	
 	@Override
 	protected void addGroupsQueryBlock(StringBuffer query, Collection<String> userGroupCodes) {
@@ -141,7 +67,7 @@ public class PublicContentSearcherDAO extends AbstractContentSearcherDAO impleme
 	
 	@Override
 	protected int addGroupStatementBlock(Collection<String> groupCodes, int index, PreparedStatement stat) throws Throwable {
-		List<String> groups = new ArrayList<String>(groupCodes);
+		List<String> groups = new ArrayList<>(groupCodes);
 		for (int i=0; i<groups.size(); i++) {
 			String groupName = groups.get(i);
 			stat.setString(++index, groupName);

@@ -85,22 +85,18 @@ public class BpmBpmCaseInstanceSelectorWidgetActionIntegrationTest extends ApsAd
 
     private Page createTemporaryPage(String pageCode) throws Exception {
         IPage root = this.pageManager.getDraftRoot();
-
         Page page = new Page();
         page.setCode(pageCode);
         page.setTitle("en", pageCode);
         page.setTitle("it", pageCode);
-        page.setParent(root);
         page.setParentCode(root.getCode());
         page.setGroup(root.getGroup());
-
         PageMetadata pageMetadata = new PageMetadata();
         pageMetadata.setMimeType("text/html");
         pageMetadata.setModel(root.getModel());
         pageMetadata.setTitles(page.getTitles());
         pageMetadata.setGroup(page.getGroup());
         page.setMetadata(pageMetadata);
-
         this.pageManager.addPage(page);
         return page;
     }

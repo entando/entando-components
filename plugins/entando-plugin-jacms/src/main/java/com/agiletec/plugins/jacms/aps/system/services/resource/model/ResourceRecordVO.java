@@ -111,7 +111,23 @@ public class ResourceRecordVO implements Serializable {
 	public void setXml(String xml) {
 		this._xml = xml;
 	}
-	
+
+	/**
+	 * Gets the owner of the resource
+	 * @return The owner's username
+	 */
+	public String getOwner() {
+		return _owner;
+	}
+
+	/**
+	 * Sets the owner of the resource
+	 * @param owner The owner's username
+	 */
+	public void setOwner(String owner) {
+		this._owner = owner;
+	}
+
 	public Date getCreationDate() {
 		return _creationDate;
 	}
@@ -132,6 +148,7 @@ public class ResourceRecordVO implements Serializable {
 	private String _mainGroup;
 	private String _masterFileName;
 	private String _xml;
+	private String _owner;
 	
 	private Date _creationDate;
 	private Date _lastModified;

@@ -329,16 +329,15 @@ public class TestContentModelAction extends ApsAdminBaseTestCase {
         page.setCode("referencing_page");
         page.setTitle("en", "Test");
         page.setTitle("it", "Test");
-        page.setParent(root);
         page.setParentCode(root.getCode());
         page.setGroup(root.getGroup());
-
         PageMetadata pageMetadata = new PageMetadata();
         pageMetadata.setGroup(root.getGroup());
         pageMetadata.setMimeType("text/html");
         pageMetadata.setModel(root.getModel());
         pageMetadata.setTitles(page.getTitles());
         page.setMetadata(pageMetadata);
+        page.setWidgets(new Widget[root.getModel().getFrames().length]);
 
         this._pageManager.addPage(page);
 

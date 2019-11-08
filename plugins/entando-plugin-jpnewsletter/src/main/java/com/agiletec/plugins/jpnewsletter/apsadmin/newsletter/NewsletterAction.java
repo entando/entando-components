@@ -26,6 +26,7 @@ import java.util.Set;
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.Category;
+import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.apsadmin.system.BaseAction;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
@@ -89,7 +90,7 @@ public class NewsletterAction extends BaseAction {
 		Category categoryTemp = category;
 		while (!contain && !categoryTemp.getCode().equals(categoryTemp.getParentCode())) {
 			contain = (categories.contains(categoryTemp.getCode()));
-			categoryTemp = categoryTemp.getParent();
+			categoryTemp = this.getCategoryManager().getCategory(categoryTemp.getParentCode());
 		}
 		return contain;
 	}
@@ -164,6 +165,13 @@ public class NewsletterAction extends BaseAction {
 	public void setContentManager(IContentManager contentManager) {
 		this._contentManager = contentManager;
 	}
+
+    protected ICategoryManager getCategoryManager() {
+        return categoryManager;
+    }
+    public void setCategoryManager(ICategoryManager categoryManager) {
+        this.categoryManager = categoryManager;
+    }
 	
 	protected INewsletterManager getNewsletterManager() {
 		return _newsletterManager;
@@ -180,6 +188,7 @@ public class NewsletterAction extends BaseAction {
 	private ContentRecordVO _contentVo;
 	
 	private IContentManager _contentManager;
+    private ICategoryManager categoryManager;
 	private INewsletterManager _newsletterManager;
 	
 }

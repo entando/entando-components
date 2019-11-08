@@ -15,6 +15,7 @@ package com.agiletec.plugins.jacms.aps.system.services.searchengine;
 
 import com.agiletec.aps.system.common.tree.ITreeNode;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.group.Group;
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.*;
@@ -36,7 +37,9 @@ public class SearcherDAO implements ISearcherDAO {
 	
 	private static final Logger logger = LoggerFactory.getLogger(SearcherDAO.class);
 
-	private File indexDir;
+	private ICategoryManager categoryManager;
+
+    private File indexDir;
 
 	/**
 	 * Inizializzazione del searcher.
@@ -176,7 +179,7 @@ public class SearcherDAO implements ISearcherDAO {
 			Iterator<ITreeNode> cateIter = categories.iterator();
 			while (cateIter.hasNext()) {
 				ITreeNode category = cateIter.next();
-				String path = category.getPath(IIndexerDAO.CONTENT_CATEGORY_SEPARATOR, false);
+				String path = category.getPath(IIndexerDAO.CONTENT_CATEGORY_SEPARATOR, false, this.getCategoryManager());
 				TermQuery categoryQuery = new TermQuery(new Term(IIndexerDAO.CONTENT_CATEGORY_FIELD_NAME, path));
 				categoriesQuery.add(categoryQuery, BooleanClause.Occur.MUST);
 			}
@@ -275,5 +278,12 @@ public class SearcherDAO implements ISearcherDAO {
     	// nothing to do
     }
 
+    public ICategoryManager getCategoryManager() {
+        return categoryManager;
+    }
+    @Override
+    public void setCategoryManager(ICategoryManager categoryManager) {
+        this.categoryManager = categoryManager;
+    }
     
 }

@@ -126,6 +126,8 @@ public class BlogManager extends AbstractService implements IBlogManager {
 		}
 	}
 	//*/
+    
+    @Override
 	public void updateConfig(IBlogConfig config) throws ApsSystemException {
 		try {
 			String xml = config.toXML();
@@ -140,7 +142,7 @@ public class BlogManager extends AbstractService implements IBlogManager {
 	@Override
 	public List<BlogArchiveInfoBean> getOccurrencesByDate(String contentType, List<String> groupCodes) throws ApsSystemException {
 		try {
-			List<BlogArchiveInfoBean> list = new ArrayList<BlogArchiveInfoBean>();
+			List<BlogArchiveInfoBean> list = new ArrayList<>();
 			Map<String, List<GroupStatistic>> archive = this.extractArchive(contentType, this.getArchive());
 			Iterator<Entry<String, List<GroupStatistic>>> archiveIter = archive.entrySet().iterator();
 			while (archiveIter.hasNext()) {
@@ -164,11 +166,12 @@ public class BlogManager extends AbstractService implements IBlogManager {
 		}
 	}
 
+    @Override
 	public List<String> getSpecialCategories() {
-		List<String> catCodes = new ArrayList<String>();
+		List<String> catCodes = new ArrayList<>();
 		try {
 			catCodes = this.getConfig().getCategories();
-			if (null == catCodes || catCodes.size() == 0) {
+			if (null == catCodes || catCodes.isEmpty()) {
 				catCodes.add(this.getCategoryManager().getRoot().getCode());
 			} else {
 				catCodes = catCodes.subList(0, 1);
@@ -193,7 +196,7 @@ public class BlogManager extends AbstractService implements IBlogManager {
 	public Map<Category, Integer> getOccurrences(List<String> contentTypeCodes, List<String> facetNodeCodes, List<String> groupCodes) throws ApsSystemException {
 		Map<Category, Integer> occurrence = null;
 		try {
-			List<String> facetNodeCodes2 = new ArrayList<String>(facetNodeCodes);
+			List<String> facetNodeCodes2 = new ArrayList<>(facetNodeCodes);
 			String categoryRootCode = this.getCategoryManager().getRoot().getCode();
 
 			//se non esiste nessuna categoria specifica per il blog, la categoria di referimento è la root delle categorie
@@ -219,7 +222,7 @@ public class BlogManager extends AbstractService implements IBlogManager {
 	public Map<Category, Integer> getOccurrences(List<String> contentTypeCodes, List<String> groupCodes) throws ApsSystemException {
 		Map<Category, Integer> occurrence = null;
 		try {
-			List<String> facetNodeCodes = new ArrayList<String>(this.getSpecialCategories());
+			List<String> facetNodeCodes = new ArrayList<>(this.getSpecialCategories());
 			String categoryRootCode = this.getCategoryManager().getRoot().getCode();
 
 			//se non esiste nessuna categoria specifica per il blog, la categoria di referimento è la root delle categorie
@@ -272,7 +275,7 @@ public class BlogManager extends AbstractService implements IBlogManager {
 	}
 	 */
 	private Map<Category, Integer> purgeMap(Map<String, Integer> occurrences, List<String> facetNodeCodes, ICategoryManager categoryManager, Boolean onnyLeafs) {
-		Map<Category, Integer> purgedMap = new HashMap<Category, Integer>();
+		Map<Category, Integer> purgedMap = new HashMap<>();
 		for (Map.Entry<String, Integer> entry : occurrences.entrySet()) {
 			String currentCat = entry.getKey();
 			Category cat = categoryManager.getCategory(currentCat);
@@ -281,7 +284,7 @@ public class BlogManager extends AbstractService implements IBlogManager {
 				for (int i = 0; i < facetNodeCodes.size(); i++) {
 					String specialCatRootCode = facetNodeCodes.get(i);
 					boolean checkLeafs = null == onnyLeafs || !onnyLeafs.booleanValue() || (onnyLeafs.booleanValue() && null != cat.getChildrenCodes() && cat.getChildrenCodes().length == 0);
-					if (cat.isChildOf(specialCatRootCode) && checkLeafs) {
+					if (cat.isChildOf(specialCatRootCode, this.getCategoryManager()) && checkLeafs) {
 						ok = true;
 						break;
 					}
@@ -371,7 +374,7 @@ public class BlogManager extends AbstractService implements IBlogManager {
 	}
 
 	private List<String> loadContentIds() throws ApsSystemException {
-		List<Object> typeCodes = new ArrayList<Object>();
+		List<Object> typeCodes = new ArrayList<>();
 		Iterator<IApsEntity> prototypes = this.getContentManager().getEntityPrototypes().values().iterator();
 		while (prototypes.hasNext()) {
 			IApsEntity prototype = prototypes.next();
@@ -383,14 +386,14 @@ public class BlogManager extends AbstractService implements IBlogManager {
 			EntitySearchFilter typeCodeFilter = new EntitySearchFilter(ApsEntityManager.ENTITY_TYPE_CODE_FILTER_KEY, false, typeCodes, false);
 			EntitySearchFilter[] filters = {typeCodeFilter};
 			List<Group> groups = this.getGroupManager().getGroups();
-			List<String> groupCodes = new ArrayList<String>(groups.size());
+			List<String> groupCodes = new ArrayList<>(groups.size());
 			Iterator<Group> groupsIter = groups.iterator();
 			while (groupsIter.hasNext()) {
 				groupCodes.add(groupsIter.next().getAuthority());
 			}
 			return this.getContentManager().loadPublicContentsId(null, filters, groupCodes);
 		}
-		return new ArrayList<String>();
+		return new ArrayList<>();
 	}
 
 	private void removeOccurrenceToArchive(Date date, Set<String> groups, Content content, Map<String, List<GroupStatistic>> archive) {
@@ -423,7 +426,7 @@ public class BlogManager extends AbstractService implements IBlogManager {
 			String dateKey = DateConverter.getFormattedDate(date, MONTH_FORMAT_KEY);
 			List<GroupStatistic> groupStatistics = archive.get(dateKey);
 			if (groupStatistics == null) {
-				groupStatistics = new ArrayList<GroupStatistic>();
+				groupStatistics = new ArrayList<>();
 				archive.put(dateKey, groupStatistics);
 			}
 			BlogStatisticsUtil.addOccurrence(groups, groupStatistics);
@@ -445,7 +448,7 @@ public class BlogManager extends AbstractService implements IBlogManager {
 	}
 
 	private Set<String> extractContentGroups(Content content) {
-		Set<String> groups = new TreeSet<String>(content.getGroups());
+		Set<String> groups = new TreeSet<>(content.getGroups());
 		groups.add(content.getMainGroup());
 		return groups;
 	}
@@ -454,7 +457,7 @@ public class BlogManager extends AbstractService implements IBlogManager {
 	protected Map<String, List<GroupStatistic>> extractArchive(String typeCode, Map<String, Map<String, List<GroupStatistic>>> archive) {
 		Map<String, List<GroupStatistic>> typeCodeArchive = archive.get(typeCode);
 		if (typeCodeArchive == null) {
-			typeCodeArchive = new TreeMap<String, List<GroupStatistic>>();
+			typeCodeArchive = new TreeMap<>();
 			archive.put(typeCode, typeCodeArchive);
 		}
 		return typeCodeArchive;
@@ -468,6 +471,7 @@ public class BlogManager extends AbstractService implements IBlogManager {
 		this._archive = archive;
 	}
 
+    @Override
 	public IBlogConfig getConfig() {
 		return _config;
 	}

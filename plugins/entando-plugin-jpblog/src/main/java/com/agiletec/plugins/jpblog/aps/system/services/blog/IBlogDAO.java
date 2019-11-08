@@ -24,9 +24,9 @@ package com.agiletec.plugins.jpblog.aps.system.services.blog;
 import java.util.List;
 import java.util.Map;
 
-import com.agiletec.plugins.jacms.aps.system.services.content.IPublicContentSearcherDAO;
+import com.agiletec.plugins.jacms.aps.system.services.content.IContentSearcherDAO;
 
-public interface IBlogDAO extends IPublicContentSearcherDAO {
+public interface IBlogDAO extends IContentSearcherDAO {
 
 	public Map<String, Integer> getOccurrences(List<String> contentTypeCodes, List<String> facetNodeCodes, List<String> groupCodes);
 

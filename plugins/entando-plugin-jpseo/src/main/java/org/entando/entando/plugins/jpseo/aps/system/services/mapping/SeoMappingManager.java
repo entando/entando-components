@@ -37,6 +37,7 @@ import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.event.PublicContentChangedEvent;
 import com.agiletec.plugins.jacms.aps.system.services.content.event.PublicContentChangedObserver;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
+import java.util.ArrayList;
 
 import java.util.Iterator;
 import java.util.List;
@@ -80,9 +81,9 @@ public class SeoMappingManager extends AbstractService implements ISeoMappingMan
 			} else {
 				System.out.println("jpseo: ignoring EXTERNAL event");
 			}
-			SeoChangedEvent sevent = new SeoChangedEvent();
-			event.setOperationCode(SeoChangedEvent.PAGE_CHANGED_EVENT);
-			this.notifyEvent(sevent);
+			SeoChangedEvent seoEvent = new SeoChangedEvent();
+			seoEvent.setOperationCode(SeoChangedEvent.PAGE_CHANGED_EVENT);
+			this.notifyEvent(seoEvent);
 		} catch (Throwable t) {
 			_logger.error("Error updating mapping from page changed", t);
 		}
@@ -113,9 +114,9 @@ public class SeoMappingManager extends AbstractService implements ISeoMappingMan
 			} else {
 				System.out.println("jpseo: ignoring EXTERNAL event");
 			}
-			SeoChangedEvent sevent = new SeoChangedEvent();
-			event.setOperationCode(SeoChangedEvent.CONTENT_CHANGED_EVENT);
-			this.notifyEvent(sevent);
+			SeoChangedEvent seoEvent = new SeoChangedEvent();
+			seoEvent.setOperationCode(SeoChangedEvent.CONTENT_CHANGED_EVENT);
+			this.notifyEvent(seoEvent);
 		} catch (Throwable t) {
 			_logger.error("Error updating mapping from public content changed", t);
 		}
@@ -138,7 +139,7 @@ public class SeoMappingManager extends AbstractService implements ISeoMappingMan
 		}
 	}
 	
-	private ContentFriendlyCode prepareContentFriendlyCode(String contentId, ITextAttribute attribute) {
+	private ContentFriendlyCode prepareContentFriendlyCode(String contentId, ITextAttribute attribute) throws ApsSystemException {
 		ContentFriendlyCode contentFriendlyCode = new ContentFriendlyCode();
 		contentFriendlyCode.setContentId(contentId);
 		String defaultLang = this.getLangManager().getDefaultLang().getCode();
@@ -151,15 +152,34 @@ public class SeoMappingManager extends AbstractService implements ISeoMappingMan
 				if (!currentLang.isDefault()) {
 					String langCode = currentLang.getCode();
 					String friendlyCode = FriendlyCodeGenerator.generateFriendlyCode(attribute.getTextForLang(langCode));
-					if (friendlyCode!=null && !friendlyCode.equals(defaultFriendlyCode)) {
+					if (friendlyCode != null && !friendlyCode.equals(defaultFriendlyCode)) {
 						contentFriendlyCode.addFriendlyCode(langCode, friendlyCode);
 					}
 				}
 			}
 		} else {
 			String friendlyCode = FriendlyCodeGenerator.generateFriendlyCode(attribute.getText());
-			contentFriendlyCode.addFriendlyCode(defaultLang, friendlyCode);
+            contentFriendlyCode.addFriendlyCode(defaultLang, friendlyCode);
 		}
+        List<String> langs = new ArrayList<>(contentFriendlyCode.getFriendlyCodes().keySet());
+        for (int i = 0; i < langs.size(); i++) {
+            String langCode = langs.get(i);
+            String codesForLang = contentFriendlyCode.getFriendlyCodes().get(langCode);
+            FieldSearchFilter filterCode = new FieldSearchFilter("friendlycode", codesForLang, false);
+            FieldSearchFilter filterLang = new FieldSearchFilter("langcode", langCode, false);
+            FieldSearchFilter[] filters = {filterCode, filterLang};
+            List<String> codes = this.searchFriendlyCode(filters);
+            if (null != codes && !codes.isEmpty()) {
+                for (int j = 0; j < codes.size(); j++) {
+                    FriendlyCodeVO codeVo = this.getCacheWrapper().getMappingByFriendlyCode(codes.get(j));
+                    if (null != codeVo && (null == codeVo.getContentId() || !contentId.equals(codeVo.getContentId()))) {
+                        _logger.warn("Already existing mapping : code '{}' - contentId '{}' - pageCode '{}' - langCode '{}'", 
+                                codeVo.getFriendlyCode(), codeVo.getContentId(), codeVo.getPageCode(), codeVo.getLangCode());
+                        contentFriendlyCode.getFriendlyCodes().remove(langCode);
+                    }
+                }
+            }
+        }
 		return contentFriendlyCode;
 	}
 	

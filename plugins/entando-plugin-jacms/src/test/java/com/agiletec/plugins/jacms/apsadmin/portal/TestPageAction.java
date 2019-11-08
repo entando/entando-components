@@ -141,14 +141,14 @@ public class TestPageAction extends ApsAdminBaseTestCase {
         assertNull(this.pageManager.getDraftPage(pageCode));
         IPage parentPage = this.pageManager.getDraftPage("service");
         PageModel pageModel = parentPage.getMetadata().getModel();
-        PageMetadata metadata = PageTestUtil.createPageMetadata(pageModel.getCode(),
+        PageMetadata metadata = PageTestUtil.createPageMetadata(pageModel,
                 true, "Test Page", null, null, false, null, null);
         ApsProperties config = PageTestUtil.createProperties("temp", "tempValue", "contentId", "RAH101");
         Widget widgetToAdd = PageTestUtil.createWidget("content_viewer", config, this.widgetTypeManager);
 
         Widget[] widgets = new Widget[pageModel.getFrames().length];//
         widgets[0] = widgetToAdd;
-        Page pageToAdd = PageTestUtil.createPage(pageCode, parentPage, "customers", metadata, widgets);
+        Page pageToAdd = PageTestUtil.createPage(pageCode, parentPage.getCode(), "customers", metadata, widgets);
         try {
             pageManager.addPage(pageToAdd);
 

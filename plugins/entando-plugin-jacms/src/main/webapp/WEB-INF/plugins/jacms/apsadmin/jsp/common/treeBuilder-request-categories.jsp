@@ -28,7 +28,7 @@
 <s:set var="nodeType" value="%{(#currentRoot.code != 'home')?'childrenNodes ':''}"/>
 <s:set var="margin" value="%{(#currentRoot.empty)?'ml-20':'no-ml'}"/>
 
-<tr id="${currentRoot.code}" data-parent="#${currentRoot.parent.code}"
+<tr id="${currentRoot.code}" data-parent="#${currentRoot.parentCode}"
     class="treeRow <s:if test="%{#currentRoot.code != 'home' && #isHidden}">collapsed childrenNodes</s:if> tree_node_flag ${liClassName}" >
         <td class="treegrid-node pointer">
         <s:if test="!#currentRoot.open && !#currentRoot.empty">

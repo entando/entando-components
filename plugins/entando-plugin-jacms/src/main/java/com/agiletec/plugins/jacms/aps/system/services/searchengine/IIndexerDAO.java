@@ -17,6 +17,7 @@ import java.io.File;
 
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
 
 /**
@@ -50,6 +51,8 @@ public interface IIndexerDAO {
     public void close();
 	
 	public void setLangManager(ILangManager langManager);
+    
+    public void setCategoryManager(ICategoryManager categoryManager);
     
 	public static final String FIELD_PREFIX = "entity:"; 
     public static final String CONTENT_ID_FIELD_NAME = FIELD_PREFIX + "id";

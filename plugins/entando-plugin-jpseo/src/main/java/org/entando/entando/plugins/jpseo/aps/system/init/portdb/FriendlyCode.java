@@ -35,7 +35,7 @@ public class FriendlyCode {
 	
 	@DatabaseField(columnName = "friendlycode", 
 			dataType = DataType.STRING, 
-			width = 100, 
+			width = 256, 
 			canBeNull = false, id = true)
 	private String _friendlyCode;
 	

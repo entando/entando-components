@@ -25,13 +25,18 @@ import java.util.Map;
 
 import com.agiletec.aps.system.services.page.PageMetadata;
 import com.agiletec.aps.util.ApsProperties;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * This is the representation of a portal page metadata
  *
  * @author E.Santoboni
  */
-public class SeoPageMetadata extends PageMetadata {
+public class SeoPageMetadata extends PageMetadata implements Serializable {
 
     private ApsProperties descriptions = new ApsProperties();
     private ApsProperties keywords = new ApsProperties();
@@ -40,6 +45,62 @@ public class SeoPageMetadata extends PageMetadata {
     private String friendlyCode;
 
     private Map<String, Map<String, PageMetatag>> complexParameters;
+    
+    public SeoPageMetadata() {
+        
+    }
+    
+     public SeoPageMetadata(PageMetadata original) {
+        this.setGroup(original.getGroup());
+        ApsProperties titles = new ApsProperties();
+        titles.putAll(original.getTitles());
+        this.setTitles(titles);
+        Set<String> extraGroups = original.getExtraGroups();
+        if (extraGroups != null) {
+            this.setExtraGroups(new TreeSet<>(extraGroups));
+        }
+        this.setModel(original.getModel());
+        this.setShowable(original.isShowable());
+        this.setUseExtraTitles(original.isUseExtraTitles());
+        this.setMimeType(original.getMimeType());
+        this.setCharset(original.getCharset());
+        this.setUpdatedAt(original.getUpdatedAt());
+    }
+    
+    @Override
+    public SeoPageMetadata clone() {
+        SeoPageMetadata spm = (SeoPageMetadata) super.clone();
+        if (null != this.getDescriptions()) {
+            spm.setDescriptions(this.getDescriptions().clone());
+        }
+        if (null != this.getKeywords()) {
+            spm.setKeywords(this.getKeywords().clone());
+        }
+        spm.setUseExtraDescriptions(this.isUseExtraDescriptions());
+        if (null != this.getComplexParameters()) {
+            Map<String, Map<String, PageMetatag>> cloneComplex = new HashMap<>();
+            Iterator<String> iter = this.getComplexParameters().keySet().iterator();
+            while (iter.hasNext()) {
+                String key = iter.next();
+                Map<String, PageMetatag> map = this.getComplexParameters().get(key);
+                Map<String, PageMetatag> mapClone = new HashMap<>();
+                if (null != map && !map.isEmpty()) {
+                    Iterator<String> iter2 = map.keySet().iterator();
+                    while (iter2.hasNext()) {
+                        String mapKey = iter2.next();
+                        PageMetatag origin = map.get(mapKey);
+                        if (null != origin) {
+                            mapClone.put(mapKey, origin.clone());
+                        }
+                    }
+                    cloneComplex.put(key, mapClone);
+                }
+            }
+            spm.setComplexParameters(cloneComplex);
+        }
+        spm.setFriendlyCode(this.getFriendlyCode());
+        return spm;
+    }
 
     public String getDescription(String langCode) {
         return this.getDescriptions().getProperty(langCode);
