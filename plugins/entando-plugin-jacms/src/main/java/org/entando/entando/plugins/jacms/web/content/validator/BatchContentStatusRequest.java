@@ -13,6 +13,7 @@
  */
 package org.entando.entando.plugins.jacms.web.content.validator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.entando.entando.web.common.annotation.ValidateString;
@@ -23,7 +24,7 @@ public class BatchContentStatusRequest {
     @NotEmpty(message = "page.status.invalid")
     @ValidateString(acceptedValues = {"draft", "published"}, message = "content.status.invalid")
     private String status;
-    private List<String> codes;
+    private List<String> codes = new ArrayList<>();
 
     public String getStatus() {
         return status;

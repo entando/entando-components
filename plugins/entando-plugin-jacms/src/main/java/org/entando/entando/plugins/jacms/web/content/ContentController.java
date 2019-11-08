@@ -230,9 +230,9 @@ public class ContentController {
         metadata.put("status", contentStatusRequest.getStatus());
         return new ResponseEntity<>(new RestResponse<>(contentDto, metadata), HttpStatus.OK);
     }
-    
+
     @RestAccessControl(permission = Permission.CONTENT_EDITOR)
-    @RequestMapping(value = "/{code}/status", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/status", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestResponse<List<ContentDto>, Map<String, String>>> updateContentsStatus(
             @Valid @RequestBody BatchContentStatusRequest batchContentStatusRequest, BindingResult bindingResult) {
         logger.debug("changing status for contents with request {}", batchContentStatusRequest);
@@ -245,7 +245,7 @@ public class ContentController {
         List<ContentDto> response = this.getContentService().updateContentsStatus(batchContentStatusRequest.getCodes(),
                 batchContentStatusRequest.getStatus(), this.extractCurrentUser());
         metadata.put("status", batchContentStatusRequest.getStatus());
-        
+
         return new ResponseEntity<>(new RestResponse<>(response, metadata), HttpStatus.OK);
     }
 
