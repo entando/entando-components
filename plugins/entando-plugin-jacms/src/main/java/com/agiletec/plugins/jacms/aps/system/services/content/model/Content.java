@@ -49,6 +49,7 @@ public class Content extends ApsEntity {
     @Deprecated
     public static final String STATES_NEW = "Nuovo";
 
+    @Deprecated
     public static final String STATUS_NEW = "NEW";
 
     /**
@@ -168,7 +169,7 @@ public class Content extends ApsEntity {
     @Override
     public IApsEntity getEntityPrototype() {
         Content content = (Content) super.getEntityPrototype();
-        content.setStatus(STATUS_NEW);
+        content.setStatus(STATUS_DRAFT);
         content.setVersion(INIT_VERSION);
         content.setViewPage(viewPage);
         content.setListModel(listModel);

@@ -47,7 +47,7 @@ public class ContentTypeDOM extends EntityTypeDOM {
 		if (!defaultModel.equals(NULL_VALUE)) {
 			content.setDefaultModel(defaultModel);
 		}
-		content.setStatus(Content.STATUS_NEW);
+		content.setStatus(Content.STATUS_DRAFT);
 		return content;
 	}
 	

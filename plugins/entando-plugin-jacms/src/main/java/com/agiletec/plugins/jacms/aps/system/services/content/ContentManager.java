@@ -274,11 +274,8 @@ public class ContentManager extends ApsEntityManager
             if (updateDate) {
                 content.incrementVersion(false);
             }
-            String status = content.getStatus();
-            if (null == status) {
+            if (!Content.STATUS_READY.equals(content.getStatus())) {
                 content.setStatus(Content.STATUS_DRAFT);
-            } else if (status.equals(Content.STATUS_PUBLIC)) {
-                content.setStatus(Content.STATUS_READY);
             }
             if (null == content.getId()) {
                 IKeyGeneratorManager keyGenerator = (IKeyGeneratorManager) this.getService(SystemConstants.KEY_GENERATOR_MANAGER);
@@ -379,7 +376,7 @@ public class ContentManager extends ApsEntityManager
             content.setLastModified(new Date());
             content.incrementVersion(false);
             if (null != content.getStatus() && content.getStatus().equals(Content.STATUS_PUBLIC)) {
-                content.setStatus(Content.STATUS_READY);
+                content.setStatus(Content.STATUS_DRAFT);
             }
             this.getContentDAO().removeOnLineContent(content);
             this.notifyPublicContentChanging(content, PublicContentChangedEvent.REMOVE_OPERATION_CODE);
