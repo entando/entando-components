@@ -16,13 +16,18 @@ package com.agiletec.plugins.jacms.aps.system.services.resource.model;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.imageresizer.IImageResizer;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.util.IImageDimensionReader;
+import com.drew.imaging.ImageMetadataReader;
+import com.drew.imaging.ImageProcessingException;
+import com.drew.metadata.Directory;
+import com.drew.metadata.Metadata;
+import com.drew.metadata.Tag;
 import org.apache.commons.io.FilenameUtils;
 import org.im4java.core.*;
 import org.slf4j.*;
 
 import javax.swing.*;
 import java.io.*;
-import java.util.Map;
+import java.util.*;
 
 public class ImageResource extends AbstractMultiInstanceResource {
 
@@ -105,12 +110,13 @@ public class ImageResource extends AbstractMultiInstanceResource {
     }
 
     @Override
-    public void saveResourceInstances(ResourceDataBean bean) throws ApsSystemException {
+    public void saveResourceInstances(ResourceDataBean bean, List<String> ignoreMetadataKeys) throws ApsSystemException {
         try {
             String masterImageFileName = getNewInstanceFileName(bean.getFileName(), 0, null);
             String subPath = this.getDiskSubFolder() + masterImageFileName;
             this.getStorageManager().deleteFile(subPath, this.isProtectedResource());
             File tempMasterFile = this.saveTempFile("temp_" + masterImageFileName, bean.getInputStream());
+            setMetadata(getImgMetadata(tempMasterFile, ignoreMetadataKeys));
             ResourceInstance instance = new ResourceInstance();
             instance.setSize(0);
             instance.setFileName(masterImageFileName);
@@ -129,6 +135,33 @@ public class ImageResource extends AbstractMultiInstanceResource {
             logger.error("Error saving image resource instances", t);
             throw new ApsSystemException("Error saving image resource instances", t);
         }
+    }
+
+    @Override
+    public void saveResourceInstances(ResourceDataBean bean) throws ApsSystemException {
+        saveResourceInstances(bean, new ArrayList<>());
+    }
+
+    protected Map<String, String> getImgMetadata(File file, List<String> ignoreKeysList) {
+        logger.debug("Get image Metadata in Resource Action");
+        Map<String, String> meta = new HashMap<>();
+        try {
+            Metadata metadata = ImageMetadataReader.readMetadata(file);
+
+            for (Directory directory : metadata.getDirectories()) {
+                for (Tag tag : directory.getTags()) {
+                    if (!ignoreKeysList.contains(tag.getTagName())) {
+                        logger.debug("Add Metadata with key: {}", tag.getTagName());
+                        meta.put(tag.getTagName(), tag.getDescription());
+                    } else {
+                        logger.debug("Skip Metadata key {}", tag.getTagName());
+                    }
+                }
+            }
+        } catch (ImageProcessingException|IOException ex) {
+            logger.error("Error reading image metadata", ex);
+        }
+        return meta;
     }
 
     @Override

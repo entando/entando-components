@@ -254,15 +254,15 @@
                                 <span class="label label-info">
                                     <span class="icon fa fa-tag"></span>
                                     &#32;
-                                    <abbr title="<s:property value="#resourceCategory.getFullTitle(currentLang.code)"/>">
-                                        <s:property value="#resourceCategory.getShortFullTitle(currentLang.code)" />
+                                    <abbr title="<s:property value="%{getFullTitle(#resourceCategory, currentLang.code)}"/>">
+                                        <s:property value="%{getShortFullTitle(#resourceCategory, currentLang.code)}" />
                                     </abbr>
                                     &#32;
                                     <wpsa:actionParam action="removeCategory" var="actionName">
                                         <wpsa:actionSubParam name="categoryCode" value="%{#resourceCategory.code}" />
                                     </wpsa:actionParam>
                                     <wpsf:submit type="button" action="%{#actionName}"
-                                        title="%{getText('label.remove') + ' ' + #resourceCategory.defaultFullTitle}"
+                                        title="%{getText('label.remove') + ' ' + getDefaultFullTitle(#resourceCategory)}"
                                         cssClass="btn btn-link">
                                         <span class="pficon pficon-close white"></span>
                                         <span class="sr-only">x</span>

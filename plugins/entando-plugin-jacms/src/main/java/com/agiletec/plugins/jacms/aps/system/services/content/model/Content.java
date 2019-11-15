@@ -32,12 +32,14 @@ public class Content extends ApsEntity {
 
     private String status;
     private boolean onLine;
+    private boolean sync;
     private String viewPage;
     private String listModel;
     private String defaultModel;
 
     private Date created;
     private Date lastModified;
+    private Date published;
 
     private String version;
     private String firstEditor;
@@ -206,6 +208,14 @@ public class Content extends ApsEntity {
         this.onLine = onLine;
     }
 
+    public boolean isSync() {
+        return sync;
+    }
+
+    public void setSync(boolean sync) {
+        this.sync = sync;
+    }
+
     public Date getCreated() {
         return created;
     }
@@ -220,6 +230,14 @@ public class Content extends ApsEntity {
 
     public void setLastModified(Date lastModified) {
         this.lastModified = lastModified;
+    }
+
+    public Date getPublished() {
+        return published;
+    }
+
+    public void setPublished(Date published) {
+        this.published = published;
     }
 
     public String getVersion() {
@@ -245,11 +263,9 @@ public class Content extends ApsEntity {
 
     protected void updateVersionId() {
         String prevVersionId = version;
-
         if (prevVersionId == null) {
             prevVersionId = INIT_VERSION;
         }
-
         String[] item = this.getVersionItems(prevVersionId);
         int workVersion = Integer.parseInt(item[1]);
         int newWorkVersion = workVersion + 1;
@@ -259,11 +275,9 @@ public class Content extends ApsEntity {
 
     protected void updateVersionIdOnPublishing() {
         String prevVersionId = version;
-
         if (prevVersionId == null) {
             prevVersionId = INIT_VERSION;
         }
-
         String[] item = this.getVersionItems(prevVersionId);
         int onlineVersion = Integer.parseInt(item[0]);
         int newOnlineVersion = onlineVersion + 1;

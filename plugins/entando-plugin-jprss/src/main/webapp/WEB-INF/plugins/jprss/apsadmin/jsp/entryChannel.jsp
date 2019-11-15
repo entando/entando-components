@@ -251,11 +251,13 @@
                     <s:text name="category" />
                 </div>
                 <div class="col-sm-10">
-                    <wpsf:select id="rss_chn_category" headerKey=""  headerValue="%{getText('jprss.label.selectCategory')}" list="availableCategories"
-                                 listKey="code"
-                                 listValue="%{getShortFullTitle(currentLang.code)}"
-                                 name="category"
-                                 cssClass="form-control" />
+                    <select name="category" id="rss_chn_category" class="form-control">
+                        <option value=""><s:text name="jprss.label.selectCategory" /></option>
+                        <s:iterator value="availableCategories" var="categoryVar">
+                            <option <s:if test="%{category == #categoryVar.code}">selected="selected"</s:if> 
+                                value="<s:property value="#categoryVar.code"/>"><s:property value="%{getShortFullTitle(#categoryVar, currentLang.code)}"/></option>
+                        </s:iterator>
+                    </select>
                 </div>
             </div>
 

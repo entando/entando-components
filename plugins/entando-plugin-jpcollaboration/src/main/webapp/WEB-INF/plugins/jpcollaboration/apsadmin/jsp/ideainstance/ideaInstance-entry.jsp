@@ -150,7 +150,7 @@
                                     <wpsa:actionParam action="removeGroup" var="actionName">
                                         <wpsa:actionSubParam name="groupName" value="%{#group_name}" />
                                     </wpsa:actionParam>
-                                    <wpsf:submit type="button" action="%{#actionName}" title="%{getText('label.remove') + ' ' + #ideaCategory.defaultFullTitle}" cssClass="btn btn-link">
+                                    <wpsf:submit type="button" action="%{#actionName}" title="%{getText('label.remove') + ' ' + #group_name}" cssClass="btn btn-link">
                                         <span class="pficon pficon-close white"></span>
                                         <span class="sr-only">x</span>
                                     </wpsf:submit>

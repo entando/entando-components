@@ -40,14 +40,11 @@ public class BpmFormWidgetActionIntegrationTest extends ApsAdminBaseTestCase {
     private void init() throws Exception {
         this.kieFormOverrideManager = (IKieFormOverrideManager) this.getService(IKieFormOverrideManager.BEAN_ID);
         assertNotNull(this.kieFormOverrideManager);
-
         this.bpmWidgetInfoManager = (IBpmWidgetInfoManager) this.getService("jpkiebpmBpmWidgetInfoManager");
         assertNotNull(this.bpmWidgetInfoManager);
-
         this.pageManager = (IPageManager) this.getService(SystemConstants.PAGE_MANAGER);
         assertNotNull(this.pageManager);
-
-        this.temporaryPage = createTemporaryPage("tmp_draft");
+        this.temporaryPage = this.createTemporaryPage("tmp_draft");
     }
 
     @Override
@@ -62,7 +59,6 @@ public class BpmFormWidgetActionIntegrationTest extends ApsAdminBaseTestCase {
     }
 
     public void testCreateOverridesAndRemoveWidget() throws Throwable {
-
         this.setUserOnSession("admin");
 
         // Open the widgetConfiguration
@@ -300,17 +296,17 @@ public class BpmFormWidgetActionIntegrationTest extends ApsAdminBaseTestCase {
         page.setCode(pageCode);
         page.setTitle("en", pageCode);
         page.setTitle("it", pageCode);
-        page.setParent(root);
         page.setParentCode(root.getCode());
         page.setGroup(root.getGroup());
 
         PageMetadata pageMetadata = new PageMetadata();
         pageMetadata.setMimeType("text/html");
         pageMetadata.setModel(root.getModel());
-        pageMetadata.setTitles(page.getTitles());
+        pageMetadata.setTitles(page.getTitles().clone());
         pageMetadata.setGroup(page.getGroup());
         page.setMetadata(pageMetadata);
-
+       
+        page.setWidgets(new Widget[root.getModel().getFrames().length]);
         this.pageManager.addPage(page);
         return page;
     }

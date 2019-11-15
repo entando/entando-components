@@ -39,7 +39,9 @@ import org.entando.entando.plugins.jacms.aps.system.services.content.IContentSer
 import org.entando.entando.plugins.jacms.web.content.validator.ContentStatusRequest;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
+
 import static org.hamcrest.CoreMatchers.is;
+
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
@@ -52,10 +54,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import org.apache.commons.lang.StringUtils;
 
 public class ContentControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
@@ -76,9 +82,14 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         String result1 = result.andReturn().getResponse().getContentAsString();
         System.out.println(result1);
         result.andExpect(status().isOk());
+        String html1 = JsonPath.read(result1, "$.payload.html");
+        Assert.assertTrue(!StringUtils.isBlank(html1));
+        
         result.andExpect(MockMvcResultMatchers.jsonPath("$.payload.html", Matchers.anything()));
         result = this.performGetContent("ART180", "11", true, null, true, user);
         String result2 = result.andReturn().getResponse().getContentAsString();
+        String html2 = JsonPath.read(result2, "$.payload.html");
+        Assert.assertTrue(!StringUtils.isBlank(html2));
         System.out.println(result2);
 
         result.andExpect(status().isOk());
@@ -87,20 +98,27 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         String result1_copy = result.andReturn().getResponse().getContentAsString();
         System.out.println(result1_copy);
         result.andExpect(status().isOk());
-        Assert.assertEquals(result1, result1_copy);
+        String htmlCopy = JsonPath.read(result1_copy, "$.payload.html");
+        Assert.assertTrue(!StringUtils.isBlank(htmlCopy));
+        Assert.assertEquals(html1, htmlCopy);
+        
         result = this.performGetContent("ART180", "list", true, null, true, user);
         result.andExpect(MockMvcResultMatchers.jsonPath("$.payload.html", Matchers.anything()));
         String result2_copy = result.andReturn().getResponse().getContentAsString();
         System.out.println(result2);
+        String html2Copy = JsonPath.read(result2_copy, "$.payload.html");
+        Assert.assertTrue(!StringUtils.isBlank(html2Copy));
         result.andExpect(status().isOk());
-        Assert.assertEquals(result2, result2_copy);
+        Assert.assertTrue(!StringUtils.isBlank(html2Copy));
+        Assert.assertEquals(html2, html2Copy);
 
         result = this.performGetContent("ART180", "list", true, "en", true, user);
         result.andExpect(MockMvcResultMatchers.jsonPath("$.payload.html", Matchers.anything()));
         String result2_copy_en = result.andReturn().getResponse().getContentAsString();
         System.out.println(result2_copy_en);
+        String html2Copy_en = JsonPath.read(result2_copy_en, "$.payload.html");
         result.andExpect(status().isOk());
-        Assert.assertNotEquals(result2_copy_en, result2_copy);
+        Assert.assertNotEquals(html2Copy_en, html2Copy);
     }
 
     @Test
@@ -127,11 +145,12 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             result.andExpect(jsonPath("$.metaData.size()", is(0)));
 
             ResultActions result2 = this.executeContentPost("1_POST_valid.json", accessToken, status().isOk());
-            result2.andExpect(jsonPath("$.payload.id", Matchers.anything()));
+            result2.andExpect(jsonPath("$.payload.size()", is(1)));
+            result2.andExpect(jsonPath("$.payload[0].id", Matchers.anything()));
             result2.andExpect(jsonPath("$.errors.size()", is(0)));
             result2.andExpect(jsonPath("$.metaData.size()", is(0)));
             String bodyResult = result2.andReturn().getResponse().getContentAsString();
-            newContentId = JsonPath.read(bodyResult, "$.payload.id");
+            newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
             Content newContent = this.contentManager.loadContent(newContentId, false);
 
             Assert.assertNotNull(newContent);
@@ -142,22 +161,23 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             Boolean threeState = (Boolean) newContent.getAttribute("ThreeState").getValue();
             Assert.assertNull(threeState);
 
-            ResultActions result3 = this.executeContentPut("1_PUT_valid.json", newContentId, "invalid", accessToken, status().isConflict());
+            ResultActions result3 = this.executeContentPut("1_PUT_valid.json", "invalid", accessToken, status().isNotFound());
             result3.andExpect(jsonPath("$.payload.size()", is(0)));
             result3.andExpect(jsonPath("$.errors.size()", is(1)));
-            result3.andExpect(jsonPath("$.errors[0].code", is("2")));
+            result3.andExpect(jsonPath("$.errors[0].code", is("1")));
             result3.andExpect(jsonPath("$.metaData.size()", is(0)));
 
-            ResultActions result4 = this.executeContentPut("1_PUT_valid.json", newContentId, newContentId, accessToken, status().isOk());
-            result4.andExpect(jsonPath("$.payload.id", is(newContentId)));
+            ResultActions result4 = this.executeContentPut("1_PUT_valid.json", newContentId, accessToken, status().isOk());
+            result4.andExpect(jsonPath("$.payload.size()", is(1)));
             result4.andExpect(jsonPath("$.errors.size()", is(0)));
             result4.andExpect(jsonPath("$.metaData.size()", is(0)));
-            result4.andExpect(jsonPath("$.payload.attributes[0].code", is("Title")));
-            result4.andExpect(jsonPath("$.payload.attributes[0].value", is("My title")));
-            result4.andExpect(jsonPath("$.payload.attributes[0].values", Matchers.anything()));
-            result4.andExpect(jsonPath("$.payload.attributes[0].elements.size()", is(0)));
-            result4.andExpect(jsonPath("$.payload.attributes[0].compositeelements.size()", is(0)));
-            result4.andExpect(jsonPath("$.payload.attributes[0].listelements", Matchers.anything()));
+            result4.andExpect(jsonPath("$.payload[0].id", is(newContentId)));
+            result4.andExpect(jsonPath("$.payload[0].attributes[0].code", is("Title")));
+            result4.andExpect(jsonPath("$.payload[0].attributes[0].value", is("My title")));
+            result4.andExpect(jsonPath("$.payload[0].attributes[0].values", Matchers.anything()));
+            result4.andExpect(jsonPath("$.payload[0].attributes[0].elements.size()", is(0)));
+            result4.andExpect(jsonPath("$.payload[0].attributes[0].compositeelements.size()", is(0)));
+            result4.andExpect(jsonPath("$.payload[0].attributes[0].listelements", Matchers.anything()));
             newContent = this.contentManager.loadContent(newContentId, false);
             date = (Date) newContent.getAttribute("Date").getValue();
             Assert.assertEquals("2018-03-21", DateConverter.getFormattedDate(date, "yyyy-MM-dd"));
@@ -193,11 +213,12 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             Assert.assertNotNull(this.contentManager.getEntityPrototype("TST"));
 
             ResultActions result = this.executeContentPost("1_POST_valid.json", accessToken, status().isOk());
-            result.andExpect(jsonPath("$.payload.id", Matchers.anything()));
+            result.andExpect(jsonPath("$.payload.size()", is(1)));
+            result.andExpect(jsonPath("$.payload[0].id", Matchers.anything()));
             result.andExpect(jsonPath("$.errors.size()", is(0)));
             result.andExpect(jsonPath("$.metaData.size()", is(0)));
             String bodyResult = result.andReturn().getResponse().getContentAsString();
-            newContentId = JsonPath.read(bodyResult, "$.payload.id");
+            newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
             Content newContent = this.contentManager.loadContent(newContentId, false);
             Assert.assertNotNull(newContent);
             Content newPublicContent = this.contentManager.loadContent(newContentId, true);
@@ -225,10 +246,13 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             Assert.assertNull(newPublicContent);
 
             result = mockMvc
-                    .perform(delete("/plugins/cms/contents/{code}", new Object[]{newContentId})
+                    .perform(delete("/plugins/cms/contents")
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .content(mapper.writeValueAsString(new String[] { newContentId }))
                             .header("Authorization", "Bearer " + accessToken));
             result.andExpect(status().isOk());
+            result.andExpect(jsonPath("$.payload.size()", is(1)));
+            result.andExpect(jsonPath("$.payload[0]", is(newContentId)));
             Assert.assertNull(this.contentManager.loadContent(newContentId, false));
         } finally {
             if (null != newContentId) {
@@ -281,12 +305,12 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         return result;
     }
 
-    private ResultActions executeContentPut(String fileName, String valueToReplace, String idInPath, String accessToken, ResultMatcher expected) throws Exception {
+    private ResultActions executeContentPut(String fileName, String valueToReplace, String accessToken, ResultMatcher expected) throws Exception {
         InputStream isJsonPostValid = this.getClass().getResourceAsStream(fileName);
         String jsonPutValid = FileTextReader.getText(isJsonPostValid);
         jsonPutValid = jsonPutValid.replace("**MARKER**", valueToReplace);
         ResultActions result = mockMvc
-                .perform(put("/plugins/cms/contents/{code}", new Object[]{idInPath})
+                .perform(put("/plugins/cms/contents")
                         .content(jsonPutValid)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));

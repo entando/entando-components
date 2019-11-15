@@ -340,8 +340,12 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
                             .header("Authorization", "Bearer " + accessToken));
 
             Widget[] defaultWidgetConfiguration = pageModel.getDefaultWidget();
-
+            
             result.andExpect(status().isOk());
+            String stringResult = result.andReturn().getResponse().getContentAsString();
+            System.out.println("*********************************************");
+            System.out.println(stringResult);
+            System.out.println("*********************************************");
             result.andExpect(jsonPath("$.payload.widgets", Matchers.hasSize(pageModel.getConfiguration().length)));
             for (int i = 0; i < pageModel.getConfiguration().length; i++) {
                 String path = String.format("$.payload.widgets[%d]", i);
@@ -376,11 +380,12 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
         if (null == pageModel) {
             pageModel = parentPage.getMetadata().getModel();
         }
-        PageMetadata metadata = PageTestUtil.createPageMetadata(pageModel.getCode(), true, pageCode + "_title", null, null, false, null, null);
+        PageMetadata metadata = PageTestUtil.createPageMetadata(pageModel, true, pageCode + "_title", null, null, false, null, null);
         ApsProperties config = PageTestUtil.createProperties("modelId", "default", "contentId", "EVN24");
         Widget widgetToAdd = PageTestUtil.createWidget("content_viewer", config, this.widgetTypeManager);
-        Widget[] widgets = {widgetToAdd};
-        Page pageToAdd = PageTestUtil.createPage(pageCode, parentPage, "free", metadata, widgets);
+        Widget[] widgets = new Widget[pageModel.getFrames().length];
+        widgets[0] = widgetToAdd;
+        Page pageToAdd = PageTestUtil.createPage(pageCode, parentPage.getCode(), "free", metadata, widgets);
         return pageToAdd;
     }
 

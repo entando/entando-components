@@ -223,15 +223,21 @@ public class PageActionAspect {
             }
         }
         IPage page = this.getPageManager().getDraftPage(pagecode);
-        if (null != page && page.getMetadata() instanceof SeoPageMetadata) {
+        if (null != page) {
+            SeoPageMetadata pageMetadata = null;
+            if (page.getMetadata() instanceof SeoPageMetadata) {
+                pageMetadata = (SeoPageMetadata) page.getMetadata();
+            } else {
+                pageMetadata = new SeoPageMetadata(page.getMetadata());
+            }
             seoPage = page;
-            SeoPageMetadata pageMetadata = (SeoPageMetadata) page.getMetadata();
             pageMetadata.setFriendlyCode(friendlyCode);
             pageMetadata.setDescriptions(descriptions);
             pageMetadata.setKeywords(langKeywordsKey);
             pageMetadata.setComplexParameters(SeoPageActionUtils.extractSeoParameters(request));
             pageMetadata.setUpdatedAt(new Date());
             pageMetadata.setUseExtraDescriptions(null != request.getParameter(PARAM_USE_EXTRA_DESCRIPTIONS) && request.getParameter(PARAM_USE_EXTRA_DESCRIPTIONS).equalsIgnoreCase("true"));
+            seoPage.setMetadata(pageMetadata);
         }
         return seoPage;
     }

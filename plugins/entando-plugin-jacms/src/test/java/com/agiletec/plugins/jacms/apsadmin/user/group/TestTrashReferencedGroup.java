@@ -33,7 +33,7 @@ public class TestTrashReferencedGroup extends ApsAdminBaseTestCase {
 		assertEquals(5, contents.size());
 		List resources = references.get("jacmsResourceManagerUtilizers");
 		assertNotNull(resources);
-		assertEquals(1, resources.size());
+		assertEquals(2, resources.size());
 	}
 
 	private String executeTrash(String currentUser, String groupName) throws Throwable {

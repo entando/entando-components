@@ -70,7 +70,7 @@ public class ApiIdeaInterface extends CollaborationAbstractApiInterface {
 	 * @throws Throwable
 	 */
 	public List<String> getIdeaListForApi(Properties properties) throws Throwable {
-		List<String> result = new ArrayList<String>();
+		List<String> result = new ArrayList<>();
 		try {
 			Collection<String> groupCodes = this.extractGroups(properties);
 			//required params
@@ -128,7 +128,6 @@ public class ApiIdeaInterface extends CollaborationAbstractApiInterface {
 			}
 			UserDetails user = (UserDetails) properties.get(SystemConstants.API_USER_PARAMETER);
 			Collection<Integer> userStatusList = this.extractIdeaStatusListForUser(user);
-
 			IdeaInstance instance = this.getIdeaInstanceManager().getIdeaInstance(idea.getInstanceCode());
 			if (null == instance) {
 				_logger.warn("instance {} not found", idea.getInstanceCode());
@@ -138,7 +137,6 @@ public class ApiIdeaInterface extends CollaborationAbstractApiInterface {
 				_logger.warn("the current user is not granted to any group required by instance {}", idea.getId());
 				throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Idea with code '" + idea.getId() + "' does not exist", Response.Status.CONFLICT);
 			}
-
 			if (!userStatusList.contains(idea.getStatus())) {
 				_logger.warn("the current user is not granted to access to idea {} due to the status {}", codeParam, idea.getStatus());
 				throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Idea with code '" + codeParam + "' does not exist", Response.Status.CONFLICT);
@@ -167,13 +165,11 @@ public class ApiIdeaInterface extends CollaborationAbstractApiInterface {
 			if (StringUtils.isNotBlank(ideaId)) {
 				ideaId = URLDecoder.decode(ideaId, "UTF-8");
 			}
-
 			IIdea idea = this.getIdeaManager().getIdea(ideaId);
 			if (null == idea) {
 				throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Idea with code '" + ideaId + "' does not exist", Response.Status.CONFLICT);
 			}
 			UserDetails user = (UserDetails) properties.get(SystemConstants.API_USER_PARAMETER);
-
 			IdeaInstance instance = this.getIdeaInstanceManager().getIdeaInstance(idea.getInstanceCode());
 			if (null == instance) {
 				_logger.warn("instance {} not found", idea.getInstanceCode());
@@ -221,7 +217,6 @@ public class ApiIdeaInterface extends CollaborationAbstractApiInterface {
 		try {
 			UserDetails user = (UserDetails) properties.get(SystemConstants.API_USER_PARAMETER);
 			String langCode = (String) properties.get(SystemConstants.API_LANG_CODE_PARAMETER);
-
 			String instanceCode = jaxbIdea.getInstanceCode();
 			IdeaInstance instance = this.getIdeaInstanceManager().getIdeaInstance(instanceCode);
 			if (null == instance) {
@@ -243,7 +238,7 @@ public class ApiIdeaInterface extends CollaborationAbstractApiInterface {
 			}
 			Set<String> tags = this.joinCategories(jaxbIdea, langCode);
 			Idea idea = jaxbIdea.getIdea();
-			idea.setTags(new ArrayList<String>(tags));
+			idea.setTags(new ArrayList<>(tags));
 			idea.setUsername(user.getUsername());
 			this.getIdeaManager().addIdea(idea);
 			response.setResult(IResponseBuilder.SUCCESS, null);
@@ -288,7 +283,7 @@ public class ApiIdeaInterface extends CollaborationAbstractApiInterface {
 			}
 			Set<String> tags = this.joinCategories(jaxbIdea, langCode);
 			Idea idea = jaxbIdea.getIdea();
-			idea.setTags(new ArrayList<String>(tags));
+			idea.setTags(new ArrayList<>(tags));
 			this.getIdeaManager().updateIdea(idea);
 			response.setResult(IResponseBuilder.SUCCESS, null);
 		} catch (ApiException ae) {
@@ -322,7 +317,7 @@ public class ApiIdeaInterface extends CollaborationAbstractApiInterface {
 	}
 
 	private Set<String> joinCategories(JAXBIdea jaxbIdea, String langCode) throws Throwable {
-		Set<String> tags = new HashSet<String>();
+		Set<String> tags = new HashSet<>();
 		List<SmallCategory> ideaTags = this.getIdeaTags(false, langCode);
 		Iterator<String> it = jaxbIdea.getTags().iterator();
 		while (it.hasNext()) {
@@ -356,9 +351,8 @@ public class ApiIdeaInterface extends CollaborationAbstractApiInterface {
 	}
 
 	private List<SmallCategory> getIdeaTags(boolean completeTitle, String langCode) {
-		List<SmallCategory> categories = new ArrayList<SmallCategory>();
+		List<SmallCategory> categories = new ArrayList<>();
 		try {
-
 			String nodeRootCode = this.getIdeaManager().getCategoryRoot();
 			categories = this.getCategoryLeaf(nodeRootCode, langCode, completeTitle);
 		} catch (Throwable t) {
@@ -369,7 +363,7 @@ public class ApiIdeaInterface extends CollaborationAbstractApiInterface {
 	}
 
 	private List<SmallCategory> getCategoryLeaf(String nodeRootCode, String langCode, boolean completeTitle) {
-		List<SmallCategory> categories = new ArrayList<SmallCategory>();
+		List<SmallCategory> categories = new ArrayList<>();
 		try {
 			Category root = this.getCategoryManager().getCategory(nodeRootCode);
 			this.addSmallCategory(categories, root, langCode, completeTitle);
@@ -390,7 +384,7 @@ public class ApiIdeaInterface extends CollaborationAbstractApiInterface {
 				if (!completeTitle) {
 					catSmall.setTitle(cat.getTitles().getProperty(langCode));
 				} else {
-					catSmall.setTitle(cat.getFullTitle(langCode));
+					catSmall.setTitle(cat.getFullTitle(langCode, this.getCategoryManager()));
 				}
 				categories.add(catSmall);
 			}
@@ -401,7 +395,6 @@ public class ApiIdeaInterface extends CollaborationAbstractApiInterface {
 	protected IIdeaInstanceManager getIdeaInstanceManager() {
 		return _ideaInstanceManager;
 	}
-
 	public void setIdeaInstanceManager(IIdeaInstanceManager ideaInstanceManager) {
 		this._ideaInstanceManager = ideaInstanceManager;
 	}
@@ -409,7 +402,6 @@ public class ApiIdeaInterface extends CollaborationAbstractApiInterface {
 	protected IIdeaManager getIdeaManager() {
 		return _ideaManager;
 	}
-
 	public void setIdeaManager(IIdeaManager ideaManager) {
 		this._ideaManager = ideaManager;
 	}
@@ -417,7 +409,6 @@ public class ApiIdeaInterface extends CollaborationAbstractApiInterface {
 	protected ICategoryManager getCategoryManager() {
 		return _categoryManager;
 	}
-
 	public void setCategoryManager(ICategoryManager categoryManager) {
 		this._categoryManager = categoryManager;
 	}

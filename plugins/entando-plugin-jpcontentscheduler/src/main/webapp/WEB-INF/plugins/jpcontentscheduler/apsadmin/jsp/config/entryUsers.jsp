@@ -145,7 +145,7 @@
                                         </wpsa:actionParam>
                                         
                                         <wpsf:submit type="button" action="%{#actionName}"
-                                            title="%{getText('label.remove') + ' ' + #currentContentTypeCode.defaultFullTitle}"
+                                            title="%{getText('label.remove') + ' ' + getDefaultFullTitle(#currentContentTypeCode)}"
                                             cssClass="btn btn-link">
                                             <span class="pficon pficon-close white"></span>
                                             <span class="sr-only">x</span>

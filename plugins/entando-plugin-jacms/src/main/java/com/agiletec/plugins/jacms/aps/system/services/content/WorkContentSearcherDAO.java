@@ -13,9 +13,6 @@
  */
 package com.agiletec.plugins.jacms.aps.system.services.content;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -27,48 +24,18 @@ import org.slf4j.LoggerFactory;
 /**
  * @author E.Santoboni
  */
-public class WorkContentSearcherDAO extends AbstractContentSearcherDAO implements IWorkContentSearcherDAO {
+public class WorkContentSearcherDAO extends AbstractContentSearcherDAO implements IContentSearcherDAO {
 	
 	private static final Logger _logger =  LoggerFactory.getLogger(WorkContentSearcherDAO.class);
 	
 	@Override
-	public List<String> loadContentsId(EntitySearchFilter[] filters, Collection<String> userGroupCodes) {
-		return this.loadContentsId(null, false, filters, userGroupCodes);
-	}
-	
-	@Override
-	public List<String> loadContentsId(String[] categories, EntitySearchFilter[] filters, Collection<String> userGroupCodes) {
-		return this.loadContentsId(categories, false, filters, userGroupCodes);
-	}
-	
-	@Override
 	public List<String> loadContentsId(String[] categories, boolean orClauseCategoryFilter, 
 			EntitySearchFilter[] filters, Collection<String> userGroupCodes) {
-		List<String> contentsId = new ArrayList<String>();
+		List<String> contentsId = new ArrayList<>();
 		if (userGroupCodes == null || userGroupCodes.isEmpty()) {
 			return contentsId;
 		}
-		Connection conn = null;
-		PreparedStatement stat = null;
-		ResultSet result = null;
-		try {
-			conn = this.getConnection();
-			stat = this.buildStatement(filters, categories, orClauseCategoryFilter, userGroupCodes, false, conn);
-			result = stat.executeQuery();
-            while (result.next()) {
-                String id = result.getString(this.getMasterTableIdFieldName());
-                if (!contentsId.contains(id)) {
-                    contentsId.add(id);
-                }
-            }
-		} catch (Throwable t) {
-			_logger.error("Error loading contents id list",  t);
-			throw new RuntimeException("Error loading contents id list", t);
-			//processDaoException(t, "Errore in caricamento lista id contenuti", "loadContentsId");
-		} finally {
-			closeDaoResources(result, stat, conn);
-		}
-		return contentsId;
+		return super.loadContentsId(categories, orClauseCategoryFilter, filters, userGroupCodes);
 	}
 	
 	@Override

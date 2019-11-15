@@ -66,11 +66,11 @@
 			<li>
 				<span class="label label-info">
 					<span class="icon fa fa-tag"></span>&#32;
-					<abbr title="<s:property value="#contentCategory.getFullTitle(currentLang.code)"/>"><s:property value="#contentCategory.getShortFullTitle(currentLang.code)" /></abbr>&#32;
+					<abbr title="<s:property value="%{getFullTitle(#contentCategory, currentLang.code)}"/>"><s:property value="%{getShortFullTitle(#contentCategory, currentLang.code)}" /></abbr>&#32;
 					<wpsa:actionParam action="removeCategory" var="actionName" >
 						<wpsa:actionSubParam name="categoryCode" value="%{#contentCategory.code}" />
 					</wpsa:actionParam>
-					<wpsf:submit type="button" action="%{#actionName}" title="%{getText('label.remove') + ' ' + #contentCategory.defaultFullTitle}" cssClass="btn btn-link">
+					<wpsf:submit type="button" action="%{#actionName}" title="%{getText('label.remove') + ' ' + getDefaultFullTitle(#contentCategory)}" cssClass="btn btn-link">
 						<span class="pficon pficon-close white"></span>
 						<span class="sr-only">x</span>
 					</wpsf:submit>

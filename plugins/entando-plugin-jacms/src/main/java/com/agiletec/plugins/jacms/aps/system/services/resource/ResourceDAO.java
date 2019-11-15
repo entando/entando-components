@@ -30,6 +30,7 @@ import com.agiletec.aps.system.common.AbstractSearcherDAO;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.Category;
+import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceRecordVO;
 import java.util.Arrays;
@@ -47,6 +48,38 @@ import org.springframework.cache.annotation.Cacheable;
 public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
 
     private static final Logger logger = LoggerFactory.getLogger(ResourceDAO.class);
+    
+    private ICategoryManager categoryManager;
+
+    private final String LOAD_RESOURCE_VO
+            = "SELECT restype, descr, maingroup, resourcexml, masterfilename, creationdate, lastmodified, owner FROM resources WHERE resid = ? ";
+
+    private final String ADD_RESOURCE
+            = "INSERT INTO resources (resid, restype, descr, maingroup, resourcexml, masterfilename, creationdate, lastmodified, owner) "
+            + "VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ?)";
+
+    private final String UPDATE_RESOURCE
+            = "UPDATE resources SET restype = ? , descr = ? , maingroup = ? , resourcexml = ? , masterfilename = ? , lastmodified = ? WHERE resid = ? ";
+
+    private final String DELETE_CONTENTS_REFERENCE
+            = "DELETE FROM contentrelations WHERE refresource = ? ";
+
+    private final String DELETE_RESOURCE
+            = "DELETE FROM resources WHERE resid = ? ";
+
+    private final String ADD_RESOURCE_REL_RECORD
+            = "INSERT INTO resourcerelations (resid, refcategory) VALUES ( ? , ? )";
+
+    private final String DELETE_RESOURCE_REL_RECORD
+            = "DELETE FROM resourcerelations WHERE resid = ? ";
+
+    protected ICategoryManager getCategoryManager() {
+        return categoryManager;
+    }
+
+    public void setCategoryManager(ICategoryManager categoryManager) {
+        this.categoryManager = categoryManager;
+    }
 
     /**
      * Carica una risorsa nel db.
@@ -81,14 +114,15 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
             stat = conn.prepareStatement(ADD_RESOURCE);
             stat.setString(1, resource.getId());
             stat.setString(2, resource.getType());
-            stat.setString(3, resource.getDescription());
+            stat.setString(3, resource.getDescription().trim());
             stat.setString(4, resource.getMainGroup());
             stat.setString(5, resource.getXML());
-            stat.setString(6, resource.getMasterFileName());
+            stat.setString(6, resource.getMasterFileName().trim());
             Date creationDate = (null != resource.getCreationDate())
                     ? resource.getCreationDate() : new Date();
             stat.setTimestamp(7, new java.sql.Timestamp(creationDate.getTime()));
             stat.setTimestamp(8, new java.sql.Timestamp(creationDate.getTime()));
+            stat.setString(9, resource.getOwner());
             stat.executeUpdate();
         } catch (Throwable t) {
             logger.error("Error adding resource record", t);
@@ -132,10 +166,10 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
         try {
             stat = conn.prepareStatement(UPDATE_RESOURCE);
             stat.setString(1, resource.getType());
-            stat.setString(2, resource.getDescription());
+            stat.setString(2, resource.getDescription().trim());
             stat.setString(3, resource.getMainGroup());
             stat.setString(4, resource.getXML());
-            stat.setString(5, resource.getMasterFileName());
+            stat.setString(5, resource.getMasterFileName().trim());
             if (null != resource.getLastModified()) {
                 stat.setTimestamp(6, new java.sql.Timestamp(resource.getLastModified().getTime()));
             } else {
@@ -315,7 +349,7 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
     }
 
     private StringBuffer createBaseQueryBlock(FieldSearchFilter[] filters, boolean selectAll, List<String> categories) {
-        StringBuffer query = super.createBaseQueryBlock(filters, selectAll);
+        StringBuffer query = super.createBaseQueryBlock(filters, false, selectAll);
         if (null != categories && categories.size() > 0) {
             query.append("INNER JOIN resourcerelations ON resources.resid = resourcerelations.resid ");
         }
@@ -352,6 +386,7 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
                 resourceVo.setMasterFileName(res.getString(5));
                 resourceVo.setCreationDate(res.getTimestamp(6));
                 resourceVo.setLastModified(res.getTimestamp(7));
+                resourceVo.setOwner(res.getString(8));
             }
         } catch (Exception t) {
             logger.error("Errore loading resource {}", id, t);
@@ -413,30 +448,20 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
     }
 
     private void addCategoryCode(ResourceInterface resource, Category category, Set<String> codes) {
-        if (category.getCode().equals(category.getParent().getCode())) {
+        if (category.getCode().equals(category.getParentCode())) {
             return;
         }
         codes.add(category.getCode());
-        Category parentCategory = (Category) category.getParent();
+        Category parentCategory = this.getCategoryManager().getCategory(category.getParentCode());
         if (null != parentCategory) {
             this.addCategoryCode(resource, parentCategory, codes);
         }
     }
-
+    
     protected void deleteRecordsById(String resourceId, String query, Connection conn) {
-        PreparedStatement stat = null;
-        try {
-            stat = conn.prepareStatement(query);
-            stat.setString(1, resourceId);
-            stat.executeUpdate();
-        } catch (Exception t) {
-            logger.error("Error deleting resource records for resource {}", resourceId, t);
-            throw new RuntimeException("Error deleting resource records for resource " + resourceId, t);
-        } finally {
-            closeDaoResources(null, stat);
-        }
+        super.executeQueryWithoutResultset(conn, query, resourceId);
     }
-
+    
     /* ESTENSIONE SPOSTAMENTO NODI */
     @Override
     public void updateResourceRelations(ResourceInterface resource) {
@@ -469,27 +494,5 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
     protected String getTableFieldName(String metadataFieldKey) {
         return metadataFieldKey;
     }
-
-    private final String LOAD_RESOURCE_VO
-            = "SELECT restype, descr, maingroup, resourcexml, masterfilename, creationdate, lastmodified FROM resources WHERE resid = ? ";
-
-    private final String ADD_RESOURCE
-            = "INSERT INTO resources (resid, restype, descr, maingroup, resourcexml, masterfilename, creationdate, lastmodified) "
-            + "VALUES ( ? , ? , ? , ? , ? , ? , ? , ? )";
-
-    private final String UPDATE_RESOURCE
-            = "UPDATE resources SET restype = ? , descr = ? , maingroup = ? , resourcexml = ? , masterfilename = ? , lastmodified = ? WHERE resid = ? ";
-
-    private final String DELETE_CONTENTS_REFERENCE
-            = "DELETE FROM contentrelations WHERE refresource = ? ";
-
-    private final String DELETE_RESOURCE
-            = "DELETE FROM resources WHERE resid = ? ";
-
-    private final String ADD_RESOURCE_REL_RECORD
-            = "INSERT INTO resourcerelations (resid, refcategory) VALUES ( ? , ? )";
-
-    private final String DELETE_RESOURCE_REL_RECORD
-            = "DELETE FROM resourcerelations WHERE resid = ? ";
 
 }

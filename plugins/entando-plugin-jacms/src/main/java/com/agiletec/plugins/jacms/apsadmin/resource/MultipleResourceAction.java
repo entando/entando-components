@@ -215,11 +215,8 @@ public class MultipleResourceAction extends ResourceAction {
             this.fetchFileFields();
             for (String fileDescription : getFileDescriptions()) {
                 if (fileDescription.length() > 0) {
-                    List<BaseResourceDataBean> baseResourceDataBeanList;
                     BaseResourceDataBean resourceFile = null;
-
                     String tempDir = System.getProperty("java.io.tmpdir");
-
                     if (listContains(fileUploadIDs, index)) {
                         if (null != getFileUploadId(index)) {
                             logger.info(" file {}", tempDir + File.separator + getFileUploadId(index) + ".tmp");
@@ -240,8 +237,8 @@ public class MultipleResourceAction extends ResourceAction {
                         logger.debug("file is null");
                         resourceFile = new BaseResourceDataBean();
                     }
-                    resourceFile.setDescr(fileDescription);
-                    resourceFile.setMainGroup(getMainGroup());
+                    resourceFile.setDescr(fileDescription.trim());
+                    resourceFile.setMainGroup(this.getMainGroup());
                     resourceFile.setResourceType(this.getResourceType());
                     resourceFile.setCategories(getCategories());
                     logger.debug("Save method, action {}", this.getStrutsAction());
@@ -258,14 +255,10 @@ public class MultipleResourceAction extends ResourceAction {
                     } else {
                         resourceFile.setMetadata(imgMetadata);
                     }
-
-                    baseResourceDataBeanList = new ArrayList<>();
-                    baseResourceDataBeanList.add(resourceFile);
                     String fileUploadName = getFileUploadFileName(index);
-
                     try {
                         if (ApsAdminSystemConstants.ADD == this.getStrutsAction()) {
-                            this.getResourceManager().addResources(baseResourceDataBeanList);
+                            this.getResourceManager().addResource(resourceFile);
                             this.addActionMessage(this.getText("message.resource.filename.uploaded",
                                     new String[]{fileUploadName}));
                             savedId.add(index);
@@ -280,13 +273,11 @@ public class MultipleResourceAction extends ResourceAction {
                                 new String[]{fileUploadName}));
                     }
                 }
-
                 if (deleteTempFile) {
                     logger.debug("Delete temp file {}", file.getAbsolutePath());
                     file.delete();
                     deleteTempFile = false;
                 }
-
                 index++;
             }
         } catch (Throwable t) {

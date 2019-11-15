@@ -13,9 +13,6 @@
  */
 package org.entando.entando.plugins.jacms.aps.system.services.content;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.agiletec.aps.system.common.IManager;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
@@ -42,10 +39,6 @@ import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModel
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentRenderizationInfo;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.IContentDispenser;
 import com.agiletec.plugins.jacms.aps.system.services.searchengine.ICmsSearchEngineManager;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
@@ -70,6 +63,12 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static org.entando.entando.plugins.jacms.web.content.ContentController.ERRCODE_CONTENT_NOT_FOUND;
+import static org.entando.entando.plugins.jacms.web.content.ContentController.ERRCODE_CONTENT_REFERENCES;
+
 public class ContentService extends AbstractEntityService<Content, ContentDto>
         implements IContentService,
         GroupServiceUtilizer<ContentDto>, CategoryServiceUtilizer<ContentDto>,
@@ -77,10 +76,6 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
         ApplicationContextAware {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
-
-    private static final String ERRCODE_CONTENT_NOT_FOUND = "1";
-    private static final String ERRCODE_STATUS_INVALID = "3";
-    private static final String ERRCODE_CONTENT_REFERENCES = "5";
 
     private ILangManager langManager;
     private IContentManager contentManager;
@@ -320,7 +315,7 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
                 lang = this.getLangManager().getLang(langCode);
                 if (null == lang) {
                     bindingResult.reject(ContentController.ERRCODE_INVALID_LANG_CODE,
-                            new String[]{modelId, dto.getTypeCode()}, "content.model.invalidLangCode");
+                            new String[]{modelId, dto.getTypeCode()}, "plugins.jacms.content.model.invalidLangCode");
                     throw new ValidationGenericException(bindingResult);
                 }
             }
@@ -344,13 +339,13 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
         }
         if (modelId.equals("default")) {
             if (null == dto.getDefaultModel()) {
-                bindingResult.reject(ContentController.ERRCODE_INVALID_MODEL, "content.model.nullDefaultModel");
+                bindingResult.reject(ContentController.ERRCODE_INVALID_MODEL, "plugins.jacms.content.model.nullDefaultModel");
                 throw new ValidationGenericException(bindingResult);
             }
             modelIdInteger = Integer.parseInt(dto.getDefaultModel());
         } else if (modelId.equals("list")) {
             if (null == dto.getListModel()) {
-                bindingResult.reject(ContentController.ERRCODE_INVALID_MODEL, "content.model.nullListModel");
+                bindingResult.reject(ContentController.ERRCODE_INVALID_MODEL, "plugins.jacms.content.model.nullListModel");
                 throw new ValidationGenericException(bindingResult);
             }
             modelIdInteger = Integer.parseInt(dto.getListModel());
@@ -359,11 +354,11 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
         }
         ContentModel model = this.getContentModelManager().getContentModel(modelIdInteger);
         if (model == null) {
-            bindingResult.reject(ContentController.ERRCODE_INVALID_MODEL, new String[]{modelId}, "content.model.nullModel");
+            bindingResult.reject(ContentController.ERRCODE_INVALID_MODEL, new String[]{modelId}, "plugins.jacms.content.model.nullModel");
             throw new ValidationGenericException(bindingResult);
         } else if (!dto.getTypeCode().equals(model.getContentType())) {
             bindingResult.reject(ContentController.ERRCODE_INVALID_MODEL,
-                    new String[]{modelId, dto.getTypeCode()}, "content.model.invalid");
+                    new String[]{modelId, dto.getTypeCode()}, "plugins.jacms.content.model.invalid");
             throw new ValidationGenericException(bindingResult);
         }
         return modelIdInteger;
@@ -372,7 +367,7 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
     @Override
     public ContentDto addContent(ContentDto request, UserDetails user, BindingResult bindingResult) {
         if (!this.getAuthorizationManager().isAuthOnGroup(user, request.getMainGroup())) {
-            bindingResult.reject(ContentController.ERRCODE_UNAUTHORIZED_CONTENT, new String[]{request.getMainGroup()}, "content.group.unauthorized");
+            bindingResult.reject(ContentController.ERRCODE_UNAUTHORIZED_CONTENT, new String[]{request.getMainGroup()}, "plugins.jacms.content.group.unauthorized");
             throw new ResourcePermissionsException(bindingResult);
         }
         request.setId(null);
@@ -381,6 +376,7 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
 
     @Override
     public ContentDto updateContent(ContentDto request, UserDetails user, BindingResult bindingResult) {
+        this.checkContentExists(request.getId());
         this.checkContentAuthorization(user, request.getId(), false, true, bindingResult);
         return super.updateEntity(JacmsSystemConstants.CONTENT_MANAGER, request, bindingResult);
     }
@@ -397,7 +393,7 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
             BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(code, "content");
             if (null != publicContent) {
                 bindingResult.reject(ContentController.ERRCODE_DELETE_PUBLIC_PAGE,
-                        new String[]{code}, "content.status.published");
+                        new String[]{code}, "plugins.jacms.content.status.published");
                 throw new ValidationGenericException(bindingResult);
             }
             this.getContentManager().deleteContent(content);
@@ -433,7 +429,7 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
                         ContentServiceUtilizer serviceUtilizer = iter.next();
                         List utilizer = serviceUtilizer.getContentUtilizer(code);
                         if (null != utilizer && utilizer.size() > 0) {
-                            bindingResult.reject(ContentController.ERRCODE_REFERENCED_ONLINE_CONTENT, new String[]{code}, "content.status.invalid.online.ref");
+                            bindingResult.reject(ContentController.ERRCODE_REFERENCED_ONLINE_CONTENT, new String[]{code}, "plugins.jacms.content.status.invalid.online.ref");
                             throw new ValidationGenericException(bindingResult);
                         }
                     }
@@ -522,7 +518,7 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
             if (!(publicVersion && !edit && null != pcai && pcai.isUserAllowed(userGroupCodes))
                     && !this.getContentAuthorizationHelper().isAuthToEdit(userDetails, contentId, publicVersion)) {
                 BindingResult bindingResult = (null == mainBindingResult) ? new BeanPropertyBindingResult(contentId, "content") : mainBindingResult;
-                bindingResult.reject(ContentController.ERRCODE_UNAUTHORIZED_CONTENT, new String[]{contentId}, "content.unauthorized.access");
+                bindingResult.reject(ContentController.ERRCODE_UNAUTHORIZED_CONTENT, new String[]{contentId}, "plugins.jacms.content.unauthorized.access");
                 throw new ResourcePermissionsException(bindingResult);
             }
         } catch (ResourceNotFoundException | ResourcePermissionsException ex) {
@@ -530,6 +526,17 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
         } catch (Exception ex) {
             logger.error("error checking auth for content {}", contentId, ex);
             throw new RestServerError("error checking auth for content", ex);
+        }
+    }
+
+    protected void checkContentExists(String code) {
+        try {
+            if (null == getContentManager().loadContent(code, false)) {
+                logger.error("Content not found: " + code);
+                throw new ResourceNotFoundException(ERRCODE_CONTENT_NOT_FOUND, "content", code);
+            }
+        } catch (ApsSystemException ex) {
+            throw new RestServerError("plugins.jacms.content.contentManager.error.read", null);
         }
     }
 

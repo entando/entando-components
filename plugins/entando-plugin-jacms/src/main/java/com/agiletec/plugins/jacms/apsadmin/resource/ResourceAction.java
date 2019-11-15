@@ -561,5 +561,17 @@ public class ResourceAction extends AbstractResourceAction implements ResourceDa
             logger.debug("resource {} metadata size: {}", this.getResourceId(), getMetadata().size());
         }
     }
-    
+
+    @Override
+    public String getOwner() {
+        //Do nothing as these Actions are destined to die
+        return null;
+    }
+
+    @Override
+    public void setOwner(String owner) {
+        //Do nothing as these Actions are destined to die
+    }
+
+
 }

@@ -111,7 +111,6 @@ public class IdeaManager extends AbstractService implements IIdeaManager, Catego
 				titles.put(langCode, "Crowd Sourcing Root");
 			}
 			categoryRoot.setTitles(titles);
-			categoryRoot.setParent(root);
 			categoryRoot.setParentCode(root.getCode());
 			this.getCategoryManager().addCategory(categoryRoot);
 			_logger.debug("Crowd Sourcing category root Created ");

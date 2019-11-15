@@ -178,14 +178,13 @@
                                         <span class="label label-info">
                                             <span class="icon fa fa-tag"></span>
                                             &#32;
-                                            <abbr title="<s:property value="#resourceCategory.getFullTitle(currentLang.code)"/>">
-                                            <s:property value="#resourceCategory.getShortFullTitle(currentLang.code)"/>
+                                            <abbr title="<s:property value="%{getFullTitle(#resourceCategory, currentLang.code)}"/>">
+                                            <s:property value="%{getShortFullTitle(#resourceCategory, currentLang.code)}"/>
                                         </abbr>
                                         &#32;
                                         <button type="button" class="btn btn-link"
-                                                onclick="categoriesAjax.removeCategory('removeCategory', '<s:property
-                                                        value="#resourceCategory.code"/>')"
-                                                title="<s:property value="%{getText('label.remove') + ' ' + #resourceCategory.defaultFullTitle}" />">
+                                                onclick="categoriesAjax.removeCategory('removeCategory', '<s:property value="#resourceCategory.code"/>')" 
+                                                title="<s:property value="%{getText('label.remove') + ' ' + getDefaultFullTitle(#resourceCategory)}" />">
                                             <span class="pficon pficon-close white"></span>
                                             <span class="sr-only">x</span>
                                         </button>
@@ -713,7 +712,7 @@
     <div class="form-horizontal">
         <div class="form-group">
             <div class="col-sm-12 margin-small-vertical">
-                <input id="submit" type="submit" value="Submit" class="btn btn-primary pull-right">
+                <input id="submit" type="submit" value="<s:property value="%{getText('label.' + resourceTypeCode + '.new')}" escapeXml="true" />" class="btn btn-primary pull-right">
             </div>
         </div>
     </div>

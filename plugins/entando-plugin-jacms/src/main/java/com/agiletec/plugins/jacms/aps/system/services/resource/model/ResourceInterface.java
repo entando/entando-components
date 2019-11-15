@@ -209,13 +209,23 @@ public interface ResourceInterface {
     public String getXML();
 
     /**
-     * Ricava ed salva tutte le istanze associate ad una risorsa, valorizzando
-     * quest'ultima con i dati delle istanze ricavate.
+     * Obtain and save all instances associated with a resource, valuing the latter
+     *      * with the data of the instances obtained.
      *
-     * @param bean L'oggetto detentore dei dati della risorsa da inserire.
+     * @param bean The object holding the data of the resource to insert.
      * @throws ApsSystemException In caso di eccezioni.
      */
     public void saveResourceInstances(ResourceDataBean bean) throws ApsSystemException;
+
+    /**
+     * Obtain and save all instances associated with a resource, valuing the latter
+     * with the data of the instances obtained.
+     *
+     * @param bean The object holding the data of the resource to insert.
+     * @param ignoreMetadataKeys The list of metadata keys to ignore when processing the resource
+     * @throws ApsSystemException In caso di eccezioni.
+     */
+    public void saveResourceInstances(ResourceDataBean bean, List<String> ignoreMetadataKeys) throws ApsSystemException;
 
     /**
      * Cancella tutte le istanze associate alla risorsa.
@@ -260,5 +270,17 @@ public interface ResourceInterface {
      * risorsa xml nel database.
      */
     public void setMetadataIgnoreKeys(String metadataIgnoreKeys);
+
+    /**
+     * Returns the owner of the resource
+     * @return The owner's username
+     */
+    public String getOwner();
+
+    /**
+     * Sets the owner of the resource
+     * @param owner The owner's username
+     */
+    public void setOwner(String owner);
 
 }

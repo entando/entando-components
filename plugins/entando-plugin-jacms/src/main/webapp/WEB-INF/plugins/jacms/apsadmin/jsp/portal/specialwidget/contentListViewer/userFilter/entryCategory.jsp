@@ -91,7 +91,13 @@
                         <label for="userFilterCategoryCode">
                             <s:text name="label.userFilterCategory" />
                         </label>
-                        <wpsf:select name="userFilterCategoryCode" id="userFilterCategoryCode" list="categories" listKey="code" listValue="getShortFullTitle(currentLang.code)" headerKey="" headerValue="%{getText('label.all')}" cssClass="form-control" />
+                        <select name="userFilterCategoryCode" id="userFilterCategoryCode" class="form-control">
+                            <option value=""><s:text name="label.all" /></option>
+                            <s:iterator value="categories" var="categoryVar">
+                                <option <s:if test="%{userFilterCategoryCode == #categoryVar.code}">selected="selected"</s:if> 
+                                    value="<s:property value="#categoryVar.code"/>"><s:property value="%{getShortFullTitle(#categoryVar, currentLang.code)}"/></option>
+                            </s:iterator>
+                        </select>
                     </div>
                 </div>
             </div>

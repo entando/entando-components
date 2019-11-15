@@ -59,14 +59,14 @@ public class FacetNodeTitleTag extends ExtendedTagSupport {
                 Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
                 String title = facetNode.getTitles().getProperty(currentLang.getCode());
                 if (this.isFullTitle()) {
-                    title = facetNode.getFullTitle(currentLang.getCode(), separator);
+                    title = facetNode.getFullTitle(currentLang.getCode(), separator, facetManager);
                 }
                 if (null == title || title.trim().length() == 0) {
                     ILangManager langManager = (ILangManager) ApsWebApplicationUtils.getBean(SystemConstants.LANGUAGE_MANAGER, this.pageContext);
                     Lang defaultLang = langManager.getDefaultLang();
                     title = facetNode.getTitles().getProperty(defaultLang.getCode());
                     if (this.isFullTitle()) {
-                        title = facetNode.getFullTitle(defaultLang.getCode(), separator);
+                        title = facetNode.getFullTitle(defaultLang.getCode(), separator, facetManager);
                     }
                 }
                 if (null == title || title.trim().length() == 0) {

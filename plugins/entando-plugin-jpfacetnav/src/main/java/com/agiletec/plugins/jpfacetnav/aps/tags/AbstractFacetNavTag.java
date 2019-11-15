@@ -115,7 +115,8 @@ public abstract class AbstractFacetNavTag extends TagSupport {
 		ITreeNodeManager facetManager = this.getFacetManager();
 		while (requredFacetIterator.hasNext()) {
 			String reqNode = (String) requredFacetIterator.next();
-			ITreeNode parent = facetManager.getNode(reqNode).getParent();
+			ITreeNode currentNode = facetManager.getNode(reqNode);
+            ITreeNode parent = facetManager.getNode(currentNode.getParentCode());
 			if (this.isChildOf(parent, selectedNode)) nodesToRemove.add(reqNode);
 		}
 		for (int i=0; i<nodesToRemove.size(); i++) {
@@ -143,8 +144,8 @@ public abstract class AbstractFacetNavTag extends TagSupport {
 		if (nodeToCheck.getCode().equals(codeForCheck)) {
 			return true;
 		}
-		ITreeNode parentFacet = nodeToCheck.getParent();
-		if (null != parentFacet && !parentFacet.getCode().equals(parentFacet.getParent().getCode())) {
+		ITreeNode parentFacet = this.getFacetManager().getNode(nodeToCheck.getParentCode());
+		if (null != parentFacet && !parentFacet.getCode().equals(parentFacet.getParentCode())) {
 			return this.isChildOf(parentFacet, codeForCheck);
 		}
 		return false;

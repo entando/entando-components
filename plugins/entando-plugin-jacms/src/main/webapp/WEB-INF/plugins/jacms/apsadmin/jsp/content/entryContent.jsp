@@ -116,8 +116,7 @@
 
         <div class="form-group<s:property value="#controlGroupErrorClass" />">
             <label class="col-sm-2 control-label" for="extraGroups">
-                <s:text name="label.join" />&#32;<s:text name="label.group" />
-                <i class="fa fa-asterisk required-icon"></i>
+                <s:text name="label.extraGroups" />
             </label>
             <div class="col-sm-10">
                 <!-- Extra Groups Add -->
@@ -183,7 +182,6 @@
         <p class="sr-only">
             <wpsf:hidden name="contentOnSessionMarker" />
             <wpsf:hidden name="resourceTypeCode" id="resourceTypeCode"/>
-
         </p>
 
         <p class="sr-only" id="quickmenu"><s:text name="title.quickMenu" /></p>
@@ -213,7 +211,6 @@
                         <s:iterator value="content.attributeList" var="attribute"><%-- attributes iterator --%>
                             <div id="<s:property value="%{'contentedit_'+#lang.code+'_'+#attribute.name}" />"><%-- contentedit div --%>
                                 <wpsa:tracerFactory var="attributeTracer" lang="%{#lang.code}" /><%-- tracer init --%>
-
                                 <s:set var="attributeFieldErrorsVar" value="%{fieldErrors[#attribute.name]}" />
                                 <s:set var="attributeHasFieldErrorVar" value="#attributeFieldErrorsVar != null && !#attributeFieldErrorsVar.isEmpty()" />
                                 <s:set var="attributeFieldNameErrorsVar" value="%{fieldErrors[#attributeTracer.getFormFieldName(#attribute)]}" />

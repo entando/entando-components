@@ -37,14 +37,13 @@
                         <s:text name="label.categories" />
                     </label>
                     <div class="col-sm-10 input-group">
-                        <wpsf:select name="catCode"
-                                     id="category"
-                                     list="systemCategories"
-                                     listKey="code"
-                                     listValue="getShortFullTitle(currentLang.code)"
-                                     headerKey=""
-                                     headerValue="%{getText('label.all')}"
-                                     cssClass="form-control" />
+                        <select name="catCode" id="catCode" class="form-control">
+                            <option value=""><s:text name="label.all" /></option>
+                            <s:iterator value="systemCategories" var="categoryVar">
+                                <option <s:if test="%{catCode == #categoryVar.code}">selected="selected"</s:if> 
+                                    value="<s:property value="#categoryVar.code"/>"><s:property value="%{getShortFullTitle(#categoryVar, currentLang.code)}"/></option>
+                            </s:iterator>
+                        </select>
                         <div class="input-group-btn">
                             <wpsf:submit type="button" action="addCategory" cssClass="btn btn-primary">
                                 <span class="icon fa fa-plus"></span>&#32;

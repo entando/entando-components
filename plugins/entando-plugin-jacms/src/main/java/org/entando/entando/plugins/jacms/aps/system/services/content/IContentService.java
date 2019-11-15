@@ -20,6 +20,8 @@ import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.springframework.validation.BindingResult;
 
+import java.util.List;
+
 /**
  * @author E.Santoboni
  */
