@@ -274,9 +274,14 @@ public class ContentManager extends ApsEntityManager
             if (updateDate) {
                 content.incrementVersion(false);
             }
-            if (!Content.STATUS_READY.equals(content.getStatus())) {
+
+            String status = content.getStatus();
+            if (null == status || status.equals(Content.STATUS_PUBLIC)) {
                 content.setStatus(Content.STATUS_DRAFT);
+            } else {
+                content.setStatus(status);
             }
+
             if (null == content.getId()) {
                 IKeyGeneratorManager keyGenerator = (IKeyGeneratorManager) this.getService(SystemConstants.KEY_GENERATOR_MANAGER);
                 int key = keyGenerator.getUniqueKeyCurrentValue();
