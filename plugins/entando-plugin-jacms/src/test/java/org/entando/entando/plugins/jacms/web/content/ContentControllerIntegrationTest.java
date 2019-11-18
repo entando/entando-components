@@ -14,6 +14,7 @@
 package org.entando.entando.plugins.jacms.web.content;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
+import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.attribute.DateAttribute;
@@ -855,6 +856,50 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                 this.contentManager.deleteContent(masterContent);
             }
         }
+    }
+
+    @Test
+    public void testFilteredContent_1() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("sort", IContentManager.CONTENT_CREATION_DATE_FILTER_KEY)
+                        .param("direction", FieldSearchFilter.DESC_ORDER)
+                        .param("filters[0].attribute", "description")
+                        .param("filters[0].value", "Sagra")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+        String bodyResult = result.andReturn().getResponse().getContentAsString();
+        result.andExpect(status().isOk());
+        String expectedContentId = "EVN21";
+        int payloadSize = JsonPath.read(bodyResult, "$.payload.size()");
+        String extractedId = JsonPath.read(bodyResult, "$.payload[" + 0 + "].id");
+        Assert.assertEquals(expectedContentId, extractedId);
+    }
+
+    @Test
+    public void testFilteredContent_2() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("sort", IContentManager.CONTENT_CREATION_DATE_FILTER_KEY)
+                        .param("direction", FieldSearchFilter.DESC_ORDER)
+                        .param("filters[0].attribute", "id")
+                        .param("filters[0].value", "EVN194")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+        String bodyResult = result.andReturn().getResponse().getContentAsString();
+        result.andExpect(status().isOk());
+        String expectedContentId = "EVN194";
+        int payloadSize = JsonPath.read(bodyResult, "$.payload.size()");
+        String extractedId = JsonPath.read(bodyResult, "$.payload[" + 0 + "].id");
+        Assert.assertEquals(expectedContentId, extractedId);
     }
 
     @Test

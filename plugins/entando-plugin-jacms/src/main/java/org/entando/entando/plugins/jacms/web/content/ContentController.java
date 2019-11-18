@@ -13,6 +13,7 @@
  */
 package org.entando.entando.plugins.jacms.web.content;
 
+import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
@@ -21,10 +22,12 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.servlet.http.HttpSession;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
+import org.entando.entando.web.common.model.*;
 import org.entando.entando.web.entity.validator.EntityValidator;
 import org.entando.entando.plugins.jacms.web.content.validator.ContentValidator;
 import org.slf4j.Logger;
@@ -41,10 +44,6 @@ import javax.validation.Valid;
 import org.entando.entando.plugins.jacms.web.content.validator.BatchContentStatusRequest;
 import org.entando.entando.plugins.jacms.web.content.validator.ContentStatusRequest;
 import org.entando.entando.plugins.jacms.web.content.validator.RestContentListRequest;
-import org.entando.entando.web.common.model.PagedMetadata;
-import org.entando.entando.web.common.model.PagedRestResponse;
-import org.entando.entando.web.common.model.RestResponse;
-import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.entando.entando.web.common.validator.AbstractPaginationValidator;
 import org.springframework.validation.DataBinder;
 import org.springframework.validation.Errors;
@@ -124,9 +123,26 @@ public class ContentController {
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagedRestResponse<ContentDto>> getContents(RestContentListRequest requestList) {
         logger.debug("getting contents with request {} - status {}", requestList, requestList.getStatus());
+        if (requestList.getFilters() != null) {
+            normalizeFilters(requestList.getFilters());
+        }
         this.getPaginationValidator().validateRestListRequest(requestList, ContentDto.class);
         PagedMetadata<ContentDto> result = this.getContentService().getContents(requestList, this.extractCurrentUser());
         return new ResponseEntity<>(new PagedRestResponse<>(result), HttpStatus.OK);
+    }
+
+    private void normalizeFilters(Filter[] filters) {
+        Arrays.stream(filters).forEach(filter -> {
+            String filterFieldName = filter.getAttribute();
+            if (null != filterFieldName) {
+                if ("id".equalsIgnoreCase(filterFieldName)) {
+                    filterFieldName = IEntityManager.ENTITY_ID_FILTER_KEY;
+                } else if ("description".equalsIgnoreCase(filterFieldName)) {
+                    filterFieldName = IContentManager.CONTENT_DESCR_FILTER_KEY;
+                }
+                filter.setAttribute(filterFieldName);
+            }
+        });
     }
 
     @RequestMapping(value = "/{code}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
