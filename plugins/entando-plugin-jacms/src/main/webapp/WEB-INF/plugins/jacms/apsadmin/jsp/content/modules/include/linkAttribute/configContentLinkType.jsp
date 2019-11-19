@@ -2,6 +2,7 @@
 <%@ taglib prefix="wp" uri="/aps-core" %>
 <%@ taglib prefix="wpsf" uri="/apsadmin-form" %>
 <%@ taglib prefix="wpsa" uri="/apsadmin-core" %>
+<%@ taglib prefix="jacmsapsadmin" uri="/jacms-apsadmin-core"%>
 
 <s:set var="thirdTitleVar">
     <s:text name="title.configureLinkAttribute" />
@@ -90,16 +91,18 @@
                     </div>
                 </div>
             </div>
-
+            <s:set var="maxSizeVar" value="10" />
+            <s:set var="paginatedContentIdsVar" value="%{getPaginatedContentsId(#maxSizeVar)}" />
+            <s:set var="contentIdsVar" value="#paginatedContentIdsVar.list" />
             <div class="col-xs-12">
-                <wpsa:subset source="contents" count="10" objectName="groupContent" advanced="true" offset="5">
+                <jacmsapsadmin:cmssubset pagerId="%{getPagerId()}" total="%{#paginatedContentIdsVar.count}" maxSize="#maxSizeVar" objectName="groupContent" offset="5" >
                     <p class="sr-only">
                     <wpsf:hidden name="lastGroupBy" />
                     <wpsf:hidden name="lastOrder" />
                     <wpsf:hidden name="contentOnSessionMarker" />
                     </p>
                     <s:set var="group" value="#groupContent" />
-                    <s:if test="%{getContents().size() > 0}">
+                    <s:if test="%{#contentIdsVar.size() > 0}">
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-hover no-mb">
                                 <thead>
@@ -207,7 +210,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <s:iterator var="contentId">
+                                    <s:iterator var="contentId" value="#contentIdsVar" >
                                         <s:set var="content" value="%{getContentVo(#contentId)}"></s:set>
                                             <tr>
                                                 <td><input type="radio" name="contentId" id="contentId_<s:property value="#content.id"/>" value="<s:property value="#content.id"/>" /></td>
@@ -235,7 +238,7 @@
                             </div>
                         </div>
                     </s:if>
-                </wpsa:subset>
+                </jacmsapsadmin:cmssubset>
             </div>
 
             <div class="col-xs-12">

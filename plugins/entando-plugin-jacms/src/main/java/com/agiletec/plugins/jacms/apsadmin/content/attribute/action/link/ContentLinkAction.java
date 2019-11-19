@@ -13,6 +13,8 @@
  */
 package com.agiletec.plugins.jacms.apsadmin.content.attribute.action.link;
 
+import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
+import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +33,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.SymbolicLink
 import com.agiletec.plugins.jacms.apsadmin.content.ContentActionConstants;
 import com.agiletec.plugins.jacms.apsadmin.content.ContentFinderAction;
 import com.agiletec.plugins.jacms.apsadmin.content.attribute.action.link.helper.ILinkAttributeActionHelper;
+import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * Classe action delegata alla gestione dei link a contenuto nelle 
@@ -39,7 +42,22 @@ import com.agiletec.plugins.jacms.apsadmin.content.attribute.action.link.helper.
  */
 public class ContentLinkAction extends ContentFinderAction {
 
-	private static final Logger _logger = LoggerFactory.getLogger(ContentLinkAction.class);
+	private static final Logger logger = LoggerFactory.getLogger(ContentLinkAction.class);
+	
+	private String contentOnSessionMarker;
+	
+	private String _contentId;
+	private boolean contentOnPageType;
+	
+	private String entryContentAnchorDest;
+	
+	private ILinkAttributeActionHelper linkAttributeHelper;
+
+	private String linkAttributeRel;
+
+	private String linkAttributeTarget;
+
+	private String linkAttributeHRefLang;
 
 	@Override
 	public String execute()  {
@@ -54,7 +72,25 @@ public class ContentLinkAction extends ContentFinderAction {
 		}
 		return result;
 	}
+    
+    @Override
+    public SearcherDaoPaginatedResult<String> getPaginatedContentsId(Integer limit) {
+        SearcherDaoPaginatedResult<String> result = null;
+		try {
+			List<String> allowedGroups = this.getContentGroupCodes();
+            EntitySearchFilter[] filters = this.createFilters();
+            if (null != limit) {
+                filters = ArrayUtils.add(filters, this.getPagerFilter(limit));
+            }
+			result = this.getContentManager().getPaginatedPublicContentsId(null, false, filters, allowedGroups);
+		} catch (Exception e) {
+			logger.error("error loading paginated contents", e);
+			throw new RuntimeException("error loading paginated contents", e);
+		}
+		return result;
+    }
 
+    @Deprecated
 	@Override
 	public List<String> getContents() {
 		List<String> result = null;
@@ -62,8 +98,7 @@ public class ContentLinkAction extends ContentFinderAction {
 			List<String> allowedGroups = this.getContentGroupCodes();
 			result = this.getContentManager().loadPublicContentsId(null, this.createFilters(), allowedGroups);
 		} catch (Throwable t) {
-			_logger.error("error loading contents", t);
-			//ApsSystemUtils.logThrowable(t, this, "getContents");
+			logger.error("error loading contents", t);
 			throw new RuntimeException("error loading contents", t);
 		}
 		return result;
@@ -72,7 +107,7 @@ public class ContentLinkAction extends ContentFinderAction {
 	public String joinContentLink() {
 		ContentRecordVO contentVo = this.getContentVo(this.getContentId());
 		if (null == contentVo || !contentVo.isOnLine()) {
-			_logger.error("Content '{}' does not exists or is not public", this.getContentId());
+			logger.error("Content '{}' does not exists or is not public", this.getContentId());
 			return FAILURE;
 		}
 		if (this.isContentOnPageType()) {
@@ -99,7 +134,7 @@ public class ContentLinkAction extends ContentFinderAction {
 	 */
 	@Override
 	protected List<String> getContentGroupCodes() {
-		List<String> allowedGroups = new ArrayList<String>();
+		List<String> allowedGroups = new ArrayList<>();
 		allowedGroups.add(Group.FREE_GROUP_NAME);
 		Content currentContent = this.getContent();
 		allowedGroups.add(currentContent.getMainGroup());
@@ -132,7 +167,6 @@ public class ContentLinkAction extends ContentFinderAction {
 	public String getLinkAttributeRel() {
 		return linkAttributeRel;
 	}
-
 	public void setLinkAttributeRel(String linkAttributeRel) {
 		this.linkAttributeRel = linkAttributeRel;
 	}
@@ -140,7 +174,6 @@ public class ContentLinkAction extends ContentFinderAction {
 	public String getLinkAttributeTarget() {
 		return linkAttributeTarget;
 	}
-
 	public void setLinkAttributeTarget(String linkAttributeTarget) {
 		this.linkAttributeTarget = linkAttributeTarget;
 	}
@@ -148,15 +181,15 @@ public class ContentLinkAction extends ContentFinderAction {
 	public String getLinkAttributeHRefLang() {
 		return linkAttributeHRefLang;
 	}
-
 	public void setLinkAttributeHRefLang(String linkAttributeHRefLang) {
 		this.linkAttributeHRefLang = linkAttributeHRefLang;
 	}
+    
 	public String getContentOnSessionMarker() {
-		return _contentOnSessionMarker;
+		return contentOnSessionMarker;
 	}
 	public void setContentOnSessionMarker(String contentOnSessionMarker) {
-		this._contentOnSessionMarker = contentOnSessionMarker;
+		this.contentOnSessionMarker = contentOnSessionMarker;
 	}
 	
 	public String getContentId() {
@@ -167,20 +200,20 @@ public class ContentLinkAction extends ContentFinderAction {
 	}
 	
 	public boolean isContentOnPageType() {
-		return _contentOnPageType;
+		return contentOnPageType;
 	}
 	public void setContentOnPageType(boolean contentOnPageType) {
-		this._contentOnPageType = contentOnPageType;
+		this.contentOnPageType = contentOnPageType;
 	}
 	
 	public String getEntryContentAnchorDest() {
-		if (null == this._entryContentAnchorDest) {
+		if (null == this.entryContentAnchorDest) {
 			this.buildEntryContentAnchorDest();
 		}
-		return _entryContentAnchorDest;
+		return entryContentAnchorDest;
 	}
 	protected void setEntryContentAnchorDest(String entryContentAnchorDest) {
-		this._entryContentAnchorDest = entryContentAnchorDest;
+		this.entryContentAnchorDest = entryContentAnchorDest;
 	}
 	
 	/**
@@ -188,29 +221,14 @@ public class ContentLinkAction extends ContentFinderAction {
 	 * @return La classe helper degli attributi di tipo Link.
 	 */
 	protected ILinkAttributeActionHelper getLinkAttributeHelper() {
-		return _linkAttributeHelper;
+		return linkAttributeHelper;
 	}
 	/**
 	 * Setta la classe helper della gestione degli attributi di tipo Link.
 	 * @param linkAttributeHelper La classe helper degli attributi di tipo Link.
 	 */
 	public void setLinkAttributeHelper(ILinkAttributeActionHelper linkAttributeHelper) {
-		this._linkAttributeHelper = linkAttributeHelper;
+		this.linkAttributeHelper = linkAttributeHelper;
 	}
-	
-	private String _contentOnSessionMarker;
-	
-	private String _contentId;
-	private boolean _contentOnPageType;
-	
-	private String _entryContentAnchorDest;
-	
-	private ILinkAttributeActionHelper _linkAttributeHelper;
-
-	private String linkAttributeRel;
-
-	private String linkAttributeTarget;
-
-	private String linkAttributeHRefLang;
 
 }
