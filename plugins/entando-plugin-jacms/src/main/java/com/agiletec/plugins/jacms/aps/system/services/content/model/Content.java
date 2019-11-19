@@ -49,6 +49,7 @@ public class Content extends ApsEntity {
     @Deprecated
     public static final String STATES_NEW = "Nuovo";
 
+    @Deprecated
     public static final String STATUS_NEW = "NEW";
 
     /**
