@@ -13,6 +13,8 @@
  */
 package com.agiletec.plugins.jacms.apsadmin.content.attribute.action.hypertext;
 
+import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
+import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +25,7 @@ import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.apsadmin.content.ContentActionConstants;
 import com.agiletec.plugins.jacms.apsadmin.content.ContentFinderAction;
+import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * Classe action delegata alla gestione dei jAPSLinks (link interni al testo degli attributi Hypertext) su contenuto.
@@ -30,18 +33,37 @@ import com.agiletec.plugins.jacms.apsadmin.content.ContentFinderAction;
  */
 public class ContentLinkAttributeAction extends ContentFinderAction {
 
-	private static final Logger _logger = LoggerFactory.getLogger(ContentLinkAttributeAction.class);
+	private static final Logger logger = LoggerFactory.getLogger(ContentLinkAttributeAction.class);
 	
+	private String contentOnSessionMarker;
+    
+    @Override
+    public SearcherDaoPaginatedResult<String> getPaginatedContentsId(Integer limit) {
+        SearcherDaoPaginatedResult<String> result = null;
+		try {
+			List<String> allowedGroups = this.getContentGroupCodes();
+            EntitySearchFilter[] filters = this.getFilters();
+            if (null != limit) {
+                filters = ArrayUtils.add(filters, this.getPagerFilter(limit));
+            }
+			result = this.getContentManager().getPaginatedPublicContentsId(null, false, filters, allowedGroups);
+		} catch (Exception e) {
+			logger.error("error loading paginated contents", e);
+			throw new RuntimeException("error loading paginated contents", e);
+		}
+		return result;
+    }
+	
+    @Deprecated
 	@Override
 	public List<String> getContents() {
 		List<String> result = null;
 		try {
 			List<String> allowedGroups = this.getContentGroupCodes();
 			result = this.getContentManager().loadPublicContentsId(null, this.getFilters(), allowedGroups);
-		} catch (Throwable t) {
-			_logger.error("error in getContents", t);
-			//ApsSystemUtils.logThrowable(t, this, "getContents");
-			throw new RuntimeException("error in getContents", t);
+		} catch (Exception e) {
+			logger.error("error in getContents", e);
+			throw new RuntimeException("error in getContents", e);
 		}
 		return result;
 	}
@@ -54,7 +76,7 @@ public class ContentLinkAttributeAction extends ContentFinderAction {
 	 */
 	@Override
 	protected List<String> getContentGroupCodes() {
-		List<String> allowedGroups = new ArrayList<String>();
+		List<String> allowedGroups = new ArrayList<>();
 		allowedGroups.add(Group.FREE_GROUP_NAME);
 		Content currentContent = this.getContent();
 		allowedGroups.add(currentContent.getMainGroup());
@@ -67,12 +89,10 @@ public class ContentLinkAttributeAction extends ContentFinderAction {
 	}
 	
 	public String getContentOnSessionMarker() {
-		return _contentOnSessionMarker;
+		return contentOnSessionMarker;
 	}
 	public void setContentOnSessionMarker(String contentOnSessionMarker) {
-		this._contentOnSessionMarker = contentOnSessionMarker;
+		this.contentOnSessionMarker = contentOnSessionMarker;
 	}
-	
-	private String _contentOnSessionMarker;
 	
 }

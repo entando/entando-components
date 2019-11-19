@@ -13,6 +13,8 @@
  */
 package com.agiletec.plugins.jacms.apsadmin.portal.specialwidget.viewer;
 
+import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
+import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -26,6 +28,7 @@ import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.plugins.jacms.apsadmin.content.ContentFinderAction;
+import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * Classe Action che cerca i contenuti per la configurazione dei widget di tipo "Pubblica contenuto singolo".
@@ -36,20 +39,43 @@ public class ContentFinderViewerAction extends ContentFinderAction {
     
     private static final Logger _logger = LoggerFactory.getLogger(ContentFinderViewerAction.class);
     
+    private String pageCode;
+    private int frame = -1;
+    private String widgetTypeCode;
+    
+    private String contentId;
+    private String modelId;
+    
+    private IPageManager pageManager;
+    private IWidgetTypeManager widgetTypeManager;
+    
     @Override
+    public SearcherDaoPaginatedResult<String> getPaginatedContentsId(Integer limit) {
+        SearcherDaoPaginatedResult<String> result = null;
+		try {
+			List<String> allowedGroups = this.getContentGroupCodes();
+            EntitySearchFilter[] filters = this.getFilters();
+            if (null != limit) {
+                filters = ArrayUtils.add(filters, this.getPagerFilter(limit));
+            }
+			result = this.getContentManager().getPaginatedPublicContentsId(null, false, filters, allowedGroups);
+		} catch (Exception e) {
+			_logger.error("error loading paginated contents", e);
+			throw new RuntimeException("error loading paginated contents", e);
+		}
+		return result;
+    }
+	
+    @Deprecated
+	@Override
     public List<String> getContents() {
         List<String> result = null;
         try {
             List<String> allowedGroups = this.getContentGroupCodes();
             result = this.getContentManager().loadPublicContentsId(null, this.getFilters(), allowedGroups);
-            /*
-			 * Non propriamente corretto; deve estrarre i contenuti che sono
-			 * visualizzabili (singolarmente) da tutti i gruppi a cui appartiene
-			 * la pagina.
-             */
         } catch (Throwable t) {
-            _logger.error("Error searching contents ", t);
-            throw new RuntimeException("Errore in ricerca contenuti", t);
+            _logger.error("Error searching contents", t);
+            throw new RuntimeException("Error searching contents", t);
         }
         return result;
     }
@@ -136,19 +162,19 @@ public class ContentFinderViewerAction extends ContentFinderAction {
     }
     
     public String getPageCode() {
-        return _pageCode;
+        return pageCode;
     }
     
     public void setPageCode(String pageCode) {
-        this._pageCode = pageCode;
+        this.pageCode = pageCode;
     }
     
     public int getFrame() {
-        return _frame;
+        return frame;
     }
     
     public void setFrame(int frame) {
-        this._frame = frame;
+        this.frame = frame;
     }
     
     @Deprecated
@@ -162,53 +188,43 @@ public class ContentFinderViewerAction extends ContentFinderAction {
     }
     
     public String getWidgetTypeCode() {
-        return _widgetTypeCode;
+        return widgetTypeCode;
     }
     
     public void setWidgetTypeCode(String widgetTypeCode) {
-        this._widgetTypeCode = widgetTypeCode;
+        this.widgetTypeCode = widgetTypeCode;
     }
     
     public String getContentId() {
-        return _contentId;
+        return contentId;
     }
     
     public void setContentId(String contentId) {
-        this._contentId = contentId;
+        this.contentId = contentId;
     }
     
     public String getModelId() {
-        return _modelId;
+        return modelId;
     }
     
     public void setModelId(String modelId) {
-        this._modelId = modelId;
+        this.modelId = modelId;
     }
     
     protected IPageManager getPageManager() {
-        return _pageManager;
+        return pageManager;
     }
     
     public void setPageManager(IPageManager pageManager) {
-        this._pageManager = pageManager;
+        this.pageManager = pageManager;
     }
     
     public IWidgetTypeManager getWidgetTypeManager() {
-        return _widgetTypeManager;
+        return widgetTypeManager;
     }
     
     public void setWidgetTypeManager(IWidgetTypeManager widgetTypeManager) {
-        this._widgetTypeManager = widgetTypeManager;
+        this.widgetTypeManager = widgetTypeManager;
     }
-    
-    private String _pageCode;
-    private int _frame = -1;
-    private String _widgetTypeCode;
-    
-    private String _contentId;
-    private String _modelId;
-    
-    private IPageManager _pageManager;
-    private IWidgetTypeManager _widgetTypeManager;
     
 }
