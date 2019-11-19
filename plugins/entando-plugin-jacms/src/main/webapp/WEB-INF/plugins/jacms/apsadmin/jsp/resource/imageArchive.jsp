@@ -247,25 +247,27 @@
                                                     </s:if>
                                                 </ul>
                                             </div>
-
                                         </div>
-
                                         <div class="card-pf-top-element">
                                                 <%-- Dimension forced for img thumbnail --%>
                                             <img src="<s:property value="%{(null != #resource.getImagePath(1)) ? #resource.getImagePath(1) : #resource.getImagePath(0)}"/>" alt=" "
                                                  style="height:90px;max-width:130px" class="img-responsive center-block"/>
                                         </div>
                                         <h2 class="card-pf-title text-center">
-                                            <s:set var="fileNameVar" value="#resource.masterFileName"/>
-                                            <s:if test='%{#fileNameVar.length()>15}'>
-                                                <s:set var="fileNameVar"
-                                                       value='%{#fileNameVar.substring(0,7)+"..."+#fileNameVar.substring(#fileNameVar.length()-5)}'/>
-                                                <s:property value="#fileNameVar"/>
-                                            </s:if>
-                                            <s:else>
-                                                <s:property value="#fileNameVar"/>
-                                            </s:else>
+                                            <s:set var="fileDescriptionVar" value="#resource.description"/>
+                                            <s:if test='%{#fileDescriptionVar.length()>15}'>
+                                                <s:set var="fileDescriptionVar"
+                                                       value='%{#fileDescriptionVar.substring(0,7)+"..."+#fileDescriptionVar.substring(#fileDescriptionVar.length()-5)}'/>
+                                                <s:property value="#fileDescriptionVar"/>
+                                            </s:if><s:else><s:property value="#fileDescriptionVar"/></s:else>
                                             <div class="creation-dates-card">
+                                                <s:text name="label.filename" />&nbsp;
+                                                <s:set var="fileNameVar" value="#resource.masterFileName"/>
+                                                <s:if test='%{#fileNameVar.length()>15}'>
+                                                    <s:set var="fileNameVar"
+                                                           value='%{#fileNameVar.substring(0,7)+"..."+#fileNameVar.substring(#fileNameVar.length()-5)}'/>
+                                                    <s:property value="#fileNameVar"/>
+                                                </s:if><s:else><s:property value="#fileNameVar"/></s:else><br />
                                                 <s:text name="label.creationDate" />&nbsp;<s:date name="#resource.creationDate" format="dd/MM/yyyy HH:mm" /><br />
                                                 <s:text name="label.lastModified" />&nbsp;<s:date name="#resource.lastModified" format="dd/MM/yyyy HH:mm" />
                                             </div>
@@ -300,8 +302,6 @@
                 <wpsf:hidden name="contentOnSessionMarker"/>
                 </p>
                 <wpsa:subset source="resources" count="10" objectName="groupResource" advanced="true" offset="5">
-
-
                     <div class="list-group list-view-pf list-view-pf-view">
                         <s:set var="group" value="#groupResource"/>
                         <s:set var="imageDimensionsVar" value="imageDimensions"/>
@@ -326,7 +326,6 @@
                                 <s:param name="ownerGroupName" value="%{ownerGroupName}"/>
                                 <s:param name="treeNodesToOpen" value="%{treeNodesToOpen}"/>
                             </s:url>
-
                             <div class="list-group-item">
                                 <div class="list-view-pf-actions">
                                     <div class="dropdown pull-right dropdown-kebab-pf">
@@ -365,19 +364,20 @@
                                     <div class="list-view-pf-body">
                                         <div class="list-view-pf">
                                             <div class="list-group-item-heading" style="font-size: 16px">
+                                                <s:set var="descriptionVar" value="%{#resource.description}" />
+                                                <s:if test='%{#descriptionVar.length()>90}'>
+                                                    <s:set var="descriptionVar"
+                                                           value='%{#descriptionVar.substring(0,30) + "..." + #descriptionVar.substring(#descriptionVar.length()-30)}'/>
+                                                    <s:property value="#descriptionVar"/>
+                                                </s:if><s:else><s:property value="#descriptionVar"/></s:else>
+                                            </div>
+                                            <div class="list-group-item-text">
                                                 <s:set var="fileNameVar" value="#resource.masterFileName"/>
-                                                <s:set var="fileDescVar" value="#resource.description"/>
                                                 <s:if test='%{#fileNameVar.length()>24}'>
                                                     <s:set var="fileNameVar"
                                                            value='%{#fileNameVar.substring(0,10)+"..."+#fileNameVar.substring(#fileNameVar.length()-10)}'/>
                                                     <s:property value="#fileNameVar"/>
-                                                </s:if>
-                                                <s:else>
-                                                    <s:property value="#fileNameVar"/>
-                                                </s:else>
-                                            </div>
-                                            <div class="list-group-item-text">
-                                                <s:property value="#fileDescVar"/>
+                                                </s:if><s:else><s:property value="#fileNameVar"/></s:else>
                                             </div>
                                             <div class="creation-dates">
                                                 <div class="list-date">
@@ -461,3 +461,4 @@
         </s:if>
     </wp:ifauthorized>
 </div>
+                    

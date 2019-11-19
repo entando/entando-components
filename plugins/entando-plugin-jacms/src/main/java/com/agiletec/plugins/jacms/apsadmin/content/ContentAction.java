@@ -132,7 +132,7 @@ public class ContentAction extends AbstractContentAction {
         Content content = this.updateContentOnSession();
         try {
             if (null == content) {
-                _logger.error("Null content on session");
+                _logger.warn("Null content on session");
                 return FAILURE;
             }
             if (/* null == content.getId() && */null == content.getMainGroup()) {
