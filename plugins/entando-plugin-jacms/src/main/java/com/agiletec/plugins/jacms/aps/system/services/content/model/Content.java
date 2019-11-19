@@ -169,7 +169,7 @@ public class Content extends ApsEntity {
     @Override
     public IApsEntity getEntityPrototype() {
         Content content = (Content) super.getEntityPrototype();
-        content.setStatus(STATUS_DRAFT);
+        content.setStatus(STATUS_NEW);
         content.setVersion(INIT_VERSION);
         content.setViewPage(viewPage);
         content.setListModel(listModel);
