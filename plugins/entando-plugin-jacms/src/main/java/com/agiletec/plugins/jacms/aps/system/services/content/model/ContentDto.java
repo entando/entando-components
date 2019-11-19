@@ -176,7 +176,10 @@ public class ContentDto extends EntityDto implements Serializable {
         Content content = (Content) prototype;
         content.setFirstEditor(getFirstEditor());
         content.setLastEditor(getLastEditor());
-        content.setStatus(getStatus());
+
+        if(getStatus() != null) {
+            content.setStatus(getStatus());
+        }
     }
 
 }
