@@ -41,7 +41,6 @@ import org.entando.entando.plugins.jacms.web.content.validator.BatchContentStatu
 import org.entando.entando.plugins.jacms.web.content.validator.ContentStatusRequest;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
-import static org.hamcrest.CoreMatchers.is;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
@@ -50,6 +49,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 
+import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -872,12 +872,11 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[0].value", "Sagra")
                         .sessionAttr("user", user)
                         .header("Authorization", "Bearer " + accessToken));
-        String bodyResult = result.andReturn().getResponse().getContentAsString();
-        result.andExpect(status().isOk());
-        String expectedContentId = "EVN21";
-        int payloadSize = JsonPath.read(bodyResult, "$.payload.size()");
-        String extractedId = JsonPath.read(bodyResult, "$.payload[" + 0 + "].id");
-        Assert.assertEquals(expectedContentId, extractedId);
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(1)))
+                .andExpect(jsonPath("$.payload[0].id", is("EVN21")));
     }
 
     @Test
@@ -894,12 +893,11 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[0].value", "EVN194")
                         .sessionAttr("user", user)
                         .header("Authorization", "Bearer " + accessToken));
-        String bodyResult = result.andReturn().getResponse().getContentAsString();
-        result.andExpect(status().isOk());
-        String expectedContentId = "EVN194";
-        int payloadSize = JsonPath.read(bodyResult, "$.payload.size()");
-        String extractedId = JsonPath.read(bodyResult, "$.payload[" + 0 + "].id");
-        Assert.assertEquals(expectedContentId, extractedId);
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(1)))
+                .andExpect(jsonPath("$.payload[0].id", is("EVN194")));
     }
 
     @Test
