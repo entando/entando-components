@@ -717,30 +717,32 @@ jQuery(document).ready(function ($) {
     // If this is single image edit form retrieve image, convert it to base64 string to add it to Store as storeItem.
     if (singleImageEdit.length === 1) {
         var imagePath = singleImageEdit.data('value');
-        toDataUrl(imagePath, function (imageData) {
+        if (imagePath) {
+            toDataUrl(imagePath, function (imageData) {
 
-            var name = $('#descr_0').val();
-            var imageData = imageData;
-            var type = imageData.substring("data:".length, imageData.indexOf(";base64"));
+                var name = $('#descr_0').val();
+                var imageData = imageData;
+                var type = imageData.substring("data:".length, imageData.indexOf(";base64"));
 
-            var newFile = fileUploadManager.prepareFile(dataURLtoFile(imageData, name));
-            newFile.name = name;
-            newFile.domElements.$formGroup = $('#formGroup-0');
-            newFile.imageData = imageData;
+                var newFile = fileUploadManager.prepareFile(dataURLtoFile(imageData, name));
+                newFile.name = name;
+                newFile.domElements.$formGroup = $('#formGroup-0');
+                newFile.imageData = imageData;
 
 
-            var newFileId = fileUploadManager.insertFile(newFile);
-            var tabResult = addTab(newFileId);
+                var newFileId = fileUploadManager.insertFile(newFile);
+                var tabResult = addTab(newFileId);
 
-            // tabResult.$tabNavigationItem.removeClass('active');
-            // tabResult.$tabPane.removeClass('active');
+                // tabResult.$tabNavigationItem.removeClass('active');
+                // tabResult.$tabPane.removeClass('active');
 
-            fileUploadManager.files[newFileId].domElements.$tabNavigationItem = tabResult.$tabNavigationItem;
-            fileUploadManager.files[newFileId].domElements.$tabPane = tabResult.$tabPane;
+                fileUploadManager.files[newFileId].domElements.$tabNavigationItem = tabResult.$tabNavigationItem;
+                fileUploadManager.files[newFileId].domElements.$tabPane = tabResult.$tabPane;
 
-            // setupCropper(newFileId);
+                // setupCropper(newFileId);
 
-        });
+            });
+        }
     }
 
 
