@@ -14,6 +14,7 @@
 package org.entando.entando.plugins.jacms.web.content;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
+import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.attribute.DateAttribute;
@@ -40,7 +41,6 @@ import org.entando.entando.plugins.jacms.web.content.validator.BatchContentStatu
 import org.entando.entando.plugins.jacms.web.content.validator.ContentStatusRequest;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
-import static org.hamcrest.CoreMatchers.is;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
@@ -49,6 +49,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 
+import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -855,6 +856,48 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                 this.contentManager.deleteContent(masterContent);
             }
         }
+    }
+
+    @Test
+    public void testFilteredContent_1() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("sort", IContentManager.CONTENT_CREATION_DATE_FILTER_KEY)
+                        .param("direction", FieldSearchFilter.DESC_ORDER)
+                        .param("filters[0].attribute", "description")
+                        .param("filters[0].value", "Sagra")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(1)))
+                .andExpect(jsonPath("$.payload[0].id", is("EVN21")));
+    }
+
+    @Test
+    public void testFilteredContent_2() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("sort", IContentManager.CONTENT_CREATION_DATE_FILTER_KEY)
+                        .param("direction", FieldSearchFilter.DESC_ORDER)
+                        .param("filters[0].attribute", "id")
+                        .param("filters[0].value", "EVN194")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(1)))
+                .andExpect(jsonPath("$.payload[0].id", is("EVN194")));
     }
 
     @Test
