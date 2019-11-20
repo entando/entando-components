@@ -41,7 +41,6 @@ import org.entando.entando.plugins.jacms.web.content.validator.BatchContentStatu
 import org.entando.entando.plugins.jacms.web.content.validator.ContentStatusRequest;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
-import static org.hamcrest.CoreMatchers.is;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
@@ -50,6 +49,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 
+import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -873,17 +873,19 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[0].value", "EVN")
                         .sessionAttr("user", user)
                         .header("Authorization", "Bearer " + accessToken));
-        String bodyResult = result.andReturn().getResponse().getContentAsString();
-        result.andExpect(status().isOk());
-        String[] expectedFreeContentsId = {"EVN25", "EVN21",
-                "EVN20", "EVN194", "EVN193", "EVN192", "EVN191", "EVN23", "EVN24"};
-        int payloadSize = JsonPath.read(bodyResult, "$.payload.size()");
-        Assert.assertEquals(expectedFreeContentsId.length, payloadSize);
-        for (int i = 0; i < expectedFreeContentsId.length; i++) {
-            String expectedId = expectedFreeContentsId[i];
-            String extractedId = JsonPath.read(bodyResult, "$.payload[" + i + "].id");
-            Assert.assertEquals(expectedId, extractedId);
-        }
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(9)))
+                .andExpect(jsonPath("$.payload[0].id", is("EVN25")))
+                .andExpect(jsonPath("$.payload[1].id", is("EVN21")))
+                .andExpect(jsonPath("$.payload[2].id", is("EVN20")))
+                .andExpect(jsonPath("$.payload[3].id", is("EVN194")))
+                .andExpect(jsonPath("$.payload[4].id", is("EVN193")))
+                .andExpect(jsonPath("$.payload[5].id", is("EVN192")))
+                .andExpect(jsonPath("$.payload[6].id", is("EVN191")))
+                .andExpect(jsonPath("$.payload[7].id", is("EVN23")))
+                .andExpect(jsonPath("$.payload[8].id", is("EVN24")));
     }
 
     @Test
@@ -901,12 +903,11 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[0].value", "EVN")
                         .sessionAttr("user", user)
                         .header("Authorization", "Bearer " + accessToken));
-        String bodyResult = result.andReturn().getResponse().getContentAsString();
-        result.andExpect(status().isOk());
-        String expectedContentId = "EVN25";
-        int payloadSize = JsonPath.read(bodyResult, "$.payload.size()");
-        String extractedId = JsonPath.read(bodyResult, "$.payload[" + 0 + "].id");
-        Assert.assertEquals(expectedContentId, extractedId);
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(9)))
+                .andExpect(jsonPath("$.payload[0].id", is("EVN25")));
     }
 
     @Test
@@ -924,16 +925,9 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[0].value", "EVN")
                         .sessionAttr("user", user)
                         .header("Authorization", "Bearer " + accessToken));
-        String bodyResult = result.andReturn().getResponse().getContentAsString();
-        result.andExpect(status().isOk());
-        String[] expectedFreeContentsId = {};
-        int payloadSize = JsonPath.read(bodyResult, "$.payload.size()");
-        Assert.assertEquals(expectedFreeContentsId.length, payloadSize);
-        for (int i = 0; i < expectedFreeContentsId.length; i++) {
-            String expectedId = expectedFreeContentsId[i];
-            String extractedId = JsonPath.read(bodyResult, "$.payload[" + i + "].id");
-            Assert.assertEquals(expectedId, extractedId);
-        }
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(0)));
     }
 
     @Test
@@ -951,17 +945,18 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[0].value", "EVN")
                         .sessionAttr("user", user)
                         .header("Authorization", "Bearer " + accessToken));
-        String bodyResult = result.andReturn().getResponse().getContentAsString();
-        result.andExpect(status().isOk());
-        String[] expectedFreeContentsId = {"EVN20", "EVN192",
-                "EVN23", "EVN24", "EVN21", "EVN25", "EVN191", "EVN194", "EVN193"};
-        int payloadSize = JsonPath.read(bodyResult, "$.payload.size()");
-        Assert.assertEquals(expectedFreeContentsId.length, payloadSize);
-        for (int i = 0; i < expectedFreeContentsId.length; i++) {
-            String expectedId = expectedFreeContentsId[i];
-            String extractedId = JsonPath.read(bodyResult, "$.payload[" + i + "].id");
-            Assert.assertEquals(expectedId, extractedId);
-        }
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(9)))
+                .andExpect(jsonPath("$.payload[0].id", is("EVN20")))
+                .andExpect(jsonPath("$.payload[1].id", is("EVN192")))
+                .andExpect(jsonPath("$.payload[2].id", is("EVN23")))
+                .andExpect(jsonPath("$.payload[3].id", is("EVN24")))
+                .andExpect(jsonPath("$.payload[4].id", is("EVN21")))
+                .andExpect(jsonPath("$.payload[5].id", is("EVN25")))
+                .andExpect(jsonPath("$.payload[6].id", is("EVN191")))
+                .andExpect(jsonPath("$.payload[7].id", is("EVN194")))
+                .andExpect(jsonPath("$.payload[8].id", is("EVN193")));
     }
 
     @Test
@@ -979,17 +974,18 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[0].value", "EVN")
                         .sessionAttr("user", user)
                         .header("Authorization", "Bearer " + accessToken));
-        String bodyResult = result.andReturn().getResponse().getContentAsString();
-        result.andExpect(status().isOk());
-        String[] expectedFreeContentsId = {"EVN193", "EVN194",
-                "EVN191", "EVN25", "EVN21", "EVN24", "EVN23", "EVN192", "EVN20"};
-        int payloadSize = JsonPath.read(bodyResult, "$.payload.size()");
-        Assert.assertEquals(expectedFreeContentsId.length, payloadSize);
-        for (int i = 0; i < expectedFreeContentsId.length; i++) {
-            String expectedId = expectedFreeContentsId[i];
-            String extractedId = JsonPath.read(bodyResult, "$.payload[" + i + "].id");
-            Assert.assertEquals(expectedId, extractedId);
-        }
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(9)))
+                .andExpect(jsonPath("$.payload[0].id", is("EVN193")))
+                .andExpect(jsonPath("$.payload[1].id", is("EVN194")))
+                .andExpect(jsonPath("$.payload[2].id", is("EVN191")))
+                .andExpect(jsonPath("$.payload[3].id", is("EVN25")))
+                .andExpect(jsonPath("$.payload[4].id", is("EVN21")))
+                .andExpect(jsonPath("$.payload[5].id", is("EVN24")))
+                .andExpect(jsonPath("$.payload[6].id", is("EVN23")))
+                .andExpect(jsonPath("$.payload[7].id", is("EVN192")))
+                .andExpect(jsonPath("$.payload[8].id", is("EVN20")));
     }
 
     @Test
@@ -1007,17 +1003,18 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[0].value", "EVN")
                         .sessionAttr("user", user)
                         .header("Authorization", "Bearer " + accessToken));
-        String bodyResult = result.andReturn().getResponse().getContentAsString();
-        result.andExpect(status().isOk());
-        String[] expectedFreeContentsId = {"EVN21", "EVN20",
-                "EVN25", "EVN24", "EVN23", "EVN192", "EVN191", "EVN194", "EVN193"};
-        int payloadSize = JsonPath.read(bodyResult, "$.payload.size()");
-        Assert.assertEquals(expectedFreeContentsId.length, payloadSize);
-        for (int i = 0; i < expectedFreeContentsId.length; i++) {
-            String expectedId = expectedFreeContentsId[i];
-            String extractedId = JsonPath.read(bodyResult, "$.payload[" + i + "].id");
-            Assert.assertEquals(expectedId, extractedId);
-        }
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(9)))
+                .andExpect(jsonPath("$.payload[0].id", is("EVN21")))
+                .andExpect(jsonPath("$.payload[1].id", is("EVN20")))
+                .andExpect(jsonPath("$.payload[2].id", is("EVN25")))
+                .andExpect(jsonPath("$.payload[3].id", is("EVN24")))
+                .andExpect(jsonPath("$.payload[4].id", is("EVN23")))
+                .andExpect(jsonPath("$.payload[5].id", is("EVN192")))
+                .andExpect(jsonPath("$.payload[6].id", is("EVN191")))
+                .andExpect(jsonPath("$.payload[7].id", is("EVN194")))
+                .andExpect(jsonPath("$.payload[8].id", is("EVN193")));
     }
 
     @Test
@@ -1035,17 +1032,59 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[0].value", "EVN")
                         .sessionAttr("user", user)
                         .header("Authorization", "Bearer " + accessToken));
-        String bodyResult = result.andReturn().getResponse().getContentAsString();
-        result.andExpect(status().isOk());
-        String[] expectedFreeContentsId = {"EVN21", "EVN25",
-                "EVN24", "EVN23", "EVN20", "EVN194", "EVN193", "EVN192", "EVN191"};
-        int payloadSize = JsonPath.read(bodyResult, "$.payload.size()");
-        Assert.assertEquals(expectedFreeContentsId.length, payloadSize);
-        for (int i = 0; i < expectedFreeContentsId.length; i++) {
-            String expectedId = expectedFreeContentsId[i];
-            String extractedId = JsonPath.read(bodyResult, "$.payload[" + i + "].id");
-            Assert.assertEquals(expectedId, extractedId);
-        }
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(9)))
+                .andExpect(jsonPath("$.payload[0].id", is("EVN21")))
+                .andExpect(jsonPath("$.payload[1].id", is("EVN25")))
+                .andExpect(jsonPath("$.payload[2].id", is("EVN24")))
+                .andExpect(jsonPath("$.payload[3].id", is("EVN23")))
+                .andExpect(jsonPath("$.payload[4].id", is("EVN20")))
+                .andExpect(jsonPath("$.payload[5].id", is("EVN194")))
+                .andExpect(jsonPath("$.payload[6].id", is("EVN193")))
+                .andExpect(jsonPath("$.payload[7].id", is("EVN192")))
+                .andExpect(jsonPath("$.payload[8].id", is("EVN191")));
+    }
+
+    public void testFilteredContent_1() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("sort", IContentManager.CONTENT_CREATION_DATE_FILTER_KEY)
+                        .param("direction", FieldSearchFilter.DESC_ORDER)
+                        .param("filters[0].attribute", "description")
+                        .param("filters[0].value", "Sagra")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(1)))
+                .andExpect(jsonPath("$.payload[0].id", is("EVN21")));
+    }
+
+    @Test
+    public void testFilteredContent_2() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("sort", IContentManager.CONTENT_CREATION_DATE_FILTER_KEY)
+                        .param("direction", FieldSearchFilter.DESC_ORDER)
+                        .param("filters[0].attribute", "id")
+                        .param("filters[0].value", "EVN194")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(1)))
+                .andExpect(jsonPath("$.payload[0].id", is("EVN194")));
     }
 
     @Test
