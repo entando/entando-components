@@ -36,6 +36,7 @@ import java.util.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -106,18 +107,24 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
             content.setDescription("My content type " + typeCode);
             content.setDefaultModel("My Model");
             content.setListModel("Model list");
+            content.setViewPage("View Page");
             ContentTypeDtoRequest contentTypeRequest = new ContentTypeDtoRequest(content);
             contentTypeRequest.setName("Content request");
-            mockMvc.perform(
+            ResultActions result = mockMvc.perform(
                     post("/plugins/cms/contentTypes")
                     .header("Authorization", "Bearer " + accessToken)
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
                     .content(jsonMapper.writeValueAsString(contentTypeRequest))
-                    .accept(MediaType.APPLICATION_JSON_UTF8))
+                    .accept(MediaType.APPLICATION_JSON_UTF8));
+
+            result.andDo(print())
                     .andExpect(status().isCreated())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                    .andExpect(jsonPath("$.payload.code").value(typeCode))
-                    .andReturn();
+                    .andExpect(jsonPath("$.payload.code", is(typeCode)))
+                    .andExpect(jsonPath("$.payload.viewPage", is("View Page")))
+                    .andExpect(jsonPath("$.payload.defaultContentModel", is("My Model")))
+                    .andExpect(jsonPath("$.payload.defaultContentModelList", is("Model list")));
+
             Assert.assertNotNull(this.contentManager.getEntityPrototype(typeCode));
         } finally {
             if (null != this.contentManager.getEntityPrototype(typeCode)) {
@@ -133,16 +140,23 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
         try {
             ContentTypeDto createdContentType = createContentType(typeCode);
             createdContentType.setName("MyContentType");
-            mockMvc.perform(put("/plugins/cms/contentTypes")
+            createdContentType.setViewPage("Updated View Page");
+            createdContentType.setDefaultContentModel("Updated Model");
+            createdContentType.setDefaultContentModelList("Updated Model list");
+
+            ResultActions result = mockMvc.perform(put("/plugins/cms/contentTypes")
                     .header("Authorization", "Bearer " + accessToken)
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
                     .content(jsonMapper.writeValueAsString(createdContentType))
-                    .accept(MediaType.APPLICATION_JSON_UTF8))
-                    //                .andDo(print())
+                    .accept(MediaType.APPLICATION_JSON_UTF8));
+
+            result.andDo(print())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.code").value(createdContentType.getCode()))
                     .andExpect(jsonPath("$.payload.name").value("MyContentType"))
-                    .andReturn();
+                    .andExpect(jsonPath("$.payload.viewPage", is("Updated View Page")))
+                    .andExpect(jsonPath("$.payload.defaultContentModel", is("Updated Model")))
+                    .andExpect(jsonPath("$.payload.defaultContentModelList", is("Updated Model list")));
         } finally {
             if (null != this.contentManager.getEntityPrototype(typeCode)) {
                 ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype(typeCode);
