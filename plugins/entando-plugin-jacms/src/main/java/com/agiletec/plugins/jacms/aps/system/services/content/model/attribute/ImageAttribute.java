@@ -59,5 +59,8 @@ public class ImageAttribute extends AbstractResourceAttribute {
 	public boolean isSearchableOptionSupported() {
 		return true;
 	}
+
+	@Override
+	public Boolean isIndexableOptionSupported() { return false; }
 	
 }

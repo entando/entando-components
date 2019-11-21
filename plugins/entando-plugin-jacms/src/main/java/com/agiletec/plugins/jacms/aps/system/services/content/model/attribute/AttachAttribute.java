@@ -92,4 +92,7 @@ public class AttachAttribute extends AbstractResourceAttribute {
 		return true;
 	}
 
+	@Override
+	public Boolean isIndexableOptionSupported() { return false; }
+
 }

@@ -24,6 +24,7 @@ package com.agiletec.plugins.jpgeoref.aps.system.services.content.model.attribut
 import java.util.ArrayList;
 import java.util.List;
 
+import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
 import org.jdom.Element;
 
 import com.agiletec.aps.system.common.entity.model.AttributeSearchInfo;
@@ -39,7 +40,7 @@ import com.agiletec.plugins.jpgeoref.aps.system.GeoRefSystemConstants;
  *
  * @author E.Santoboni
  */
-public class CoordsAttribute extends AbstractAttribute {
+public class CoordsAttribute extends AbstractAttribute implements IndexableAttributeInterface {
 
     /**
      * Returns JDOM element
@@ -225,6 +226,11 @@ public class CoordsAttribute extends AbstractAttribute {
             } catch (Exception e) {
             }
         }
+    }
+
+    @Override
+    public String getIndexeableFieldValue() {
+        return String.valueOf(getValue());
     }
 
     private static final String ATTRIBUTE_ELEMENT = "attribute";
