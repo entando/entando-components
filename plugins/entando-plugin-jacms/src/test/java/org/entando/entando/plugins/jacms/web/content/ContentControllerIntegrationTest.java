@@ -859,6 +859,193 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
     }
 
     @Test
+    public void testLoadOrderedPublicEvents_5() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("sort", IContentManager.CONTENT_DESCR_FILTER_KEY)
+                        .param("direction", FieldSearchFilter.DESC_ORDER)
+                        .param("filters[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filters[0].operator", "eq")
+                        .param("filters[0].value", "EVN")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(9)))
+                .andExpect(jsonPath("$.payload[0].id", is("EVN25")))
+                .andExpect(jsonPath("$.payload[1].id", is("EVN21")))
+                .andExpect(jsonPath("$.payload[2].id", is("EVN20")))
+                .andExpect(jsonPath("$.payload[3].id", is("EVN194")))
+                .andExpect(jsonPath("$.payload[4].id", is("EVN193")))
+                .andExpect(jsonPath("$.payload[5].id", is("EVN192")))
+                .andExpect(jsonPath("$.payload[6].id", is("EVN191")))
+                .andExpect(jsonPath("$.payload[7].id", is("EVN23")))
+                .andExpect(jsonPath("$.payload[8].id", is("EVN24")));
+    }
+
+    @Test
+    public void testLoadOrderedPublicEvents_6() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("sort", IContentManager.CONTENT_MAIN_GROUP_FILTER_KEY)
+                        .param("direction", FieldSearchFilter.ASC_ORDER)
+                        .param("filters[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filters[0].operator", "eq")
+                        .param("filters[0].value", "EVN")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(9)))
+                .andExpect(jsonPath("$.payload[0].id", is("EVN25")));
+    }
+
+    @Test
+    public void testLoadOrderedPublicEvents_7() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("sort", IContentManager.CONTENT_FIRST_EDITOR_FILTER_KEY)
+                        .param("direction", FieldSearchFilter.DESC_ORDER)
+                        .param("filters[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filters[0].operator", "eq")
+                        .param("filters[0].value", "EVN")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(0)));
+    }
+
+    @Test
+    public void testLoadOrderedPublicEvents_8() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("sort", IEntityManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("direction", FieldSearchFilter.ASC_ORDER)
+                        .param("filters[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filters[0].operator", "eq")
+                        .param("filters[0].value", "EVN")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(9)))
+                .andExpect(jsonPath("$.payload[0].id", is("EVN20")))
+                .andExpect(jsonPath("$.payload[1].id", is("EVN192")))
+                .andExpect(jsonPath("$.payload[2].id", is("EVN23")))
+                .andExpect(jsonPath("$.payload[3].id", is("EVN24")))
+                .andExpect(jsonPath("$.payload[4].id", is("EVN21")))
+                .andExpect(jsonPath("$.payload[5].id", is("EVN25")))
+                .andExpect(jsonPath("$.payload[6].id", is("EVN191")))
+                .andExpect(jsonPath("$.payload[7].id", is("EVN194")))
+                .andExpect(jsonPath("$.payload[8].id", is("EVN193")));
+    }
+
+    @Test
+    public void testLoadOrderedPublicEvents_9() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("sort", "status")
+                        .param("direction", FieldSearchFilter.ASC_ORDER)
+                        .param("filters[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filters[0].operator", "eq")
+                        .param("filters[0].value", "EVN")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(9)))
+                .andExpect(jsonPath("$.payload[0].id", is("EVN193")))
+                .andExpect(jsonPath("$.payload[1].id", is("EVN194")))
+                .andExpect(jsonPath("$.payload[2].id", is("EVN191")))
+                .andExpect(jsonPath("$.payload[3].id", is("EVN25")))
+                .andExpect(jsonPath("$.payload[4].id", is("EVN21")))
+                .andExpect(jsonPath("$.payload[5].id", is("EVN24")))
+                .andExpect(jsonPath("$.payload[6].id", is("EVN23")))
+                .andExpect(jsonPath("$.payload[7].id", is("EVN192")))
+                .andExpect(jsonPath("$.payload[8].id", is("EVN20")));
+    }
+
+    @Test
+    public void testLoadOrderedPublicEvents_10() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("sort", "lastmodified")
+                        .param("direction", FieldSearchFilter.DESC_ORDER)
+                        .param("filters[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filters[0].operator", "eq")
+                        .param("filters[0].value", "EVN")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(9)))
+                .andExpect(jsonPath("$.payload[0].id", is("EVN21")))
+                .andExpect(jsonPath("$.payload[1].id", is("EVN20")))
+                .andExpect(jsonPath("$.payload[2].id", is("EVN25")))
+                .andExpect(jsonPath("$.payload[3].id", is("EVN24")))
+                .andExpect(jsonPath("$.payload[4].id", is("EVN23")))
+                .andExpect(jsonPath("$.payload[5].id", is("EVN192")))
+                .andExpect(jsonPath("$.payload[6].id", is("EVN191")))
+                .andExpect(jsonPath("$.payload[7].id", is("EVN194")))
+                .andExpect(jsonPath("$.payload[8].id", is("EVN193")));
+    }
+
+    @Test
+    public void testLoadOrderedPublicEvents_11() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("sort", IContentManager.CONTENT_CREATION_DATE_FILTER_KEY)
+                        .param("direction", FieldSearchFilter.DESC_ORDER)
+                        .param("filters[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filters[0].operator", "eq")
+                        .param("filters[0].value", "EVN")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(9)))
+                .andExpect(jsonPath("$.payload[0].id", is("EVN21")))
+                .andExpect(jsonPath("$.payload[1].id", is("EVN25")))
+                .andExpect(jsonPath("$.payload[2].id", is("EVN24")))
+                .andExpect(jsonPath("$.payload[3].id", is("EVN23")))
+                .andExpect(jsonPath("$.payload[4].id", is("EVN20")))
+                .andExpect(jsonPath("$.payload[5].id", is("EVN194")))
+                .andExpect(jsonPath("$.payload[6].id", is("EVN193")))
+                .andExpect(jsonPath("$.payload[7].id", is("EVN192")))
+                .andExpect(jsonPath("$.payload[8].id", is("EVN191")));
+    }
+
     public void testFilteredContent_1() throws Throwable {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();

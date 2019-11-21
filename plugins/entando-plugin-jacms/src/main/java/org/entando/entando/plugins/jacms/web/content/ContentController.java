@@ -17,6 +17,7 @@ import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
+import com.agiletec.plugins.jacms.aps.system.services.content.parse.ContentDOM;
 import org.entando.entando.plugins.jacms.aps.system.services.content.IContentService;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
 
@@ -123,12 +124,29 @@ public class ContentController {
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagedRestResponse<ContentDto>> getContents(RestContentListRequest requestList) {
         logger.debug("getting contents with request {} - status {}", requestList, requestList.getStatus());
+        normalizeSortFields(requestList);
         if (requestList.getFilters() != null) {
             normalizeFilters(requestList.getFilters());
         }
         this.getPaginationValidator().validateRestListRequest(requestList, ContentDto.class);
         PagedMetadata<ContentDto> result = this.getContentService().getContents(requestList, this.extractCurrentUser());
         return new ResponseEntity<>(new PagedRestResponse<>(result), HttpStatus.OK);
+    }
+
+    private void normalizeSortFields(RestContentListRequest requestList) {
+        String sortField = requestList.getSort();
+        if (null != sortField) {
+            if ("lastmodified".equalsIgnoreCase(sortField)) {
+                sortField = IContentManager.CONTENT_MODIFY_DATE_FILTER_KEY;
+            } else if (IEntityManager.ENTITY_TYPE_CODE_FILTER_KEY.equalsIgnoreCase(sortField)) {
+                sortField = IEntityManager.ENTITY_TYPE_CODE_FILTER_KEY;
+            } else if ("description".equalsIgnoreCase(sortField)) {
+                sortField = IContentManager.CONTENT_DESCR_FILTER_KEY;
+            } else {
+                sortField = sortField.toLowerCase();
+            }
+            requestList.setSort(sortField);
+        }
     }
 
     private void normalizeFilters(Filter[] filters) {
