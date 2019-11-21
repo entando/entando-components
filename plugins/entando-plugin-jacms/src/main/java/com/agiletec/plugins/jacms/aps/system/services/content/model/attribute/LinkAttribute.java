@@ -277,6 +277,9 @@ public class LinkAttribute extends TextAttribute implements IReferenceableAttrib
         this.linkResolverManager = linkResolverManager;
     }
 
+    @Override
+    public Boolean isIndexableOptionSupported() { return false; }
+
     private SymbolicLink symbolicLink;
     private Map<String, String> linkProperties = new HashMap<>();
     private transient IContentManager contentManager;
