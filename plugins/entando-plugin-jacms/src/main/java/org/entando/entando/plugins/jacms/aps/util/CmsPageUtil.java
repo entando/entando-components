@@ -272,7 +272,7 @@ public class CmsPageUtil {
             addPublishedContents(page.getWidgets(), contents, applicationContext);
         } catch (Throwable t) {
             String msg = "Error extracting published contents on page '" + pageCode + "'";
-            logger.error("Error extracting published contents on page '{}'", pageCode, t);
+            logger.error(msg, t);
             throw new RuntimeException(msg, t);
         }
         return contents;
@@ -303,7 +303,7 @@ public class CmsPageUtil {
             }
         } catch (Throwable t) {
             String msg = "Error extracting published contents on page";
-            logger.error("Error extracting published contents on page", t);
+            logger.error(msg, t);
             throw new RuntimeException(msg, t);
         }
     }
@@ -311,7 +311,7 @@ public class CmsPageUtil {
     private static void addContent(Collection<Content> contents, String contentId, IContentManager contentManager) {
         try {
             if (null != contentId) {
-                Content content = contentManager.loadContent(contentId, true, false);
+                Content content = contentManager.loadContent(contentId, true);
                 if (null != content) {
                     contents.add(content);
                 }

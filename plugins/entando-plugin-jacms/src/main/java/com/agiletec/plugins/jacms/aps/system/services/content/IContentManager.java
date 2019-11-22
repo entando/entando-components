@@ -101,8 +101,6 @@ public interface IContentManager extends IEntityManager {
      */
     public Content loadContent(String id, boolean onLine) throws ApsSystemException;
 
-    public Content loadContent(String id, boolean onLine, boolean cacheable) throws ApsSystemException;
-
     /**
      * Restituisce un VO contenente le informazioni del record su db
      * corrispondente al contenuto di cui all'id inserito.
