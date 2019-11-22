@@ -52,6 +52,8 @@ import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentRenderizationInfo;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.IContentDispenser;
 import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import org.entando.entando.plugins.jacms.aps.system.services.api.model.CmsApiResponse;
 import org.entando.entando.plugins.jacms.aps.system.services.api.model.JAXBCmsResult;
 
@@ -90,6 +92,9 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
             }
             String langCode = properties.getProperty(SystemConstants.API_LANG_CODE_PARAMETER);
             String filtersParam = properties.getProperty("filters");
+            if (!filtersParam.isEmpty()) {
+                filtersParam = URLDecoder.decode(filtersParam, StandardCharsets.UTF_8.toString());
+            }
             EntitySearchFilter[] filters = this.getContentListHelper().getFilters(contentType, filtersParam, langCode);
             String[] categoryCodes = null;
             String categoriesParam = properties.getProperty("categories");
