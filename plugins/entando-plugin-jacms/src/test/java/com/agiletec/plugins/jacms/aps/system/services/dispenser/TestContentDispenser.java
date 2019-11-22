@@ -18,6 +18,7 @@ import org.entando.entando.aps.system.services.cache.CacheInfoManager;
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
@@ -43,23 +44,42 @@ public class TestContentDispenser extends BaseTestCase {
         assertEquals(this.replaceNewLine(_attendedEnART1_cached.trim()), this.replaceNewLine(outputInfo.getCachedRenderedContent().trim()));
         this._contentDispenser.resolveLinks(outputInfo, reqCtx);
         assertEquals(this.replaceNewLine(_attendedEnART1.trim()), this.replaceNewLine(outputInfo.getRenderedContent().trim()));
+        
+        ContentRenderizationInfo outputInfoForUser = this._contentDispenser.getRenderizationInfo("ART1", 2, "en", this.getUserOnSession(), false);
+        assertEquals(outputInfo.getCachedRenderedContent().trim(), outputInfoForUser.getCachedRenderedContent().trim());
 
         this.setUserOnSession("admin");
         outputInfo = this._contentDispenser.getRenderizationInfo("ART1", 2, "en", reqCtx);
         assertEquals(this.replaceNewLine(_attendedEnART1_cached.trim()), this.replaceNewLine(outputInfo.getCachedRenderedContent().trim()));
         this._contentDispenser.resolveLinks(outputInfo, reqCtx);
         assertEquals(this.replaceNewLine(_attendedEnART1.trim()), this.replaceNewLine(outputInfo.getRenderedContent().trim()));
-
+        
+        outputInfoForUser = this._contentDispenser.getRenderizationInfo("ART1", 2, "en", this.getUserOnSession(), false);
+        assertEquals(outputInfo.getCachedRenderedContent().trim(), outputInfoForUser.getCachedRenderedContent().trim());
+        
         outputInfo = this._contentDispenser.getRenderizationInfo("ART104", 2, "it", reqCtx);
         assertEquals(this.replaceNewLine(_attendedItART104_cached.trim()), this.replaceNewLine(outputInfo.getCachedRenderedContent().trim()));
-
+        
+        outputInfoForUser = this._contentDispenser.getRenderizationInfo("ART104", 2, "it", this.getUserOnSession(), false);
+        assertEquals(outputInfo.getCachedRenderedContent().trim(), outputInfoForUser.getCachedRenderedContent().trim());
+        
         this.setUserOnSession("editorCoach");
         outputInfo = this._contentDispenser.getRenderizationInfo("ART104", 2, "it", reqCtx);
         assertEquals(this.replaceNewLine(_attendedItART104_cached.trim()), this.replaceNewLine(outputInfo.getCachedRenderedContent().trim()));
+        
+        outputInfoForUser = this._contentDispenser.getRenderizationInfo("ART104", 2, "it", this.getUserOnSession(), false);
+        assertEquals(outputInfo.getCachedRenderedContent().trim(), outputInfoForUser.getCachedRenderedContent().trim());
 
         this.setUserOnSession("pageManagerCoach");
         outputInfo = this._contentDispenser.getRenderizationInfo("ART104", 2, "it", reqCtx);
         assertEquals(this.replaceNewLine(_attendedItART104_cached.trim()), this.replaceNewLine(outputInfo.getCachedRenderedContent().trim()));
+        
+        outputInfoForUser = this._contentDispenser.getRenderizationInfo("ART104", 2, "it", this.getUserOnSession(), false);
+        assertEquals(outputInfo.getCachedRenderedContent().trim(), outputInfoForUser.getCachedRenderedContent().trim());
+    }
+    
+    private UserDetails getUserOnSession() {
+        return (UserDetails) super.getRequestContext().getRequest().getSession().getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
     }
 
     public void testGetRenderedContent_2() throws Throwable {
