@@ -89,7 +89,7 @@ public class BaseContentDispenser extends AbstractService implements IContentDis
         if (null == authInfo) {
             return null;
         }
-        return this.getRenderizationInfo(authInfo, contentId, modelId, langCode, reqCtx, cacheable);
+        return this.getRenderizationInfo(authInfo, contentId, modelId, langCode, reqCtx);
     }
 
     @Override
@@ -101,33 +101,28 @@ public class BaseContentDispenser extends AbstractService implements IContentDis
         if (null == authInfo) {
             return null;
         }
-        return this.getRenderizationInfo(authInfo, contentId, modelId, langCode, currentUser, null, cacheable);
+        return this.getRenderizationInfo(authInfo, contentId, modelId, langCode, currentUser, null);
     }
     
     protected ContentRenderizationInfo getRenderizationInfo(PublicContentAuthorizationInfo authInfo,
             String contentId, long modelId, String langCode, RequestContext reqCtx) {
-        return this.getRenderizationInfo(authInfo, contentId, modelId, langCode, reqCtx, true);
-    }
-    
-    protected ContentRenderizationInfo getRenderizationInfo(PublicContentAuthorizationInfo authInfo,
-            String contentId, long modelId, String langCode, RequestContext reqCtx, boolean cacheable) {
         UserDetails currentUser = (null != reqCtx) ? (UserDetails) reqCtx.getRequest().getSession().getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER) : null;
-        return this.getRenderizationInfo(authInfo, contentId, modelId, langCode, currentUser, reqCtx, cacheable);
+        return this.getRenderizationInfo(authInfo, contentId, modelId, langCode, currentUser, reqCtx);
     }
 
     protected ContentRenderizationInfo getRenderizationInfo(PublicContentAuthorizationInfo authInfo,
-            String contentId, long modelId, String langCode, UserDetails user, RequestContext reqCtx, boolean cacheable) {
+            String contentId, long modelId, String langCode, UserDetails user, RequestContext reqCtx) {
         ContentRenderizationInfo renderInfo = null;
         try {
             List<Group> userGroups = (null != user) ? this.getAuthorizationManager().getUserGroups(user) : new ArrayList<>();
             if (authInfo.isUserAllowed(userGroups)) {
-                renderInfo = this.getBaseRenderizationInfo(authInfo, contentId, modelId, langCode, user, reqCtx, cacheable);
+                renderInfo = this.getBaseRenderizationInfo(authInfo, contentId, modelId, langCode, user, reqCtx);
                 if (null == renderInfo) {
                     return null;
                 }
             } else {
                 String renderedContent = "Current user '" + ((null != user) ? user.getUsername() : "null") + "' can't view this content";
-                Content contentToRender = this.getContentManager().loadContent(contentId, true, cacheable);
+                Content contentToRender = this.getContentManager().loadContent(contentId, true);
                 renderInfo = new ContentRenderizationInfo(contentToRender, renderedContent, modelId, langCode, null);
                 renderInfo.setRenderedContent(renderedContent);
                 return renderInfo;
@@ -151,19 +146,14 @@ public class BaseContentDispenser extends AbstractService implements IContentDis
             _logger.error("Error while resolve links for content {}", renderizationInfo.getContentId(), t);
         }
     }
-
+    
     public ContentRenderizationInfo getBaseRenderizationInfo(PublicContentAuthorizationInfo authInfo,
             String contentId, long modelId, String langCode, UserDetails currentUser, RequestContext reqCtx) {
-        return this.getBaseRenderizationInfo(authInfo, contentId, modelId, langCode, currentUser, reqCtx, true);
-    }
-
-    public ContentRenderizationInfo getBaseRenderizationInfo(PublicContentAuthorizationInfo authInfo,
-            String contentId, long modelId, String langCode, UserDetails currentUser, RequestContext reqCtx, boolean cacheable) {
         ContentRenderizationInfo renderInfo = null;
         try {
-            List<Group> userGroups = (null != currentUser) ? this.getAuthorizationManager().getUserGroups(currentUser) : new ArrayList<Group>();
+            List<Group> userGroups = (null != currentUser) ? this.getAuthorizationManager().getUserGroups(currentUser) : new ArrayList<>();
             if (authInfo.isUserAllowed(userGroups)) {
-                Content contentToRender = this.getContentManager().loadContent(contentId, true, cacheable);
+                Content contentToRender = this.getContentManager().loadContent(contentId, true);
                 String renderedContent = this.buildRenderedContent(contentToRender, modelId, langCode, reqCtx);
                 if (null != renderedContent && renderedContent.trim().length() > 0) {
                     List<AttributeRole> roles = this.getContentManager().getAttributeRoles();

@@ -134,7 +134,7 @@ public class ContentAuthorizationHelper implements IContentAuthorizationHelper {
     public PublicContentAuthorizationInfo getAuthorizationInfo(String contentId, boolean cacheable) {
         PublicContentAuthorizationInfo authInfo = null;
         try {
-            Content content = this.getContentManager().loadContent(contentId, true, cacheable);
+            Content content = this.getContentManager().loadContent(contentId, true);
             if (null == content) {
                 _logger.debug("public content {} doesn't exist", contentId);
                 return null;
