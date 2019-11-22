@@ -120,11 +120,12 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
                 return null;
             }
             List<String> contentsId = this.extractContents(properties);
+            UserDetails user = (UserDetails) properties.get(SystemConstants.API_USER_PARAMETER);
             String langCode = properties.getProperty(SystemConstants.API_LANG_CODE_PARAMETER);
             render.append(this.getItemsStartElement());
             for (int i = 0; i < contentsId.size(); i++) {
                 render.append(this.getItemStartElement());
-                String renderedContent = this.getRenderedContent(contentsId.get(i), modelIdInteger, langCode);
+                String renderedContent = this.getRenderedContent(contentsId.get(i), modelIdInteger, langCode, user);
                 if (null != renderedContent) {
                     render.append(renderedContent);
                 }
@@ -175,11 +176,12 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
             if (null == modelId || modelId.trim().length() == 0) {
                 return null;
             }
+            UserDetails user = (UserDetails) properties.get(SystemConstants.API_USER_PARAMETER);
             Content mainContent = this.getPublicContent(id);
             Integer modelIdInteger = this.checkModel(modelId, mainContent);
             if (null != modelIdInteger) {
                 String langCode = properties.getProperty(SystemConstants.API_LANG_CODE_PARAMETER);
-                render = this.getRenderedContent(id, modelIdInteger, langCode);
+                render = this.getRenderedContent(id, modelIdInteger, langCode, user);
             }
         } catch (ApiException ae) {
             throw ae;
@@ -190,9 +192,9 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
         return render;
     }
 
-    protected String getRenderedContent(String id, int modelId, String langCode) {
+    protected String getRenderedContent(String id, int modelId, String langCode, UserDetails user) {
         String renderedContent = null;
-        ContentRenderizationInfo renderizationInfo = this.getContentDispenser().getRenderizationInfo(id, modelId, langCode, null, true);
+        ContentRenderizationInfo renderizationInfo = this.getContentDispenser().getRenderizationInfo(id, modelId, langCode, user, true);
         if (null != renderizationInfo) {
             this.getContentDispenser().resolveLinks(renderizationInfo, null);
             renderedContent = renderizationInfo.getRenderedContent();

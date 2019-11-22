@@ -92,24 +92,41 @@ public class BaseContentDispenser extends AbstractService implements IContentDis
         return this.getRenderizationInfo(authInfo, contentId, modelId, langCode, reqCtx, cacheable);
     }
 
+    @Override
+    @Cacheable(value = ICacheInfoManager.DEFAULT_CACHE_NAME, condition = "#result != null and #cacheable",
+            key = "T(com.agiletec.plugins.jacms.aps.system.services.dispenser.BaseContentDispenser).getRenderizationInfoCacheKey(#contentId, #modelId, #langCode, #currentUser)")
+    @CacheableInfo(groups = "T(com.agiletec.plugins.jacms.aps.system.services.dispenser.BaseContentDispenser).getRenderizationInfoCacheGroupsCsv(#contentId, #modelId)")
+    public ContentRenderizationInfo getRenderizationInfo(String contentId, long modelId, String langCode, UserDetails currentUser, boolean cacheable) {
+        PublicContentAuthorizationInfo authInfo = this.getContentAuthorizationHelper().getAuthorizationInfo(contentId, cacheable);
+        if (null == authInfo) {
+            return null;
+        }
+        return this.getRenderizationInfo(authInfo, contentId, modelId, langCode, currentUser, null, cacheable);
+    }
+    
     protected ContentRenderizationInfo getRenderizationInfo(PublicContentAuthorizationInfo authInfo,
             String contentId, long modelId, String langCode, RequestContext reqCtx) {
         return this.getRenderizationInfo(authInfo, contentId, modelId, langCode, reqCtx, true);
     }
-
+    
     protected ContentRenderizationInfo getRenderizationInfo(PublicContentAuthorizationInfo authInfo,
             String contentId, long modelId, String langCode, RequestContext reqCtx, boolean cacheable) {
+        UserDetails currentUser = (null != reqCtx) ? (UserDetails) reqCtx.getRequest().getSession().getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER) : null;
+        return this.getRenderizationInfo(authInfo, contentId, modelId, langCode, currentUser, reqCtx, cacheable);
+    }
+
+    protected ContentRenderizationInfo getRenderizationInfo(PublicContentAuthorizationInfo authInfo,
+            String contentId, long modelId, String langCode, UserDetails user, RequestContext reqCtx, boolean cacheable) {
         ContentRenderizationInfo renderInfo = null;
         try {
-            UserDetails currentUser = (null != reqCtx) ? (UserDetails) reqCtx.getRequest().getSession().getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER) : null;
-            List<Group> userGroups = (null != currentUser) ? this.getAuthorizationManager().getUserGroups(currentUser) : new ArrayList<Group>();
+            List<Group> userGroups = (null != user) ? this.getAuthorizationManager().getUserGroups(user) : new ArrayList<>();
             if (authInfo.isUserAllowed(userGroups)) {
-                renderInfo = this.getBaseRenderizationInfo(authInfo, contentId, modelId, langCode, currentUser, reqCtx, cacheable);
+                renderInfo = this.getBaseRenderizationInfo(authInfo, contentId, modelId, langCode, user, reqCtx, cacheable);
                 if (null == renderInfo) {
                     return null;
                 }
             } else {
-                String renderedContent = "Current user '" + currentUser.getUsername() + "' can't view this content";
+                String renderedContent = "Current user '" + ((null != user) ? user.getUsername() : "null") + "' can't view this content";
                 Content contentToRender = this.getContentManager().loadContent(contentId, true, cacheable);
                 renderInfo = new ContentRenderizationInfo(contentToRender, renderedContent, modelId, langCode, null);
                 renderInfo.setRenderedContent(renderedContent);
@@ -178,13 +195,17 @@ public class BaseContentDispenser extends AbstractService implements IContentDis
         }
         return renderedContent;
     }
-
+    
     public static String getRenderizationInfoCacheKey(String contentId, long modelId, String langCode, RequestContext reqCtx) {
         UserDetails currentUser = (null != reqCtx) ? (UserDetails) reqCtx.getRequest().getSession().getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER) : null;
+        return getRenderizationInfoCacheKey(contentId, modelId, langCode, currentUser);
+    }
+
+    public static String getRenderizationInfoCacheKey(String contentId, long modelId, String langCode, UserDetails currentUser) {
         StringBuffer key = new StringBuffer();
         key.append(contentId).append("_").append(modelId).append("_").append(langCode).append("_RENDER_INFO_CacheKey");
         if (null != currentUser && !currentUser.getUsername().equals(SystemConstants.GUEST_USER_NAME)) {
-            List<String> codes = new ArrayList<String>();
+            List<String> codes = new ArrayList<>();
             if (null != currentUser.getAuthorizations()) {
                 for (int i = 0; i < currentUser.getAuthorizations().size(); i++) {
                     Authorization auth = currentUser.getAuthorizations().get(i);
