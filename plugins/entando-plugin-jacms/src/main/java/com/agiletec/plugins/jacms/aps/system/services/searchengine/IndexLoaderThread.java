@@ -69,7 +69,7 @@ public class IndexLoaderThread extends Thread {
 	
 	private void reloadContentIndex(String id) {
 		try {
-			Content content = this._contentManager.loadContent(id, true, false);
+			Content content = this._contentManager.loadContent(id, true);
 			if (content != null) {
 				this._indexerDao.add(content);
 				_logger.debug("Indexed content {}", content.getId());
