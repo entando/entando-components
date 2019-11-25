@@ -18,9 +18,10 @@ import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.DateAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.NumberAttribute;
 import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
+import com.agiletec.aps.system.common.tree.ITreeNode;
+import com.agiletec.aps.system.common.tree.ITreeNodeManager;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.Category;
-import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.lang.*;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import org.apache.lucene.analysis.Analyzer;
@@ -46,7 +47,7 @@ public class IndexerDAO implements IIndexerDAO {
 
     private ILangManager langManager;
 
-    private ICategoryManager categoryManager;
+    private ITreeNodeManager treeNodeManager;
 
     /**
      * Inizializzazione dell'indicizzatore.
@@ -138,7 +139,7 @@ public class IndexerDAO implements IIndexerDAO {
         List<Category> categories = entity.getCategories();
         if (null != categories && !categories.isEmpty()) {
             for (int i = 0; i < categories.size(); i++) {
-                Category category = categories.get(i);
+                ITreeNode category = categories.get(i);
                 this.indexCategory(document, category);
             }
         }
@@ -198,13 +199,13 @@ public class IndexerDAO implements IIndexerDAO {
         }
     }
 
-    protected void indexCategory(Document document, Category categoryToIndex) {
+    protected void indexCategory(Document document, ITreeNode categoryToIndex) {
         if (null == categoryToIndex || categoryToIndex.isRoot()) {
             return;
         }
         document.add(new StringField(CONTENT_CATEGORY_FIELD_NAME,
-                categoryToIndex.getPath(CONTENT_CATEGORY_SEPARATOR, false, this.getCategoryManager()), Field.Store.YES));
-        Category parentCategory = this.getCategoryManager().getCategory(categoryToIndex.getParentCode());
+                categoryToIndex.getPath(CONTENT_CATEGORY_SEPARATOR, false, this.getTreeNodeManager()), Field.Store.YES));
+        ITreeNode parentCategory = this.getTreeNodeManager().getNode(categoryToIndex.getParentCode());
         this.indexCategory(document, parentCategory);
     }
 
@@ -248,12 +249,12 @@ public class IndexerDAO implements IIndexerDAO {
         this.langManager = langManager;
     }
 
-    public ICategoryManager getCategoryManager() {
-        return categoryManager;
+    public ITreeNodeManager getTreeNodeManager() {
+        return treeNodeManager;
     }
     @Override
-    public void setCategoryManager(ICategoryManager categoryManager) {
-        this.categoryManager = categoryManager;
+    public void setTreeNodeManager(ITreeNodeManager treeNodeManager) {
+        this.treeNodeManager = treeNodeManager;
     }
-
+    
 }

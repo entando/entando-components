@@ -16,8 +16,8 @@ package com.agiletec.plugins.jacms.aps.system.services.searchengine;
 import java.io.File;
 
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
+import com.agiletec.aps.system.common.tree.ITreeNodeManager;
 import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 
@@ -53,7 +53,7 @@ public interface IIndexerDAO {
 	
 	public void setLangManager(ILangManager langManager);
     
-    public void setCategoryManager(ICategoryManager categoryManager);
+    public void setTreeNodeManager(ITreeNodeManager treeNodeManager);
     
 	public static final String FIELD_PREFIX = "entity:"; 
     public static final String CONTENT_ID_FIELD_NAME = FIELD_PREFIX + "id";
