@@ -77,7 +77,7 @@ public class SearchEngineDAOFactory implements ISearchEngineDAOFactory {
             Class indexerClass = Class.forName(this.getIndexerClassName());
             indexerDao = (IIndexerDAO) indexerClass.newInstance();
             indexerDao.setLangManager(this.getLangManager());
-            indexerDao.setCategoryManager(this.getCategoryManager());
+            indexerDao.setTreeNodeManager(this.getCategoryManager());
             indexerDao.init(this.getDirectory(subDir));
         } catch (Throwable t) {
             logger.error("Error getting indexer", t);
