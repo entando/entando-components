@@ -13,9 +13,15 @@
  */
 package com.agiletec.plugins.jacms.aps.system.services.searchengine;
 
+import com.agiletec.aps.system.common.tree.ITreeNode;
 import org.entando.entando.aps.system.services.searchengine.IEntitySearchEngineManager;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.category.Category;
+import java.util.Collection;
+import java.util.List;
+import org.entando.entando.aps.system.services.searchengine.FacetedContentsResult;
+import org.entando.entando.aps.system.services.searchengine.SearchEngineFilter;
 
 /**
  * Interfaccia base per i servizi detentori delle operazioni di indicizzazione
@@ -57,5 +63,14 @@ public interface ICmsSearchEngineManager extends IEntitySearchEngineManager {
      * @return Le informazioni sull'ultimo ricaricamento della configurazione.
      */
     public LastReloadInfo getLastReloadInfo();
+    
+    public FacetedContentsResult searchFacetedEntities(SearchEngineFilter[] filters,
+            Collection<ITreeNode> categories, Collection<String> allowedGroups) throws ApsSystemException;
+
+    public FacetedContentsResult searchFacetedEntities(SearchEngineFilter[] filters,
+            SearchEngineFilter[] categories, Collection<String> allowedGroups) throws ApsSystemException;
+
+    public List<String> loadContentsId(SearchEngineFilter[] filters,
+            SearchEngineFilter[] facetNodeCodes, List<String> groupCodes) throws ApsSystemException;
 
 }
