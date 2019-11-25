@@ -42,6 +42,7 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.ResourceManagerIn
 import com.agiletec.plugins.jacms.aps.system.services.resource.ResourceManagerTest;
 import com.agiletec.plugins.jacms.aps.system.services.resource.TestResourceDAO;
 import com.agiletec.plugins.jacms.aps.system.services.resource.parse.TestResourceDOM;
+import com.agiletec.plugins.jacms.aps.system.services.searchengine.FacetSearchEngineManagerIntegrationTest;
 import com.agiletec.plugins.jacms.aps.system.services.searchengine.SearchEngineManagerIntegrationTest;
 import com.agiletec.plugins.jacms.aps.system.services.searchengine.SearchEngineManagerTest;
 import com.agiletec.plugins.jacms.apsadmin.category.TestTrashReferencedCategory;
@@ -106,7 +107,7 @@ public class AllTests {
         TestSuite suite = new TestSuite("Test for jACMS");
 
         System.out.println("Test for jACMS plugin");
-
+        
         //
         suite.addTestSuite(ContentAdminActionIntegrationTest.class);
         suite.addTestSuite(ContentCategoryActionIntegrationTest.class);
@@ -145,9 +146,11 @@ public class AllTests {
         suite.addTestSuite(TestResourceDAO.class);
         suite.addTestSuite(ResourceManagerIntegrationTest.class);
         suite.addTest(new JUnit4TestAdapter(ResourceManagerTest.class));
-        //
+        
+        suite.addTestSuite(FacetSearchEngineManagerIntegrationTest.class);
         suite.addTestSuite(SearchEngineManagerIntegrationTest.class);
         suite.addTest(new JUnit4TestAdapter(SearchEngineManagerTest.class));
+        
         suite.addTestSuite(TestApplicationContext.class);
 
         // Test cross utilizers
@@ -228,7 +231,7 @@ public class AllTests {
 
         // ----------------------------------------
         suite.addTestSuite(TestJacmsLabelsProperties.class);
-
+        
         return suite;
     }
 

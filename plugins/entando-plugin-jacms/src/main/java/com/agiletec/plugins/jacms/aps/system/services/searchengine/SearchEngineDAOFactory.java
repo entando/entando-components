@@ -92,8 +92,9 @@ public class SearchEngineDAOFactory implements ISearchEngineDAOFactory {
         try {
             Class searcherClass = Class.forName(this.getSearcherClassName());
             searcherDao = (ISearcherDAO) searcherClass.newInstance();
-            searcherDao.setCategoryManager(this.getCategoryManager());
             searcherDao.init(this.getDirectory(subDir));
+            searcherDao.setTreeNodeManager(this.getCategoryManager());
+            searcherDao.setLangManager(this.getLangManager());
         } catch (Throwable t) {
             logger.error("Error creating new searcher", t);
             throw new ApsSystemException("Error creating new searcher", t);

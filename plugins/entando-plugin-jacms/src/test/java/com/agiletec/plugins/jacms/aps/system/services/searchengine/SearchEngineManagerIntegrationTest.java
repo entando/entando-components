@@ -58,7 +58,7 @@ public class SearchEngineManagerIntegrationTest extends BaseTestCase {
         this.waitThreads(ICmsSearchEngineManager.RELOAD_THREAD_NAME_PREFIX);
         super.tearDown();
     }
-
+    
     public void testSearchAllContents() throws Throwable {
         try {
             Thread thread = this.searchEngineManager.startReloadContentsReferences();
@@ -76,9 +76,11 @@ public class SearchEngineManagerIntegrationTest extends BaseTestCase {
             throw t;
         }
     }
-
+    
     public void testSearchContentsId_1() throws Throwable {
         try {
+            Thread thread = this.searchEngineManager.startReloadContentsReferences();
+            thread.join();
             Content content_1 = this.createContent_1();
             this.searchEngineManager.deleteIndexedEntity(content_1.getId());
             this.searchEngineManager.addEntityToIndex(content_1);
@@ -100,7 +102,7 @@ public class SearchEngineManagerIntegrationTest extends BaseTestCase {
             throw t;
         }
     }
-
+    
     public void testSearchContentsId_2() throws Throwable {
         try {
             Thread thread = this.searchEngineManager.startReloadContentsReferences();
@@ -253,6 +255,7 @@ public class SearchEngineManagerIntegrationTest extends BaseTestCase {
             List<String> allowedGroup = new ArrayList<>();
             allowedGroup.add(Group.FREE_GROUP_NAME);
             SearchEngineFilter filter1 = new SearchEngineFilter("it", "San meravigliosa", SearchEngineFilter.TextSearchOption.ALL_WORDS);
+            filter1.setFullTextSearch(true);
             SearchEngineFilter[] filters1 = {filter1};
             List<String> contentsId = sem.searchEntityId(filters1, null, allowedGroup);
             assertNotNull(contentsId);
@@ -260,6 +263,7 @@ public class SearchEngineManagerIntegrationTest extends BaseTestCase {
             assertTrue(contentsId.contains(content_1.getId()));
 
             SearchEngineFilter filter2 = new SearchEngineFilter("it", "San meravigliosa", SearchEngineFilter.TextSearchOption.AT_LEAST_ONE_WORD);
+            filter2.setFullTextSearch(true);
             SearchEngineFilter[] filters2 = {filter2};
             contentsId = sem.searchEntityId(filters2, null, allowedGroup);
             assertNotNull(contentsId);
@@ -268,12 +272,14 @@ public class SearchEngineManagerIntegrationTest extends BaseTestCase {
             assertTrue(contentsId.contains(content_3.getId()));
 
             SearchEngineFilter filter3 = new SearchEngineFilter("it", "San meravigliosa", SearchEngineFilter.TextSearchOption.EXACT);
+            filter3.setFullTextSearch(true);
             SearchEngineFilter[] filters3 = {filter3};
             contentsId = sem.searchEntityId(filters3, null, allowedGroup);
             assertNotNull(contentsId);
             assertEquals(0, contentsId.size());
 
             SearchEngineFilter filter4 = new SearchEngineFilter("it", "una cosa meravigliosa", SearchEngineFilter.TextSearchOption.EXACT);
+            filter4.setFullTextSearch(true);
             SearchEngineFilter[] filters4 = {filter4};
             contentsId = sem.searchEntityId(filters4, null, allowedGroup);
             assertNotNull(contentsId);
@@ -283,7 +289,7 @@ public class SearchEngineManagerIntegrationTest extends BaseTestCase {
             throw t;
         }
     }
-
+    
     public void testFacetedAllContents() throws Throwable {
         try {
             Thread thread = this.searchEngineManager.startReloadContentsReferences();
@@ -292,7 +298,8 @@ public class SearchEngineManagerIntegrationTest extends BaseTestCase {
             Set<String> allowedGroup = new HashSet<>();
             allowedGroup.add(Group.ADMINS_GROUP_NAME);
             SearchEngineFilter[] filters = {};
-            FacetedContentsResult result = sem.searchFacetedEntities(filters, null, allowedGroup);
+            List<ITreeNode> categories = null;
+            FacetedContentsResult result = sem.searchFacetedEntities(filters, categories, allowedGroup);
             assertNotNull(result);
             assertNotNull(result.getContentsId());
             assertNotNull(result.getOccurrences());
@@ -314,7 +321,8 @@ public class SearchEngineManagerIntegrationTest extends BaseTestCase {
             List<String> allowedGroup = new ArrayList<>();
             allowedGroup.add(Group.FREE_GROUP_NAME);
             allowedGroup.add(Group.ADMINS_GROUP_NAME);
-            FacetedContentsResult result = sem.searchFacetedEntities(null, categories, allowedGroup);
+            SearchEngineFilter[] filters = {};
+            FacetedContentsResult result = sem.searchFacetedEntities(filters, categories, allowedGroup);
             assertNotNull(result);
             String[] expected1 = {"ART122", "ART102", "ART111", "ART120"};
             this.verify(result.getContentsId(), expected1);
@@ -323,7 +331,7 @@ public class SearchEngineManagerIntegrationTest extends BaseTestCase {
             throw t;
         }
     }
-
+    
     private void verify(List<String> contentsId, String[] array) {
         assertEquals(array.length, contentsId.size());
         for (int i = 0; i < array.length; i++) {
@@ -334,6 +342,7 @@ public class SearchEngineManagerIntegrationTest extends BaseTestCase {
     private Content createContent_1() {
         Content content = new Content();
         content.setId("100");
+        content.setDescription("Description content 1");
         content.setMainGroup(Group.FREE_GROUP_NAME);
         content.addGroup("secondaryGroup");
         content.setTypeCode("ART");
@@ -354,6 +363,7 @@ public class SearchEngineManagerIntegrationTest extends BaseTestCase {
     private Content createContent_2() {
         Content content = new Content();
         content.setId("101");
+        content.setDescription("Description content 2");
         content.setMainGroup(Group.FREE_GROUP_NAME);
         content.addGroup("thirdGroup");
         content.setTypeCode("ART");
@@ -374,6 +384,7 @@ public class SearchEngineManagerIntegrationTest extends BaseTestCase {
     private Content createContent_3() {
         Content content = new Content();
         content.setId("103");
+        content.setDescription("Description content 3");
         content.setMainGroup(Group.FREE_GROUP_NAME);
         content.setTypeCode("ART");
         TextAttribute text = new TextAttribute();
@@ -387,10 +398,12 @@ public class SearchEngineManagerIntegrationTest extends BaseTestCase {
         content.addCategory(category);
         return content;
     }
-
+    
     public void testSearchContentByResource() throws Exception {
         Content contentForTest = this.contentManager.loadContent("ALL4", true);
         try {
+            Thread thread = this.searchEngineManager.startReloadContentsReferences();
+            thread.join();
             contentForTest.setId(null);
             AttachAttribute attachAttribute = (AttachAttribute) contentForTest.getAttribute("Attach");
             ResourceInterface resource = this.resourceManager.loadResource("6");
@@ -416,7 +429,7 @@ public class SearchEngineManagerIntegrationTest extends BaseTestCase {
             }
         }
     }
-
+    
     private void init() throws Exception {
         try {
             this.contentManager = (IContentManager) this.getService(JacmsSystemConstants.CONTENT_MANAGER);
