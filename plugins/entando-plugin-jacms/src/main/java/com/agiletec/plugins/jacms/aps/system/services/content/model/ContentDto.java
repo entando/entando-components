@@ -174,9 +174,9 @@ public class ContentDto extends EntityDto implements Serializable {
         super.fillEntity(prototype, categoryManager, bindingResult);
 
         Content content = (Content) prototype;
-        content.setFirstEditor(getFirstEditor());
+        content.setFirstEditor(getFirstEditor() == null ? content.getFirstEditor() : getFirstEditor());
         content.setLastEditor(getLastEditor());
-        content.setStatus(getStatus());
+        content.setStatus(getStatus() == null ? content.getStatus() : getStatus());
     }
 
 }

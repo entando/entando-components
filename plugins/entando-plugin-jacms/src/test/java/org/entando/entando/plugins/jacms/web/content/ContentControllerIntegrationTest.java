@@ -194,6 +194,56 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
     }
 
     @Test
+    public void testAddUpdateContentCategories() throws Exception {
+        String newContentId = null;
+        try {
+            Assert.assertNull(this.contentManager.getEntityPrototype("TST"));
+            String accessToken = this.createAccessToken();
+
+            this.executeContentTypePost("1_POST_type_valid.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype("TST"));
+
+            ResultActions result = executeContentPost("1_POST_valid.json", accessToken, status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.payload.size()", is(1)))
+                .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                .andExpect(jsonPath("$.payload[0].firstEditor", is("jack_bauer")))
+                .andExpect(jsonPath("$.payload[0].lastEditor", is("jack_bauer")))
+                .andExpect(jsonPath("$.payload[0].version", is("0.1")))
+                .andExpect(jsonPath("$.payload[0].attributes.size()", is(10)))
+                .andExpect(jsonPath("$.errors.size()", is(0)))
+                .andExpect(jsonPath("$.metaData.size()", is(0)));
+
+            newContentId = JsonPath.read(result.andReturn().getResponse().getContentAsString(), "$.payload[0].id");
+
+            result = executeContentPut("1_PUT_categories.json", newContentId, accessToken, status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(1)))
+                .andExpect(jsonPath("$.errors.size()", is(0)))
+                .andExpect(jsonPath("$.metaData.size()", is(0)))
+                .andExpect(jsonPath("$.payload[0].id", is(newContentId)))
+                .andExpect(jsonPath("$.payload[0].attributes.size()", is(10)))
+                .andExpect(jsonPath("$.payload[0].firstEditor", is("jack_bauer")))
+                .andExpect(jsonPath("$.payload[0].lastEditor", is("jack_bauer")))
+                .andExpect(jsonPath("$.payload[0].description", is("New Content for test")))
+                .andExpect(jsonPath("$.payload[0].mainGroup", is("free")))
+                .andExpect(jsonPath("$.payload[0].categories.size()", is(2)))
+                .andExpect(jsonPath("$.payload[0].categories[0]", is("resCat1")))
+                .andExpect(jsonPath("$.payload[0].categories[1]", is("resCat2")))
+                .andExpect(jsonPath("$.payload[0].version", is("0.2")));
+        } finally {
+            if (null != newContentId) {
+                Content newContent = this.contentManager.loadContent(newContentId, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != this.contentManager.getEntityPrototype("TST")) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("TST");
+            }
+        }
+    }
+
+    @Test
     public void testAddDeleteContent() throws Exception {
         String newContentId = null;
         try {
