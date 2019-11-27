@@ -331,8 +331,9 @@ public class ContentModelControllerIntegrationTest extends AbstractControllerInt
                             .content(payload)
                             .header("Authorization", "Bearer " + accessToken));
 
-            result.andExpect(status().isConflict());
-            result.andExpect(jsonPath("$.errors[0].code", is("4")));
+            result.andExpect(status().isOk())
+                .andExpect(jsonPath("$.errors.size()", is(0)))
+                .andExpect(jsonPath("$.payload.contentType", is("EVN")));
 
         } finally {
             ContentModel model = this.contentModelManager.getContentModel(modelId);
