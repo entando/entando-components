@@ -98,10 +98,13 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
             EntitySearchFilter[] filters = this.getContentListHelper().getFilters(contentType, filtersParam, langCode);
             String[] categoryCodes = null;
             String categoriesParam = properties.getProperty("categories");
-            if (null != categoriesParam && categoriesParam.trim().length() > 0) {
+            boolean orClause = false;
+            if (!StringUtils.isEmpty(categoriesParam)) {
                 categoryCodes = categoriesParam.split(IContentListHelper.CATEGORIES_SEPARATOR);
+                String orClauseString = properties.getProperty("orClauseCategoryFilter");
+                orClause = !StringUtils.isEmpty(orClauseString) && orClauseString.trim().equalsIgnoreCase("true");
             }
-            bean = new ApiContentListBean(contentType, filters, categoryCodes);
+            bean = new ApiContentListBean(contentType, filters, categoryCodes, orClause);
         } catch (ApiException ae) {
             throw ae;
         } catch (Throwable t) {
@@ -368,7 +371,7 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
     }
 
     private List<ApiError> validate(Content content) throws ApsSystemException {
-        List<ApiError> errors = new ArrayList<ApiError>();
+        List<ApiError> errors = new ArrayList<>();
         try {
             if (null == content.getMainGroup()) {
                 errors.add(new ApiError(IApiErrorCodes.API_VALIDATION_ERROR, "Main group null", Response.Status.CONFLICT));

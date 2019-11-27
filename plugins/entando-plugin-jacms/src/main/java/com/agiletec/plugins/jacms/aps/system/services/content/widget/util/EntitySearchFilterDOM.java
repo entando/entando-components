@@ -18,7 +18,6 @@ import java.util.Properties;
 
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
-import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentListFilterBean;
 
 /**
  * Provides utility methods for content filters.
@@ -41,12 +40,6 @@ public class EntitySearchFilterDOM {
 	public EntitySearchFilter[] getFilters(String contentType, String showletParam, IContentManager contentManager, String langCode) {
 		FilterUtils filterUtils = new FilterUtils();
 		return filterUtils.getFilters(contentManager.getEntityPrototype(contentType), showletParam, langCode);
-	}
-	
-	@Deprecated
-	public EntitySearchFilter getFilter(String contentType, IContentListFilterBean bean, IContentManager contentManager, String langCode) {
-		FilterUtils filterUtils = new FilterUtils();
-		return filterUtils.getFilter(contentManager.getEntityPrototype(contentType), bean, langCode);
 	}
 	
 	@Deprecated

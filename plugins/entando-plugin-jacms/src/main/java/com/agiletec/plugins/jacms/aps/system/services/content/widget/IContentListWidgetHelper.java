@@ -20,7 +20,6 @@ import com.agiletec.aps.system.common.entity.helper.IEntityFilterBean;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
-import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentListFilterBean;
 
 /**
  * Interfaccia base per l'implementazione del bean helper della showlet di erogatore lista contenuti.
@@ -53,23 +52,7 @@ public interface IContentListWidgetHelper extends com.agiletec.plugins.jacms.aps
 	 */
 	public EntitySearchFilter[] getFilters(String contentType, String filtersShowletParam, RequestContext reqCtx);
 	
-	/**
-	 * Costruisce e restituisce un filtro in base ai parametri specificati.
-	 * Il metodo è a servizio del sottoTag ContentListFilterTag di ContentListTag.
-	 * @param contentType Il Tipo di Contenuto corrispondente al filtro da costruire.
-	 * @param bean Il contenitore delle informazioni sul filtro da costruire.
-	 * @param reqCtx Il contesto della richiesta corrente.
-	 * @return Il nuovo filtro costruito in base ai parametri specificati.
-	 * @deprecated From Entando 3.0 version 3.0.1. Use getFilter(String, IEntityFilterBean, RequestContext) method
-	 */
-	public EntitySearchFilter getFilter(String contentType, IContentListFilterBean bean, RequestContext reqCtx);
-	
 	public EntitySearchFilter getFilter(String contentType, IEntityFilterBean bean, RequestContext reqCtx);
-	
-	/**
-	 * @deprecated From Entando 3.0 version 3.0.1. Use getUserFilterOption(String, IEntityFilterBean, RequestContext) method
-	 */
-	public UserFilterOptionBean getUserFilterOption(String contentType, IContentListFilterBean bean, RequestContext reqCtx);
 	
 	public UserFilterOptionBean getUserFilterOption(String contentType, IEntityFilterBean bean, RequestContext reqCtx);
 	

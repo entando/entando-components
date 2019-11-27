@@ -43,7 +43,7 @@ import org.springframework.cache.annotation.Cacheable;
  */
 public class BaseContentListHelper implements IContentListHelper {
 
-    private static final Logger _logger = LoggerFactory.getLogger(BaseContentListHelper.class);
+    private static final Logger logger = LoggerFactory.getLogger(BaseContentListHelper.class);
 
     private IContentManager contentManager;
     private ICacheInfoManager cacheInfoManager;
@@ -56,15 +56,6 @@ public class BaseContentListHelper implements IContentListHelper {
         }
         BaseFilterUtils dom = new BaseFilterUtils();
         return dom.getFilters(contentPrototype, filtersShowletParam, langCode);
-    }
-
-    /**
-     * @deprecated From Entando 2.0 version 2.4.1. Use getFilter(String
-     * contentType, IEntityFilterBean, String) method
-     */
-    @Override
-    public EntitySearchFilter getFilter(String contentType, IContentListFilterBean bean, String langCode) {
-        return this.getFilter(contentType, (IEntityFilterBean) bean, langCode);
     }
 
     @Override
@@ -94,10 +85,10 @@ public class BaseContentListHelper implements IContentListHelper {
             if (null == bean.getContentType()) {
                 throw new ApsSystemException("Content type not defined");
             }
-            Collection<String> userGroupCodes = getAllowedGroupCodes(user); //this.getAllowedGroups(user);
-            contentsId = this.getContentManager().loadPublicContentsId(bean.getContentType(), bean.getCategories(), bean.getFilters(), userGroupCodes);
+            Collection<String> userGroupCodes = getAllowedGroupCodes(user);
+            contentsId = this.getContentManager().loadPublicContentsId(bean.getContentType(), bean.getCategories(), bean.isOrClauseCategoryFilter(), bean.getFilters(), userGroupCodes);
         } catch (Throwable t) {
-            _logger.error("Error extracting contents id", t);
+            logger.error("Error extracting contents id", t);
             throw new ApsSystemException("Error extracting contents id", t);
         }
         return contentsId;
@@ -125,7 +116,7 @@ public class BaseContentListHelper implements IContentListHelper {
     }
 
     public static Collection<String> getAllowedGroupCodes(UserDetails user) {
-        Set<String> codes = new HashSet<String>();
+        Set<String> codes = new HashSet<>();
         codes.add(Group.FREE_GROUP_NAME);
         List<Authorization> auths = (null != user) ? user.getAuthorizations() : null;
         if (null != auths) {
@@ -160,7 +151,7 @@ public class BaseContentListHelper implements IContentListHelper {
         if (null != bean.getContentType()) {
             cacheKey.append("TYPE_").append(bean.getContentType());
         }
-        List<String> groupCodes = new ArrayList<String>(userGroupCodes);
+        List<String> groupCodes = new ArrayList<>(userGroupCodes);
         if (!groupCodes.contains(Group.FREE_GROUP_NAME)) {
             groupCodes.add(Group.FREE_GROUP_NAME);
         }
@@ -172,7 +163,7 @@ public class BaseContentListHelper implements IContentListHelper {
             String code = groupCodes.get(i);
             cacheKey.append("_").append(code);
         }
-        if (null != bean.getCategories()) {
+        if (null != bean.getCategories() && bean.getCategories().length > 0) {
             List<String> categoryCodes = Arrays.asList(bean.getCategories());
             Collections.sort(categoryCodes);
             for (int j = 0; j < categoryCodes.size(); j++) {
@@ -182,6 +173,7 @@ public class BaseContentListHelper implements IContentListHelper {
                 String code = categoryCodes.get(j);
                 cacheKey.append("_").append(code);
             }
+            cacheKey.append("_ORCLAUSE_").append(bean.isOrClauseCategoryFilter());
         }
         if (null != bean.getFilters()) {
             for (int k = 0; k < bean.getFilters().length; k++) {
@@ -213,7 +205,7 @@ public class BaseContentListHelper implements IContentListHelper {
     }
 
     public static List<String> splitValues(String concatedValues, String separator) {
-        List<String> values = new ArrayList<String>();
+        List<String> values = new ArrayList<>();
         if (concatedValues != null && concatedValues.trim().length() > 0) {
             String[] codes = concatedValues.split(separator);
             for (String code : codes) {
