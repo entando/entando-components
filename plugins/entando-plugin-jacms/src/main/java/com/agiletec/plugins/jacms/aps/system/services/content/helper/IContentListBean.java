@@ -38,6 +38,8 @@ public interface IContentListBean {
 	 * @return La categorie dei contenuti da cercare.
 	 */
 	public String[] getCategories();
+    
+    public boolean isOrClauseCategoryFilter();
 	
 	/**
 	 * Restituisce la lista di filtri definita nel bean.

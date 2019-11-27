@@ -30,7 +30,6 @@ import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
-import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentListFilterBean;
 import com.agiletec.plugins.jacms.aps.system.services.content.widget.UserFilterOptionBean;
 
 /**
@@ -89,14 +88,6 @@ public class FilterUtils extends BaseFilterUtils {
 			}
 		}
 		return list;
-	}
-	
-	/**
-	 * @deprecated From Entando 3.0 version 3.0.1. Use getUserFilter(String, IEntityFilterBean, IContentManager, RequestContext) method
-	 */
-	public UserFilterOptionBean getUserFilter(String contentType, 
-			IContentListFilterBean bean, IContentManager contentManager, RequestContext reqCtx) {
-		return this.getUserFilter(contentType, (IEntityFilterBean) bean, contentManager, "dd/MM/yyyy", reqCtx);
 	}
 	
 	/**
