@@ -92,7 +92,7 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
             }
             String langCode = properties.getProperty(SystemConstants.API_LANG_CODE_PARAMETER);
             String filtersParam = properties.getProperty("filters");
-            if (!filtersParam.isEmpty()) {
+            if (!StringUtils.isEmpty(filtersParam)) {
                 filtersParam = URLDecoder.decode(filtersParam, StandardCharsets.UTF_8.toString());
             }
             EntitySearchFilter[] filters = this.getContentListHelper().getFilters(contentType, filtersParam, langCode);
