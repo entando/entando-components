@@ -23,6 +23,7 @@ import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.attribute.TextAttribute;
 import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
 import com.agiletec.aps.system.common.tree.ITreeNode;
+import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.group.Group;
@@ -108,7 +109,7 @@ public class SearchEngineManagerIntegrationTest extends BaseTestCase {
             Thread thread = this.searchEngineManager.startReloadContentsReferences();
             thread.join();
 
-            Set<String> allowedGroup = new HashSet<String>();
+            Set<String> allowedGroup = new HashSet<>();
             List<String> contentsId = this.searchEngineManager.searchEntityId("it", "Corpo coach", allowedGroup);
             assertNotNull(contentsId);
             assertFalse(contentsId.contains("ART104"));
@@ -122,7 +123,7 @@ public class SearchEngineManagerIntegrationTest extends BaseTestCase {
             assertNotNull(contentsId);
             assertTrue(contentsId.contains("EVN194"));//free content
 
-            Set<String> allowedGroup2 = new HashSet<String>();
+            Set<String> allowedGroup2 = new HashSet<>();
             allowedGroup2.add(Group.ADMINS_GROUP_NAME);
             contentsId = this.searchEngineManager.searchEntityId("it", "testo coach", allowedGroup2);
             assertNotNull(contentsId);
@@ -144,7 +145,7 @@ public class SearchEngineManagerIntegrationTest extends BaseTestCase {
             this.searchEngineManager.deleteIndexedEntity(content_2.getId());
             this.searchEngineManager.addEntityToIndex(content_2);
 
-            List<String> allowedGroup = new ArrayList<String>();
+            List<String> allowedGroup = new ArrayList<>();
             allowedGroup.add(Group.FREE_GROUP_NAME);
             List<String> contentsId = this.searchEngineManager.searchEntityId("it", "San meravigliosa", allowedGroup);
             assertNotNull(contentsId);
@@ -229,21 +230,13 @@ public class SearchEngineManagerIntegrationTest extends BaseTestCase {
             throw t;
         }
     }
-
+    
     public void testSearchContentsId_7() throws Throwable {
         try {
             Content content_1 = this.createContent_1();
             this.searchEngineManager.deleteIndexedEntity(content_1.getId());
             this.searchEngineManager.addEntityToIndex(content_1);
-
-            Content content_2 = this.createContent_2();
-            this.searchEngineManager.deleteIndexedEntity(content_2.getId());
-            this.searchEngineManager.addEntityToIndex(content_2);
-
-            Content content_3 = this.createContent_3();
-            this.searchEngineManager.deleteIndexedEntity(content_3.getId());
-            this.searchEngineManager.addEntityToIndex(content_3);
-
+            this.createContentsForTest();
             //San Pietroburgo è una città meravigliosa W3C-WAI
             //100
             //Il turismo ha incrementato più del 20 per cento nel 2011-2013, quando la Croazia ha aderito all'Unione europea. Consegienda di questo aumento è una serie di modernizzazione di alloggi di recente costruzione, tra cui circa tre dozzine di ostelli.
@@ -261,6 +254,13 @@ public class SearchEngineManagerIntegrationTest extends BaseTestCase {
             assertNotNull(contentsId);
             assertEquals(1, contentsId.size());
             assertTrue(contentsId.contains(content_1.getId()));
+            
+            SearchEngineFilter filter1_2 = new SearchEngineFilter("en", "San meravigliosa", SearchEngineFilter.TextSearchOption.ALL_WORDS);
+            filter1.setFullTextSearch(true);
+            SearchEngineFilter[] filters1_2 = {filter1_2};
+            contentsId = sem.searchEntityId(filters1_2, null, allowedGroup);
+            assertNotNull(contentsId);
+            assertTrue(contentsId.isEmpty());
 
             SearchEngineFilter filter2 = new SearchEngineFilter("it", "San meravigliosa", SearchEngineFilter.TextSearchOption.AT_LEAST_ONE_WORD);
             filter2.setFullTextSearch(true);
@@ -268,8 +268,8 @@ public class SearchEngineManagerIntegrationTest extends BaseTestCase {
             contentsId = sem.searchEntityId(filters2, null, allowedGroup);
             assertNotNull(contentsId);
             assertEquals(2, contentsId.size());
-            assertTrue(contentsId.contains(content_1.getId()));
-            assertTrue(contentsId.contains(content_3.getId()));
+            assertTrue(contentsId.contains("101"));
+            assertTrue(contentsId.contains("103"));
 
             SearchEngineFilter filter3 = new SearchEngineFilter("it", "San meravigliosa", SearchEngineFilter.TextSearchOption.EXACT);
             filter3.setFullTextSearch(true);
@@ -284,7 +284,59 @@ public class SearchEngineManagerIntegrationTest extends BaseTestCase {
             contentsId = sem.searchEntityId(filters4, null, allowedGroup);
             assertNotNull(contentsId);
             assertEquals(1, contentsId.size());
-            assertTrue(contentsId.contains(content_3.getId()));
+            assertTrue(contentsId.contains("103"));
+        } catch (Throwable t) {
+            throw t;
+        }
+    }
+    public void testSearchContentsId_7_like() throws Throwable {
+        try {
+            this.createContentsForTest();
+            //San Pietroburgo è una città meravigliosa W3C-WAI
+            //Il turismo ha incrementato più del 20 per cento nel 2011-2013, quando la Croazia ha aderito all'Unione europea. Consegienda di questo aumento è una serie di modernizzazione di alloggi di recente costruzione, tra cui circa tre dozzine di ostelli.
+            //La vita è una cosa meravigliosa
+            
+            SearchEngineManager sem = (SearchEngineManager) this.searchEngineManager;
+
+            List<String> allowedGroup = new ArrayList<>();
+            allowedGroup.add(Group.FREE_GROUP_NAME);
+            SearchEngineFilter filter1 = new SearchEngineFilter("Articolo", true, "San viglios", SearchEngineFilter.TextSearchOption.ALL_WORDS);
+            filter1.setLangCode("it");
+            filter1.setLikeOption(true);
+            SearchEngineFilter[] filters1 = {filter1};
+            List<String> contentsId = sem.searchEntityId(filters1, null, allowedGroup);
+            assertEquals(1, contentsId.size());
+            assertTrue(contentsId.contains("101"));
+
+            SearchEngineFilter filter2 = new SearchEngineFilter("Articolo", true, "San ravigl", SearchEngineFilter.TextSearchOption.AT_LEAST_ONE_WORD);
+            filter2.setLangCode("it");
+            filter2.setLikeOption(true);
+            SearchEngineFilter[] filters2 = {filter2};
+            contentsId = sem.searchEntityId(filters2, null, allowedGroup);
+            assertEquals(2, contentsId.size());
+            assertTrue(contentsId.contains("101"));
+            assertTrue(contentsId.contains("103"));
+            
+            SearchEngineFilter filter3 = new SearchEngineFilter("Articolo", true, "meravig*");
+            filter3.setLangCode("it");
+            SearchEngineFilter[] filters3 = {filter3};
+            contentsId = sem.searchEntityId(filters3, null, allowedGroup);
+            assertEquals(2, contentsId.size());
+            assertTrue(contentsId.contains("101"));
+            assertTrue(contentsId.contains("103"));
+            
+            SearchEngineFilter filter4 = new SearchEngineFilter("en", "Accompany*");
+            filter4.setFullTextSearch(true);
+            SearchEngineFilter[] filters4 = {filter4};
+            contentsId = sem.searchEntityId(filters4, null, allowedGroup);
+            assertEquals(1, contentsId.size());
+            assertTrue(contentsId.contains("102"));
+            
+            SearchEngineFilter filter5 = new SearchEngineFilter("en", "Accompany");
+            filter5.setFullTextSearch(true);
+            SearchEngineFilter[] filters5 = {filter5};
+            contentsId = sem.searchEntityId(filters5, null, allowedGroup);
+            assertTrue(contentsId.isEmpty());
         } catch (Throwable t) {
             throw t;
         }
@@ -338,10 +390,22 @@ public class SearchEngineManagerIntegrationTest extends BaseTestCase {
             assertTrue(contentsId.contains(array[i]));
         }
     }
+    
+    private void createContentsForTest() throws ApsSystemException {
+        Content content_1 = this.createContent_1();
+        this.searchEngineManager.deleteIndexedEntity(content_1.getId());
+        this.searchEngineManager.addEntityToIndex(content_1);
+        Content content_2 = this.createContent_2();
+        this.searchEngineManager.deleteIndexedEntity(content_2.getId());
+        this.searchEngineManager.addEntityToIndex(content_2);
+        Content content_3 = this.createContent_3();
+        this.searchEngineManager.deleteIndexedEntity(content_3.getId());
+        this.searchEngineManager.addEntityToIndex(content_3);
+    }
 
     private Content createContent_1() {
         Content content = new Content();
-        content.setId("100");
+        content.setId("101");
         content.setDescription("Description content 1");
         content.setMainGroup(Group.FREE_GROUP_NAME);
         content.addGroup("secondaryGroup");
@@ -362,7 +426,7 @@ public class SearchEngineManagerIntegrationTest extends BaseTestCase {
 
     private Content createContent_2() {
         Content content = new Content();
-        content.setId("101");
+        content.setId("102");
         content.setDescription("Description content 2");
         content.setMainGroup(Group.FREE_GROUP_NAME);
         content.addGroup("thirdGroup");
