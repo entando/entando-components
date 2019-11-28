@@ -212,8 +212,7 @@ public class SearcherDAO implements ISearcherDAO {
         }
         return mainQuery.build();
     }
-
-    //TODO Copied from core - make this method protected in superclass
+    
     private Query createQuery(SearchEngineFilter filter) {
         BooleanQuery.Builder fieldQuery = null;
         String key = this.getFilterKey(filter);
@@ -227,6 +226,7 @@ public class SearcherDAO implements ISearcherDAO {
             }
             //To be improved to manage different type
             for (int j = 0; j < allowedValues.size(); j++) {
+                //NOTE: search for lower case....
                 String singleValue = allowedValues.get(j).toString();
                 String[] values = singleValue.split("\\s+");
                 if (!option.equals(SearchEngineFilter.TextSearchOption.EXACT)) {
@@ -238,15 +238,13 @@ public class SearcherDAO implements ISearcherDAO {
                         bc = BooleanClause.Occur.MUST_NOT;
                     }
                     for (int i = 0; i < values.length; i++) {
-                        TermQuery term = new TermQuery(new Term(key, values[i].toLowerCase()));
-                        //NOTE: search lower case....
-                        singleOptionFieldQuery.add(term, bc);
+                        Query queryTerm = this.getTermQueryForTextSearch(key, values[i], filter.isLikeOption());
+                        singleOptionFieldQuery.add(queryTerm, bc);
                     }
                     fieldQuery.add(singleOptionFieldQuery.build(), BooleanClause.Occur.SHOULD);
                 } else {
                     PhraseQuery.Builder phraseQuery = new PhraseQuery.Builder();
                     for (int i = 0; i < values.length; i++) {
-                        //NOTE: search lower case....
                         phraseQuery.add(new Term(key, values[i].toLowerCase()), i);
                     }
                     fieldQuery.add(phraseQuery.build(), BooleanClause.Occur.SHOULD);
@@ -255,6 +253,7 @@ public class SearcherDAO implements ISearcherDAO {
         } else if (null != value) {
             fieldQuery = new BooleanQuery.Builder();
             if (value instanceof String) {
+                //NOTE: search for lower case....
                 SearchEngineFilter.TextSearchOption option = filter.getTextSearchOption();
                 if (null == option) {
                     option = SearchEngineFilter.TextSearchOption.AT_LEAST_ONE_WORD;
@@ -269,14 +268,12 @@ public class SearcherDAO implements ISearcherDAO {
                         bc = BooleanClause.Occur.MUST_NOT;
                     }
                     for (int i = 0; i < values.length; i++) {
-                        TermQuery term = new TermQuery(new Term(key, values[i].toLowerCase()));
-                        //NOTE: search lower case....
-                        fieldQuery.add(term, bc);
+                        Query queryTerm = this.getTermQueryForTextSearch(key, values[i], filter.isLikeOption());
+                        fieldQuery.add(queryTerm, bc);
                     }
                 } else {
                     PhraseQuery.Builder phraseQuery = new PhraseQuery.Builder();
                     for (int i = 0; i < values.length; i++) {
-                        //NOTE: search lower case....
                         phraseQuery.add(new Term(key, values[i].toLowerCase()), i);
                     }
                     return phraseQuery.build();
@@ -312,6 +309,20 @@ public class SearcherDAO implements ISearcherDAO {
         }
         return null;
     }
+    
+    protected Query getTermQueryForTextSearch(String key, String value, boolean isLikeSearch) {
+        //NOTE: search for lower case....
+        String stringValue = value.toLowerCase();
+        boolean useWildCard = false;
+        if (value.startsWith("*") || value.endsWith("*")) {
+            useWildCard = true;
+        } else if (isLikeSearch) {
+            stringValue = "*"+stringValue+"*";
+            useWildCard = true;
+        }
+        Term term = new Term(key, stringValue);
+        return (useWildCard) ? new WildcardQuery(term) : new TermQuery(term);
+    } 
     
     protected String getFilterKey(SearchEngineFilter filter) {
         String key = filter.getKey();
