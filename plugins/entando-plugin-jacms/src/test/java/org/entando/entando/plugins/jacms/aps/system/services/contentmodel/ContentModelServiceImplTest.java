@@ -177,12 +177,17 @@ public class ContentModelServiceImplTest {
         contentModelToUpdate.setContentType("AAA");
 
         String updatedDescription = "test description";
+        String updatedContentType = "BBB";
         contentModelToUpdate.setDescr(updatedDescription);
+        contentModelToUpdate.setContentType(updatedContentType);
 
-        this.mockedContentModels.get(id).setDescription(updatedDescription);
+        ContentModel contentModel = this.mockedContentModels.get(id);
+        contentModel.setDescription(updatedDescription);
+        contentModel.setContentType(updatedContentType);
 
         ContentModelDto result = contentModelService.update(contentModelToUpdate);
         assertThat(result.getDescr()).isEqualTo(updatedDescription);
+        assertThat(result.getContentType()).isEqualTo(updatedContentType);
     }
 
     @Test(expected = ResourceNotFoundException.class)
@@ -194,22 +199,6 @@ public class ContentModelServiceImplTest {
             contentModelService.update(contentModelToUpdate);
         } catch (ResourceNotFoundException ex) {
             assertThat(ex.getErrorCode()).isEqualTo(ContentModelValidator.ERRCODE_CONTENTMODEL_NOT_FOUND);
-            throw ex;
-        }
-    }
-
-    @Test(expected = ValidationConflictException.class)
-    public void shouldFailUpdatingContentModelBecauseInvalidContentType() {
-        try {
-            long id = 1L;
-            ContentModelDto contentModelToUpdate = new ContentModelDto();
-            contentModelToUpdate.setId(id);
-            contentModelToUpdate.setContentType("BBB");
-            contentModelService.update(contentModelToUpdate);
-        } catch (ValidationConflictException ex) {
-            List<ObjectError> errors = ex.getBindingResult().getAllErrors();
-            assertThat(errors).isNotNull().hasSize(1);
-            assertThat(errors.get(0).getCode()).isEqualTo(ContentModelValidator.ERRCODE_CONTENTMODEL_CANNOT_UPDATE_CONTENT_TYPE);
             throw ex;
         }
     }
