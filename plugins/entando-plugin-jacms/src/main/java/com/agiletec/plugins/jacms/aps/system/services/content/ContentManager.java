@@ -207,6 +207,9 @@ public class ContentManager extends ApsEntityManager
                     if (null == content.getLastEditor()) {
                         content.setLastEditor(contentVo.getLastEditor());
                     }
+                    if (null == content.getRestriction()) {
+                        content.setRestriction(contentVo.getRestriction());
+                    }
                     if (null == content.getCreated()) {
                         content.setCreated(contentVo.getCreate());
                     }

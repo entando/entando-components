@@ -133,6 +133,10 @@ public class ContentWrapper extends EntityWrapper {
 	public String getLastEditor() {
 		return ((Content) super.getEntity()).getLastEditor();
 	}
+
+	public String getRestriction() {
+		return ((Content) super.getEntity()).getRestriction();
+	}
 	
     protected RequestContext getReqCtx() {
         return _reqCtx;

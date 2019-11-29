@@ -35,6 +35,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.helper.PublicConte
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentRestriction;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModelManager;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentRenderizationInfo;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.IContentDispenser;
@@ -373,6 +374,7 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
         request.setId(null);
         request.setFirstEditor(user.getUsername());
         request.setLastEditor(user.getUsername());
+        request.setRestriction(ContentRestriction.getRestrictionValue(request.getMainGroup()));
         return this.addEntity(JacmsSystemConstants.CONTENT_MANAGER, request, bindingResult);
     }
 
@@ -381,6 +383,7 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
         this.checkContentExists(request.getId());
         this.checkContentAuthorization(user, request.getId(), false, true, bindingResult);
         request.setLastEditor(user.getUsername());
+        request.setRestriction(ContentRestriction.getRestrictionValue(request.getMainGroup()));
         return super.updateEntity(JacmsSystemConstants.CONTENT_MANAGER, request, bindingResult);
     }
 

@@ -114,7 +114,14 @@ public class ContentRecordVO extends ApsEntityRecord {
 	public void setLastEditor(String lastEditor) {
 		this._lastEditor = lastEditor;
 	}
-	
+
+	public String getRestriction() {
+		return _restriction;
+	}
+	public void setRestriction(String _restriction) {
+		this._restriction = _restriction;
+	}
+
 	private String _description;
 	private String _status;
 	private Date _create;
@@ -128,5 +135,6 @@ public class ContentRecordVO extends ApsEntityRecord {
 	private String _version;
 	private String _firstEditor;
 	private String _lastEditor;
+	private String _restriction;
 	
 }

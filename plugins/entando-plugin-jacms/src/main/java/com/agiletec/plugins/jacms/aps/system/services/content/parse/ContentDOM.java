@@ -46,6 +46,10 @@ public class ContentDOM extends ApsEntityDOM {
 	public void setLastEditor(String lastEditor) {
 		this.setAttribute(TAG_LAST_EDITOR, lastEditor);
 	}
+
+	public void setRestriction(String restriction) {
+		this.setAttribute(TAG_RESTRICTION, restriction);
+	}
 	
 	public void setCreationDate(Date created) {
 		if (null == created) return;
@@ -74,5 +78,6 @@ public class ContentDOM extends ApsEntityDOM {
 	private final static String TAG_LAST_MODIFIED = "lastModified";
 	private final static String TAG_FIRST_EDITOR = "firstEditor";
 	private final static String TAG_LAST_EDITOR = "lastEditor";
+	private final static String TAG_RESTRICTION = "restriction";
 	
 }
