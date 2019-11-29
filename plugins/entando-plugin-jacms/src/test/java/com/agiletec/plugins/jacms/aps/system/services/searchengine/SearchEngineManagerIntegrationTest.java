@@ -256,7 +256,7 @@ public class SearchEngineManagerIntegrationTest extends BaseTestCase {
             assertTrue(contentsId.contains(content_1.getId()));
             
             SearchEngineFilter filter1_2 = new SearchEngineFilter("en", "San meravigliosa", SearchEngineFilter.TextSearchOption.ALL_WORDS);
-            filter1.setFullTextSearch(true);
+            filter1_2.setFullTextSearch(true);
             SearchEngineFilter[] filters1_2 = {filter1_2};
             contentsId = sem.searchEntityId(filters1_2, null, allowedGroup);
             assertNotNull(contentsId);
