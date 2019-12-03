@@ -544,9 +544,9 @@ public class ResourceAction extends AbstractResourceAction implements ResourceDa
                 }
             }
         } catch (ImageProcessingException ex) {
-            logger.error("Error reading metadata");
+            logger.error("Error reading metadata from file " + this.getFileName() + " - message " + ex.getMessage());
         } catch (IOException ioex) {
-            logger.error("Error reading file");
+            logger.error("Error reading file", ioex);
         }
         return meta;
     }
