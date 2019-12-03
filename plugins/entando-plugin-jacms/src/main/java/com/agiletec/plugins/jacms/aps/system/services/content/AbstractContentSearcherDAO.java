@@ -72,7 +72,7 @@ public abstract class AbstractContentSearcherDAO extends AbstractEntitySearcherD
 	
 	protected PreparedStatement buildStatement(EntitySearchFilter[] filters,
 			Collection<String> userGroupCodes, boolean selectAll, Connection conn) {
-		return this.buildStatement(filters, null,false, userGroupCodes, selectAll, conn);
+		return this.buildStatement(filters, null, false, userGroupCodes, selectAll, conn);
 	}
 	
 	protected PreparedStatement buildStatement(EntitySearchFilter[] filters,
