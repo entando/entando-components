@@ -51,12 +51,6 @@ public class ContentManager extends ApsEntityManager
     private IContentUpdaterService contentUpdaterService;
 
     @Override
-    public void init() throws Exception {
-        super.init();
-        logger.debug("{} ready. Initialized {} content types", this.getClass().getName(), super.getEntityTypes().size());
-    }
-
-    @Override
     protected String getConfigItemName() {
         return JacmsSystemConstants.CONFIG_ITEM_CONTENT_TYPES;
     }
