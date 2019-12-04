@@ -57,9 +57,9 @@ public class TestContentFinderAction extends AbstractBaseTestContentAction {
 		Map<String, String> params = new HashMap<String, String>();
 		this.executeSearch("admin", params);
 		ContentFinderAction action = (ContentFinderAction) this.getAction();
-		String[] order1 = {"ALL4", "ART112","ART122","ART121","ART120","ART111","ART179","EVN21",
+		String[] order1 = {"ART1", "ALL4", "ART112","ART122","ART121","ART120","ART111","ART179","EVN21",
 				"EVN20","EVN41","EVN25","EVN24","EVN23","ART102","ART104","EVN103",
-				"RAH101","EVN192","EVN191","RAH1","ART180","EVN194","EVN193","ART1","ART187"};
+				"RAH101","EVN192","EVN191","RAH1","ART180","EVN194","EVN193","ART187"};
 		List<String> contents = action.getContents();
 		assertEquals(order1.length, contents.size());
 		for (int i=0; i<contents.size(); i++) {
@@ -167,8 +167,8 @@ public class TestContentFinderAction extends AbstractBaseTestContentAction {
 		params.put("contentType", "ART");
 		this.executeSearch("admin", params);
 		ContentFinderAction action = (ContentFinderAction) this.getAction();
-		String[] order1 = {"ART112","ART122","ART121","ART120",
-				"ART111","ART179","ART102","ART104","ART180","ART1","ART187"};
+		String[] order1 = {"ART1","ART112","ART122","ART121","ART120",
+				"ART111","ART179","ART102","ART104","ART180","ART187"};
 		List<String> contents = action.getContents();
 		assertEquals(order1.length, contents.size());
 		for (int i=0; i<contents.size(); i++) {
@@ -261,7 +261,7 @@ public class TestContentFinderAction extends AbstractBaseTestContentAction {
 		params.put("categoryCode", "general");
 		this.executeSearch("admin", params);
 		action = (ContentFinderAction) this.getAction();
-		String[] order2 = {"EVN192", "EVN193"};
+		String[] order2 = {"EVN25", "EVN23", "EVN192", "EVN193"};
 		contents = action.getContents();
 		assertEquals(order2.length, contents.size());
 		for (int i=0; i<contents.size(); i++) {

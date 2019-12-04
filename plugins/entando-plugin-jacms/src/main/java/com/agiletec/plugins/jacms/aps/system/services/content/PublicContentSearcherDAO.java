@@ -99,7 +99,7 @@ public class PublicContentSearcherDAO extends AbstractContentSearcherDAO impleme
 		ArrayList<EntitySearchFilter> remainingFilters = new ArrayList<>();
 
 		for (EntitySearchFilter filter : filters) {
-			if (filter.getKey().equals(IContentManager.CONTENT_GROUP_FILTER_KEY)) {
+			if (IContentManager.CONTENT_GROUP_FILTER_KEY.equals(filter.getKey())) {
 				groups.add((String)filter.getValue());
 			} else {
 				remainingFilters.add(filter);
