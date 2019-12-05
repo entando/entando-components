@@ -63,9 +63,9 @@ public class TestContentFinderViewerAction extends ApsAdminBaseTestCase {
 		Map<String, String> params = new HashMap<String, String>();
 		this.executeParametrizedSearchContents("admin", "pagina_11", "1", null);//Pagina Free
 		ContentFinderViewerAction action = (ContentFinderViewerAction) this.getAction();
-		String[] order1 = {"ART1", "ALL4", "ART121", "EVN21", "EVN20", "EVN25",
-				"EVN24", "EVN23", "EVN192", "EVN191", "RAH1", 
-				"ART180", "EVN194", "EVN193", "ART187"};
+		String[] order1 = {"ALL4", "ART121", "EVN21", "EVN20", "EVN25",
+				"EVN24", "EVN23", "EVN192", "EVN191", "RAH1",
+				"ART180", "EVN194", "EVN193", "ART1", "ART187"};
 		List<String> contents = action.getContents();
 		assertEquals(order1.length, contents.size());
 		for (int i=0; i<contents.size(); i++) {

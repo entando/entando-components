@@ -226,10 +226,9 @@ public class TestContentManager extends BaseTestCase {
         EntitySearchFilter[] filters = {modifyOrder, onlineFilter};
         List<String> contentIds = this._contentManager.searchId(filters);
         assertNotNull(contentIds);
-        String[] expected = {"ART187", "EVN193", "EVN194", "ART180", "RAH1", "EVN191",
-            "EVN192", "RAH101", "EVN103", "ART104", "ART102", "EVN23", "EVN24",
-            "EVN25", "EVN41", "EVN20", "EVN21", "ART111", "ART120", "ART121", "ART122", "ART112", "ALL4", "ART1"};
-        assertEquals(expected.length, contentIds.size());
+        String[] expected = {"ART187", "ART1", "EVN193", "EVN194", "ART180", "RAH1",
+                "EVN191", "EVN192", "RAH101", "EVN103", "ART104", "ART102", "EVN23",
+                "EVN24", "EVN25", "EVN41", "EVN20", "EVN21", "ART111", "ART120", "ART121", "ART122", "ART112", "ALL4"};
         this.verifyOrder(contentIds, expected);
     }
 
@@ -256,7 +255,7 @@ public class TestContentManager extends BaseTestCase {
         EntitySearchFilter statusFilter = new EntitySearchFilter(IContentManager.CONTENT_STATUS_FILTER_KEY, false, Content.STATUS_DRAFT, false);
         EntitySearchFilter[] filters2 = {creationOrder, typeFilter, statusFilter};
         contents = this._contentManager.loadWorkContentsId(filters2, groupCodes);
-        String[] order2 = {"ART102", "ART187", "ART179"};
+        String[] order2 = {"ART102", "ART187", "ART179", "ART1"};
         assertEquals(order2.length, contents.size());
         this.verifyOrder(contents, order2);
 
