@@ -154,7 +154,7 @@
         </div>
     </div>
 
-
+    <s:set var="resourcesVar" value="resources" />
 
     <div class="tab-content">
         <div id="table-view" class="tab-pane fade">
@@ -175,7 +175,7 @@
                 <wpsf:hidden name="contentOnSessionMarker"/>
                 </p>
 
-                <wpsa:subset source="resources" count="10" objectName="groupResource" advanced="true" offset="5">
+                <wpsa:subset source="#resourcesVar" count="10" objectName="groupResource" advanced="true" offset="5">
 
                     <!--carte-->
                     <s:if test="onEditContent">
@@ -395,7 +395,7 @@
                 <wpsf:hidden name="order" />
                 <wpsf:hidden name="contentOnSessionMarker"/>
                 </p>
-                <wpsa:subset source="resources" count="10" objectName="groupResource" advanced="true" offset="5">
+                <wpsa:subset source="#resourcesVar" count="10" objectName="groupResource" advanced="true" offset="5">
 
                     <!--lista attachment-->
 

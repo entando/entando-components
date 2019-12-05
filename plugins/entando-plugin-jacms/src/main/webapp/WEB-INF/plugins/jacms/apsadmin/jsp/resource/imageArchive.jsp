@@ -165,6 +165,8 @@
             </div>
         </div>
     </div>
+    
+    <s:set var="resourcesVar" value="resources" />
 
     <div class="tab-content">
         <div id="table-view" class="tab-pane fade">
@@ -186,7 +188,7 @@
                 <wpsf:hidden name="contentOnSessionMarker"/>
                 </p>
 
-                <wpsa:subset source="resources" count="10" objectName="groupResource" advanced="true" offset="5">
+                <wpsa:subset source="#resourcesVar" count="10" objectName="groupResource" advanced="true" offset="5">
                     <div class="row row-cards-pf">
                         <s:set var="group" value="#groupResource"/>
                         <s:set var="imageDimensionsVar" value="imageDimensions"/>
@@ -301,7 +303,7 @@
                 <wpsf:hidden name="order" />
                 <wpsf:hidden name="contentOnSessionMarker"/>
                 </p>
-                <wpsa:subset source="resources" count="10" objectName="groupResource" advanced="true" offset="5">
+                <wpsa:subset source="#resourcesVar" count="10" objectName="groupResource" advanced="true" offset="5">
                     <div class="list-group list-view-pf list-view-pf-view">
                         <s:set var="group" value="#groupResource"/>
                         <s:set var="imageDimensionsVar" value="imageDimensions"/>
@@ -461,4 +463,3 @@
         </s:if>
     </wp:ifauthorized>
 </div>
-                    
