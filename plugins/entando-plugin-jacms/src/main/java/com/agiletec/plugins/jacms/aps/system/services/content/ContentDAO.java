@@ -76,6 +76,7 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 		contentVo.setVersion(res.getString(10));
 		contentVo.setFirstEditor(res.getString(11));
 		contentVo.setLastEditor(res.getString(12));
+		contentVo.setRestriction(res.getString(13));
 		return contentVo;
 	}
 
@@ -105,6 +106,7 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 		stat.setString(9, content.getVersion());
 		stat.setString(10, content.getFirstEditor());
 		stat.setString(11, content.getLastEditor());
+		stat.setString(12, content.getRestriction());
 	}
 
 	@Override
@@ -181,6 +183,7 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 		stat.setString(index++, content.getMainGroup());
 		stat.setString(index++, content.getVersion());
 		stat.setString(index++, content.getLastEditor());
+		stat.setString(index++, content.getRestriction());
 		stat.setString(index++, content.getId());
 	}
 
@@ -270,6 +273,7 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 			stat.setString(index++, content.getMainGroup());
 			stat.setString(index++, content.getVersion());
 			stat.setString(index++, content.getLastEditor());
+			stat.setString(index++, content.getRestriction());
 			stat.setString(index++, content.getId());
 			stat.executeUpdate();
 		} catch (Throwable t) {
@@ -404,6 +408,7 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 			}
 			stat.setString(index++, content.getVersion());
 			stat.setString(index++, content.getLastEditor());
+			stat.setString(index++, content.getRestriction());
 			stat.setString(index++, content.getId());
 			stat.executeUpdate();
 		} catch (Throwable t) {
@@ -784,32 +789,33 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 
 	private final String LOAD_CONTENTS_VO_MAIN_BLOCK = "SELECT contents.contentid, contents.contenttype, contents.descr, contents.status, "
 			+ "contents.workxml, contents.created, contents.lastmodified, contents.onlinexml, contents.maingroup, "
-			+ "contents.currentversion, contents.firsteditor, contents.lasteditor " + "FROM contents ";
+			+ "contents.currentversion, contents.firsteditor, contents.lasteditor, contents.restriction " + "FROM contents ";
 
 	private final String LOAD_CONTENT_VO = LOAD_CONTENTS_VO_MAIN_BLOCK + " WHERE contents.contentid = ? ";
 
 	private final String ADD_CONTENT = "INSERT INTO contents (contentid, contenttype, descr, status, workxml, "
-			+ "created, lastmodified, maingroup, currentversion, firsteditor, lasteditor) "
-			+ "VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ?)";
+			+ "created, lastmodified, maingroup, currentversion, firsteditor, lasteditor, restriction) "
+			+ "VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ?, ?)";
 
 	private final String INSERT_ONLINE_CONTENT = "UPDATE contents SET contenttype = ? , descr = ? , status = ? , "
 			+ "workxml = ? , lastmodified = ? , onlinexml = ? , maingroup = ? , currentversion = ? , lasteditor = ? "
-			+ "WHERE contentid = ? ";
+			+ ", restriction = ? WHERE contentid = ? ";
 
 	private final String INSERT_ONLINE_CONTENT_WITHOUT_DATE = "UPDATE contents SET contenttype = ? , descr = ? , status = ? , "
-			+ "workxml = ? , onlinexml = ? , maingroup = ? , currentversion = ? , lasteditor = ? " + "WHERE contentid = ? ";
+			+ "workxml = ? , onlinexml = ? , maingroup = ? , currentversion = ? , lasteditor = ? , restriction = ? "
+			+ "WHERE contentid = ? ";
 
 	private final String REMOVE_ONLINE_CONTENT = "UPDATE contents SET onlinexml = ? , status = ? , "
-			+ "workxml = ? , lastmodified = ? , currentversion = ? , lasteditor = ? WHERE contentid = ? ";
+			+ "workxml = ? , lastmodified = ? , currentversion = ? , lasteditor = ? , restriction = ? WHERE contentid = ? ";
 
 	private final String REMOVE_ONLINE_CONTENT_WITHOUT_DATE = "UPDATE contents SET onlinexml = ? , status = ? , "
-			+ "workxml = ? , currentversion = ? , lasteditor = ? WHERE contentid = ? ";
+			+ "workxml = ? , currentversion = ? , lasteditor = ? , restriction = ? WHERE contentid = ? ";
 
 	private final String UPDATE_CONTENT = "UPDATE contents SET contenttype = ? , descr = ? , status = ? , "
-			+ "workxml = ? , lastmodified = ? , maingroup = ? , currentversion = ? , lasteditor = ? " + "WHERE contentid = ? ";
+			+ "workxml = ? , lastmodified = ? , maingroup = ? , currentversion = ? , lasteditor = ? , restriction = ? " + "WHERE contentid = ? ";
 
 	private final String UPDATE_CONTENT_WITHOUT_DATE = "UPDATE contents SET contenttype = ? , descr = ? , status = ? , "
-			+ "workxml = ? , maingroup = ? , currentversion = ? , lasteditor = ? " + "WHERE contentid = ? ";
+			+ "workxml = ? , maingroup = ? , currentversion = ? , lasteditor = ? , restriction = ? " + "WHERE contentid = ? ";
 
 	private final String LOAD_ALL_CONTENTS_ID = "SELECT contentid FROM contents";
 

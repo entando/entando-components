@@ -227,9 +227,8 @@ public class TestContentManager extends BaseTestCase {
         List<String> contentIds = this._contentManager.searchId(filters);
         assertNotNull(contentIds);
         String[] expected = {"ART187", "ART1", "EVN193", "EVN194", "ART180", "RAH1",
-            "EVN191", "EVN192", "RAH101", "EVN103", "ART104", "ART102", "EVN23",
-            "EVN24", "EVN25", "EVN41", "EVN20", "EVN21", "ART111", "ART120", "ART121", "ART122", "ART112", "ALL4"};
-        assertEquals(expected.length, contentIds.size());
+                "EVN191", "EVN192", "RAH101", "EVN103", "ART104", "ART102", "EVN23",
+                "EVN24", "EVN25", "EVN41", "EVN20", "EVN21", "ART111", "ART120", "ART121", "ART122", "ART112", "ALL4"};
         this.verifyOrder(contentIds, expected);
     }
 
@@ -314,13 +313,13 @@ public class TestContentManager extends BaseTestCase {
         EntitySearchFilter[] filters = {creationOrder};
         String[] categories_1 = {"general_cat2"};
         List<String> contents = this._contentManager.loadWorkContentsId(categories_1, filters, groupCodes);
-        String[] order_a = {"ART120", "ART112", "ART111", "EVN193", "ART179"};
+        String[] order_a = {"ART120", "EVN25", "ART112", "ART111", "EVN193", "ART179"};
         assertEquals(order_a.length, contents.size());
         this.verifyOrder(contents, order_a);
 
         String[] categories_2 = {"general_cat1", "general_cat2"};
         contents = this._contentManager.loadWorkContentsId(categories_2, filters, groupCodes);
-        String[] order_b = {"ART111", "ART179"};
+        String[] order_b = {"EVN25", "ART111", "ART179"};
         assertEquals(order_b.length, contents.size());
         assertEquals(order_b[0], contents.get(0));
 
@@ -329,7 +328,7 @@ public class TestContentManager extends BaseTestCase {
         try {
             this._contentManager.saveContent(newContent);
             contents = this._contentManager.loadWorkContentsId(categories_1, filters, groupCodes);
-            String[] order_c = {newContent.getId(), "ART120", "ART112", "ART111", "EVN193", "ART179"};
+            String[] order_c = {newContent.getId(), "ART120", "EVN25", "ART112", "ART111", "EVN193", "ART179"};
             assertEquals(order_c.length, contents.size());
             this.verifyOrder(contents, order_c);
 
@@ -337,7 +336,7 @@ public class TestContentManager extends BaseTestCase {
             newContent.addCategory(categoryManager.getCategory("general_cat1"));
             this._contentManager.saveContent(newContent);
             contents = this._contentManager.loadWorkContentsId(categories_2, filters, groupCodes);
-            String[] order_d = {newContent.getId(), "ART111", "ART179"};
+            String[] order_d = {newContent.getId(), "EVN25", "ART111", "ART179"};
             assertEquals(order_d.length, contents.size());
             this.verifyOrder(contents, order_d);
         } catch (Throwable t) {
@@ -1080,19 +1079,22 @@ public class TestContentManager extends BaseTestCase {
         groups.add(Group.ADMINS_GROUP_NAME);
         String[] categories1 = {"general_cat1"};
         List<String> contents = this._contentManager.loadWorkContentsId(categories1, null, groups);
-        assertEquals(5, contents.size());
+        assertEquals(7, contents.size());
         assertTrue(contents.contains("ART179"));
         assertTrue(contents.contains("ART180"));
         assertTrue(contents.contains("ART102"));
         assertTrue(contents.contains("ART111"));
         assertTrue(contents.contains("EVN192"));
+        assertTrue(contents.contains("EVN23"));
+        assertTrue(contents.contains("EVN25"));
 
         String[] categories2 = {"general_cat1", "general_cat2"};
 
         contents = this._contentManager.loadWorkContentsId(categories2, null, groups);
-        assertEquals(2, contents.size());
+        assertEquals(3, contents.size());
         assertTrue(contents.contains("ART111"));
         assertTrue(contents.contains("ART179"));
+        assertTrue(contents.contains("EVN25"));
     }
 
     public void testLoadWorkContentsForCategory_2() throws ApsSystemException {

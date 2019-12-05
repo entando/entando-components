@@ -91,11 +91,26 @@ public class PublicContentSearcherDAO extends AbstractContentSearcherDAO impleme
 	}
 	
 	@Override
-	protected PreparedStatement buildStatement(EntitySearchFilter[] filters, 
+	protected PreparedStatement buildStatement(EntitySearchFilter[] filters,
 			String[] categories, boolean orClauseCategoryFilter, 
 			Collection<String> userGroupCodes, boolean selectAll, Connection conn) {
+
+		ArrayList<String> groups = new ArrayList<>();
+		ArrayList<EntitySearchFilter> remainingFilters = new ArrayList<>();
+
+		for (EntitySearchFilter filter : filters) {
+			if (IContentManager.CONTENT_GROUP_FILTER_KEY.equals(filter.getKey())) {
+				groups.add((String)filter.getValue());
+			} else {
+				remainingFilters.add(filter);
+			}
+		}
+
+		filters = remainingFilters.toArray(new EntitySearchFilter[remainingFilters.size()]);
+		String[] groupsArr = groups.toArray(new String[groups.size()]);
+
 		Collection<String> groupsForSelect = this.getGroupsForSelect(userGroupCodes);
-		String query = this.createQueryString(filters, categories, orClauseCategoryFilter, groupsForSelect, selectAll);
+		String query = this.createQueryString(filters, groupsArr, categories, orClauseCategoryFilter, groupsForSelect, selectAll);
 		//System.out.println("QUERY : " + query);
 		PreparedStatement stat = null;
 		try {
@@ -109,6 +124,11 @@ public class PublicContentSearcherDAO extends AbstractContentSearcherDAO impleme
 			if (categories != null) {
 				for (int i=0; i<categories.length; i++) {
 					stat.setString(++index, categories[i]);
+				}
+			}
+			if (groupsArr != null) {
+				for (int i=0; i<groupsArr.length; i++) {
+					stat.setString(++index, groupsArr[i]);
 				}
 			}
 		} catch (Throwable t) {

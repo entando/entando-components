@@ -93,6 +93,12 @@ public class Content {
 			width = 40, 
 			canBeNull = true)
 	private String _firstEditor;
+
+	@DatabaseField(columnName = "restriction",
+			dataType = DataType.STRING,
+			width = 40,
+			canBeNull = true)
+	private String _restriction;
 	
 	public static final String TABLE_NAME = "contents";
 	
@@ -112,6 +118,7 @@ CREATE TABLE contents
   currentversion character varying(7) NOT NULL,
   firsteditor character varying(40),
   lasteditor character varying(40),
+  restriction character varying(40),
   CONSTRAINT contents_pkey PRIMARY KEY (contentid )
 )
  */

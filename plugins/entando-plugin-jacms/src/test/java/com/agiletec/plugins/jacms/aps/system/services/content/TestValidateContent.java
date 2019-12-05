@@ -71,7 +71,7 @@ public class TestValidateContent extends BaseTestCase {
     
     public void testValidate_2() throws Throwable {
         try {
-            Content content = this._contentManager.loadContent("EVN191", true);
+            Content content = this._contentManager.loadContent("EVN21", true);
             content.setId(null);
             content.setMainGroup(Group.FREE_GROUP_NAME);//Valorizzo il gruppo proprietario
             content.getGroups().add("customers");

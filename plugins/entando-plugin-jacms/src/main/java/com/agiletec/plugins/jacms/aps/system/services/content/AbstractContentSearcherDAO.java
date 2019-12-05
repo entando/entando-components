@@ -16,6 +16,7 @@ package com.agiletec.plugins.jacms.aps.system.services.content;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -62,24 +63,29 @@ public abstract class AbstractContentSearcherDAO extends AbstractEntitySearcherD
 			return "firsteditor";
 		} else if (metadataFieldKey.equals(IContentManager.CONTENT_LAST_EDITOR_FILTER_KEY)) {
 			return "lasteditor";
+		} else if (metadataFieldKey.equals(IContentManager.CONTENT_RESTRICTION_FILTER_KEY)) {
+			return "restriction";
+		}else if (metadataFieldKey.equals(IContentManager.CONTENT_GROUP_FILTER_KEY)) {
+			return "group";
 		} else throw new RuntimeException("Chiave di ricerca '" + metadataFieldKey + "' non riconosciuta");
 	}
 	
-	protected PreparedStatement buildStatement(EntitySearchFilter[] filters, 
+	protected PreparedStatement buildStatement(EntitySearchFilter[] filters,
 			Collection<String> userGroupCodes, boolean selectAll, Connection conn) {
 		return this.buildStatement(filters, null, false, userGroupCodes, selectAll, conn);
 	}
 	
-	protected PreparedStatement buildStatement(EntitySearchFilter[] filters, 
+	protected PreparedStatement buildStatement(EntitySearchFilter[] filters,
 			String[] categories, Collection<String> userGroupCodes, boolean selectAll, Connection conn) {
 		return this.buildStatement(filters, categories, false, userGroupCodes, selectAll, conn);
 	}
 	
-	protected PreparedStatement buildStatement(EntitySearchFilter[] filters, 
+	protected PreparedStatement buildStatement(EntitySearchFilter[] filters,
 			String[] categories, boolean orClauseCategoryFilter, 
 			Collection<String> userGroupCodes, boolean selectAll, Connection conn) {
 		Collection<String> groupsForSelect = this.getGroupsForSelect(userGroupCodes);
-		String query = this.createQueryString(filters, categories, orClauseCategoryFilter, groupsForSelect, selectAll);
+
+		String query = this.createQueryString(filters, null, categories, orClauseCategoryFilter, groupsForSelect, selectAll);
 		//System.out.println("QUERY : " + query);
 		PreparedStatement stat = null;
 		try {
@@ -119,16 +125,17 @@ public abstract class AbstractContentSearcherDAO extends AbstractEntitySearcherD
 	}
 	
 	protected String createQueryString(EntitySearchFilter[] filters, Collection<String> groupsForSelect, boolean selectAll) {
-		return this.createQueryString(filters, null, false, groupsForSelect, selectAll);
+		return this.createQueryString(filters, null, null, false, groupsForSelect, selectAll);
 	}
 	
 	protected String createQueryString(EntitySearchFilter[] filters, 
 			String[] categories, Collection<String> groupsForSelect, boolean selectAll) {
-		return this.createQueryString(filters, categories, false, groupsForSelect, selectAll);
+		return this.createQueryString(filters, null, categories, false, groupsForSelect, selectAll);
 	}
 	
-	protected String createQueryString(EntitySearchFilter[] filters, 
+	protected String createQueryString(EntitySearchFilter[] filters, String[] groups,
 			String[] categories, boolean orClauseCategoryFilter, Collection<String> groupsForSelect, boolean selectAll) {
+
 		StringBuffer query = this.createBaseQueryBlock(filters, selectAll);
 		boolean hasAppendWhereClause = this.appendFullAttributeFilterQueryBlocks(filters, query, false);
 		hasAppendWhereClause = this.appendMetadataFieldFilterQueryBlocks(filters, query, hasAppendWhereClause);
@@ -139,6 +146,10 @@ public abstract class AbstractContentSearcherDAO extends AbstractEntitySearcherD
 		if (null != categories && categories.length > 0) {
 			hasAppendWhereClause = this.verifyWhereClauseAppend(query, hasAppendWhereClause);
 			this.addCategoriesQueryBlock(query, categories, !orClauseCategoryFilter);
+		}
+		if (null != groups && groups.length > 0) {
+			hasAppendWhereClause = this.verifyWhereClauseAppend(query, hasAppendWhereClause);
+			this.addGroupsQueryBlock(query, groups);
 		}
 		boolean ordered = appendOrderQueryBlocks(filters, query, false);
 		//System.out.println("********** " + query.toString());
@@ -173,7 +184,22 @@ public abstract class AbstractContentSearcherDAO extends AbstractEntitySearcherD
 			query.append(" ) ");
 		}
 	}
-	
+
+    protected void addGroupsQueryBlock(StringBuffer query, String[] groups) {
+        if (groups != null && groups.length > 0) {
+            query.append(" ( ");
+            for (int i = 0; i < groups.length; i++) {
+                if (i > 0) {
+                    query.append(" AND ");
+                }
+                query.append(" contents.contentid IN (SELECT contentid FROM ")
+                        .append(this.getContentRelationsTableName()).append(" WHERE ")
+                        .append(this.getContentRelationsTableName()).append(".refgroup = ? ) ");
+            }
+            query.append(" ) ");
+        }
+    }
+
 	protected Collection<String> getGroupsForSelect(Collection<String> userGroupCodes) {
 		if (userGroupCodes != null && userGroupCodes.contains(Group.ADMINS_GROUP_NAME)) {
 			return null;
@@ -203,6 +229,7 @@ public abstract class AbstractContentSearcherDAO extends AbstractEntitySearcherD
 		contentVo.setXmlOnLine(xmlOnLine);
 		contentVo.setVersion(result.getString("currentversion"));
 		contentVo.setLastEditor(result.getString("lasteditor"));
+		contentVo.setRestriction(result.getString("restriction"));
 		return contentVo;
 	}
 	
