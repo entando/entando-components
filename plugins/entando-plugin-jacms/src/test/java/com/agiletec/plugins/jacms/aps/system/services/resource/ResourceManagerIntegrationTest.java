@@ -225,7 +225,6 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
             filterOrder.setOrder(FieldSearchFilter.ASC_ORDER);
             FieldSearchFilter pagerFilter = new FieldSearchFilter(2, 0);
             FieldSearchFilter[] filters = new FieldSearchFilter[]{filterType, filterOrder, pagerFilter};
-            //Arrays.asList(filters)
             SearcherDaoPaginatedResult<String> result = this.resourceManager.getPaginatedResourcesId(filters, Arrays.asList(categoryCodeToAdd), allowedGroups);
             assertEquals(4, result.getCount().intValue());
             assertEquals(2, result.getList().size());
@@ -239,14 +238,15 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
             assertEquals(resourcesId.size(), 1);
             ResourceInterface res1 = this.resourceManager.loadResource(resourceListAdded.get(0).getId());
             assertTrue(res1 instanceof ImageResource);
+            assertEquals("entando_logo.jpg", res1.getMasterFileName());
             assertEquals(res1.getCategories().size(), 1);
             assertEquals(res1.getDescription(), resDescrToAdd1);
             assertTrue(res1.getMetadata().size() > 0);
             
             ResourceInstance instance01 = ((ImageResource) res1).getInstance(0, null);
-            //assertEquals("entando_logo.jpg", res1.getMasterFileName());
-            //String fileNameInstance01 = instance01.getFileName();
-            //assertFalse(fileNameInstance01.startsWith("entando_logo"));
+            String fileNameInstance01 = instance01.getFileName();
+            
+            assertTrue(fileNameInstance01.startsWith("entando_logo"));
             assertEquals("image/jpeg", instance01.getMimeType());
 
             resourcesId = resourceManager.searchResourcesId(resourceType, null, categoryCodeToAdd, allowedGroups);
@@ -262,31 +262,33 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
             assertTrue(res2 instanceof ImageResource);
             assertEquals(res2.getCategories().size(), 1);
             assertEquals(res2.getDescription(), resDescrToAdd2);
-
+            assertEquals("entando_logo.jpg", res2.getMasterFileName());
+            assertEquals(res1.getMasterFileName(), res2.getMasterFileName());
+            
             ResourceInstance instance02 = ((ImageResource) res2).getInstance(0, null);
-            //String fileNameInstance02 = instance02.getFileName();
-            //assertFalse(fileNameInstance02.startsWith("entando_logo"));
-            //assertFalse(fileNameInstance02.equals(fileNameInstance01));
-            //assertEquals("entando_logo.jpg", res2.getMasterFileName());
+            String fileNameInstance02 = instance02.getFileName();
+            
+            assertTrue(fileNameInstance02.startsWith("entando_logo"));
+            assertFalse(fileNameInstance02.equals(fileNameInstance01));
             assertEquals("image/jpeg", instance02.getMimeType());
-
+            
             // Image 3
             resourcesId = resourceManager.searchResourcesId(resourceType, resDescrToAdd3, null, allowedGroups);
             assertEquals(resourcesId.size(), 1);
             resourcesId = resourceManager.searchResourcesId(resourceType, resDescrToAdd3, categoryCodeToAdd, allowedGroups);
             assertEquals(resourcesId.size(), 1);
             ResourceInterface res3 = this.resourceManager.loadResource(resourceListAdded.get(2).getId());
+            assertEquals("entando_logo.jpg", res3.getMasterFileName());
+            assertEquals(res1.getMasterFileName(), res3.getMasterFileName());
             assertTrue(res3 instanceof ImageResource);
             assertEquals(res3.getCategories().size(), 1);
             assertEquals(res3.getDescription(), resDescrToAdd3);
 
             ResourceInstance instance03 = ((ImageResource) res3).getInstance(0, null);
-            //String fileNameInstance03 = instance03.getFileName();
-            //assertFalse(fileNameInstance03.startsWith("entando_logo"));
-            //assertFalse(fileNameInstance03.equals(fileNameInstance01));
-            //assertEquals("entando_logo.jpg", res3.getMasterFileName());
+            String fileNameInstance03 = instance03.getFileName();
+            assertTrue(fileNameInstance03.startsWith("entando_logo"));
+            assertFalse(fileNameInstance03.equals(fileNameInstance01));
             assertEquals("image/jpeg", instance03.getMimeType());
-
         } catch (Throwable t) {
             throw t;
         } finally {
