@@ -158,7 +158,7 @@
         <attribute>
             <description><![CDATA[Sets the ID of the pager itself, it has to be used when two or more pagers exist in the same page.]]></description>
             <name>pagerId</name>
-            <required>no</required>
+            <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>

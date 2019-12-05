@@ -361,21 +361,6 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
         return this.getResourceStream(instance.getSize(), instance.getLangCode());
     }
 
-    /**
-     * Restitituisce il nome file corretto da utilizzare per i salvataggi di
-     * istanze risorse all'interno del fileSystem.
-     *
-     * @param masterFileName Il nome del file principale.
-     * @return Il nome file corretto.
-     * @deprecated from jAPS 2.1
-     */
-    @Deprecated
-    protected String getRevisedInstanceFileName(String masterFileName) {
-        String instanceFileName = masterFileName.replaceAll("[^ _.a-zA-Z0-9]", "");
-        instanceFileName = instanceFileName.trim().replace(' ', '_');
-        return instanceFileName;
-    }
-
     @Override
     public String getDefaultUrlPath() {
         ResourceInstance defaultInstance = this.getDefaultInstance();
@@ -455,15 +440,16 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
         }
         return new File(filePath);
     }
-
+    
     protected String getUniqueBaseName(String originalFileName) {
         Assert.hasLength(originalFileName, "File name must not be null or empty");
         String baseName = FilenameUtils.getBaseName(originalFileName);
         String extension = FilenameUtils.getExtension(originalFileName);
+        baseName = this.purgeBaseName(baseName);
         String suggestedName = baseName;
         int fileOrder = 1;
         while(this.exists(this.createFileName(suggestedName, extension))) {
-            suggestedName = baseName + '_' +fileOrder;
+            suggestedName = baseName + '_' + fileOrder;
             fileOrder ++;
         }
         return suggestedName;
@@ -472,6 +458,7 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
     protected String getMultiFileUniqueBaseName(String baseName, String suffix, String extension) {
         Assert.hasLength(baseName, "base name of file can't be null or empty");
         Assert.notNull(suffix, "file suffix can't be null");
+        baseName = this.purgeBaseName(baseName);
         String suggestedName = baseName + suffix;
         int fileOrder = 1;
         while(this.exists(this.createFileName(suggestedName, extension))) {
@@ -479,6 +466,11 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
             fileOrder ++;
         }
         return suggestedName;
+    }
+    
+    private String purgeBaseName(String baseName) {
+        String purgedName = baseName.replaceAll("[^ _.a-zA-Z0-9]", "");
+        return purgedName.trim().replace(' ', '_');
     }
 
     protected String createFileName(String baseName, String extension) {
