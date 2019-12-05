@@ -48,7 +48,7 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
     private Map<String, String> metadata;
 
     private String metadataIgnoreKeys;
-
+    
     /**
      * Inizializza gli elementi base costituenti la Risorsa.
      */
@@ -397,11 +397,11 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
             //PATH di richiamo della servlet di autorizzazione
             //Sintassi /<RES_ID>/<SIZE>/<LANG_CODE>/
             final String def = "def";
-            urlPath.append(protectedBaseURL);
+            urlPath.append(this.getProtectedBaseURL());
             if (!urlPath.toString().endsWith("/")) {
                 urlPath.append("/");
             }
-            urlPath.append(id).append("/");
+            urlPath.append(this.getId()).append("/");
             if (instance.getSize() < 0) {
                 urlPath.append(def);
             } else {
@@ -415,19 +415,19 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
             }
             urlPath.append("/");
         } else {
-            StringBuilder subFolder = new StringBuilder(folder);
+            StringBuilder subFolder = new StringBuilder(this.getFolder());
             if (!subFolder.toString().endsWith("/")) {
                 subFolder.append("/");
             }
             subFolder.append(instance.getFileName());
-            String path = storageManager.getResourceUrl(subFolder.toString(), false);
+            String path = this.getStorageManager().getResourceUrl(subFolder.toString(), false);
             urlPath.append(path);
         }
         return urlPath.toString();
     }
 
     protected boolean isProtectedResource() {
-        return (!Group.FREE_GROUP_NAME.equals(mainGroup));
+        return (!Group.FREE_GROUP_NAME.equals(this.getMainGroup()));
     }
 
     protected File saveTempFile(String filename, InputStream is) throws ApsSystemException, IOException {
@@ -456,38 +456,32 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
         return new File(filePath);
     }
 
-    String getUniqueBaseName(String originalFileName) {
+    protected String getUniqueBaseName(String originalFileName) {
         Assert.hasLength(originalFileName, "File name must not be null or empty");
-
         String baseName = FilenameUtils.getBaseName(originalFileName);
         String extension = FilenameUtils.getExtension(originalFileName);
-
         String suggestedName = baseName;
         int fileOrder = 1;
-        while(exists(createFilePlusExtensionName(suggestedName, extension))) {
+        while(this.exists(this.createFileName(suggestedName, extension))) {
             suggestedName = baseName + '_' +fileOrder;
             fileOrder ++;
         }
-
         return suggestedName;
     }
 
-    String getMultiFileUniqueBaseName(String baseName, String suffix, String extension) {
+    protected String getMultiFileUniqueBaseName(String baseName, String suffix, String extension) {
         Assert.hasLength(baseName, "base name of file can't be null or empty");
         Assert.notNull(suffix, "file suffix can't be null");
-
         String suggestedName = baseName + suffix;
-
         int fileOrder = 1;
-        while(exists(createFilePlusExtensionName(suggestedName, extension))) {
+        while(this.exists(this.createFileName(suggestedName, extension))) {
             suggestedName = baseName + '_' + fileOrder + suffix;
             fileOrder ++;
         }
-
         return suggestedName;
     }
 
-    String createFilePlusExtensionName(String baseName, String extension) {
+    protected String createFileName(String baseName, String extension) {
         return extension == null ? baseName : baseName + '.' + extension;
     }
 
@@ -528,4 +522,5 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
     public void setOwner(String owner) {
         this.owner = owner;
     }
+    
 }
