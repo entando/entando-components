@@ -19,6 +19,9 @@ import java.util.List;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.common.FieldSearchFilter;
+import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
+import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.group.Group;
@@ -32,6 +35,7 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ImageResour
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceDataBean;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInstance;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,7 +52,7 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
         super.setUp();
         this.init();
     }
-
+    
     public void testLoadResource() throws Throwable {
         try {
             ResourceInterface resource = this.resourceManager.loadResource("44");
@@ -184,19 +188,24 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
             }
         }
     }
-
-    public void testAddRemoveImageResources(String mainGroup) throws Throwable {
+    
+    public void testAddRemoveImageResources() throws Throwable {
+        this.testAddRemoveImageResources(Group.FREE_GROUP_NAME);
+        this.testAddRemoveImageResources("customers");
+        this.testAddRemoveImageResources(Group.ADMINS_GROUP_NAME);
+    }
+    
+    private void testAddRemoveImageResources(String mainGroup) throws Throwable {
         List<String> allowedGroups = this.getAllGroupCodes();
-        ResourceInterface res = null;
         String resDescrToAdd1 = "Entando Logo 1";
         String resDescrToAdd2 = "Entando Logo 2";
         String resDescrToAdd3 = "Entando Logo 3";
         String resourceType = "Image";
         String categoryCodeToAdd = "resCat1";
 
-        BaseResourceDataBean bean1 = this.getMockBaseResource(resourceType, mainGroup, resDescrToAdd1, categoryCodeToAdd, "entando_logo_1.jpg");
-        BaseResourceDataBean bean2 = this.getMockBaseResource(resourceType, mainGroup, resDescrToAdd2, categoryCodeToAdd, "entando_logo_2.jpg");
-        BaseResourceDataBean bean3 = this.getMockBaseResource(resourceType, mainGroup, resDescrToAdd3, categoryCodeToAdd, "entando_logo_3.jpg");
+        BaseResourceDataBean bean1 = this.getMockBaseResource(resourceType, mainGroup, resDescrToAdd1, categoryCodeToAdd, "entando_logo.jpg");
+        BaseResourceDataBean bean2 = this.getMockBaseResource(resourceType, mainGroup, resDescrToAdd2, categoryCodeToAdd, "entando_logo.jpg");
+        BaseResourceDataBean bean3 = this.getMockBaseResource(resourceType, mainGroup, resDescrToAdd3, categoryCodeToAdd, "entando_logo.jpg");
 
         List<BaseResourceDataBean> resourceList = new ArrayList<>();
         resourceList.add(bean1);
@@ -208,64 +217,80 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
             assertEquals(1, resourcesId.size());
 
             resourceListAdded = this.resourceManager.addResources(resourceList);
-
+            assertEquals(3, resourceListAdded.size());
+            resourcesId = resourceManager.searchResourcesId(resourceType, null, categoryCodeToAdd, allowedGroups);
+            assertEquals(4, resourcesId.size());
+            FieldSearchFilter<String> filterType = new FieldSearchFilter(IResourceManager.RESOURCE_TYPE_FILTER_KEY, resourceType, false);
+            FieldSearchFilter<String> filterOrder = new FieldSearchFilter(IResourceManager.RESOURCE_DESCR_FILTER_KEY);
+            filterOrder.setOrder(FieldSearchFilter.ASC_ORDER);
+            FieldSearchFilter pagerFilter = new FieldSearchFilter(2, 0);
+            FieldSearchFilter[] filters = new FieldSearchFilter[]{filterType, filterOrder, pagerFilter};
+            //Arrays.asList(filters)
+            SearcherDaoPaginatedResult<String> result = this.resourceManager.getPaginatedResourcesId(filters, Arrays.asList(categoryCodeToAdd), allowedGroups);
+            assertEquals(4, result.getCount().intValue());
+            assertEquals(2, result.getList().size());
+            assertEquals(resourceListAdded.get(0).getId(), result.getList().get(0));
+            assertEquals(resourceListAdded.get(1).getId(), result.getList().get(1));
+            
             // Image 1
             resourcesId = resourceManager.searchResourcesId(resourceType, resDescrToAdd1, null, allowedGroups);
             assertEquals(resourcesId.size(), 1);
             resourcesId = resourceManager.searchResourcesId(resourceType, resDescrToAdd1, categoryCodeToAdd, allowedGroups);
             assertEquals(resourcesId.size(), 1);
-            res = this.resourceManager.loadResource(resourcesId.get(0));
-            assertTrue(res instanceof ImageResource);
-            assertEquals(res.getCategories().size(), 1);
-            assertEquals(res.getDescription(), resDescrToAdd1);
-            assertEquals(2, res.getMetadata().size());
-            assertEquals("value1", res.getMetadata().get("metadata1"));
-            assertEquals("value2", res.getMetadata().get("metadata2"));
-            ResourceInstance instance0 = ((ImageResource) res).getInstance(0, null);
-            assertEquals("entando_logo.jpg", res.getMasterFileName());
-            assertEquals("image/jpeg", instance0.getMimeType());
+            ResourceInterface res1 = this.resourceManager.loadResource(resourceListAdded.get(0).getId());
+            assertTrue(res1 instanceof ImageResource);
+            assertEquals(res1.getCategories().size(), 1);
+            assertEquals(res1.getDescription(), resDescrToAdd1);
+            assertTrue(res1.getMetadata().size() > 0);
+            
+            ResourceInstance instance01 = ((ImageResource) res1).getInstance(0, null);
+            //assertEquals("entando_logo.jpg", res1.getMasterFileName());
+            //String fileNameInstance01 = instance01.getFileName();
+            //assertFalse(fileNameInstance01.startsWith("entando_logo"));
+            assertEquals("image/jpeg", instance01.getMimeType());
 
             resourcesId = resourceManager.searchResourcesId(resourceType, null, categoryCodeToAdd, allowedGroups);
-            assertEquals(resourcesId.size(), 2);
+            assertEquals(resourcesId.size(), 4);
 
             // Image 2
             resourcesId = resourceManager.searchResourcesId(resourceType, resDescrToAdd2, null, allowedGroups);
             assertEquals(resourcesId.size(), 1);
             resourcesId = resourceManager.searchResourcesId(resourceType, resDescrToAdd2, categoryCodeToAdd, allowedGroups);
             assertEquals(resourcesId.size(), 1);
-            res = this.resourceManager.loadResource(resourcesId.get(0));
-            assertTrue(res instanceof ImageResource);
-            assertEquals(res.getCategories().size(), 1);
-            assertEquals(res.getDescription(), resDescrToAdd2);
+            
+            ResourceInterface res2 = this.resourceManager.loadResource(resourceListAdded.get(1).getId());
+            assertTrue(res2 instanceof ImageResource);
+            assertEquals(res2.getCategories().size(), 1);
+            assertEquals(res2.getDescription(), resDescrToAdd2);
 
-            instance0 = ((ImageResource) res).getInstance(0, null);
-            assertEquals("entando_logo.jpg", res.getMasterFileName());
-            assertEquals("image/jpeg", instance0.getMimeType());
-
-            resourcesId = resourceManager.searchResourcesId(resourceType, null, categoryCodeToAdd, allowedGroups);
-            assertEquals(resourcesId.size(), 2);
+            ResourceInstance instance02 = ((ImageResource) res2).getInstance(0, null);
+            //String fileNameInstance02 = instance02.getFileName();
+            //assertFalse(fileNameInstance02.startsWith("entando_logo"));
+            //assertFalse(fileNameInstance02.equals(fileNameInstance01));
+            //assertEquals("entando_logo.jpg", res2.getMasterFileName());
+            assertEquals("image/jpeg", instance02.getMimeType());
 
             // Image 3
             resourcesId = resourceManager.searchResourcesId(resourceType, resDescrToAdd3, null, allowedGroups);
             assertEquals(resourcesId.size(), 1);
             resourcesId = resourceManager.searchResourcesId(resourceType, resDescrToAdd3, categoryCodeToAdd, allowedGroups);
             assertEquals(resourcesId.size(), 1);
-            res = this.resourceManager.loadResource(resourcesId.get(0));
-            assertTrue(res instanceof ImageResource);
-            assertEquals(res.getCategories().size(), 1);
-            assertEquals(res.getDescription(), resDescrToAdd3);
+            ResourceInterface res3 = this.resourceManager.loadResource(resourceListAdded.get(2).getId());
+            assertTrue(res3 instanceof ImageResource);
+            assertEquals(res3.getCategories().size(), 1);
+            assertEquals(res3.getDescription(), resDescrToAdd3);
 
-            instance0 = ((ImageResource) res).getInstance(0, null);
-            assertEquals("entando_logo.jpg", res.getMasterFileName());
-            assertEquals("image/jpeg", instance0.getMimeType());
-
-            resourcesId = resourceManager.searchResourcesId(resourceType, null, categoryCodeToAdd, allowedGroups);
-            assertEquals(resourcesId.size(), 2);
+            ResourceInstance instance03 = ((ImageResource) res3).getInstance(0, null);
+            //String fileNameInstance03 = instance03.getFileName();
+            //assertFalse(fileNameInstance03.startsWith("entando_logo"));
+            //assertFalse(fileNameInstance03.equals(fileNameInstance01));
+            //assertEquals("entando_logo.jpg", res3.getMasterFileName());
+            assertEquals("image/jpeg", instance03.getMimeType());
 
         } catch (Throwable t) {
             throw t;
         } finally {
-            if (res != null) {
+            if (resourceListAdded != null) {
                 this.resourceManager.deleteResources(resourceListAdded);
                 List<String> resources = resourceManager.searchResourcesId(resourceType, resDescrToAdd1, null, allowedGroups);
                 assertEquals(resources.size(), 0);
@@ -278,7 +303,7 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
             }
         }
     }
-
+    
     private ResourceDataBean getMockResource(String resourceType,
             String mainGroup, String resDescrToAdd, String categoryCodeToAdd) {
         File file = new File("target/test/entando_logo.jpg");
@@ -300,7 +325,7 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
         bean.setCategories(categories);
         return bean;
     }
-
+    
     private BaseResourceDataBean getMockBaseResource(String resourceType,
             String mainGroup, String resDescrToAdd, String categoryCodeToAdd,
             String fileName) {
@@ -311,11 +336,6 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
         bean.setMainGroup(mainGroup);
         bean.setResourceType(resourceType);
         bean.setMimeType("image/jpeg");
-        Map<String, String> metadata = new HashMap<>();
-        metadata.put("metadata1", "value1");
-        metadata.put("metadata2", "value2");
-        metadata.put("Blue TRC", "0000");
-        bean.setMetadata(metadata);
         List<Category> categories = new ArrayList<>();
         ICategoryManager catManager
                 = (ICategoryManager) this.getService(SystemConstants.CATEGORY_MANAGER);
@@ -324,7 +344,7 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
         bean.setCategories(categories);
         return bean;
     }
-
+    
     public void testAddNullResource() throws Throwable {
         List<String> allowedGroups = this.getAllGroupCodes();
         String resDescrToAdd = "Null Entando resource";
@@ -341,7 +361,7 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
             this.verifyTestAddNullResource(resDescrToAdd, resourceType, initsize);
         }
     }
-
+    
     private void verifyTestAddNullResource(String resDescrToAdd, String resourceType, int initsize) throws Throwable {
         List<String> allowedGroups = this.getAllGroupCodes();
         List<String> resourcesId = null;
@@ -368,7 +388,7 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
         bean.setMimeType("text/plain");
         return bean;
     }
-
+    
     public void testGetResourceType() {
         ResourceInterface imageResource = this.resourceManager.createResourceType("Image");
         assertEquals("", imageResource.getDescription());
@@ -395,13 +415,13 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
         assertEquals("8", utilizers.get(0));
         assertEquals("82", utilizers.get(1));
     }
-
+    
     private List<String> getAllGroupCodes() {
         List<String> groupCodes = new ArrayList<>();
         this.groupManager.getGroups().stream().forEach(group -> groupCodes.add(group.getName()));
         return groupCodes;
     }
-
+    
     public void testGetMetadataMapping() throws Exception {
         Map<String, List<String>> mapping = this.resourceManager.getMetadataMapping();
         assertNotNull(mapping);
@@ -414,7 +434,7 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
         assertEquals("YYYY", mapping.get("legend").get(3));
         assertEquals("metadataKeyK", mapping.get("title").get(1));
     }
-
+    
     private void init() throws Exception {
         try {
             this.resourceManager = (IResourceManager) this.getService(JacmsSystemConstants.RESOURCE_MANAGER);

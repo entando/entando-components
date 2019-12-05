@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
+import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.BaseResourceDataBean;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceDataBean;
@@ -165,11 +166,16 @@ public interface IResourceManager {
      */
     public List<String> searchResourcesId(String type, String text,
             String filename, String categoryCode, Collection<String> groupCodes) throws ApsSystemException;
-
+    
     public List<String> searchResourcesId(FieldSearchFilter[] filters,
             String categoryCode, Collection<String> groupCodes) throws ApsSystemException;
 
+    public List<String> searchResourcesId(FieldSearchFilter[] filters,
+            List<String> categories, Collection<String> groupCodes) throws ApsSystemException;
+
     public List<String> searchResourcesId(FieldSearchFilter[] filters, List<String> categories) throws ApsSystemException;
+    
+    public SearcherDaoPaginatedResult<String> getPaginatedResourcesId(FieldSearchFilter[] filters, List<String> categories, Collection<String> userGroupCodes) throws ApsSystemException;
 
     /**
      * Restituisce la risorsa con l'id specificato.
