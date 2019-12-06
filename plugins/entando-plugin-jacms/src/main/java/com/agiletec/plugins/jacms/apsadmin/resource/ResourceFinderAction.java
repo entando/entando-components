@@ -13,12 +13,12 @@
  */
 package com.agiletec.plugins.jacms.apsadmin.resource;
 
-import static com.opensymphony.xwork2.Action.SUCCESS;
-
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
+import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.group.Group;
+import com.agiletec.apsadmin.tags.util.AdminPagerTagHelper;
 import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ImageResourceDimension;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.util.IImageDimensionReader;
@@ -26,6 +26,7 @@ import com.agiletec.plugins.jacms.apsadmin.util.ResourceIconUtil;
 
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -57,14 +58,7 @@ public class ResourceFinderAction extends AbstractResourceAction {
     private String order;
     private String lastGroupBy;
     private String groupBy;
-
-    /**
-     * Restituisce la lista di identificativi delle risorse che soddisfano i
-     * parametri di ricerca immessi.
-     *
-     * @return La lista di identificativi di risorse.
-     * @throws Throwable In caso di errore.
-     */
+    
     public List<String> getResources() throws Throwable {
         List<String> resourceIds = null;
         try {
@@ -76,6 +70,36 @@ public class ResourceFinderAction extends AbstractResourceAction {
             throw t;
         }
         return resourceIds;
+    }
+    
+    public SearcherDaoPaginatedResult<String> getPaginatedResourcesId(Integer limit) {
+        SearcherDaoPaginatedResult<String> result = null;
+        try {
+            List<String> userGroups = this.getGroupCodesForSearch();
+            List<String> groupCodesForSearch = (userGroups.contains(Group.ADMINS_GROUP_NAME)) ? null : userGroups;
+            FieldSearchFilter[] filters = this.createSearchFilters();
+            if (null != limit) {
+                filters = ArrayUtils.add(filters, this.getPagerFilter(limit));
+            }
+            List<String> categories = (StringUtils.isBlank(this.getCategoryCode())) ? null : Arrays.asList(this.getCategoryCode());
+            result = this.getResourceManager().getPaginatedResourcesId(filters, categories, groupCodesForSearch);
+        } catch (Throwable t) {
+            logger.error("error in getPaginateResourcesId", t);
+            throw new RuntimeException("error in getPaginateResourcesId", t);
+        }
+        return result;
+    }
+    
+    protected EntitySearchFilter getPagerFilter(Integer limit) {
+        int pagerItem = new AdminPagerTagHelper().getItemNumber(this.getPagerId(), this.getRequest());
+        int item = (pagerItem > 0) ? pagerItem : 1;
+        int realLimit = (null != limit && limit > 0) ? limit : 10;
+        int offset = (item - 1) * realLimit;
+        return new EntitySearchFilter(realLimit, offset);
+    }
+    
+    public String getPagerId() {
+        return this.getClass().getSimpleName();
     }
 
     protected FieldSearchFilter[] createSearchFilters() {
