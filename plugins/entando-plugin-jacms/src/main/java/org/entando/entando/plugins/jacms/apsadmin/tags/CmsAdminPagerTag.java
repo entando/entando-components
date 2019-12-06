@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.tags.util.IPagerVO;
 import com.agiletec.apsadmin.tags.util.AdminPagerTagHelper;
-import com.agiletec.apsadmin.tags.util.ComponentPagerVO;
 import com.opensymphony.xwork2.util.ValueStack;
 import java.util.Arrays;
 
@@ -43,13 +42,11 @@ public class CmsAdminPagerTag extends com.agiletec.apsadmin.tags.AdminPagerTag {
             Integer realTotal = Integer.parseInt(this.findValue(this.getTotal()).toString());
             Integer realMaxSize = Integer.parseInt(this.findValue(this.getMaxSize()).toString());
             ValueStack stack = this.getStack();
-            ComponentPagerVO compPagerVo = new ComponentPagerVO(stack);
             AdminPagerTagHelper helper = this.getPagerHelper();
             IPagerVO pagerVo = helper.getPagerVO(Arrays.asList(new String[realTotal]),
                     realPagerId.toString(), realMaxSize, true, this.getOffset(), request);
-            compPagerVo.initPager(pagerVo);
-            stack.getContext().put(this.getObjectName(), compPagerVo);
-            stack.setValue("#attr['" + this.getObjectName() + "']", compPagerVo, false);
+            stack.getContext().put(this.getObjectName(), pagerVo);
+            stack.setValue("#attr['" + this.getObjectName() + "']", pagerVo, false);
         } catch (Exception e) {
             logger.error("Error creating the pager", e);
             throw new JspException("Error creating the pager", e);
