@@ -15,10 +15,8 @@ package com.agiletec.plugins.jacms.aps.system.services.contentmodel.model;
 
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeRole;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.*;
 import org.entando.entando.aps.system.services.entity.model.EntityTypeFullDto;
-import org.entando.entando.plugins.jacms.aps.system.init.portdb.enums.DefaultContentModel;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.*;
