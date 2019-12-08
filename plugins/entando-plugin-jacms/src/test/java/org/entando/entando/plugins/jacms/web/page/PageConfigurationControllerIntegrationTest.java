@@ -1,5 +1,6 @@
 package org.entando.entando.plugins.jacms.web.page;
 
+import com.opensymphony.xwork2.mock.MockResult;
 import java.util.Map;
 
 import com.agiletec.aps.system.services.page.IPage;
@@ -23,14 +24,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import org.hamcrest.Matchers;
+
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -152,6 +157,161 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
             String putResult = result.andReturn().getResponse().getContentAsString();
             result.andExpect(status().isOk());
             assertThat(putResult, is(getResult));
+
+        } finally {
+            this.pageManager.deletePage(pageCode);
+        }
+    }
+
+    @Test
+    public void testPutPageConfigurationFilterFormat() throws Exception {
+        String pageCode = "draft_page_100";
+        try {
+            Page mockPage = createPage(pageCode, null);
+            this.pageManager.addPage(mockPage);
+            IPage onlinePage = this.pageManager.getOnlinePage(pageCode);
+            assertThat(onlinePage, is(nullValue()));
+            IPage draftPage = this.pageManager.getDraftPage(pageCode);
+            assertThat(draftPage, is(not(nullValue())));
+
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+            String accessToken = mockOAuthInterceptor(user);
+
+            String payload = "{\n"
+                    + "  \"code\": \"content_viewer\",\n"
+                    + "  \"config\": {\n"
+                    + "      \"contentId\": \"EVN24\",\n"
+                    + "      \"modelId\": \"default\",\n"
+                    + "      \"userFilters\": [\n"
+                    + "         {\"attributeFilter\": false, \"key\": \"fulltext\"},\n"
+                    + "         {\"attributeFilter\": false, \"key\": \"category\"}\n"
+                    + "      ]\n"
+                    + "  }\n"
+                    + "}";
+
+            ResultActions result = mockMvc
+                    .perform(put("/pages/{pageCode}/widgets/{frame}", new Object[]{pageCode, 0})
+                            .param("status", IPageService.STATUS_DRAFT)
+                            .content(payload)
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken));
+
+            result
+                .andDo(print())
+                .andExpect(jsonPath("$.errors", hasSize(0)))
+                .andExpect(jsonPath("$.payload.code", is("content_viewer")))
+                .andExpect(jsonPath("$.payload.config.size()", is(3)))
+                .andExpect(jsonPath("$.payload.config.userFilters.size()", is(2)));
+
+            IPage updatedPage = pageManager.getDraftPage(pageCode);
+            Widget widget = updatedPage.getWidgets()[0];
+            assertThat(widget.getConfig().get("userFilters"),
+                    equalTo("(attributeFilter=false;key=fulltext)+(attributeFilter=false;key=category)"));
+
+        } finally {
+            this.pageManager.deletePage(pageCode);
+        }
+    }
+
+    @Test
+    public void testPutPageConfigurationCategoriesFormat() throws Exception {
+        String pageCode = "draft_page_100";
+        try {
+            Page mockPage = createPage(pageCode, null);
+            this.pageManager.addPage(mockPage);
+            IPage onlinePage = this.pageManager.getOnlinePage(pageCode);
+            assertThat(onlinePage, is(nullValue()));
+            IPage draftPage = this.pageManager.getDraftPage(pageCode);
+            assertThat(draftPage, is(not(nullValue())));
+
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+            String accessToken = mockOAuthInterceptor(user);
+
+            String payload = "{\n"
+                    + "  \"code\": \"content_viewer\",\n"
+                    + "  \"config\": {\n"
+                    + "      \"contentId\": \"EVN24\",\n"
+                    + "      \"modelId\": \"default\",\n"
+                    + "      \"categories\": [\"resCat1\", \"resCat2\"]\n"
+                    + "  }\n"
+                    + "}";
+
+            ResultActions result = mockMvc
+                    .perform(put("/pages/{pageCode}/widgets/{frame}", new Object[]{pageCode, 0})
+                            .param("status", IPageService.STATUS_DRAFT)
+                            .content(payload)
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken));
+
+            result
+                    .andDo(print())
+                    .andExpect(jsonPath("$.errors", hasSize(0)))
+                    .andExpect(jsonPath("$.payload.code", is("content_viewer")))
+                    .andExpect(jsonPath("$.payload.config.size()", is(3)))
+                    .andExpect(jsonPath("$.payload.config.categories.size()", is(2)))
+                    .andExpect(jsonPath("$.payload.config.categories[0]", is("resCat1")))
+                    .andExpect(jsonPath("$.payload.config.categories[1]", is("resCat2")));
+
+            IPage updatedPage = pageManager.getDraftPage(pageCode);
+            Widget widget = updatedPage.getWidgets()[0];
+
+            assertThat(widget.getConfig().get("categories"),
+                    equalTo("resCat1,resCat2"));
+
+        } finally {
+            this.pageManager.deletePage(pageCode);
+        }
+    }
+
+    @Test
+    public void testPutPageConfigurationContentsFormat() throws Exception {
+        String pageCode = "draft_page_100";
+        try {
+            Page mockPage = createPage(pageCode, null);
+            this.pageManager.addPage(mockPage);
+            IPage onlinePage = this.pageManager.getOnlinePage(pageCode);
+            assertThat(onlinePage, is(nullValue()));
+            IPage draftPage = this.pageManager.getDraftPage(pageCode);
+            assertThat(draftPage, is(not(nullValue())));
+
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+            String accessToken = mockOAuthInterceptor(user);
+
+            String payload = "{\n"
+                    + "  \"code\": \"content_viewer\",\n"
+                    + "  \"config\": {\n"
+                    + "      \"contentId\": \"EVN24\",\n"
+                    + "      \"modelId\": \"default\",\n"
+                    + "      \"contents\": [\n"
+                    + "         {\"contentId\": \"ABC1\", \"contentDescription\": \"My Content 1\"},\n"
+                    + "         {\"contentId\": \"ABC2\", \"contentDescription\": \"My Content 2\"}\n"
+                    + "      ]\n"
+                    + "  }\n"
+                    + "}";
+
+            ResultActions result = mockMvc
+                    .perform(put("/pages/{pageCode}/widgets/{frame}", new Object[]{pageCode, 0})
+                            .param("status", IPageService.STATUS_DRAFT)
+                            .content(payload)
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken));
+
+            result
+                    .andDo(print())
+                    .andExpect(jsonPath("$.errors", hasSize(0)))
+                    .andExpect(jsonPath("$.payload.code", is("content_viewer")))
+                    .andExpect(jsonPath("$.payload.config.size()", is(3)))
+                    .andExpect(jsonPath("$.payload.config.contents.size()", is(2)))
+                    .andExpect(jsonPath("$.payload.config.contents[0].contentId", is("ABC1")))
+                    .andExpect(jsonPath("$.payload.config.contents[0].contentDescription", is("My Content 1")))
+                    .andExpect(jsonPath("$.payload.config.contents[1].contentId", is("ABC2")))
+                    .andExpect(jsonPath("$.payload.config.contents[1].contentDescription", is("My Content 2")));
+
+            IPage updatedPage = pageManager.getDraftPage(pageCode);
+            Widget widget = updatedPage.getWidgets()[0];
+
+            assertThat(widget.getConfig().get("contents"),
+                    equalTo("[{contentId=ABC1,contentDescription=My Content 1},{contentId=ABC2,contentDescription=My Content 2}]"));
 
         } finally {
             this.pageManager.deletePage(pageCode);

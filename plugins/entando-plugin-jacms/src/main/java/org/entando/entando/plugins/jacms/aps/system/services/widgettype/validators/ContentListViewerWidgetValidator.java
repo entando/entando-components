@@ -119,7 +119,6 @@ public class ContentListViewerWidgetValidator extends AbstractListViewerWidgetVa
                 && type.hasParameter(WIDGET_CONFIG_KEY_MAXELEMFORITEM)
                 && type.hasParameter(WIDGET_CONFIG_KEY_MAXELEMENTS)
                 && StringUtils.isNotEmpty((String) config.get(WIDGET_CONFIG_KEY_CONTENTTYPE))
-                && StringUtils.isEmpty((String) config.get(WIDGET_CONFIG_KEY_CATEGORIES))
                 && StringUtils.isEmpty((String) config.get(WIDGET_CONFIG_KEY_MAXELEMFORITEM))
                 && StringUtils.isEmpty((String) config.get(WIDGET_CONFIG_KEY_MAXELEMENTS))) {
             errors.reject(WidgetValidatorCmsHelper.ERRCODE_INVALID_CONFIGURATION, new String[]{}, WIDGET_CODE + ".parameters.invalid");
