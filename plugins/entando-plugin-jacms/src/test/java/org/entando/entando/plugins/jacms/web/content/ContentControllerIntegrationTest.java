@@ -136,9 +136,11 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             result2.andExpect(jsonPath("$.payload[0].id", Matchers.anything()));
             result2.andExpect(jsonPath("$.payload[0].firstEditor", is("jack_bauer")));
             result2.andExpect(jsonPath("$.payload[0].lastEditor", is("jack_bauer")));
+            result2.andExpect(jsonPath("$.payload[0].mainGroup", is("free")));
             result2.andExpect(jsonPath("$.payload[0].restriction", is("OPEN")));
             result2.andExpect(jsonPath("$.errors.size()", is(0)));
             result2.andExpect(jsonPath("$.metaData.size()", is(0)));
+
             String bodyResult = result2.andReturn().getResponse().getContentAsString();
             newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
             Content newContent = this.contentManager.loadContent(newContentId, false);
@@ -170,6 +172,8 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             result4.andExpect(jsonPath("$.payload[0].attributes[0].listelements", Matchers.anything()));
             result4.andExpect(jsonPath("$.payload[0].firstEditor", is("jack_bauer")));
             result4.andExpect(jsonPath("$.payload[0].lastEditor", is("jack_bauer")));
+            result4.andExpect(jsonPath("$.payload[0].mainGroup", is("free")));
+            result4.andExpect(jsonPath("$.payload[0].restriction", is("OPEN")));
             newContent = this.contentManager.loadContent(newContentId, false);
             date = (Date) newContent.getAttribute("Date").getValue();
             Assert.assertEquals("2018-03-21", DateConverter.getFormattedDate(date, "yyyy-MM-dd"));
@@ -181,6 +185,12 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
 
             ListAttribute list = (ListAttribute) newContent.getAttribute("multilist");
             Assert.assertEquals(4, list.getAttributeList("en").size());
+
+            ResultActions result5 = this
+                    .executeContentPut("1_PUT_maingroup.json", newContentId, accessToken, status().isOk());
+            result5.andExpect(jsonPath("$.payload[0].mainGroup", is("group1")))
+                    .andExpect(jsonPath("$.payload[0].restriction", is("RESTRICTED")));
+
         } finally {
             if (null != newContentId) {
                 Content newContent = this.contentManager.loadContent(newContentId, false);
