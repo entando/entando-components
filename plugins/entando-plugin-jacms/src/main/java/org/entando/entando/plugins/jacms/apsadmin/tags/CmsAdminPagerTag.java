@@ -53,6 +53,11 @@ public class CmsAdminPagerTag extends com.agiletec.apsadmin.tags.AdminPagerTag {
         }
         return EVAL_BODY_INCLUDE;
     }
+	
+	@Override
+	public int doEndTag() throws JspException {
+		return EVAL_PAGE;
+	}
 
     public String getTotal() {
         return total;
