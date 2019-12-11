@@ -136,7 +136,7 @@ public class LinkAttribute extends TextAttribute implements IReferenceableAttrib
 
     @Override
     public boolean isSearchableOptionSupported() {
-        return true;
+        return false;
     }
 
     @Override
@@ -276,9 +276,6 @@ public class LinkAttribute extends TextAttribute implements IReferenceableAttrib
     public void setLinkResolverManager(ILinkResolverManager linkResolverManager) {
         this.linkResolverManager = linkResolverManager;
     }
-
-    @Override
-    public Boolean isIndexableOptionSupported() { return false; }
 
     private SymbolicLink symbolicLink;
     private Map<String, String> linkProperties = new HashMap<>();
