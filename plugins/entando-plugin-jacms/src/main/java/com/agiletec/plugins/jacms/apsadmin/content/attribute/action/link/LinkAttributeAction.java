@@ -65,7 +65,7 @@ public class LinkAttributeAction extends BaseAction implements ILinkAttributeAct
 				result = "configContentLink";
 				break;
 			case (SymbolicLink.CONTENT_ON_PAGE_TYPE):
-				_logger.error("link on contentOnPage unavailable");
+                result = "configContentLink";
 				break;
 			case SymbolicLink.PAGE_TYPE:
 				result = "configPageLink";
