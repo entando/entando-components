@@ -137,8 +137,8 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
             String payloadWithInvalidModelId = "{\n"
                     + "  \"code\": \"content_viewer\",\n"
                     + "  \"config\": {\n"
-                    + " \"contentId\": \"EVN24\",\n"
-                    + " \"modelId\": \"default\"\n"
+                    + " \"modelId\": \"default\",\n"
+                    + " \"contentId\": \"EVN24\"\n"
                     + "  }\n"
                     + "}";
 
@@ -377,7 +377,7 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
             pageModel = parentPage.getMetadata().getModel();
         }
         PageMetadata metadata = PageTestUtil.createPageMetadata(pageModel.getCode(), true, pageCode + "_title", null, null, false, null, null);
-        ApsProperties config = PageTestUtil.createProperties("modelId", "default", "contentId", "EVN24");
+        ApsProperties config = PageTestUtil.createProperties("contentId", "EVN24", "modelId", "default");
         Widget widgetToAdd = PageTestUtil.createWidget("content_viewer", config, this.widgetTypeManager);
         Widget[] widgets = {widgetToAdd};
         Page pageToAdd = PageTestUtil.createPage(pageCode, parentPage, "free", metadata, widgets);
