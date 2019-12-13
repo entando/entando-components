@@ -137,8 +137,8 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
             String payloadWithInvalidModelId = "{\n"
                     + "  \"code\": \"content_viewer\",\n"
                     + "  \"config\": {\n"
-                    + " \"contentId\": \"EVN24\",\n"
                     + " \"modelId\": \"default\"\n"
+                    + " \"contentId\": \"EVN24\",\n"
                     + "  }\n"
                     + "}";
 
