@@ -7,14 +7,10 @@
     <p class="sr-only">
         <wpsf:hidden name="selectedNode" />
     </p>
-
     <s:set var="publishedContents" value="getPublishedContents(selectedNode)" />
-
     <s:if test="!#publishedContents.empty">
-
-        <wpsa:subset source="#publishedContents" count="10" objectName="publishedContentsGroup" advanced="true" offset="5" pagerId="publishedContents">
+        <wpsa:subset source="#publishedContents" count="10" objectName="publishedContentsGroup" advanced="true" offset="5" pagerId="publContents">
             <s:set var="group" value="#publishedContentsGroup" />
-
             <div class="col-xs-12 no-padding">
                 <table class="table table-striped table-bordered table-hover no-mb" id="contentListTable" summary="<s:text name="note.content.publishedContent.summary" />">
                     <legend><s:text name="title.publishedContent" /></legend>
@@ -34,7 +30,6 @@
                 </div>
             </div>
         </wpsa:subset>
-
     </s:if>
     <s:else>
         <div class="alert alert-info">
@@ -42,10 +37,7 @@
             <strong><s:text name="note.publishedContent.empty" /></strong>
         </div>
     </s:else>
-
     <hr />
-
     <s:set var="referencingContentsId" value="getReferencingContentsId(selectedNode)" />
     <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/portal/include/referencingContents.jsp" />
 </s:form>
-
