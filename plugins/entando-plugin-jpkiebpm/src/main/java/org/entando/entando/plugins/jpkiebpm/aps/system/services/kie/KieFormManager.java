@@ -462,7 +462,7 @@ public class KieFormManager extends AbstractService implements IKieFormManager {
     // TODO rename method to getHumanTaskForm or similar
     public KieProcessFormQueryResult getTaskForm(KieBpmConfig config, String containerId, long taskId) throws ApsSystemException {
         KieProcessFormQueryResult form = null;
-        if (!config.getActive()
+        if (config ==null || !config.getActive()
                 || StringUtils.isBlank(containerId)) {
             return form;
         }

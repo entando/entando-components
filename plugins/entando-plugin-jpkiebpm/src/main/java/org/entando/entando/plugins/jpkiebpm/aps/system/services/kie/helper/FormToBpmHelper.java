@@ -23,13 +23,6 @@
  */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper;
 
-import java.text.SimpleDateFormat;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieDataHolder;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
@@ -39,6 +32,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.BpmToFormHelper.SEPARATOR;
@@ -290,7 +284,7 @@ public class FormToBpmHelper {
                 result = String.valueOf(value);
             } else if (fieldClass.equals(INTEGER)) {
                 result = Integer.valueOf(value);
-            } else if (fieldClass.equals(BOOLEAN)) {
+            } else if (fieldClass.equals(BOOLEAN) || fieldClass.equals("boolean")) {
                 if (value == null) {
                     result = false;
                 } else if (value.equalsIgnoreCase("true")
