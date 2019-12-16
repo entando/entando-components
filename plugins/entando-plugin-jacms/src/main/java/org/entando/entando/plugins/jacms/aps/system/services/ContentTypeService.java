@@ -20,6 +20,7 @@ import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.aps.system.services.entity.AbstractEntityTypeService;
 import org.entando.entando.aps.system.services.entity.model.*;
 import org.entando.entando.web.common.model.*;
+import org.entando.entando.web.entity.model.EntityTypeDtoRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
@@ -64,6 +65,10 @@ public class ContentTypeService extends AbstractEntityTypeService<Content, Conte
         return getAttributeType(CONTENT_MODEL_MANAGER, attributeCode);
     }
 
+    public List<EntityTypeAttributeFullDto> getContentTypeAttributes(String contentTypeCode) {
+        return getEntityAttributes(CONTENT_MODEL_MANAGER, contentTypeCode);
+    }
+
     public EntityTypeAttributeFullDto getContentTypeAttribute(String contentTypeCode, String attributeCode) {
         return getEntityAttribute(CONTENT_MODEL_MANAGER, contentTypeCode, attributeCode);
     }
@@ -106,5 +111,17 @@ public class ContentTypeService extends AbstractEntityTypeService<Content, Conte
 
     public Map<String, Integer> reloadProfileTypesReferences(List<String> profileTypeCodes) {
         return reloadEntityTypesReferences(CONTENT_MODEL_MANAGER, profileTypeCodes);
+    }
+
+    @Override
+    protected Content createEntityType(IEntityManager entityManager, EntityTypeDtoRequest dto,
+            BindingResult bindingResult) throws Throwable {
+        ContentTypeDtoRequest request = (ContentTypeDtoRequest) dto;
+        Content result = super.createEntityType(entityManager, dto, bindingResult);
+        result.setViewPage(request.getViewPage());
+        result.setDefaultModel(request.getDefaultContentModel());
+        result.setListModel(request.getDefaultContentModelList());
+
+        return result;
     }
 }

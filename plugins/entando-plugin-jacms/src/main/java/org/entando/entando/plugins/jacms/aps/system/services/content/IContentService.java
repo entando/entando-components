@@ -40,6 +40,8 @@ public interface IContentService {
     public void deleteContent(String code, UserDetails user);
 
     public ContentDto updateContentStatus(String code, String status, UserDetails user);
+    
+    public List<ContentDto> updateContentsStatus(List<String> codes, String status, UserDetails user);
 
     public PagedMetadata<?> getContentReferences(String code, String manager, UserDetails user, RestListRequest requestList);
 

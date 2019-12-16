@@ -35,6 +35,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.helper.PublicConte
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentRestriction;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModelManager;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentRenderizationInfo;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.IContentDispenser;
@@ -237,7 +238,7 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
                 result.removeIf(i -> !fullTextResult.contains(i));
             }
             List<String> sublist = requestList.getSublist(result);
-            PagedMetadata<ContentDto> pagedMetadata = new PagedMetadata<>(requestList, sublist.size());
+            PagedMetadata<ContentDto> pagedMetadata = new PagedMetadata<>(requestList, result.size());
             List<ContentDto> masterList = new ArrayList<>();
             for (String contentId : sublist) {
                 masterList.add(this.buildContentDto(contentId, online,
@@ -371,6 +372,9 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
             throw new ResourcePermissionsException(bindingResult);
         }
         request.setId(null);
+        request.setFirstEditor(user.getUsername());
+        request.setLastEditor(user.getUsername());
+        request.setRestriction(ContentRestriction.getRestrictionValue(request.getMainGroup()));
         return this.addEntity(JacmsSystemConstants.CONTENT_MANAGER, request, bindingResult);
     }
 
@@ -378,6 +382,8 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
     public ContentDto updateContent(ContentDto request, UserDetails user, BindingResult bindingResult) {
         this.checkContentExists(request.getId());
         this.checkContentAuthorization(user, request.getId(), false, true, bindingResult);
+        request.setLastEditor(user.getUsername());
+        request.setRestriction(ContentRestriction.getRestrictionValue(request.getMainGroup()));
         return super.updateEntity(JacmsSystemConstants.CONTENT_MANAGER, request, bindingResult);
     }
 
@@ -444,6 +450,21 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
             logger.error("Error updating content {} status", code, e);
             throw new RestServerError("error in update page content", e);
         }
+    }
+    
+    @Override
+    public List<ContentDto> updateContentsStatus(List<String> codes, String status, UserDetails user) {
+        return codes.stream()
+                .map(code -> {
+                    try {
+                        return updateContentStatus(code, status, user);
+                    } catch (Exception e) {
+                        logger.error("Error in updating content(code: {}) status {}", code, e);
+                        return null;
+                    }
+                })
+                .filter(content -> content != null)
+                .collect(Collectors.toList());
     }
 
     @Override

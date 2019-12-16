@@ -99,7 +99,13 @@ public class Content {
 			dataType = DataType.STRING, 
 			width = 40, 
 			canBeNull = true)
-	private String firstEditor;
+	private String _firstEditor;
+
+	@DatabaseField(columnName = "restriction",
+			dataType = DataType.STRING,
+			width = 40,
+			canBeNull = true)
+	private String _restriction;
 	
 	public static final String TABLE_NAME = "contents";
 	

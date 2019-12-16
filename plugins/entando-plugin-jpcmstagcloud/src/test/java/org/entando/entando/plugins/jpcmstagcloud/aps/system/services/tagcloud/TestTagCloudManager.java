@@ -82,7 +82,7 @@ public class TestTagCloudManager extends ApsPluginBaseTestCase {
 		Map<String, Integer> expected = new HashMap<String, Integer>();
 		expected.put("cat1", new Integer(1));
 		expected.put("evento", new Integer(4));
-		expected.put("general", new Integer(5));
+		expected.put("general", new Integer(6));
 
 		Map<ITreeNode, Integer> cloudInfos = this._tagCloudManager.getCloudInfos(user);
 		this.compareCloudInfos(expected, cloudInfos);
@@ -90,7 +90,7 @@ public class TestTagCloudManager extends ApsPluginBaseTestCase {
 		user = this.getUser("editorCoach");
 		expected.put("cat1", new Integer(1));
 		expected.put("evento", new Integer(3));
-		expected.put("general", new Integer(3));
+		expected.put("general", new Integer(4));
 		cloudInfos = this._tagCloudManager.getCloudInfos(user);
 		this.compareCloudInfos(expected, cloudInfos);
 

@@ -44,6 +44,7 @@ public class Content extends ApsEntity {
     private String version;
     private String firstEditor;
     private String lastEditor;
+    private String restriction;
 
     /**
      * La descrizione dello stato del nuovo contenuto.
@@ -51,6 +52,7 @@ public class Content extends ApsEntity {
     @Deprecated
     public static final String STATES_NEW = "Nuovo";
 
+    @Deprecated
     public static final String STATUS_NEW = "NEW";
 
     /**
@@ -187,6 +189,7 @@ public class Content extends ApsEntity {
         contentDOM.setLastEditor(lastEditor);
         contentDOM.setCreationDate(created);
         contentDOM.setModifyDate(lastModified);
+        contentDOM.setRestriction(restriction);
         return contentDOM;
     }
 
@@ -303,5 +306,13 @@ public class Content extends ApsEntity {
 
     public void setLastEditor(String lastEditor) {
         this.lastEditor = lastEditor;
+    }
+
+    public String getRestriction() {
+        return restriction;
+    }
+
+    public void setRestriction(String restriction) {
+        this.restriction = restriction;
     }
 }

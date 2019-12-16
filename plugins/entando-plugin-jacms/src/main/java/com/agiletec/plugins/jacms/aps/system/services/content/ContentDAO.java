@@ -98,32 +98,32 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 
 	private final String LOAD_CONTENTS_VO_MAIN_BLOCK = "SELECT contents.contentid, contents.contenttype, contents.descr, "
             + "contents.status, contents.workxml, contents.created, contents.lastmodified, contents.onlinexml, contents.published, "
-            + "contents.sync, contents.maingroup, contents.currentversion, contents.firsteditor, contents.lasteditor FROM contents ";
+            + "contents.sync, contents.maingroup, contents.currentversion, contents.firsteditor, contents.lasteditor, contents.restriction FROM contents ";
 
 	private final String LOAD_CONTENT_VO = LOAD_CONTENTS_VO_MAIN_BLOCK + " WHERE contents.contentid = ? ";
 
 	private final String ADD_CONTENT = "INSERT INTO contents (contentid, contenttype, descr, status, workxml, "
-			+ "created, lastmodified, sync, maingroup, currentversion, firsteditor, lasteditor) "
-			+ "VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ?)";
+			+ "created, lastmodified, sync, maingroup, currentversion, firsteditor, lasteditor, restriction) "
+			+ "VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ?)";
 
 	private final String INSERT_ONLINE_CONTENT = "UPDATE contents SET contenttype = ? , descr = ? , status = ? , "
-			+ "workxml = ? , lastmodified = ? , onlinexml = ? , published = ? , sync = ? , maingroup = ? , currentversion = ? , lasteditor = ? "
-			+ "WHERE contentid = ? ";
+			+ "workxml = ? , lastmodified = ? , onlinexml = ? , published = ? , sync = ? , maingroup = ? , currentversion = ? , lasteditor = ? , "
+			+ "restriction = ? WHERE contentid = ? ";
 
 	private final String INSERT_ONLINE_CONTENT_WITHOUT_DATE = "UPDATE contents SET contenttype = ? , descr = ? , status = ? , "
-			+ "workxml = ? , onlinexml = ? , sync = ? , maingroup = ? , currentversion = ? , lasteditor = ? " + "WHERE contentid = ? ";
+			+ "workxml = ? , onlinexml = ? , sync = ? , maingroup = ? , currentversion = ? , lasteditor = ? , restriction = ? WHERE contentid = ? ";
 
 	private final String REMOVE_ONLINE_CONTENT = "UPDATE contents SET onlinexml = ? , published = ? , sync = ? , "
-            + "status = ? , workxml = ? , lastmodified = ? , currentversion = ? , lasteditor = ? WHERE contentid = ? ";
+            + "status = ? , workxml = ? , lastmodified = ? , currentversion = ? , lasteditor = ? , restriction = ? WHERE contentid = ? ";
 
 	private final String REMOVE_ONLINE_CONTENT_WITHOUT_DATE = "UPDATE contents SET onlinexml = ? , sync = ? , "
-            + "status = ? , workxml = ? , currentversion = ? , lasteditor = ? WHERE contentid = ? ";
+            + "status = ? , workxml = ? , currentversion = ? , lasteditor = ? , restriction = ? WHERE contentid = ? ";
 
 	private final String UPDATE_CONTENT = "UPDATE contents SET contenttype = ? , descr = ? , status = ? , "
-			+ "workxml = ? , sync = ? , lastmodified = ? , maingroup = ? , currentversion = ? , lasteditor = ? " + "WHERE contentid = ? ";
+			+ "workxml = ? , sync = ? , lastmodified = ? , maingroup = ? , currentversion = ? , lasteditor = ? , restriction = ? " + "WHERE contentid = ? ";
 
 	private final String UPDATE_CONTENT_WITHOUT_DATE = "UPDATE contents SET contenttype = ? , descr = ? , status = ? , "
-			+ "workxml = ? , sync = ? , maingroup = ? , currentversion = ? , lasteditor = ? " + "WHERE contentid = ? ";
+			+ "workxml = ? , sync = ? , maingroup = ? , currentversion = ? , lasteditor = ? , restriction = ? " + "WHERE contentid = ? ";
 
 	private final String LOAD_ALL_CONTENTS_ID = "SELECT contentid FROM contents";
 
@@ -134,7 +134,7 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 	private final String ADD_WORK_ATTRIBUTE_ROLE_RECORD = "INSERT INTO workcontentattributeroles (contentid, attrname, rolename) VALUES ( ? , ? , ? )";
 
 	private final String DELETE_WORK_ATTRIBUTE_ROLE_RECORD = "DELETE FROM workcontentattributeroles WHERE contentid = ? ";
-
+    
 	private static final String COUNT_OFFLINE_CONTENTS = 
             "SELECT count(contents.contentid) from contents WHERE contents.sync = 0 and onlinexml is null";
 
@@ -173,6 +173,7 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 		contentVo.setVersion(res.getString("currentversion"));
 		contentVo.setFirstEditor(res.getString("firsteditor"));
 		contentVo.setLastEditor(res.getString("lasteditor"));
+		contentVo.setRestriction(res.getString("restriction"));
 		return contentVo;
 	}
 
@@ -203,6 +204,7 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 		stat.setString(10, content.getVersion());
 		stat.setString(11, content.getFirstEditor());
 		stat.setString(12, content.getLastEditor());
+		stat.setString(13, content.getRestriction());
 	}
 
 	@Override
@@ -280,6 +282,7 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 		stat.setString(index++, content.getMainGroup());
 		stat.setString(index++, content.getVersion());
 		stat.setString(index++, content.getLastEditor());
+		stat.setString(index++, content.getRestriction());
 		stat.setString(index++, content.getId());
 	}
 
@@ -374,6 +377,7 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 			stat.setString(index++, content.getMainGroup());
 			stat.setString(index++, content.getVersion());
 			stat.setString(index++, content.getLastEditor());
+			stat.setString(index++, content.getRestriction());
 			stat.setString(index++, content.getId());
 			stat.executeUpdate();
 		} catch (Throwable t) {
@@ -511,6 +515,7 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 			}
 			stat.setString(index++, content.getVersion());
 			stat.setString(index++, content.getLastEditor());
+			stat.setString(index++, content.getRestriction());
 			stat.setString(index++, content.getId());
 			stat.executeUpdate();
 		} catch (Throwable t) {

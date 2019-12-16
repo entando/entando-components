@@ -19,6 +19,7 @@ public class RowContentListConfigurationEntry {
 
     private String contentId;
     private String modelId;
+    private String contentDescription;
 
     public RowContentListConfigurationEntry() {
 
@@ -45,15 +46,24 @@ public class RowContentListConfigurationEntry {
         this.modelId = modelId;
     }
 
+    public String getContentDescription() {
+        return contentDescription;
+    }
+
+    public void setContentDescription(String contentDescription) {
+        this.contentDescription = contentDescription;
+    }
+
     public String toCfg() {
         String contentIdBlock = "contentId=" + this.getContentId();
         String modelIdBlock = StringUtils.isBlank(this.getModelId()) ? "" : ",modelId=" + this.getModelId();
-        return "{" + contentIdBlock + modelIdBlock + "}";
+        String contentDescriptionBlock = ",contentDescription=" + this.getContentDescription();
+        return "{" + contentIdBlock + modelIdBlock + contentDescriptionBlock + "}";
     }
 
     @Override
     public String toString() {
-        return "ContentContainer [contentId=" + contentId + ", modelId=" + modelId + "]";
+        return "ContentContainer [contentId=" + contentId + ", modelId=" + modelId + ", contentDescription=" + contentDescription + "]";
     }
 
 }

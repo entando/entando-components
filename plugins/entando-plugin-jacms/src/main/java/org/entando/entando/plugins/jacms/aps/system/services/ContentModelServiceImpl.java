@@ -219,16 +219,8 @@ public class ContentModelServiceImpl implements ContentModelService {
 
     protected BeanPropertyBindingResult validateForUpdate(ContentModelDto request, ContentModel contentModel) {
         BeanPropertyBindingResult errors = new BeanPropertyBindingResult(contentModel, "contentModel");
-        this.validateContentTypeIsEquals(request.getContentType(), contentModel.getContentType(), errors);
         this.validateContentType(contentModel, errors);
         return errors;
-    }
-
-    protected void validateContentTypeIsEquals(String newContentType, String existingConentType, BeanPropertyBindingResult errors) {
-        if (!newContentType.equals(existingConentType)) {
-            Object[] args = {existingConentType, newContentType};
-            errors.reject(ContentModelValidator.ERRCODE_CONTENTMODEL_CANNOT_UPDATE_CONTENT_TYPE, args, "contentmodel.contentType.locked");
-        }
     }
 
     protected void validateIdIsUnique(ContentModel contentModel, BeanPropertyBindingResult errors) {

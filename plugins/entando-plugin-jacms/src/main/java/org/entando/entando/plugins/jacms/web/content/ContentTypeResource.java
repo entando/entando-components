@@ -16,6 +16,7 @@ package org.entando.entando.plugins.jacms.web.content;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.*;
 import io.swagger.annotations.*;
+import java.util.List;
 import org.entando.entando.aps.system.services.entity.model.*;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.model.*;
@@ -108,6 +109,11 @@ public interface ContentTypeResource {
     @GetMapping("/plugins/cms/contentTypeAttributes/{attributeCode}")
     ResponseEntity<SimpleRestResponse<AttributeTypeDto>> getContentTypeAttribute(
             @PathVariable String attributeCode);
+
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @GetMapping("/plugins/cms/contentTypes/{contentTypeCode}/attributes")
+    ResponseEntity<RestResponse<List<EntityTypeAttributeFullDto>, Map>> getContentTypeAttributes(
+            @PathVariable String contentTypeCode);
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @GetMapping("/plugins/cms/contentTypes/{contentTypeCode}/attributes/{attributeCode}")

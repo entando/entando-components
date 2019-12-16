@@ -23,6 +23,7 @@ import com.google.common.collect.ImmutableMap;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.validation.Valid;
@@ -56,7 +57,7 @@ public class ContentTypeResourceController implements ContentTypeResource {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private static final String CONTENT_TYPE_CODE = "contentTypeCode";
+    public static final String CONTENT_TYPE_CODE = "contentTypeCode";
     private static final String ATTRIBUTE_CODE = "attributeCode";
     private static final String MOVEMENT = "movement";
 
@@ -95,7 +96,11 @@ public class ContentTypeResourceController implements ContentTypeResource {
     public ResponseEntity<SimpleRestResponse<Map>> delete(@PathVariable("code") String code) {
         logger.debug("REST request - delete content type {}", code);
         service.delete(code);
-        return ResponseEntity.ok(new SimpleRestResponse<>(new HashMap<>()));
+
+        Map<String, String> metadata = ImmutableMap.of(
+                CONTENT_TYPE_CODE, code
+        );
+        return ResponseEntity.ok(new SimpleRestResponse<>(metadata));
     }
 
     @Override
@@ -144,6 +149,16 @@ public class ContentTypeResourceController implements ContentTypeResource {
         logger.debug("REST request - get content type attributes {}", attributeCode);
         AttributeTypeDto attributeTypeDto = service.getAttributeType(attributeCode);
         return ResponseEntity.ok(new SimpleRestResponse<>(attributeTypeDto));
+    }
+
+    @Override
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    public ResponseEntity<RestResponse<List<EntityTypeAttributeFullDto>, Map>> getContentTypeAttributes(
+            @PathVariable String contentTypeCode) {
+        logger.debug("REST request - get content type {} attributes", contentTypeCode);
+        List<EntityTypeAttributeFullDto> dtos = service.getContentTypeAttributes(contentTypeCode);
+        Map<String, String> metadata = ImmutableMap.of(CONTENT_TYPE_CODE, contentTypeCode);
+        return ResponseEntity.ok(new RestResponse<>(dtos, metadata));
     }
 
     @Override

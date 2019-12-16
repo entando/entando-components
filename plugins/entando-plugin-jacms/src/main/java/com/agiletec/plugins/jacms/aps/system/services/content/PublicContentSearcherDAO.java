@@ -22,6 +22,8 @@ import java.util.Set;
 
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.services.group.Group;
+import java.sql.Connection;
+import java.sql.ResultSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,8 +44,72 @@ public class PublicContentSearcherDAO extends AbstractContentSearcherDAO impleme
 		groupCodes.add(Group.FREE_GROUP_NAME);
 		EntitySearchFilter onLineFilter = new EntitySearchFilter(IContentManager.CONTENT_ONLINE_FILTER_KEY, false);
 		filters = this.addFilter(filters, onLineFilter);
-        return super.loadContentsId(categories, orClauseCategoryFilter, filters, groupCodes);
-    }
+		List<String> contentsId = new ArrayList<String>();
+		Connection conn = null;
+		PreparedStatement stat = null;
+		ResultSet result = null;
+		try {
+			conn = this.getConnection();
+			stat = this.buildStatement(filters, categories, orClauseCategoryFilter, groupCodes, false, false, conn);
+			result = stat.executeQuery();
+            while (result.next()) {
+                String id = result.getString(this.getMasterTableIdFieldName());
+                if (!contentsId.contains(id)) {
+                    contentsId.add(id);
+                }
+            }
+		} catch (Throwable t) {
+			_logger.error("Error loading contents id list",  t);
+			throw new RuntimeException("Error loading contents id list", t);
+		} finally {
+			closeDaoResources(result, stat, conn);
+		}
+		return contentsId;
+	}
+	
+	@Override
+	protected PreparedStatement buildStatement(EntitySearchFilter[] filters,
+			String[] categories, boolean orClauseCategoryFilter, 
+			Collection<String> userGroupCodes, boolean selectAll, boolean isCount, Connection conn) {
+		ArrayList<String> groups = new ArrayList<>();
+		ArrayList<EntitySearchFilter> remainingFilters = new ArrayList<>();
+		for (EntitySearchFilter filter : filters) {
+			if (IContentManager.CONTENT_GROUP_FILTER_KEY.equals(filter.getKey())) {
+				groups.add((String)filter.getValue());
+			} else {
+				remainingFilters.add(filter);
+			}
+		}
+		filters = remainingFilters.toArray(new EntitySearchFilter[remainingFilters.size()]);
+		String[] groupsArr = groups.toArray(new String[groups.size()]);
+		Collection<String> groupsForSelect = this.getGroupsForSelect(userGroupCodes);
+		String query = this.createQueryString(filters, groupsArr, categories, orClauseCategoryFilter, groupsForSelect, isCount, selectAll);
+		PreparedStatement stat = null;
+		try {
+			stat = conn.prepareStatement(query);
+			int index = 0;
+			index = super.addAttributeFilterStatementBlock(filters, index, stat);
+			index = this.addMetadataFieldFilterStatementBlock(filters, index, stat);
+			if (groupsForSelect != null) {
+				index = this.addGroupStatementBlock(groupsForSelect, index, stat);
+			}
+			if (categories != null) {
+				for (int i=0; i<categories.length; i++) {
+					stat.setString(++index, categories[i]);
+				}
+			}
+			if (groupsArr != null) {
+				for (int i=0; i<groupsArr.length; i++) {
+					stat.setString(++index, groupsArr[i]);
+				}
+			}
+		} catch (Throwable t) {
+			_logger.error("Error creating statement",  t);
+			throw new RuntimeException("Error creating statement", t);
+			//processDaoException(t, "Errore in fase di creazione statement", "buildStatement");
+		}
+		return stat;
+	}
 	
 	@Override
 	protected void addGroupsQueryBlock(StringBuffer query, Collection<String> userGroupCodes) {

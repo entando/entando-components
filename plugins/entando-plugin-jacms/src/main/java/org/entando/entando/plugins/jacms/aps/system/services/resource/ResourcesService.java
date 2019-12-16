@@ -258,6 +258,7 @@ public class ResourcesService {
             );
         }
 
+        List<String> groups = new ArrayList<>();
         for (Filter filter : Optional.ofNullable(requestList.getFilters()).orElse(new Filter[]{})) {
             String attr;
             boolean useLikeOption = false;
@@ -277,8 +278,8 @@ public class ResourcesService {
                     attr = IResourceManager.RESOURCE_MODIFY_DATE_FILTER_KEY;
                     break;
                 case "group":
-                    attr = IResourceManager.RESOURCE_MAIN_GROUP_FILTER_KEY;
-                    break;
+                    groups.add(filter.getValue());
+                    continue;
                 case "owner":
                     attr = IResourceManager.RESOURCE_OWNER_FILTER_KEY;
                     break;
@@ -289,6 +290,12 @@ public class ResourcesService {
 
             filters.add(
                 new FieldSearchFilter(attr, filter.getValue(), useLikeOption)
+            );
+        }
+
+        if (groups.size() > 0) {
+            filters.add(
+                new FieldSearchFilter(IResourceManager.RESOURCE_MAIN_GROUP_FILTER_KEY, groups, false)
             );
         }
 
@@ -314,8 +321,8 @@ public class ResourcesService {
             key = IResourceManager.RESOURCE_OWNER_FILTER_KEY;
         }
 
-        EntitySearchFilter filter = new EntitySearchFilter(key, false);
-        filter.setOrder(requestList.getDirection().equals("desc") ?
+        EntitySearchFilter filter = new EntitySearchFilter(key, true);
+        filter.setOrder(requestList.getDirection().equals(EntitySearchFilter.DESC_ORDER) ?
                 EntitySearchFilter.DESC_ORDER : EntitySearchFilter.ASC_ORDER);
 
         return filter;

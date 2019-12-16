@@ -36,6 +36,7 @@ public class ContentRecordVO extends ApsEntityRecord {
 	private String version;
 	private String firstEditor;
 	private String lastEditor;
+    private String restriction;
 	
 	public String getDescription() {
 		return description;
@@ -135,6 +136,13 @@ public class ContentRecordVO extends ApsEntityRecord {
 	}
 	public void setLastEditor(String lastEditor) {
 		this.lastEditor = lastEditor;
+	}
+
+	public String getRestriction() {
+		return restriction;
+	}
+	public void setRestriction(String restriction) {
+		this.restriction = restriction;
 	}
 	
 }

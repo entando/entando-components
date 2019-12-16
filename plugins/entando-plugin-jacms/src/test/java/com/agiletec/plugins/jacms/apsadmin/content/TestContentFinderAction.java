@@ -261,7 +261,7 @@ public class TestContentFinderAction extends AbstractBaseTestContentAction {
 		params.put("categoryCode", "general");
 		this.executeSearch("admin", params);
 		action = (ContentFinderAction) this.getAction();
-		String[] order2 = {"EVN192", "EVN193"};
+		String[] order2 = {"EVN25", "EVN23", "EVN192", "EVN193"};
 		contents = action.getContents();
 		assertEquals(order2.length, contents.size());
 		for (int i=0; i<contents.size(); i++) {

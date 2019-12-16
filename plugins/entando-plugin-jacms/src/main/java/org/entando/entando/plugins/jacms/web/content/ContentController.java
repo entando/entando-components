@@ -13,18 +13,22 @@
  */
 package org.entando.entando.plugins.jacms.web.content;
 
+import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
+import com.agiletec.plugins.jacms.aps.system.services.content.parse.ContentDOM;
 import org.entando.entando.plugins.jacms.aps.system.services.content.IContentService;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.servlet.http.HttpSession;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
+import org.entando.entando.web.common.model.*;
 import org.entando.entando.web.entity.validator.EntityValidator;
 import org.entando.entando.plugins.jacms.web.content.validator.ContentValidator;
 import org.slf4j.Logger;
@@ -37,12 +41,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
+import org.entando.entando.plugins.jacms.web.content.validator.BatchContentStatusRequest;
 import org.entando.entando.plugins.jacms.web.content.validator.ContentStatusRequest;
 import org.entando.entando.plugins.jacms.web.content.validator.RestContentListRequest;
-import org.entando.entando.web.common.model.PagedMetadata;
-import org.entando.entando.web.common.model.PagedRestResponse;
-import org.entando.entando.web.common.model.RestResponse;
-import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.entando.entando.web.common.validator.AbstractPaginationValidator;
 import org.springframework.validation.DataBinder;
 import org.springframework.validation.Errors;
@@ -122,9 +124,30 @@ public class ContentController {
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagedRestResponse<ContentDto>> getContents(RestContentListRequest requestList) {
         logger.debug("getting contents with request {} - status {}", requestList, requestList.getStatus());
+        requestList.setSort(normalizeAttributeNames(requestList.getSort()));
+        Optional.ofNullable(requestList.getFilters()).map(Arrays::stream).orElseGet(Stream::empty).forEach(filter -> {
+            filter.setAttribute(normalizeAttributeNames(filter.getAttribute()));
+        });
         this.getPaginationValidator().validateRestListRequest(requestList, ContentDto.class);
         PagedMetadata<ContentDto> result = this.getContentService().getContents(requestList, this.extractCurrentUser());
         return new ResponseEntity<>(new PagedRestResponse<>(result), HttpStatus.OK);
+    }
+
+    private String normalizeAttributeNames(String attributeName) {
+        if (attributeName != null) {
+            if ("lastmodified".equalsIgnoreCase(attributeName)) {
+                return IContentManager.CONTENT_MODIFY_DATE_FILTER_KEY;
+            } else if (IEntityManager.ENTITY_TYPE_CODE_FILTER_KEY.equalsIgnoreCase(attributeName)) {
+                return IEntityManager.ENTITY_TYPE_CODE_FILTER_KEY;
+            } else if ("description".equalsIgnoreCase(attributeName)) {
+                return IContentManager.CONTENT_DESCR_FILTER_KEY;
+            } else if ("id".equalsIgnoreCase(attributeName) || IEntityManager.ENTITY_ID_FILTER_KEY.equalsIgnoreCase(attributeName)) {
+                return IEntityManager.ENTITY_ID_FILTER_KEY;
+            }
+            return attributeName.toLowerCase();
+        } else {
+            return null;
+        }
     }
 
     @RequestMapping(value = "/{code}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -193,7 +216,7 @@ public class ContentController {
 
     @RestAccessControl(permission = Permission.CONTENT_EDITOR)
     @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<List<ContentDto>>> updateContent(
+    public ResponseEntity<SimpleRestResponse<List<ContentDto>>> updateContents(
             @Valid @RequestBody List<ContentDto> bodyRequest, BindingResult bindingResult) {
         logger.debug("Update content -> {}", bodyRequest);
         if (bindingResult.hasErrors()) {
@@ -216,7 +239,7 @@ public class ContentController {
 
     @RestAccessControl(permission = Permission.CONTENT_EDITOR)
     @RequestMapping(value = "/{code}/status", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse<ContentDto, Map<String, String>>> updatePageStatus(@PathVariable String code,
+    public ResponseEntity<RestResponse<ContentDto, Map<String, String>>> updateContentStatus(@PathVariable String code,
             @Valid @RequestBody ContentStatusRequest contentStatusRequest, BindingResult bindingResult) {
         logger.debug("changing status for content {} with request {}", code, contentStatusRequest);
         Map<String, String> metadata = new HashMap<>();
@@ -227,6 +250,24 @@ public class ContentController {
         ContentDto contentDto = this.getContentService().updateContentStatus(code, contentStatusRequest.getStatus(), this.extractCurrentUser());
         metadata.put("status", contentStatusRequest.getStatus());
         return new ResponseEntity<>(new RestResponse<>(contentDto, metadata), HttpStatus.OK);
+    }
+
+    @RestAccessControl(permission = Permission.CONTENT_EDITOR)
+    @RequestMapping(value = "/status", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RestResponse<List<ContentDto>, Map<String, String>>> updateContentsStatus(
+            @Valid @RequestBody BatchContentStatusRequest batchContentStatusRequest, BindingResult bindingResult) {
+        logger.debug("changing status for contents with request {}", batchContentStatusRequest);
+        Map<String, String> metadata = new HashMap<>();
+        //field validations
+        if (bindingResult.hasErrors()) {
+            throw new ValidationGenericException(bindingResult);
+        }
+
+        List<ContentDto> response = this.getContentService().updateContentsStatus(batchContentStatusRequest.getCodes(),
+                batchContentStatusRequest.getStatus(), this.extractCurrentUser());
+        metadata.put("status", batchContentStatusRequest.getStatus());
+
+        return new ResponseEntity<>(new RestResponse<>(response, metadata), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.CONTENT_EDITOR)
@@ -247,7 +288,7 @@ public class ContentController {
 
     @RestAccessControl(permission = Permission.CONTENT_EDITOR)
     @RequestMapping(method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<?>> deleteContent(@RequestBody List<String> codes) {
+    public ResponseEntity<SimpleRestResponse<?>> deleteContents(@RequestBody List<String> codes) {
         logger.debug("Deleting contents -> {}", codes);
 
         UserDetails userDetails = this.extractCurrentUser();

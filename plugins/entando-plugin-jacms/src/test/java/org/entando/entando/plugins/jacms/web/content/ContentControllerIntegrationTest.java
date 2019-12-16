@@ -14,6 +14,7 @@
 package org.entando.entando.plugins.jacms.web.content;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
+import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.attribute.DateAttribute;
@@ -36,12 +37,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.entando.entando.plugins.jacms.aps.system.services.content.IContentService;
+import org.entando.entando.plugins.jacms.web.content.validator.BatchContentStatusRequest;
 import org.entando.entando.plugins.jacms.web.content.validator.ContentStatusRequest;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
-
-import static org.hamcrest.CoreMatchers.is;
-
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
@@ -50,6 +49,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 
+import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -57,6 +57,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -72,7 +73,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
     private ICmsSearchEngineManager searchEngineManager;
 
     private ObjectMapper mapper = new ObjectMapper();
-
+    
     @Test
     public void testGetContentWithModel() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
@@ -145,10 +146,16 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             result.andExpect(jsonPath("$.metaData.size()", is(0)));
 
             ResultActions result2 = this.executeContentPost("1_POST_valid.json", accessToken, status().isOk());
+            result2.andDo(print());
             result2.andExpect(jsonPath("$.payload.size()", is(1)));
             result2.andExpect(jsonPath("$.payload[0].id", Matchers.anything()));
+            result2.andExpect(jsonPath("$.payload[0].firstEditor", is("jack_bauer")));
+            result2.andExpect(jsonPath("$.payload[0].lastEditor", is("jack_bauer")));
+            result2.andExpect(jsonPath("$.payload[0].mainGroup", is("free")));
+            result2.andExpect(jsonPath("$.payload[0].restriction", is("OPEN")));
             result2.andExpect(jsonPath("$.errors.size()", is(0)));
             result2.andExpect(jsonPath("$.metaData.size()", is(0)));
+
             String bodyResult = result2.andReturn().getResponse().getContentAsString();
             newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
             Content newContent = this.contentManager.loadContent(newContentId, false);
@@ -178,6 +185,10 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             result4.andExpect(jsonPath("$.payload[0].attributes[0].elements.size()", is(0)));
             result4.andExpect(jsonPath("$.payload[0].attributes[0].compositeelements.size()", is(0)));
             result4.andExpect(jsonPath("$.payload[0].attributes[0].listelements", Matchers.anything()));
+            result4.andExpect(jsonPath("$.payload[0].firstEditor", is("jack_bauer")));
+            result4.andExpect(jsonPath("$.payload[0].lastEditor", is("jack_bauer")));
+            result4.andExpect(jsonPath("$.payload[0].mainGroup", is("free")));
+            result4.andExpect(jsonPath("$.payload[0].restriction", is("OPEN")));
             newContent = this.contentManager.loadContent(newContentId, false);
             date = (Date) newContent.getAttribute("Date").getValue();
             Assert.assertEquals("2018-03-21", DateConverter.getFormattedDate(date, "yyyy-MM-dd"));
@@ -189,6 +200,62 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
 
             ListAttribute list = (ListAttribute) newContent.getAttribute("multilist");
             Assert.assertEquals(4, list.getAttributeList("en").size());
+
+            ResultActions result5 = this
+                    .executeContentPut("1_PUT_maingroup.json", newContentId, accessToken, status().isOk());
+            result5.andExpect(jsonPath("$.payload[0].mainGroup", is("group1")))
+                    .andExpect(jsonPath("$.payload[0].restriction", is("RESTRICTED")));
+
+        } finally {
+            if (null != newContentId) {
+                Content newContent = this.contentManager.loadContent(newContentId, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != this.contentManager.getEntityPrototype("TST")) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("TST");
+            }
+        }
+    }
+
+    @Test
+    public void testAddUpdateContentCategories() throws Exception {
+        String newContentId = null;
+        try {
+            Assert.assertNull(this.contentManager.getEntityPrototype("TST"));
+            String accessToken = this.createAccessToken();
+
+            this.executeContentTypePost("1_POST_type_valid.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype("TST"));
+
+            ResultActions result = executeContentPost("1_POST_valid.json", accessToken, status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.payload.size()", is(1)))
+                .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                .andExpect(jsonPath("$.payload[0].firstEditor", is("jack_bauer")))
+                .andExpect(jsonPath("$.payload[0].lastEditor", is("jack_bauer")))
+                .andExpect(jsonPath("$.payload[0].version", is("0.1")))
+                .andExpect(jsonPath("$.payload[0].attributes.size()", is(10)))
+                .andExpect(jsonPath("$.errors.size()", is(0)))
+                .andExpect(jsonPath("$.metaData.size()", is(0)));
+
+            newContentId = JsonPath.read(result.andReturn().getResponse().getContentAsString(), "$.payload[0].id");
+
+            result = executeContentPut("1_PUT_categories.json", newContentId, accessToken, status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(1)))
+                .andExpect(jsonPath("$.errors.size()", is(0)))
+                .andExpect(jsonPath("$.metaData.size()", is(0)))
+                .andExpect(jsonPath("$.payload[0].id", is(newContentId)))
+                .andExpect(jsonPath("$.payload[0].attributes.size()", is(10)))
+                .andExpect(jsonPath("$.payload[0].firstEditor", is("jack_bauer")))
+                .andExpect(jsonPath("$.payload[0].lastEditor", is("jack_bauer")))
+                .andExpect(jsonPath("$.payload[0].description", is("New Content for test")))
+                .andExpect(jsonPath("$.payload[0].mainGroup", is("free")))
+                .andExpect(jsonPath("$.payload[0].categories.size()", is(2)))
+                .andExpect(jsonPath("$.payload[0].categories[0]", is("resCat1")))
+                .andExpect(jsonPath("$.payload[0].categories[1]", is("resCat2")))
+                .andExpect(jsonPath("$.payload[0].version", is("0.2")));
         } finally {
             if (null != newContentId) {
                 Content newContent = this.contentManager.loadContent(newContentId, false);
@@ -257,6 +324,178 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         } finally {
             if (null != newContentId) {
                 Content newContent = this.contentManager.loadContent(newContentId, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != this.contentManager.getEntityPrototype("TST")) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("TST");
+            }
+        }
+    }
+
+    @Test
+    public void testUpdateContents() throws Exception {
+        String newContentId = null;
+        try {
+            Assert.assertNull(this.contentManager.getEntityPrototype("TST"));
+            String accessToken = this.createAccessToken();
+
+            this.executeContentTypePost("1_POST_type_valid.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype("TST"));
+
+            ResultActions result = this.executeContentPost("1_POST_valid.json", accessToken, status().isOk());
+            result.andExpect(jsonPath("$.payload.size()", is(1)));
+            result.andExpect(jsonPath("$.payload[0].id", Matchers.anything()));
+            result.andExpect(jsonPath("$.errors.size()", is(0)));
+            result.andExpect(jsonPath("$.metaData.size()", is(0)));
+            String bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
+            Content newContent = this.contentManager.loadContent(newContentId, false);
+            Assert.assertNotNull(newContent);
+            Content newPublicContent = this.contentManager.loadContent(newContentId, true);
+            Assert.assertNull(newPublicContent);
+
+            BatchContentStatusRequest batchContentStatusRequest = new BatchContentStatusRequest();
+            batchContentStatusRequest.setStatus("published");
+            batchContentStatusRequest.getCodes().add(newContentId);
+
+            result = mockMvc
+                    .perform(put("/plugins/cms/contents/status")
+                            .content(mapper.writeValueAsString(batchContentStatusRequest))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isOk());
+            newPublicContent = this.contentManager.loadContent(newContentId, true);
+            Assert.assertNotNull(newPublicContent);
+
+            batchContentStatusRequest.setStatus("draft");
+            result = mockMvc
+                    .perform(put("/plugins/cms/contents/{code}/status", newContentId)
+                            .content(mapper.writeValueAsString(batchContentStatusRequest))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isOk());
+            newPublicContent = this.contentManager.loadContent(newContentId, true);
+            Assert.assertNull(newPublicContent);
+
+            result = mockMvc
+                    .perform(delete("/plugins/cms/contents")
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .content(mapper.writeValueAsString(new String[] { newContentId }))
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isOk());
+            result.andExpect(jsonPath("$.payload.size()", is(1)));
+            result.andExpect(jsonPath("$.payload[0]", is(newContentId)));
+            Assert.assertNull(this.contentManager.loadContent(newContentId, false));
+        } finally {
+            if (null != newContentId) {
+                Content newContent = this.contentManager.loadContent(newContentId, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != this.contentManager.getEntityPrototype("TST")) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("TST");
+            }
+        }
+    }
+
+    @Test
+    public void testUpdateContentsBatch() throws Exception {
+        String newContentId1 = null;
+        String newContentId2 = null;
+        String newContentId3 = null;
+        try {
+            Assert.assertNull(this.contentManager.getEntityPrototype("TST"));
+            String accessToken = this.createAccessToken();
+
+            this.executeContentTypePost("1_POST_type_valid.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype("TST"));
+
+            BatchContentStatusRequest batchContentStatusRequest = new BatchContentStatusRequest();
+            batchContentStatusRequest.setStatus("published");
+
+            ResultActions result = this.executeContentPost("1_POST_valid.json", accessToken, status().isOk());
+            String bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId1 = JsonPath.read(bodyResult, "$.payload[0].id");
+            Content newContent = this.contentManager.loadContent(newContentId1, false);
+            Assert.assertNotNull(newContent);
+            Content newPublicContent = this.contentManager.loadContent(newContentId1, true);
+            Assert.assertNull(newPublicContent);
+
+            batchContentStatusRequest.getCodes().add(newContentId1);
+
+            result = this.executeContentPost("1_POST_valid.json", accessToken, status().isOk());
+            bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId2 = JsonPath.read(bodyResult, "$.payload[0].id");
+
+            batchContentStatusRequest.getCodes().add(newContentId2);
+
+            result = this.executeContentPost("1_POST_valid.json", accessToken, status().isOk());
+            bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId3 = JsonPath.read(bodyResult, "$.payload[0].id");
+
+            batchContentStatusRequest.getCodes().add(newContentId3);
+
+            batchContentStatusRequest.getCodes().stream().forEach(code -> {
+                try {
+                    Assert.assertNotNull(this.contentManager.loadContent(code, false));
+                    Assert.assertNull(this.contentManager.loadContent(code, true));
+                } catch (Exception e) {
+                    Assert.fail();
+                }
+            });
+
+            result = mockMvc
+                    .perform(put("/plugins/cms/contents/status")
+                            .content(mapper.writeValueAsString(batchContentStatusRequest))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isOk());
+
+            batchContentStatusRequest.getCodes().stream().forEach(code -> {
+                try {
+                    Assert.assertNotNull(this.contentManager.loadContent(code, false));
+                    Assert.assertNotNull(this.contentManager.loadContent(code, true));
+                } catch (Exception e) {
+                    Assert.fail();
+                }
+            });
+
+            batchContentStatusRequest.setStatus("draft");
+
+            result = mockMvc
+                    .perform(put("/plugins/cms/contents/status")
+                            .content(mapper.writeValueAsString(batchContentStatusRequest))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isOk());
+
+            batchContentStatusRequest.getCodes().stream().forEach(code -> {
+                try {
+                    Assert.assertNotNull(this.contentManager.loadContent(code, false));
+                    Assert.assertNull(this.contentManager.loadContent(code, true));
+                } catch (Exception e) {
+                    Assert.fail();
+                }
+            });
+
+        } finally {
+            if (null != newContentId1) {
+                Content newContent = this.contentManager.loadContent(newContentId1, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != newContentId2) {
+                Content newContent = this.contentManager.loadContent(newContentId2, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != newContentId3) {
+                Content newContent = this.contentManager.loadContent(newContentId3, false);
                 if (null != newContent) {
                     this.contentManager.deleteContent(newContent);
                 }
@@ -346,6 +585,29 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         result.andExpect(status().isOk());
         System.out.println(result.andReturn().getResponse().getContentAsString());
         result.andExpect(jsonPath("$.payload", Matchers.hasSize(Matchers.greaterThan(0))));
+    }
+
+    @Test
+    public void testGetContentsPaginated() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents?page=1&pageSize=2")
+                        .param("sort", IContentManager.CONTENT_CREATION_DATE_FILTER_KEY)
+                        .param("direction", FieldSearchFilter.DESC_ORDER)
+                        .param("filter[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filter[0].operator", "eq")
+                        .param("filter[0].value", "EVN")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+        result
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(2)))
+                .andExpect(jsonPath("$.metaData.page", is(1)))
+                .andExpect(jsonPath("$.metaData.pageSize", is(2)))
+                .andExpect(jsonPath("$.metaData.totalItems", is(11)))
+                .andExpect(jsonPath("$.metaData.lastPage", is(6)));
     }
 
     @Test
@@ -673,6 +935,555 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
     }
 
     @Test
+    public void testLoadOrderedPublicEvents_5() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("sort", IContentManager.CONTENT_DESCR_FILTER_KEY)
+                        .param("direction", FieldSearchFilter.DESC_ORDER)
+                        .param("filters[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filters[0].operator", "eq")
+                        .param("filters[0].value", "EVN")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(9)))
+                .andExpect(jsonPath("$.payload[0].id", is("EVN25")))
+                .andExpect(jsonPath("$.payload[1].id", is("EVN21")))
+                .andExpect(jsonPath("$.payload[2].id", is("EVN20")))
+                .andExpect(jsonPath("$.payload[3].id", is("EVN194")))
+                .andExpect(jsonPath("$.payload[4].id", is("EVN193")))
+                .andExpect(jsonPath("$.payload[5].id", is("EVN192")))
+                .andExpect(jsonPath("$.payload[6].id", is("EVN191")))
+                .andExpect(jsonPath("$.payload[7].id", is("EVN23")))
+                .andExpect(jsonPath("$.payload[8].id", is("EVN24")));
+    }
+
+    @Test
+    public void testLoadOrderedPublicEvents_6() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("sort", IContentManager.CONTENT_MAIN_GROUP_FILTER_KEY)
+                        .param("direction", FieldSearchFilter.ASC_ORDER)
+                        .param("filters[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filters[0].operator", "eq")
+                        .param("filters[0].value", "EVN")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(9)))
+                .andExpect(jsonPath("$.payload[0].id", is("EVN25")));
+    }
+
+    @Test
+    public void testLoadOrderedPublicEvents_7() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("sort", IContentManager.CONTENT_FIRST_EDITOR_FILTER_KEY)
+                        .param("direction", FieldSearchFilter.DESC_ORDER)
+                        .param("filters[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filters[0].operator", "eq")
+                        .param("filters[0].value", "EVN")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(3)));
+    }
+
+    @Test
+    public void testLoadOrderedPublicEvents_8() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("sort", IEntityManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("direction", FieldSearchFilter.ASC_ORDER)
+                        .param("filters[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filters[0].operator", "eq")
+                        .param("filters[0].value", "EVN")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(9)))
+                .andExpect(jsonPath("$.payload[0].id", is("EVN20")))
+                .andExpect(jsonPath("$.payload[1].id", is("EVN192")))
+                .andExpect(jsonPath("$.payload[2].id", is("EVN23")))
+                .andExpect(jsonPath("$.payload[3].id", is("EVN24")))
+                .andExpect(jsonPath("$.payload[4].id", is("EVN21")))
+                .andExpect(jsonPath("$.payload[5].id", is("EVN25")))
+                .andExpect(jsonPath("$.payload[6].id", is("EVN191")))
+                .andExpect(jsonPath("$.payload[7].id", is("EVN194")))
+                .andExpect(jsonPath("$.payload[8].id", is("EVN193")));
+    }
+
+    @Test
+    public void testLoadOrderedPublicEvents_9() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("sort", "status")
+                        .param("direction", FieldSearchFilter.ASC_ORDER)
+                        .param("filters[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filters[0].operator", "eq")
+                        .param("filters[0].value", "EVN")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(9)))
+                .andExpect(jsonPath("$.payload[0].id", is("EVN193")))
+                .andExpect(jsonPath("$.payload[1].id", is("EVN194")))
+                .andExpect(jsonPath("$.payload[2].id", is("EVN191")))
+                .andExpect(jsonPath("$.payload[3].id", is("EVN25")))
+                .andExpect(jsonPath("$.payload[4].id", is("EVN21")))
+                .andExpect(jsonPath("$.payload[5].id", is("EVN24")))
+                .andExpect(jsonPath("$.payload[6].id", is("EVN23")))
+                .andExpect(jsonPath("$.payload[7].id", is("EVN192")))
+                .andExpect(jsonPath("$.payload[8].id", is("EVN20")));
+    }
+
+    @Test
+    public void testLoadOrderedPublicEvents_10() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("sort", "lastmodified")
+                        .param("direction", FieldSearchFilter.DESC_ORDER)
+                        .param("filters[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filters[0].operator", "eq")
+                        .param("filters[0].value", "EVN")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(9)))
+                .andExpect(jsonPath("$.payload[0].id", is("EVN21")))
+                .andExpect(jsonPath("$.payload[1].id", is("EVN20")))
+                .andExpect(jsonPath("$.payload[2].id", is("EVN25")))
+                .andExpect(jsonPath("$.payload[3].id", is("EVN24")))
+                .andExpect(jsonPath("$.payload[4].id", is("EVN23")))
+                .andExpect(jsonPath("$.payload[5].id", is("EVN192")))
+                .andExpect(jsonPath("$.payload[6].id", is("EVN191")))
+                .andExpect(jsonPath("$.payload[7].id", is("EVN194")))
+                .andExpect(jsonPath("$.payload[8].id", is("EVN193")));
+    }
+
+    @Test
+    public void testLoadOrderedPublicEvents_11() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("sort", IContentManager.CONTENT_CREATION_DATE_FILTER_KEY)
+                        .param("direction", FieldSearchFilter.DESC_ORDER)
+                        .param("filters[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filters[0].operator", "eq")
+                        .param("filters[0].value", "EVN")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(9)))
+                .andExpect(jsonPath("$.payload[0].id", is("EVN21")))
+                .andExpect(jsonPath("$.payload[1].id", is("EVN25")))
+                .andExpect(jsonPath("$.payload[2].id", is("EVN24")))
+                .andExpect(jsonPath("$.payload[3].id", is("EVN23")))
+                .andExpect(jsonPath("$.payload[4].id", is("EVN20")))
+                .andExpect(jsonPath("$.payload[5].id", is("EVN194")))
+                .andExpect(jsonPath("$.payload[6].id", is("EVN193")))
+                .andExpect(jsonPath("$.payload[7].id", is("EVN192")))
+                .andExpect(jsonPath("$.payload[8].id", is("EVN191")));
+    }
+
+    public void testFilteredContent_1() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("sort", IContentManager.CONTENT_CREATION_DATE_FILTER_KEY)
+                        .param("direction", FieldSearchFilter.DESC_ORDER)
+                        .param("filters[0].attribute", "description")
+                        .param("filters[0].value", "Sagra")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(1)))
+                .andExpect(jsonPath("$.payload[0].id", is("EVN21")));
+    }
+
+    @Test
+    public void testFilteredContent_2() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("sort", IContentManager.CONTENT_CREATION_DATE_FILTER_KEY)
+                        .param("direction", FieldSearchFilter.DESC_ORDER)
+                        .param("filters[0].attribute", "id")
+                        .param("filters[0].value", "EVN194")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(1)))
+                .andExpect(jsonPath("$.payload[0].id", is("EVN194")));
+    }
+
+    @Test
+    public void testFilteredContent_3() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("filters[0].attribute", "firsteditor")
+                        .param("filters[0].value", "admin")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(0)));
+    }
+
+    @Test
+    public void testFilteredContent_4() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("filters[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filters[0].operator", "eq")
+                        .param("filters[0].value", "EVN")
+                        .param("filters[1].attribute", "firsteditor")
+                        .param("filters[1].value", "editor1")
+                        .param("filters[1].operator", "eq")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(2)));
+    }
+
+    @Test
+    public void testFilteredContent_5() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("filters[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filters[0].operator", "eq")
+                        .param("filters[0].value", "EVN")
+                        .param("filters[1].attribute", "firsteditor")
+                        .param("filters[1].value", "editor2")
+                        .param("filters[1].operator", "eq")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(1)));
+    }
+
+    @Test
+    public void testFilteredContent_6() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("filters[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filters[0].operator", "eq")
+                        .param("filters[0].value", "EVN")
+                        .param("filters[1].attribute", "firsteditor")
+                        .param("filters[1].value", "editor2")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(1)));
+    }
+
+    @Test
+    public void testFilteredContent_7() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("filters[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filters[0].operator", "eq")
+                        .param("filters[0].value", "EVN")
+                        .param("filters[1].attribute", "firsteditor")
+                        .param("filters[1].value", "editor1")
+                        .param("filters[1].operator", "not")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(1)));
+    }
+
+    @Test
+    public void testFilteredContent_8() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("filters[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filters[0].operator", "eq")
+                        .param("filters[0].value", "EVN")
+                        .param("filters[1].attribute", "mainGroup")
+                        .param("filters[1].value", "free")
+                        .param("filters[1].operator", "eq")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(8)));
+    }
+
+    @Test
+    public void testFilteredContent_9() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("filters[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filters[0].operator", "eq")
+                        .param("filters[0].value", "EVN")
+                        .param("filters[1].attribute", "mainGroup")
+                        .param("filters[1].value", "free")
+                        .param("filters[1].operator", "not")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(1)));
+    }
+
+    @Test
+    public void testFilteredContent_10() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("filters[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filters[0].operator", "eq")
+                        .param("filters[0].value", "EVN")
+                        .param("categories[0]", "general_cat1")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(2)));
+    }
+
+    @Test
+    public void testFilteredContent_11() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("filters[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filters[0].operator", "eq")
+                        .param("filters[0].value", "EVN")
+                        .param("categories[0]", "general_cat1")
+                        .param("categories[1]", "general_cat2")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(1)));
+    }
+
+    @Test
+    public void testFilteredContent_12() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("filters[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filters[0].operator", "eq")
+                        .param("filters[0].value", "EVN")
+                        .param("categories[0]", "general_cat2")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(1)));
+    }
+
+    @Test
+    public void testFilteredContent_13() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("filters[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filters[0].operator", "eq")
+                        .param("filters[0].value", "EVN")
+                        .param("categories[0]", "general_cat3")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(0)));
+    }
+    
+    @Test
+    public void testFilteredContent_14() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("filters[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filters[0].operator", "eq")
+                        .param("filters[0].value", "EVN")
+                        .param("filters[1].attribute", "group")
+                        .param("filters[1].value", "group1")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(3)));
+    }
+    
+    @Test
+    public void testFilteredContent_15() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("filters[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filters[0].operator", "eq")
+                        .param("filters[0].value", "EVN")
+                        .param("filters[1].attribute", "group")
+                        .param("filters[1].value", "free")
+                        .param("filters[2].attribute", "group")
+                        .param("filters[2].value", "group1")
+                        .param("filters[3].attribute", "group")
+                        .param("filters[3].value", "group2")
+                        .param("filters[4].attribute", "group")
+                        .param("filters[4].value", "group3")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(1)));
+    }
+    
+    @Test
+    public void testFilteredContent_16() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("filters[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filters[0].operator", "eq")
+                        .param("filters[0].value", "EVN")
+                        .param("filters[1].attribute", "restriction")
+                        .param("filters[1].value", "OPEN")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(2)));
+    }
+
+    @Test
+    public void testFilteredContent_17() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/plugins/cms/contents")
+                        .param("status", IContentService.STATUS_ONLINE)
+                        .param("filters[0].attribute", IContentManager.ENTITY_TYPE_CODE_FILTER_KEY)
+                        .param("filters[0].operator", "eq")
+                        .param("filters[0].value", "EVN")
+                        .param("filters[1].attribute", "restriction")
+                        .param("filters[1].value", "RESTRICTED")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(1)));
+    }
+
+    @Test
     public void testLoadPublicContentsWithHtml() throws Exception {
         ResultActions result = mockMvc
                 .perform(get("/plugins/cms/contents")
@@ -797,7 +1608,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .header("Authorization", "Bearer " + accessToken));
         bodyResult = result.andReturn().getResponse().getContentAsString();
         result.andExpect(status().isOk());
-        List<String> expectedFreeContentsId = Arrays.asList("ART111", "ART120", "ART122");
+        List<String> expectedFreeContentsId = Arrays.asList("ART111", "ART120", "ART122", "EVN25");
         int newPayloadSize = JsonPath.read(bodyResult, "$.payload.size()");
         Assert.assertEquals(expectedFreeContentsId.size(), newPayloadSize);
         for (int i = 0; i < expectedFreeContentsId.size(); i++) {
@@ -830,5 +1641,5 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             Assert.assertEquals(expectedContentsId[i], extractedId);
         }
     }
-
+    
 }

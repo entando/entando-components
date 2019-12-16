@@ -350,12 +350,12 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
         try {
             stat = conn.prepareStatement(query);
             int index = 0;
-            index = this.addMetadataFieldFilterStatementBlock(filters, index, stat);
             if (null != categories && categories.size() > 0) {
                 for (String category : categories) {
                     stat.setString(++index, category);
                 }
             }
+            index = this.addMetadataFieldFilterStatementBlock(filters, index, stat);
         } catch (Throwable t) {
             logger.error("Error while creating the statement", t);
             throw new RuntimeException("Error while creating the statement", t);
@@ -365,16 +365,7 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
 
     private String createQueryString(FieldSearchFilter[] filters, List<String> categories, boolean isCount) {
         StringBuffer query = this.createBaseQueryBlock(filters, false, isCount, categories);
-        boolean hasAppendWhereClause = this.appendMetadataFieldFilterQueryBlocks(filters, query, false);
-        if (null != categories && categories.size() > 0) {
-            hasAppendWhereClause = this.verifyWhereClauseAppend(query, hasAppendWhereClause);
-            for (int i = 0; i < categories.size(); i++) {
-                if (i > 0) {
-                    query.append(" AND ");
-                }
-                query.append("resourcerelations.refcategory = ? ");
-            }
-        }
+        this.appendMetadataFieldFilterQueryBlocks(filters, query, false);
         if (!isCount) {
             super.appendOrderQueryBlocks(filters, query, false);
             this.appendLimitQueryBlock(filters, query);
@@ -384,8 +375,12 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
 
     private StringBuffer createBaseQueryBlock(FieldSearchFilter[] filters, boolean selectAll, boolean isCount, List<String> categories) {
         StringBuffer query = super.createBaseQueryBlock(filters, isCount, selectAll);
-        if (null != categories && categories.size() > 0) {
-            query.append("INNER JOIN resourcerelations ON resources.resid = resourcerelations.resid ");
+        if (categories != null) {
+            for (int i = 0; i < categories.size(); i++) {
+                query.append(String.format(
+                        "INNER JOIN resourcerelations res%d ON resources.resid = res%d.resid AND res%d.refcategory= ? ",
+                        i, i, i));
+            }
         }
         return query;
     }

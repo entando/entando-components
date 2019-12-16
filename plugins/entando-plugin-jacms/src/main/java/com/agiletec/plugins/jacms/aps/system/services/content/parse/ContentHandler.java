@@ -49,6 +49,8 @@ public class ContentHandler extends EntityHandler {
 				this.startCreated(attributes, qName);
 			} else if (qName.equals("lastModified")) {
 				this.startLastModified(attributes, qName);
+			} else if (qName.equals("restriction")) {
+				this.startRestriction(attributes, qName);
 			}
 		} catch (SAXException e) {
 			_logger.error("error in start element", e);
@@ -74,6 +76,8 @@ public class ContentHandler extends EntityHandler {
 				this.endCreated();
 			} else if (qName.equals("lastModified")) {
 				this.endLastModified();
+			} else if (qName.equals("restriction")) {
+				this.endRestriction();
 			}
 		} catch (Throwable t) {
 			_logger.error("error in end element", t);
@@ -102,6 +106,10 @@ public class ContentHandler extends EntityHandler {
 	}
 	
 	private void startLastModified(Attributes attributes, String qName) throws SAXException {
+		return; // nothing to do
+	}
+
+	private void startRestriction(Attributes attributes, String qName) throws SAXException {
 		return; // nothing to do
 	}
 	
@@ -146,6 +154,13 @@ public class ContentHandler extends EntityHandler {
 		if (null != textBuffer) {
 			Date date = DateConverter.parseDate(textBuffer.toString(), JacmsSystemConstants.CONTENT_METADATA_DATE_FORMAT);
 			((Content) this.getCurrentEntity()).setLastModified(date);
+		}
+	}
+
+	private void endRestriction() {
+		StringBuffer textBuffer = this.getTextBuffer();
+		if (null != textBuffer) {
+			((Content) this.getCurrentEntity()).setRestriction(textBuffer.toString());
 		}
 	}
 	

@@ -136,7 +136,7 @@ public class LinkAttribute extends TextAttribute implements IReferenceableAttrib
 
     @Override
     public boolean isSearchableOptionSupported() {
-        return true;
+        return false;
     }
 
     @Override

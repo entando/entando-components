@@ -36,6 +36,7 @@ import java.util.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -106,18 +107,24 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
             content.setDescription("My content type " + typeCode);
             content.setDefaultModel("My Model");
             content.setListModel("Model list");
+            content.setViewPage("View Page");
             ContentTypeDtoRequest contentTypeRequest = new ContentTypeDtoRequest(content);
             contentTypeRequest.setName("Content request");
-            mockMvc.perform(
+            ResultActions result = mockMvc.perform(
                     post("/plugins/cms/contentTypes")
                     .header("Authorization", "Bearer " + accessToken)
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
                     .content(jsonMapper.writeValueAsString(contentTypeRequest))
-                    .accept(MediaType.APPLICATION_JSON_UTF8))
+                    .accept(MediaType.APPLICATION_JSON_UTF8));
+
+            result.andDo(print())
                     .andExpect(status().isCreated())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                    .andExpect(jsonPath("$.payload.code").value(typeCode))
-                    .andReturn();
+                    .andExpect(jsonPath("$.payload.code", is(typeCode)))
+                    .andExpect(jsonPath("$.payload.viewPage", is("View Page")))
+                    .andExpect(jsonPath("$.payload.defaultContentModel", is("My Model")))
+                    .andExpect(jsonPath("$.payload.defaultContentModelList", is("Model list")));
+
             Assert.assertNotNull(this.contentManager.getEntityPrototype(typeCode));
         } finally {
             if (null != this.contentManager.getEntityPrototype(typeCode)) {
@@ -133,16 +140,23 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
         try {
             ContentTypeDto createdContentType = createContentType(typeCode);
             createdContentType.setName("MyContentType");
-            mockMvc.perform(put("/plugins/cms/contentTypes")
+            createdContentType.setViewPage("Updated View Page");
+            createdContentType.setDefaultContentModel("Updated Model");
+            createdContentType.setDefaultContentModelList("Updated Model list");
+
+            ResultActions result = mockMvc.perform(put("/plugins/cms/contentTypes")
                     .header("Authorization", "Bearer " + accessToken)
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
                     .content(jsonMapper.writeValueAsString(createdContentType))
-                    .accept(MediaType.APPLICATION_JSON_UTF8))
-                    //                .andDo(print())
+                    .accept(MediaType.APPLICATION_JSON_UTF8));
+
+            result.andDo(print())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.code").value(createdContentType.getCode()))
                     .andExpect(jsonPath("$.payload.name").value("MyContentType"))
-                    .andReturn();
+                    .andExpect(jsonPath("$.payload.viewPage", is("Updated View Page")))
+                    .andExpect(jsonPath("$.payload.defaultContentModel", is("Updated Model")))
+                    .andExpect(jsonPath("$.payload.defaultContentModelList", is("Updated Model list")));
         } finally {
             if (null != this.contentManager.getEntityPrototype(typeCode)) {
                 ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype(typeCode);
@@ -162,7 +176,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
                     .accept(MediaType.APPLICATION_JSON_UTF8))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.payload.size()", is(0)))
+                    .andExpect(jsonPath("$.payload.contentTypeCode", is(typeCode)))
                     .andReturn();
             Assert.assertNull(this.contentManager.getEntityPrototype(typeCode));
         } catch (Exception e) {
@@ -256,7 +270,8 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("Attach"))
-                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(false))
+                .andExpect(jsonPath("$.payload.indexableOptionSupported").value(true))
                 .andReturn();
     }
 
@@ -271,7 +286,8 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("Boolean"))
-                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(false))
+                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andExpect(jsonPath("$.payload.indexableOptionSupported").value(false))
                 .andReturn();
     }
 
@@ -286,7 +302,8 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("CheckBox"))
-                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(false))
+                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andExpect(jsonPath("$.payload.indexableOptionSupported").value(false))
                 .andReturn();
     }
 
@@ -302,6 +319,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("Composite"))
                 .andExpect(jsonPath("$.payload.searchableOptionSupported").value(false))
+                .andExpect(jsonPath("$.payload.indexableOptionSupported").value(false))
                 .andReturn();
     }
 
@@ -317,6 +335,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("Date"))
                 .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andExpect(jsonPath("$.payload.indexableOptionSupported").value(true))
                 .andReturn();
     }
 
@@ -332,6 +351,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("Enumerator"))
                 .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andExpect(jsonPath("$.payload.indexableOptionSupported").value(true))
                 .andReturn();
     }
 
@@ -347,6 +367,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("EnumeratorMap"))
                 .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andExpect(jsonPath("$.payload.indexableOptionSupported").value(true))
                 .andReturn();
     }
 
@@ -361,7 +382,8 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("Hypertext"))
-                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(false))
+                .andExpect(jsonPath("$.payload.indexableOptionSupported").value(true))
                 .andReturn();
     }
 
@@ -376,7 +398,8 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("Image"))
-                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(false))
+                .andExpect(jsonPath("$.payload.indexableOptionSupported").value(true))
                 .andReturn();
     }
 
@@ -391,7 +414,8 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("Link"))
-                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(false))
+                .andExpect(jsonPath("$.payload.indexableOptionSupported").value(true))
                 .andReturn();
     }
 
@@ -407,6 +431,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("List"))
                 .andExpect(jsonPath("$.payload.searchableOptionSupported").value(false))
+                .andExpect(jsonPath("$.payload.indexableOptionSupported").value(false))
                 .andReturn();
     }
 
@@ -422,6 +447,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("Longtext"))
                 .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andExpect(jsonPath("$.payload.indexableOptionSupported").value(true))
                 .andReturn();
     }
 
@@ -437,6 +463,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("Monolist"))
                 .andExpect(jsonPath("$.payload.searchableOptionSupported").value(false))
+                .andExpect(jsonPath("$.payload.indexableOptionSupported").value(false))
                 .andReturn();
     }
 
@@ -452,6 +479,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("Monotext"))
                 .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andExpect(jsonPath("$.payload.indexableOptionSupported").value(true))
                 .andReturn();
     }
 
@@ -467,6 +495,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("Number"))
                 .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andExpect(jsonPath("$.payload.indexableOptionSupported").value(true))
                 .andReturn();
     }
 
@@ -482,6 +511,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("Text"))
                 .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andExpect(jsonPath("$.payload.indexableOptionSupported").value(true))
                 .andReturn();
     }
 
@@ -496,7 +526,8 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("ThreeState"))
-                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(false))
+                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andExpect(jsonPath("$.payload.indexableOptionSupported").value(false))
                 .andReturn();
     }
 
@@ -512,6 +543,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("Timestamp"))
                 .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andExpect(jsonPath("$.payload.indexableOptionSupported").value(true))
                 .andReturn();
     }
 
@@ -561,6 +593,32 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                     .andExpect(jsonPath("$.payload.code").value("MyAttribute"))
+                    .andReturn();
+        } finally {
+            if (null != this.contentManager.getEntityPrototype(typeCode)) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype(typeCode);
+            }
+            Assert.assertNull(this.contentManager.getEntityPrototype(typeCode));
+        }
+    }
+
+    @Test
+    public void testListAttributesFromContentType() throws Exception {
+        String typeCode = "TX5";
+        try {
+            List<EntityTypeAttributeFullDto> contentTypeAttribute = this.createContentTypeAttributes(typeCode);
+
+            mockMvc.perform(
+                    get("/plugins/cms/contentTypes/{contentCode}/attributes", typeCode)
+                            .header("Authorization", "Bearer " + accessToken)
+                            .contentType(MediaType.APPLICATION_JSON_UTF8)
+                            .accept(MediaType.APPLICATION_JSON_UTF8))
+                    //                .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(jsonPath("$.payload.size()").value(2))
+                    .andExpect(jsonPath("$.payload[0].code").value("MyAttribute1"))
+                    .andExpect(jsonPath("$.payload[1].code").value("MyAttribute2"))
                     .andReturn();
         } finally {
             if (null != this.contentManager.getEntityPrototype(typeCode)) {

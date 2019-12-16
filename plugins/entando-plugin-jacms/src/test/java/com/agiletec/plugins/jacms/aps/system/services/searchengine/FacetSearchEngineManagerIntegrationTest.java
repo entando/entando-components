@@ -60,7 +60,10 @@ public class FacetSearchEngineManagerIntegrationTest extends BaseTestCase {
             assertNotNull(freeResult);
             List<String> freeContentsId = freeResult.getContentsId();
             assertNotNull(freeContentsId);
-            assertEquals(2, freeResult.getOccurrences().size());
+            assertEquals(5, freeResult.getOccurrences().size());
+            assertEquals(2, freeResult.getOccurrences().get("general").intValue());
+            assertEquals(2, freeResult.getOccurrences().get("general_cat1").intValue());
+            assertEquals(1, freeResult.getOccurrences().get("general_cat2").intValue());
             assertEquals(2, freeResult.getOccurrences().get("evento").intValue());
             assertEquals(1, freeResult.getOccurrences().get("cat1").intValue());
             allowedGroup.add(Group.ADMINS_GROUP_NAME);
@@ -130,7 +133,7 @@ public class FacetSearchEngineManagerIntegrationTest extends BaseTestCase {
         categories_1.add(this.categoryManager.getCategory("general_cat2"));
         FacetedContentsResult result1 = this.searchEngineManager.searchFacetedEntities(filters, categories_1, allowedGroup);
         List<String> contents = result1.getContentsId();
-        String[] order_a = {"ART120", "ART111"};
+        String[] order_a = {"ART120", "EVN25", "ART111"};
         assertEquals(order_a.length, contents.size());
         this.verifyOrder(contents, order_a);
 
@@ -138,7 +141,7 @@ public class FacetSearchEngineManagerIntegrationTest extends BaseTestCase {
         categories_2.add(this.categoryManager.getCategory("general_cat1"));
         FacetedContentsResult result2 = this.searchEngineManager.searchFacetedEntities(filters, categories_2, allowedGroup);
         contents = result2.getContentsId();
-        String[] order_b = {"ART111"};
+        String[] order_b = {"EVN25", "ART111"};
         assertEquals(order_b.length, contents.size());
         assertEquals(order_b[0], contents.get(0));
 
@@ -150,7 +153,7 @@ public class FacetSearchEngineManagerIntegrationTest extends BaseTestCase {
             super.waitThreads(ICmsSearchEngineManager.RELOAD_THREAD_NAME_PREFIX);
             FacetedContentsResult result3 = this.searchEngineManager.searchFacetedEntities(filters, categories_1, allowedGroup);
             contents = result3.getContentsId();
-            String[] order_c = {newContent.getId(), "ART120", "ART111"};
+            String[] order_c = {newContent.getId(), "ART120", "EVN25", "ART111"};
             assertEquals(order_c.length, contents.size());
             this.verifyOrder(contents, order_c);
 
@@ -160,7 +163,7 @@ public class FacetSearchEngineManagerIntegrationTest extends BaseTestCase {
             super.waitThreads(ICmsSearchEngineManager.RELOAD_THREAD_NAME_PREFIX);
             FacetedContentsResult result4 = this.searchEngineManager.searchFacetedEntities(filters, categories_2, allowedGroup);
             contents = result4.getContentsId();
-            String[] order_d = {newContent.getId(), "ART111"};
+            String[] order_d = {newContent.getId(), "EVN25", "ART111"};
             assertEquals(order_d.length, contents.size());
             this.verifyOrder(contents, order_d);
         } catch (Throwable t) {

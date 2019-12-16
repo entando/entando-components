@@ -15,10 +15,8 @@ package com.agiletec.plugins.jacms.aps.system.services.contentmodel.model;
 
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeRole;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.*;
 import org.entando.entando.aps.system.services.entity.model.EntityTypeFullDto;
-import org.entando.entando.plugins.jacms.aps.system.init.portdb.enums.DefaultContentModel;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.*;
@@ -27,11 +25,11 @@ import java.util.*;
 @ApiModel("ContentType")
 public class ContentTypeDto extends EntityTypeFullDto {
 
-    @JsonProperty("defaultContentModel")
-    private DefaultContentModel defaultContentModel;
+    private String defaultContentModel;
 
-    @JsonProperty("defaultContentModelList")
-    private DefaultContentModel defaultContentModelList;
+    private String defaultContentModelList;
+
+    private String viewPage;
 
     public ContentTypeDto() {
         super();
@@ -39,6 +37,10 @@ public class ContentTypeDto extends EntityTypeFullDto {
 
     public ContentTypeDto(Content src, List<AttributeRole> roles) {
         super(src, roles);
+
+        setDefaultContentModel(src.getDefaultModel());
+        setDefaultContentModelList(src.getListModel());
+        setViewPage(src.getViewPage());
     }
 
     public ContentTypeDto code(String code) {
@@ -47,26 +49,35 @@ public class ContentTypeDto extends EntityTypeFullDto {
     }
 
     @ApiModelProperty
-    public DefaultContentModel getDefaultContentModel() {
+    public String getDefaultContentModel() {
         return defaultContentModel;
     }
 
-    public void setDefaultContentModel(DefaultContentModel defaultContentModel) {
+    public void setDefaultContentModel(String defaultContentModel) {
         this.defaultContentModel = defaultContentModel;
     }
 
-    public ContentTypeDto defaultContentModelList(DefaultContentModel defaultContentModelList) {
+    public ContentTypeDto defaultContentModelList(String defaultContentModelList) {
         this.defaultContentModelList = defaultContentModelList;
         return this;
     }
 
     @ApiModelProperty
-    public DefaultContentModel getDefaultContentModelList() {
+    public String getDefaultContentModelList() {
         return defaultContentModelList;
     }
 
-    public void setDefaultContentModelList(DefaultContentModel defaultContentModelList) {
+    public void setDefaultContentModelList(String defaultContentModelList) {
         this.defaultContentModelList = defaultContentModelList;
+    }
+
+    @ApiModelProperty
+    public String getViewPage() {
+        return viewPage;
+    }
+
+    public void setViewPage(String viewPage) {
+        this.viewPage = viewPage;
     }
 
     public ContentTypeDto name(String name) {

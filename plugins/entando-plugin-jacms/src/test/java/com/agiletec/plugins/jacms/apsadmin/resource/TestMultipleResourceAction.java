@@ -170,8 +170,9 @@ public class TestMultipleResourceAction extends ApsAdminBaseTestCase {
         }
         params.put("resourceTypeCode", action.getResourceTypeCode());
 
-        assertEquals(1, action.getCategoryCodes().size());
+        assertEquals(2, action.getCategoryCodes().size());
         assertTrue(action.getCategoryCodes().contains("resCat1"));
+        assertTrue(action.getCategoryCodes().contains("resCat3"));
 
         this.initAction("/do/jacms/Resource", "removeCategory");
         this.setUserOnSession("admin");
@@ -183,7 +184,7 @@ public class TestMultipleResourceAction extends ApsAdminBaseTestCase {
         assertEquals(Action.SUCCESS, result);
 
         action = (MultipleResourceAction) this.getAction();
-        assertEquals(0, action.getCategoryCodes().size(), 0);
+        assertEquals(1, action.getCategoryCodes().size(), 0);
 
         this.initAction("/do/jacms/Resource", "joinCategory");
         params.put("categoryCode", "resCat1");
@@ -198,25 +199,9 @@ public class TestMultipleResourceAction extends ApsAdminBaseTestCase {
         assertEquals(Action.SUCCESS, result);
 
         action = (MultipleResourceAction) this.getAction();
-        assertEquals(1, action.getCategoryCodes().size());
-        assertTrue(action.getCategoryCodes().contains("resCat1"));
-
-        this.initAction("/do/jacms/Resource", "joinCategory");
-        params.put("categoryCode", "resCat2");
-        Iterator<String> iter3 = action.getCategoryCodes().iterator();
-        while (iter3.hasNext()) {
-            String categoryCode = iter3.next();
-            params.put("categoryCodes", categoryCode);
-        }
-        this.addParameters(params);
-        this.setUserOnSession("admin");
-        result = this.executeAction();
-        assertEquals(Action.SUCCESS, result);
-
-        action = (MultipleResourceAction) this.getAction();
         assertEquals(2, action.getCategoryCodes().size());
         assertTrue(action.getCategoryCodes().contains("resCat1"));
-        assertTrue(action.getCategoryCodes().contains("resCat2"));
+        assertTrue(action.getCategoryCodes().contains("resCat3"));
     }
 
     public void testJoinCategoryWithInvalidCategory() throws Throwable {

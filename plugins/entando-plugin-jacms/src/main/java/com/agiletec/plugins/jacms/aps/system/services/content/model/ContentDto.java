@@ -13,6 +13,9 @@
  */
 package com.agiletec.plugins.jacms.aps.system.services.content.model;
 
+import com.agiletec.aps.system.common.entity.model.IApsEntity;
+import com.agiletec.aps.system.services.category.ICategoryManager;
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentRestriction;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -22,6 +25,7 @@ import java.util.Date;
 import java.util.Map;
 import org.entando.entando.web.common.json.JsonDateDeserializer;
 import org.entando.entando.web.common.json.JsonDateSerializer;
+import org.springframework.validation.BindingResult;
 
 public class ContentDto extends EntityDto implements Serializable {
 
@@ -37,6 +41,7 @@ public class ContentDto extends EntityDto implements Serializable {
     private String version;
     private String firstEditor;
     private String lastEditor;
+    private String restriction;
     private String html;
 
     /**
@@ -64,6 +69,7 @@ public class ContentDto extends EntityDto implements Serializable {
         this.setVersion(src.getVersion());
         this.setFirstEditor(src.getFirstEditor());
         this.setLastEditor(src.getLastEditor());
+        this.setRestriction(src.getRestriction());
     }
 
     public String getStatus() {
@@ -150,6 +156,14 @@ public class ContentDto extends EntityDto implements Serializable {
         this.lastEditor = lastEditor;
     }
 
+    public String getRestriction() {
+        return restriction;
+    }
+
+    public void setRestriction(String restriction) {
+        this.restriction = restriction;
+    }
+
     public String getHtml() {
         return html;
     }
@@ -164,6 +178,17 @@ public class ContentDto extends EntityDto implements Serializable {
 
     public void setReferences(Map<String, Boolean> references) {
         this.references = references;
+    }
+
+    @Override
+    public void fillEntity(IApsEntity prototype, ICategoryManager categoryManager, BindingResult bindingResult) {
+        super.fillEntity(prototype, categoryManager, bindingResult);
+
+        Content content = (Content) prototype;
+        content.setFirstEditor(getFirstEditor() == null ? content.getFirstEditor() : getFirstEditor());
+        content.setLastEditor(getLastEditor());
+        content.setRestriction(ContentRestriction.getRestrictionValue(getMainGroup()));
+        content.setStatus(getStatus() == null ? content.getStatus() : getStatus());
     }
 
 }
