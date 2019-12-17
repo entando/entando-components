@@ -34,7 +34,6 @@ import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
-import com.agiletec.apsadmin.portal.helper.IPageActionHelper;
 import com.agiletec.apsadmin.portal.specialwidget.SimpleWidgetConfigAction;
 import com.agiletec.apsadmin.system.ITreeAction;
 
@@ -44,6 +43,18 @@ import com.agiletec.apsadmin.system.ITreeAction;
 public class ReplicatorWidgetAction extends SimpleWidgetConfigAction implements ITreeAction {
 
     private static final Logger _logger = LoggerFactory.getLogger(ReplicatorWidgetAction.class);
+
+    private String _pageCodeParam;
+    private Integer _frameIdParam;
+
+    private List<String> _invalidShowletTypes;
+
+    private IPage _targetPage;
+
+    private String _targetNode;
+    private Set<String> _treeNodesToOpen = new HashSet<String>();
+
+    private String _treeNodeActionMarkerCode;
 
     @Override
     public void validate() {
@@ -180,9 +191,9 @@ public class ReplicatorWidgetAction extends SimpleWidgetConfigAction implements 
             String marker = this.getTreeNodeActionMarkerCode();
             if (null != marker) {
                 if (marker.equalsIgnoreCase(ACTION_MARKER_OPEN)) {
-                    targets = this.getReplicatorPageActionHelper().checkTargetNodes(this.getTargetNode(), targets, this.getNodeGroupCodes());
+                    targets = this.getPageActionHelper().checkTargetNodes(this.getTargetNode(), targets, this.getNodeGroupCodes());
                 } else if (marker.equalsIgnoreCase(ACTION_MARKER_CLOSE)) {
-                    targets = this.getReplicatorPageActionHelper().checkTargetNodesOnClosing(this.getTargetNode(), targets, this.getNodeGroupCodes());
+                    targets = this.getPageActionHelper().checkTargetNodesOnClosing(this.getTargetNode(), targets, this.getNodeGroupCodes());
                 }
             }
             this.setTreeNodesToOpen(targets);
@@ -198,7 +209,7 @@ public class ReplicatorWidgetAction extends SimpleWidgetConfigAction implements 
         ITreeNode node = null;
         try {
             ITreeNode allowedTree = this.getAllowedTreeRootNode();
-            node = this.getReplicatorPageActionHelper().getShowableTree(this.getTreeNodesToOpen(), allowedTree, this.getNodeGroupCodes());
+            node = this.getPageActionHelper().getShowableTree(this.getTreeNodesToOpen(), allowedTree, this.getNodeGroupCodes());
         } catch (Throwable t) {
             _logger.error("error in getShowableTree", t);
         }
@@ -209,7 +220,7 @@ public class ReplicatorWidgetAction extends SimpleWidgetConfigAction implements 
     public ITreeNode getAllowedTreeRootNode() {
         ITreeNode node = null;
         try {
-            node = this.getReplicatorPageActionHelper().getAllowedTreeRoot(this.getNodeGroupCodes());
+            node = this.getPageActionHelper().getAllowedTreeRoot(this.getNodeGroupCodes());
         } catch (Throwable t) {
             _logger.error("error in getAllowedTreeRootNode", t);
         }
@@ -224,7 +235,7 @@ public class ReplicatorWidgetAction extends SimpleWidgetConfigAction implements 
      */
     protected Collection<String> getNodeGroupCodes() {
         IPage page = this.getCurrentPage();
-        Set<String> groupCodes = new HashSet<String>();
+        Set<String> groupCodes = new HashSet<>();
         groupCodes.add(Group.FREE_GROUP_NAME);
         groupCodes.add(page.getGroup());
         return groupCodes;
@@ -276,28 +287,6 @@ public class ReplicatorWidgetAction extends SimpleWidgetConfigAction implements 
 
     public void setTreeNodeActionMarkerCode(String treeNodeActionMarkerCode) {
         this._treeNodeActionMarkerCode = treeNodeActionMarkerCode;
-    }
-
-    private String _pageCodeParam;
-    private Integer _frameIdParam;
-
-    private List<String> _invalidShowletTypes;
-
-    private IPage _targetPage;
-
-    private String _targetNode;
-    private Set<String> _treeNodesToOpen = new HashSet<String>();
-
-    private String _treeNodeActionMarkerCode;
-
-    private IPageActionHelper _replicatorPageActionHelper;
-
-    protected IPageActionHelper getReplicatorPageActionHelper() {
-        return this._replicatorPageActionHelper;
-    }
-
-    public void setReplicatorPageActionHelper(final IPageActionHelper replicatorPageActionHelper) {
-        this._replicatorPageActionHelper = replicatorPageActionHelper;
     }
 
 }
