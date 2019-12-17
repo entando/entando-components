@@ -223,7 +223,7 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
                 throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Failed to get process list ", Response.Status.INTERNAL_SERVER_ERROR);
             }
         }
-        
+
         return null;
     }
 
