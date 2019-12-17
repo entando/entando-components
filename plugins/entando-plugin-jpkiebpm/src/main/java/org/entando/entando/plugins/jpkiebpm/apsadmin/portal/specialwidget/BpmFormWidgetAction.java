@@ -301,7 +301,7 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction implements Bpm
         }
 
         if (field.getType().equalsIgnoreCase("CheckBox")) {
-            CheckedAttribute bool = (CheckedAttribute) this.getAttributePrototype("Boolean");
+            CheckedAttribute bool = new CheckedAttribute();
             bool.setName(field.getName());
             bool.setDefaultLangCode(this.getCurrentLang().getCode());
             bool.setRequired(req);
