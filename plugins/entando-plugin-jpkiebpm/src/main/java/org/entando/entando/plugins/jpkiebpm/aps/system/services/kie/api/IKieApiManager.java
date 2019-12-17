@@ -40,13 +40,13 @@ public interface IKieApiManager {
 
     void postBpmForm(KieBpmConfig bpmConfig, KieApiInputForm form) throws Throwable;
 
-    List<KieProcessInstance> getInstanceProcessesList(KieBpmConfig bpmConfig, Properties properties) throws Throwable;
+    List<KieProcessInstance> getInstanceProcessesList(Properties properties) throws Throwable;
 
     void postSignal(KieBpmConfig bpmConfig, KieApiSignal signal) throws Throwable;
 
     void startNewProcess(KieBpmConfig bpmConfig, KieApiProcessStart process) throws Throwable;
 
-    public List<KieProcessInstance> processList(KieBpmConfig bpmConfig, Properties properties) throws Throwable;
+    public List<KieProcessInstance> processList(Properties properties) throws Throwable;
 
-    public JAXBProcessInstanceList processInstancesDataTable(KieBpmConfig bpmConfig, Properties properties) throws Throwable;
+    public JAXBProcessInstanceList processInstancesDataTable(Properties properties) throws Throwable;
 }

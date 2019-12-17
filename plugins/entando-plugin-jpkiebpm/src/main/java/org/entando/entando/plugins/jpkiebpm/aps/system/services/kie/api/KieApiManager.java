@@ -157,43 +157,78 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
     }
 
     @Override
-    public List<KieProcessInstance> getInstanceProcessesList(KieBpmConfig bpmConfig, Properties properties) throws Throwable {
+    public List<KieProcessInstance> getInstanceProcessesList(Properties properties) throws Throwable {
         String processId = properties.getProperty("processId");
+        final String configId = properties.getProperty("configId");
+        if (null != configId) {
+            try {
+                final BpmWidgetInfo bpmWidgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(Integer.parseInt(configId));
 
-        try {
-            List<KieProcessInstance> list = this.getKieFormManager().getProcessInstancesList(bpmConfig, processId, 0, 5000);
-            return list;
-        } catch (ApsSystemException t) {
-            String msg = String.format("No error getting the list of processes of type '{}'", processId);
-            throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, msg, Response.Status.INTERNAL_SERVER_ERROR);
+                final String information = bpmWidgetInfo.getInformationDraft();
+                if (StringUtils.isNotEmpty(information)) {
+                    final ApsProperties config = new ApsProperties();
+                    try {
+                        config.loadFromXml(information);
+                    } catch (IOException e) {
+                        logger.error("Error load configuration  {} ", e.getMessage());
+                    }
+
+                    KieBpmConfig bpmConfig = this.kieFormManager.getKieServerConfigurations().get(config.get("kieSourceId"));
+                    List<KieProcessInstance> list = this.getKieFormManager().getProcessInstancesList(bpmConfig, processId, 0, 5000);
+                    return list;
+                }
+            } catch (ApsSystemException e) {
+                logger.error("Failed to get process list Error {}", e);
+                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Failed to get process list", Response.Status.INTERNAL_SERVER_ERROR);
+
+            }
         }
+
+        return null;
     }
 
     @Override
-    public List<KieProcessInstance> processList(KieBpmConfig bpmConfig, Properties properties) throws Throwable {
+    public List<KieProcessInstance> processList(Properties properties) throws Throwable {
         final String page = properties.getProperty("page");
         final String pageSize = properties.getProperty("pageSize");
+        final String configId = properties.getProperty("configId");
         Map<String, String> opt = new HashMap<String, String>();
 
-        try {
-            if (StringUtils.isNotBlank(page)) {
-                opt.put("page", page);
+
+        if (null != configId) {
+            try {
+                final BpmWidgetInfo bpmWidgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(Integer.parseInt(configId));
+
+                final String information = bpmWidgetInfo.getInformationDraft();
+                if (StringUtils.isNotEmpty(information)) {
+                    final ApsProperties config = new ApsProperties();
+                    try {
+                        config.loadFromXml(information);
+                    } catch (IOException e) {
+                        logger.error("Error load configuration  {} ", e.getMessage());
+                    }
+
+                    KieBpmConfig bpmConfig = this.kieFormManager.getKieServerConfigurations().get(config.get("kieSourceId"));
+                    if (StringUtils.isNotBlank(page)) {
+                        opt.put("page", page);
+                    }
+                    if (StringUtils.isNotBlank(pageSize)) {
+                        opt.put("pageSize", pageSize);
+                    }
+                    List<KieProcessInstance> list = this.getKieFormManager().getAllProcessInstancesList(bpmConfig, opt);
+                    return list;
+                }
+            } catch (ApsSystemException e) {
+                logger.error("Failed to get process list Error {}", e);
+                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Failed to get process list ", Response.Status.INTERNAL_SERVER_ERROR);
             }
-            if (StringUtils.isNotBlank(pageSize)) {
-                opt.put("pageSize", pageSize);
-            }
-            List<KieProcessInstance> list
-                    = this.getKieFormManager().getAllProcessInstancesList(bpmConfig, opt);
-            return list;
-        } catch (ApsSystemException t) {
-            logger.error("Failed to get process list in kie ",t);
-            String msg = String.format("No error getting the list of processes");
-            throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, msg, Response.Status.INTERNAL_SERVER_ERROR);
         }
+        
+        return null;
     }
 
     @Override
-    public JAXBProcessInstanceList processInstancesDataTable(KieBpmConfig bpmConfig, Properties properties) throws Throwable {
+    public JAXBProcessInstanceList processInstancesDataTable(Properties properties) throws Throwable {
         final String pageString = properties.getProperty("page");
         final String pageSizeString = properties.getProperty("pageSize");
         final String configId = properties.getProperty("configId");
@@ -209,6 +244,7 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
             if (null != configId) {
                 try {
                     final BpmWidgetInfo bpmWidgetInfo = bpmWidgetInfoManager.getBpmWidgetInfo(Integer.parseInt(configId));
+
                     final String information = bpmWidgetInfo.getInformationDraft();
                     if (StringUtils.isNotEmpty(information)) {
                         final ApsProperties config = new ApsProperties();
@@ -217,6 +253,8 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
                         } catch (IOException e) {
                             logger.error("Error load configuration  {} ", e.getMessage());
                         }
+
+                        KieBpmConfig bpmConfig = this.kieFormManager.getKieServerConfigurations().get(config.get("kieSourceId"));
                         final JAXBProcessInstanceList processList = new JAXBProcessInstanceList();
                         this.setElementDatatableFieldDefinition(config, processList);
                         this.setElementList(bpmConfig, config, processList);
