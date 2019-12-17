@@ -255,11 +255,19 @@ public class FormToBpmHelper {
 
         logger.debug("the field {} have value {}", field.getName(), value);
 
+
+        // get the data type
+        final String fieldClass = BpmToFormHelper.getFieldClass(field);
+
         if (null == value) {
             if (!mandatory) {
-                logger.debug("not mandatory {} return NullFormField()", mandatory);
 
-                return new NullFormField();
+                if (fieldClass.equals(BOOLEAN) || fieldClass.equals("boolean")) {
+                    return false;
+                }else {
+                    logger.debug("not mandatory {} return NullFormField()", mandatory);
+                    return new NullFormField();
+                }
             } else {
                 logger.debug("mandatory {} return {}", result);
 
@@ -272,8 +280,6 @@ public class FormToBpmHelper {
                 return new NullFormField();
             }
         }
-        // get the data type
-        final String fieldClass = BpmToFormHelper.getFieldClass(field);
         if (null == fieldClass) {
             return result;
         }
