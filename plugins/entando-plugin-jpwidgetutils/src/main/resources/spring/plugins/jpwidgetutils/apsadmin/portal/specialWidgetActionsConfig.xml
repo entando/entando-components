@@ -9,12 +9,10 @@
           class="org.entando.entando.plugins.jpwidgetutils.apsadmin.portal.specialwidget.replicator.ReplicatorWidgetAction" parent="abstractPortalAction" >
         <property name="invalidShowletTypes">
             <list>
-                <value>jpshowletreplicator</value>
-                <value>jpshowletreplicator</value>
-                <value>jpwidgetutilsreplicator</value>
+                <value>jpwidgetutils_replicator</value>
             </list>
         </property>
-        <property name="replicatorPageActionHelper" ref="pageActionHelperOnline" />
+        <property name="pageActionHelper" ref="pageActionHelperOnline" />
     </bean>
 	
 </beans>
