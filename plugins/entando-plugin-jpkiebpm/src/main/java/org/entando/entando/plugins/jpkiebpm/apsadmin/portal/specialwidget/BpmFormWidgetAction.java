@@ -50,7 +50,6 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.overri
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.OverrideList;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.PlaceHolderOverride;
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.DataUXBuilder;
-import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.CheckedAttribute;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -301,7 +300,7 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction implements Bpm
         }
 
         if (field.getType().equalsIgnoreCase("CheckBox")) {
-            CheckedAttribute bool = new CheckedAttribute();
+            BooleanAttribute bool = (BooleanAttribute) this.getAttributePrototype("Boolean");
             bool.setName(field.getName());
             bool.setDefaultLangCode(this.getCurrentLang().getCode());
             bool.setRequired(req);
