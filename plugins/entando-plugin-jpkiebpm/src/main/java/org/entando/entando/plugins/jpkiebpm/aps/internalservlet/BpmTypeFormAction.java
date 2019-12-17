@@ -157,7 +157,8 @@ public class BpmTypeFormAction extends AbstractApsEntityAction {
 
                     toBpm.put(attribute.getName(), this.getRequest().getParameter(attribute.getType() + ":" + value));
 
-                    if(attribute.getType().equals("Boolean") || attribute.getType().equals("boolean")) {
+                    if(this.getRequest().getParameter(attribute.getType() + ":" + value) ==null &&
+                            (attribute.getType().equals("Boolean") || attribute.getType().equals("boolean"))) {
                         toBpm.put(attribute.getName(), false);
                     }
                 } else {
