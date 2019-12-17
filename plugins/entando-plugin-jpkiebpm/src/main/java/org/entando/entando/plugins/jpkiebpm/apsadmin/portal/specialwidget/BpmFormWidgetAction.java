@@ -18,18 +18,14 @@ import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
-import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
-import com.agiletec.aps.system.common.entity.model.attribute.BooleanAttribute;
-import com.agiletec.aps.system.common.entity.model.attribute.DateAttribute;
-import com.agiletec.aps.system.common.entity.model.attribute.MonoListAttribute;
-import com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute;
-import com.agiletec.aps.system.common.entity.model.attribute.NumberAttribute;
+import com.agiletec.aps.system.common.entity.model.attribute.*;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.i18n.II18nManager;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.apsadmin.portal.specialwidget.SimpleWidgetConfigAction;
+import com.opensymphony.xwork2.Preparable;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.dataobject.IDataObjectManager;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
@@ -43,25 +39,28 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.bpmwidgetinfo.IB
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormOverrideManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverride;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverrideInEditing;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util.KieApiUtil;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.EntityNaming;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcess;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormField;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieProcessFormQueryResult;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.DefaultValueOverride;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.OverrideList;
+import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.PlaceHolderOverride;
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.DataUXBuilder;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.CheckedAttribute;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.*;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
-import com.opensymphony.xwork2.Preparable;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverrideInEditing;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.DefaultValueOverride;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.PlaceHolderOverride;
-import org.springframework.beans.factory.annotation.Autowired;
-import static com.opensymphony.xwork2.Action.SUCCESS;
-import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.override.OverrideList;
 
 public class BpmFormWidgetAction extends SimpleWidgetConfigAction implements BpmSourceAndProcessSelector<KieProcess>, Preparable {
 
@@ -302,7 +301,7 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction implements Bpm
         }
 
         if (field.getType().equalsIgnoreCase("CheckBox")) {
-            BooleanAttribute bool = (BooleanAttribute) this.getAttributePrototype("Boolean");
+            CheckedAttribute bool = (CheckedAttribute) this.getAttributePrototype("Boolean");
             bool.setName(field.getName());
             bool.setDefaultLangCode(this.getCurrentLang().getCode());
             bool.setRequired(req);

@@ -59,6 +59,7 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.Entit
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper.FormToBpmHelper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.*;
 import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.DataUXBuilder;
+import org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget.helper.dataModels.CheckedAttribute;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -644,7 +645,7 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
         }
 
         if (field.getType().equalsIgnoreCase("CheckBox")) {
-            BooleanAttribute bool = (BooleanAttribute) this.getAttributePrototype("Boolean");
+            CheckedAttribute bool = new CheckedAttribute();
             bool.setName(field.getName());
             bool.setDefaultLangCode(this.getCurrentLang().getCode());
             bool.setRequired(req);
