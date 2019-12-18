@@ -46,42 +46,27 @@ public class ContentSettingsServiceUnitTest {
 
     @Test(expected = ValidationConflictException.class)
     public void testCropRatioConflict() {
-        contentSettingsService.validateCropRatio(cropRatios, "4:3");
+        contentSettingsService.validateCropRatioNotExists(cropRatios, "4:3");
     }
 
     @Test
     public void testMetadataValidation() {
         contentSettingsService.validateMetadata(metadata, "new_key", "new_mapping1,new_mapping2");
-        contentSettingsService.validateMetadata(metadata, "new_key2", "new_mapping3, new_mapping4");
+        contentSettingsService.validateMetadata(metadata, "new_key2", "NEW-MAPpinG@1#special;,./ã][´´");
     }
 
     @Test(expected = ValidationGenericException.class)
     public void testMetadataInvalidFormat1() {
-        contentSettingsService.validateMetadata(metadata, "new_key", "NEW_mapping1,new_mapping2");
-    }
-
-    @Test(expected = ValidationGenericException.class)
-    public void testMetadataInvalidFormat2() {
         contentSettingsService.validateMetadata(metadata, "NEW_key", "new_mapping1,new_mapping2");
     }
 
     @Test(expected = ValidationGenericException.class)
-    public void testMetadataInvalidFormat3() {
-        contentSettingsService.validateMetadata(metadata, "new_key", "new-mapping1,new_mapping2");
-    }
-
-    @Test(expected = ValidationGenericException.class)
-    public void testMetadataInvalidFormat4() {
+    public void testMetadataInvalidFormat2() {
         contentSettingsService.validateMetadata(metadata, "new-key", "new_mapping1,new_mapping2");
-    }
-
-    @Test(expected = ValidationGenericException.class)
-    public void testMetadataInvalidFormat5() {
-        contentSettingsService.validateMetadata(metadata, "new_key", "new-mapping!,new_mapping2");
     }
 
     @Test(expected = ValidationConflictException.class)
     public void testMetadataConflict() {
-        contentSettingsService.validateMetadata(metadata, "my_key", "new_mapping1,new_mapping2");
+        contentSettingsService.validateMetadataNotExists(metadata, "my_key");
     }
 }

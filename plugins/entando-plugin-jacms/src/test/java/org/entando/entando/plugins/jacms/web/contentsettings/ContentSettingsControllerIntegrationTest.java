@@ -162,18 +162,6 @@ public class ContentSettingsControllerIntegrationTest extends AbstractController
                 .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.SUPERUSER)
                 .build();
 
-        performCreateMetadata(user, "newkey1", "NEWMAPPINGVALUE?")
-                .andDo(print())
-                .andExpect(status().isBadRequest());
-
-        performCreateMetadata(user, "newkey2", "{newmappingvalue}")
-                .andDo(print())
-                .andExpect(status().isBadRequest());
-
-        performCreateMetadata(user, "newkey3", "newmapping-value")
-                .andDo(print())
-                .andExpect(status().isBadRequest());
-
         performCreateMetadata(user, "new-key", "newmappingvalue")
                 .andDo(print())
                 .andExpect(status().isBadRequest());
