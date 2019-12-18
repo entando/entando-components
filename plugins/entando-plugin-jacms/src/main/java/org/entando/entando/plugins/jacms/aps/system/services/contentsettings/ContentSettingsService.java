@@ -253,13 +253,6 @@ public class ContentSettingsService {
             errors.reject(ERRCODE_INVALID_METADATA, "plugins.jacms.contentsettings.error.metadata.invalid");
             throw new ValidationGenericException(errors);
         }
-
-        for(String value : mapping.split(",")) {
-            if (!regex.matcher(value.trim()).matches()) {
-                errors.reject(ERRCODE_INVALID_METADATA, "plugins.jacms.contentsettings.error.metadata.invalid");
-                throw new ValidationGenericException(errors);
-            }
-        }
     }
 
     public void validateMetadataNotExists(Map<String,List<String>> metadata, String key) {
