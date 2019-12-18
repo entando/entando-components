@@ -141,7 +141,7 @@
             </description>
             <name>cacheable</name>
             <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
+            <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
             <description><![CDATA[Inserts the title on a variable of the page context with the name provided.]]></description>
