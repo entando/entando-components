@@ -26,7 +26,6 @@ import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeRole;
-import com.agiletec.aps.system.services.authorization.Authorization;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.user.UserDetails;
@@ -37,6 +36,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.helper.PublicConte
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.linkresolver.ILinkResolverManager;
 import com.agiletec.plugins.jacms.aps.system.services.renderer.IContentRenderer;
+import java.util.stream.Collectors;
 import org.springframework.cache.annotation.Cacheable;
 
 /**
@@ -80,7 +80,7 @@ public class BaseContentDispenser extends AbstractService implements IContentDis
     }
 
     @Override
-    @Cacheable(value = ICacheInfoManager.DEFAULT_CACHE_NAME, condition = "#result != null and #cacheable",
+    @Cacheable(value = ICacheInfoManager.DEFAULT_CACHE_NAME, condition = "#cacheable",
             key = "T(com.agiletec.plugins.jacms.aps.system.services.dispenser.BaseContentDispenser).getRenderizationInfoCacheKey(#contentId, #modelId, #langCode, #reqCtx)")
     @CacheableInfo(groups = "T(com.agiletec.plugins.jacms.aps.system.services.dispenser.BaseContentDispenser).getRenderizationInfoCacheGroupsCsv(#contentId, #modelId)")
     public ContentRenderizationInfo getRenderizationInfo(String contentId,
@@ -93,7 +93,7 @@ public class BaseContentDispenser extends AbstractService implements IContentDis
     }
 
     @Override
-    @Cacheable(value = ICacheInfoManager.DEFAULT_CACHE_NAME, condition = "#result != null and #cacheable",
+    @Cacheable(value = ICacheInfoManager.DEFAULT_CACHE_NAME, condition = "#cacheable",
             key = "T(com.agiletec.plugins.jacms.aps.system.services.dispenser.BaseContentDispenser).getRenderizationInfoCacheKey(#contentId, #modelId, #langCode, #currentUser)")
     @CacheableInfo(groups = "T(com.agiletec.plugins.jacms.aps.system.services.dispenser.BaseContentDispenser).getRenderizationInfoCacheGroupsCsv(#contentId, #modelId)")
     public ContentRenderizationInfo getRenderizationInfo(String contentId, long modelId, String langCode, UserDetails currentUser, boolean cacheable) {
@@ -192,40 +192,29 @@ public class BaseContentDispenser extends AbstractService implements IContentDis
     }
 
     public static String getRenderizationInfoCacheKey(String contentId, long modelId, String langCode, UserDetails currentUser) {
-        StringBuffer key = new StringBuffer();
+        StringBuilder key = new StringBuilder();
         key.append(contentId).append("_").append(modelId).append("_").append(langCode).append("_RENDER_INFO_CacheKey");
         if (null != currentUser && !currentUser.getUsername().equals(SystemConstants.GUEST_USER_NAME)) {
             List<String> codes = new ArrayList<>();
             if (null != currentUser.getAuthorizations()) {
-                for (int i = 0; i < currentUser.getAuthorizations().size(); i++) {
-                    Authorization auth = currentUser.getAuthorizations().get(i);
-                    if (null != auth && null != auth.getGroup()) {
-                        String code = auth.getGroup().getAuthority() + "_";
-                        if (null != auth.getRole()) {
-                            code += auth.getRole().getAuthority();
-                        } else {
-                            code += "null";
-                        }
-                        codes.add(code);
-                    }
-                }
+                currentUser.getAuthorizations().stream()
+                        .filter(auth -> (null != auth && null != auth.getGroup()))
+                        .forEach(auth -> {
+                            String code = auth.getGroup().getAuthority() + "_";
+                            if (null != auth.getRole()) {
+                                code += auth.getRole().getAuthority();
+                            } else {
+                                code += "null";
+                            }
+                            codes.add(code);
+                        });
             }
             if (!codes.isEmpty()) {
-                key.append("_AUTHS:");
-                appendAuthCodes(codes, key);
+                Collections.sort(codes);
+                key.append("_AUTHS:").append(codes.stream().collect(Collectors.joining("-")));
             }
         }
         return key.toString();
-    }
-
-    private static void appendAuthCodes(List<String> codes, StringBuffer key) {
-        Collections.sort(codes);
-        for (int i = 0; i < codes.size(); i++) {
-            if (i > 0) {
-                key.append("-");
-            }
-            key.append(codes.get(i));
-        }
     }
 
     public static String getRenderizationInfoCacheGroupsCsv(String contentId, long modelId) {
