@@ -183,6 +183,7 @@ public class ContentManager extends ApsEntityManager
                     content.setOnLine(contentVo.isOnLine());
                     content.setMainGroup(contentVo.getMainGroupCode());
                     content.setSync(contentVo.isSync());
+                    content.setStatus(contentVo.getStatus());
                     if (null == content.getVersion()) {
                         content.setVersion(contentVo.getVersion());
                     }
@@ -200,9 +201,6 @@ public class ContentManager extends ApsEntityManager
                     }
                     if (null == content.getPublished()) {
                         content.setPublished(contentVo.getPublish());
-                    }
-                    if (null == content.getStatus()) {
-                        content.setStatus(contentVo.getStatus());
                     }
                 }
             }
