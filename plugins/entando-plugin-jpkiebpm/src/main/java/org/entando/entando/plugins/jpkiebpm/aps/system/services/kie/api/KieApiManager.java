@@ -324,6 +324,10 @@ public class KieApiManager extends AbstractService implements IKieApiManager {
         final List<JAXBProcessInstance> list = new ArrayList<>();
         final List<KieProcessInstance> rawList = this.getKieFormManager().getProcessInstancesList(bpmConfig, processId, 0, 5000);
         for (final KieProcessInstance process : rawList) {
+
+            Map<String, String> vars = this.getKieFormManager().getProcessVariableInstances(bpmConfig, process.getInstanceId()+"");
+            process.setProcessVariables(vars);
+
             list.add(new JAXBProcessInstance(process));
         }
         processList.setList(list);

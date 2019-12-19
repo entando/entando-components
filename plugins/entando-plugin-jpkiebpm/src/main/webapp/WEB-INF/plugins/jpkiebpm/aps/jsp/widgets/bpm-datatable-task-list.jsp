@@ -341,21 +341,21 @@
                     var items = data.response.result.taskList.list || [];
                         items = Array.isArray(items) ? items : [items];
                         items = items.map(function (item) {
-                        item['activated'] = new Date(item['activated']).toLocaleString();
-                        item['created'] = new Date(item['created']).toLocaleString();
-                            const reduceKeyValuePairs = pairs => pairs.reduce((acc, pair) => ({
-                                    ...acc,
-                                    [pair.key]: pair.value,
-                        }), {});
-                            const kvpWithEntryField = {
-                                    ...item,
-                            ...reduceKeyValuePairs(item.processVariables.entry)
-                        };
-                            const {
-                                    processVariables,
-                            ...dest
-                        } = kvpWithEntryField;
-                            return dest;
+                            item['activated'] = new Date(item['activated']).toLocaleString();
+                            item['created'] = new Date(item['created']).toLocaleString();
+                                const reduceKeyValuePairs = pairs => pairs.reduce((acc, pair) => ({
+                                        ...acc,
+                                        [pair.key]: pair.value,
+                            }), {});
+                                const kvpWithEntryField = {
+                                        ...item,
+                                ...reduceKeyValuePairs(item.processVariables.entry)
+                            };
+                                const {
+                                        processVariables,
+                                ...dest
+                            } = kvpWithEntryField;
+                                return dest;
                         });
                         var containerId = data.response.result.taskList.containerId;
                         extraConfig.columnDefinition = data.response.result.taskList["datatable-field-definition"].fields;

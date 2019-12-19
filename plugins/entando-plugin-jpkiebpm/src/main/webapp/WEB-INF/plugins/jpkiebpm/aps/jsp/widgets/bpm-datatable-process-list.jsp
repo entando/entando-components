@@ -34,12 +34,27 @@
             $.get(url, function (data) {
 
                 var items = data.response.result.processInstanceList.list || [];
+                items = Array.isArray(items) ? items : [items];
                 items = items.map(function (item) {
                     item['start-date'] = new Date(item['start-date']).toLocaleString();
                     delete item['@xsi.type'];
 
-                    return item;
+                    const reduceKeyValuePairs = pairs => pairs.reduce((acc, pair) => ({
+                        ...acc,
+                        [pair.key]: pair.value,
+                    }), {});
+                    const kvpWithEntryField = {
+                        ...item,
+                        ...reduceKeyValuePairs(item.processVariables.entry)
+                    };
+                    const {
+                        processVariables,
+                        ...dest
+                    } = kvpWithEntryField;
+                    return dest;
                 });
+
+
                 extraConfig.columnDefinition = data.response.result.processInstanceList["datatable-field-definition"].fields;
                 org.entando.datatable.CustomDatatable(items, idTable, extraConfig);
 

@@ -23,13 +23,13 @@
  */
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model;
 
-import java.util.HashMap;
-import java.util.Map;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -171,4 +171,16 @@ public class KieProcessInstance {
 //    @XmlElementWrapper(name="process-instance-process_instance_variables")
     @XmlJavaTypeAdapter(InstanceVariables.class)
     private HashMap<String, Object> process_instance_variables;
+
+
+    private Map<String, String> processVars;
+
+    @XmlElement(name = "processVariables")
+    public Map<String, String> getProcessVariables() {
+        return processVars;
+    }
+
+    public void setProcessVariables(Map<String, String> processVariables) {
+        this.processVars = processVariables;
+    }
 }

@@ -27,7 +27,8 @@ import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KiePro
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Entando
@@ -46,6 +47,7 @@ public class JAXBProcessInstance {
     private String processInstanceDesc;
     private String correlationKey;
     private String parentInstanceId;
+    private Map<String, String> processVars = new HashMap<>();
 
     public JAXBProcessInstance(KieProcessInstance process) {
         this.processInstanceId = String.valueOf(process.getInstanceId());
@@ -59,6 +61,7 @@ public class JAXBProcessInstance {
         this.processInstanceDesc = process.getDesc();
         this.correlationKey = process.getCorrelationKey();
         this.parentInstanceId = String.valueOf(process.getParentInstanceId());
+        this.processVars = process.getProcessVariables();
 
     }
 
@@ -176,6 +179,15 @@ public class JAXBProcessInstance {
 
     public void setParentInstanceId(String parentInstanceId) {
         this.parentInstanceId = parentInstanceId;
+    }
+
+    @XmlElement(name = "processVariables")
+    public Map<String, String> getProcessVariables() {
+        return processVars;
+    }
+
+    public void setProcessVariables(Map<String, String> processVariables) {
+        this.processVars = processVariables;
     }
 
 }

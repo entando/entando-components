@@ -31,15 +31,10 @@ public class BpmProcessDatatableWidgetAction extends BpmDatatableWidgetAction {
             super.loadDataIntoFieldDatatable(fields);
         }
 
+        Set<String> processVars = getFormManager().getProcessVariables(config, containerId, processId);
+
         Map<String, String> columns = new HashMap<>();
-
-        columns.put("Status Progress", "statusProgress");
-        columns.put("Customer Name", "customerName");
-        columns.put("partyName", "partyName");
-        columns.put("status", "status");
-        columns.put("Company", "company");
-        columns.put("Case Due In", "dueDate");
-
+        processVars.stream().forEach( s -> columns.put(s ,s));
         this.loadDataIntoFieldDatatable(columns);
     }
 
