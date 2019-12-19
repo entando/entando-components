@@ -65,7 +65,7 @@
                         <s:set var="treeItemIconName" value="'fa-folder'" />
                         <s:set var="actionName" value="'joinFacet'" />
                         <s:if test="#categoryTreeStyleVar == 'classic'">
-                            <s:set var="currentRoot" value="facetRoot" />
+                            <s:set var="currentRoot" value="allowedTreeRootNode" />
                             <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/common/treeBuilderCategoriesJoin.jsp" />
                         </s:if>
                         <s:elseif test="#categoryTreeStyleVar == 'request'">
