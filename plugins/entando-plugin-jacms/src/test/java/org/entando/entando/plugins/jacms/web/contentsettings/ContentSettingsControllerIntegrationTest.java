@@ -252,6 +252,31 @@ public class ContentSettingsControllerIntegrationTest extends AbstractController
     }
 
     @Test
+    public void testEditCropRatiosInvalidFormat() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.SUPERUSER)
+                .build();
+
+        performCreateCropRatio(user, "4:3")
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(1)))
+                .andExpect(jsonPath("$.payload[0]", Matchers.equalTo("4:3")));
+
+        performEditCropRatio(user, "4:3", "alfa:6")
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        performEditCropRatio(user, "4:3", "4-6")
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        performRemoveCropRatio(user, "4:3")
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
     public void testChangeEditor() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.SUPERUSER)

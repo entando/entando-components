@@ -182,7 +182,7 @@ public class ContentSettingsService {
 
     public List<String> editCropRatio(String ratio, String newRatio) {
         List<String> cropRatios = listCropRatios();
-        validateCropRatio(cropRatios, ratio);
+        validateCropRatio(cropRatios, newRatio);
         validateCropRatioExists(cropRatios, ratio);
 
         cropRatios.remove(ratio);
