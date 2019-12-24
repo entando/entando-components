@@ -101,6 +101,26 @@
                     "value": "Mio titolo"
                 }
             ]
+        }, {
+            "code": "ATT",
+            "values": {
+                "en": {
+                    "id": "7"
+                },
+                "it": {
+                    "id": "6"
+                }
+            }
+        }, {
+            "code": "img1",
+            "values": {
+                "en": {
+                    "id": "22"
+                },
+                "it": {
+                    "id": "44"
+                }
+            }
         }
     ]
 }]

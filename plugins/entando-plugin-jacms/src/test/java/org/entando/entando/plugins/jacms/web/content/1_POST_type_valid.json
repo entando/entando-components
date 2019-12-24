@@ -76,6 +76,16 @@
                     "name": "Description of subtitle attribute"
                 }
             ]
+        }, {
+            "code": "ATT",
+            "type": "Attach",
+            "name": "Attach Description",
+            "mandatory": false
+        }, {
+            "code": "img1",
+            "type": "Image",
+            "name": "Image Description",
+            "mandatory": false
         }
     ]
 }

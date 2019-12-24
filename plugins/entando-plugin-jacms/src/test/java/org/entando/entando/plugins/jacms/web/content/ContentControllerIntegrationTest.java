@@ -13,6 +13,16 @@
  */
 package org.entando.entando.plugins.jacms.web.content;
 
+import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
@@ -26,6 +36,7 @@ import com.agiletec.aps.util.DateConverter;
 import com.agiletec.aps.util.FileTextReader;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
+import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 import com.agiletec.plugins.jacms.aps.system.services.searchengine.ICmsSearchEngineManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
@@ -48,18 +59,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
-
-import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ContentControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
@@ -144,6 +144,14 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             String bodyResult = result2.andReturn().getResponse().getContentAsString();
             newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
             Content newContent = this.contentManager.loadContent(newContentId, false);
+            Map<String, ResourceInterface> attResources = (Map<String,ResourceInterface>) newContent.getAttributeList().get(10).getValue();
+            Map<String, ResourceInterface> imgResources = (Map<String,ResourceInterface>) newContent.getAttributeList().get(11).getValue();
+
+            Assert.assertEquals(attResources.get("en").getId(), "6");
+            Assert.assertEquals(attResources.get("it").getId(), "7");
+
+            Assert.assertEquals(imgResources.get("en").getId(), "44");
+            Assert.assertEquals(imgResources.get("it").getId(), "22");
 
             Assert.assertNotNull(newContent);
             Date date = (Date) newContent.getAttribute("Date").getValue();
@@ -183,6 +191,15 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             Assert.assertNotNull(threeState);
             Assert.assertTrue(threeState);
 
+            attResources = (Map<String,ResourceInterface>) newContent.getAttributeList().get(10).getValue();
+            imgResources = (Map<String,ResourceInterface>) newContent.getAttributeList().get(11).getValue();
+
+            Assert.assertEquals(attResources.get("en").getId(), "7");
+            Assert.assertEquals(attResources.get("it").getId(), "6");
+
+            Assert.assertEquals(imgResources.get("en").getId(), "22");
+            Assert.assertEquals(imgResources.get("it").getId(), "44");
+
             ListAttribute list = (ListAttribute) newContent.getAttribute("multilist");
             Assert.assertEquals(4, list.getAttributeList("en").size());
 
@@ -205,6 +222,44 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
     }
 
     @Test
+    public void testAddContentInvalidResourceGroup() throws Exception {
+        try {
+            Assert.assertNull(contentManager.getEntityPrototype("TST"));
+            String accessToken = createAccessToken();
+
+            executeContentTypePost("1_POST_type_valid.json", accessToken, status().isCreated());
+            Assert.assertNotNull(contentManager.getEntityPrototype("TST"));
+
+            executeContentPost("1_POST_invalid_resource.json", accessToken, status().isBadRequest())
+                .andDo(print())
+                .andExpect(jsonPath("$.errors.size()", is(1)));
+        } finally {
+            if (null != contentManager.getEntityPrototype("TST")) {
+                ((IEntityTypesConfigurer) contentManager).removeEntityPrototype("TST");
+            }
+        }
+    }
+
+    @Test
+    public void testAddContentResourceNotFound() throws Exception {
+        try {
+            Assert.assertNull(contentManager.getEntityPrototype("TST"));
+            String accessToken = createAccessToken();
+
+            executeContentTypePost("1_POST_type_valid.json", accessToken, status().isCreated());
+            Assert.assertNotNull(contentManager.getEntityPrototype("TST"));
+
+            executeContentPost("1_POST_resource_not_found.json", accessToken, status().isBadRequest())
+                    .andDo(print())
+                    .andExpect(jsonPath("$.errors.size()", is(1)));
+        } finally {
+            if (null != contentManager.getEntityPrototype("TST")) {
+                ((IEntityTypesConfigurer) contentManager).removeEntityPrototype("TST");
+            }
+        }
+    }
+
+    @Test
     public void testAddUpdateContentCategories() throws Exception {
         String newContentId = null;
         try {
@@ -221,7 +276,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                 .andExpect(jsonPath("$.payload[0].firstEditor", is("jack_bauer")))
                 .andExpect(jsonPath("$.payload[0].lastEditor", is("jack_bauer")))
                 .andExpect(jsonPath("$.payload[0].version", is("0.1")))
-                .andExpect(jsonPath("$.payload[0].attributes.size()", is(10)))
+                .andExpect(jsonPath("$.payload[0].attributes.size()", is(12)))
                 .andExpect(jsonPath("$.errors.size()", is(0)))
                 .andExpect(jsonPath("$.metaData.size()", is(0)));
 
@@ -232,7 +287,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                 .andExpect(jsonPath("$.errors.size()", is(0)))
                 .andExpect(jsonPath("$.metaData.size()", is(0)))
                 .andExpect(jsonPath("$.payload[0].id", is(newContentId)))
-                .andExpect(jsonPath("$.payload[0].attributes.size()", is(10)))
+                .andExpect(jsonPath("$.payload[0].attributes.size()", is(12)))
                 .andExpect(jsonPath("$.payload[0].firstEditor", is("jack_bauer")))
                 .andExpect(jsonPath("$.payload[0].lastEditor", is("jack_bauer")))
                 .andExpect(jsonPath("$.payload[0].description", is("New Content for test")))
@@ -622,6 +677,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .header("Authorization", "Bearer " + accessToken)
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON_UTF8));
+        result.andDo(print());
         result.andExpect(status().isOk());
         result.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
         result.andExpect(jsonPath("$.metaData.pageSize").value("100"));

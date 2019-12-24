@@ -14,12 +14,18 @@
 package com.agiletec.plugins.jacms.aps.system.services.content.model;
 
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
+import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.services.category.ICategoryManager;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.AbstractResourceAttribute;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentRestriction;
+import com.agiletec.plugins.jacms.aps.system.services.resource.model.AttachResource;
+import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.io.Serializable;
+import java.util.Map.Entry;
+import org.entando.entando.aps.system.services.entity.model.EntityAttributeDto;
 import org.entando.entando.aps.system.services.entity.model.EntityDto;
 import java.util.Date;
 import java.util.Map;
@@ -189,6 +195,26 @@ public class ContentDto extends EntityDto implements Serializable {
         content.setLastEditor(getLastEditor());
         content.setRestriction(ContentRestriction.getRestrictionValue(getMainGroup()));
         content.setStatus(getStatus() == null ? content.getStatus() : getStatus());
+
+        // Load Resources from DTO ids
+        for (EntityAttributeDto attr : this.getAttributes()) {
+            for (Entry<String, AttributeInterface> entry : content.getAttributeMap().entrySet()) {
+                if (entry.getValue().getName().equals(attr.getCode())
+                        && AbstractResourceAttribute.class.isAssignableFrom(entry.getValue().getClass())) {
+
+                    for (Entry<String,Object> resEntry : attr.getValues().entrySet()) {
+                        String langCode = resEntry.getKey();
+                        String resourceId = (String) ((Map<String, Object>) resEntry.getValue()).get("id");
+
+                        AbstractResourceAttribute resAttr = (AbstractResourceAttribute) entry.getValue();
+                        ResourceInterface resource = new AttachResource();
+                        resource.setId(resourceId);
+
+                        resAttr.setResource(resource, langCode);
+                    }
+                }
+            }
+        }
     }
 
 }
