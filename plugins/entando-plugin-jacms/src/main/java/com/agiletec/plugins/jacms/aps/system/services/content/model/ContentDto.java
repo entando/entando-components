@@ -17,6 +17,7 @@ import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.AbstractResourceAttribute;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.LinkAttribute;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentRestriction;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.AttachResource;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
@@ -32,6 +33,7 @@ import java.util.Map;
 import org.entando.entando.web.common.json.JsonDateDeserializer;
 import org.entando.entando.web.common.json.JsonDateSerializer;
 import org.springframework.validation.BindingResult;
+import sun.awt.Symbol;
 
 public class ContentDto extends EntityDto implements Serializable {
 
@@ -198,21 +200,43 @@ public class ContentDto extends EntityDto implements Serializable {
 
         // Load Resources from DTO ids
         for (EntityAttributeDto attr : this.getAttributes()) {
-            for (Entry<String, AttributeInterface> entry : content.getAttributeMap().entrySet()) {
-                if (entry.getValue().getName().equals(attr.getCode())
-                        && AbstractResourceAttribute.class.isAssignableFrom(entry.getValue().getClass())) {
+            AttributeInterface contentAttr = content.getAttributeMap().get(attr.getCode());
+            if (AbstractResourceAttribute.class.isAssignableFrom(contentAttr.getClass())) {
+                for (Entry<String, Object> resEntry : attr.getValues().entrySet()) {
+                    String langCode = resEntry.getKey();
+                    String resourceId = (String) ((Map<String, Object>) resEntry.getValue()).get("id");
 
-                    for (Entry<String,Object> resEntry : attr.getValues().entrySet()) {
-                        String langCode = resEntry.getKey();
-                        String resourceId = (String) ((Map<String, Object>) resEntry.getValue()).get("id");
+                    AbstractResourceAttribute resAttr = (AbstractResourceAttribute) contentAttr;
+                    ResourceInterface resource = new AttachResource();
+                    resource.setId(resourceId);
 
-                        AbstractResourceAttribute resAttr = (AbstractResourceAttribute) entry.getValue();
-                        ResourceInterface resource = new AttachResource();
-                        resource.setId(resourceId);
-
-                        resAttr.setResource(resource, langCode);
-                    }
+                    resAttr.setResource(resource, langCode);
                 }
+            } else if (LinkAttribute.class.isAssignableFrom(contentAttr.getClass())) {
+                SymbolicLink link = new SymbolicLink();
+
+                int destType = (Integer) ((Map)attr.getValue()).get("destType");
+                switch (destType) {
+                    case SymbolicLink.URL_TYPE:
+                        link.setDestinationToUrl((String) ((Map)attr.getValue()).get("urlDest"));
+                        break;
+                    case SymbolicLink.PAGE_TYPE:
+                        link.setDestinationToPage((String) ((Map)attr.getValue()).get("pageDest"));
+                        break;
+                    case SymbolicLink.RESOURCE_TYPE:
+                        link.setDestinationToResource((String) ((Map)attr.getValue()).get("resourceDest"));
+                        break;
+                    case SymbolicLink.CONTENT_TYPE:
+                        link.setDestinationToContent((String) ((Map)attr.getValue()).get("contentDest"));
+                        break;
+                    case SymbolicLink.CONTENT_ON_PAGE_TYPE:
+                        link.setDestinationToContentOnPage((String) ((Map)attr.getValue()).get("contentDest"),
+                                (String) ((Map)attr.getValue()).get("pageDest"));
+                        break;
+                }
+                LinkAttribute linkAttr = (LinkAttribute) contentAttr;
+
+                linkAttr.setSymbolicLink(link);
             }
         }
     }

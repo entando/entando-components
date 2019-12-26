@@ -21,7 +21,11 @@ import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
+import com.agiletec.aps.system.common.entity.model.attribute.AbstractListAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
+import com.agiletec.aps.system.common.entity.model.attribute.CompositeAttribute;
+import com.agiletec.aps.system.common.entity.model.attribute.ListAttribute;
+import com.agiletec.aps.system.common.entity.model.attribute.MonoListAttribute;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
@@ -41,6 +45,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.helper.PublicConte
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.AbstractResourceAttribute;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.AttachAttribute;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.util.ICmsAttributeErrorCodes;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentRestriction;
@@ -48,6 +53,7 @@ import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModel
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentRenderizationInfo;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.IContentDispenser;
 import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceService;
+import com.agiletec.plugins.jacms.aps.system.services.resource.model.AbstractResource;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.AttachResource;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceDto;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
@@ -171,23 +177,50 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
             @Override
             protected ContentDto toDto(Content src) {
                 ContentDto content = new ContentDto(src);
-                for (EntityAttributeDto attr : content.getAttributes()) {
-                    AttributeInterface contentAttr = src.getAttribute(attr.getCode());
-
-                    //Convert Resources to DTOs
-                    if (attr.getValues() != null && attr.getCode().equals(contentAttr.getName())
-                            && AbstractResourceAttribute.class.isAssignableFrom(contentAttr.getClass())) {
-                        attr.setValues(
-                            attr.getValues().entrySet().stream()
-                                .filter(e -> e.getValue() != null)
-                                .map(e -> new AbstractMap.SimpleEntry<>(e.getKey(),
-                                        resourcesService.convertResourceToDto((ResourceInterface) e.getValue())))
-                                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
-                    }
-                }
+                convertResourceAttributesToDto(src.getAttributeList(), content.getAttributes());
                 return content;
             }
         };
+    }
+
+    private void convertResourceAttributesToDto(List<AttributeInterface> srcAttrs, List<EntityAttributeDto> attrs) {
+        for (EntityAttributeDto attr : attrs) {
+            AttributeInterface contentAttr = null;
+            for (AttributeInterface srcAttr : srcAttrs) {
+                if (srcAttr.getName().equals(attr.getCode())) {
+                    contentAttr = srcAttr;
+                }
+            }
+
+            if (contentAttr == null) {
+                continue;
+            }
+
+            //Convert Resources to DTOs
+            if (attr.getCode().equals(contentAttr.getName()) && attr.getValues() != null
+                    && AbstractResourceAttribute.class.isAssignableFrom(contentAttr.getClass())) {
+                convertResourceAttributeToDto(attr);
+            } else if (attr.getCode().equals(contentAttr.getName()) && attr.getCompositeElements() != null
+                    && CompositeAttribute.class.isAssignableFrom(contentAttr.getClass())) {
+                CompositeAttribute compAttr = (CompositeAttribute) contentAttr;
+
+                convertResourceAttributesToDto(compAttr.getAttributes(), attr.getCompositeElements());
+            } else if (attr.getCode().equals(contentAttr.getName()) && attr.getElements() != null
+                    && (AbstractListAttribute.class.isAssignableFrom(contentAttr.getClass()))) {
+                AbstractListAttribute listAttr = (AbstractListAttribute) contentAttr;
+
+                convertResourceAttributesToDto(listAttr.getAttributes(), attr.getElements());
+            }
+        }
+    }
+
+    private void convertResourceAttributeToDto(EntityAttributeDto attr) {
+        attr.setValues(
+                attr.getValues().entrySet().stream()
+                        .filter(e -> e.getValue() != null)
+                        .map(e -> new AbstractMap.SimpleEntry<>(e.getKey(),
+                                resourcesService.convertResourceToDto((ResourceInterface) e.getValue())))
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
     }
 
     @Override

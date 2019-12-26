@@ -36,6 +36,7 @@ import com.agiletec.aps.util.DateConverter;
 import com.agiletec.aps.util.FileTextReader;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.SymbolicLink;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 import com.agiletec.plugins.jacms.aps.system.services.searchengine.ICmsSearchEngineManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -203,6 +204,11 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             ListAttribute list = (ListAttribute) newContent.getAttribute("multilist");
             Assert.assertEquals(4, list.getAttributeList("en").size());
 
+            SymbolicLink link = (SymbolicLink) newContent.getAttributeList().get(12).getValue();
+            Assert.assertEquals(link.getSymbolicDestination(), "#!U;https://myurl.com!#");
+            Assert.assertEquals(link.getDestType(), SymbolicLink.URL_TYPE);
+            Assert.assertEquals(link.getUrlDest(), "https://myurl.com");
+
             ResultActions result5 = this
                     .executeContentPut("1_PUT_maingroup.json", newContentId, accessToken, status().isOk());
             result5.andExpect(jsonPath("$.payload[0].mainGroup", is("group1")))
@@ -276,7 +282,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                 .andExpect(jsonPath("$.payload[0].firstEditor", is("jack_bauer")))
                 .andExpect(jsonPath("$.payload[0].lastEditor", is("jack_bauer")))
                 .andExpect(jsonPath("$.payload[0].version", is("0.1")))
-                .andExpect(jsonPath("$.payload[0].attributes.size()", is(12)))
+                .andExpect(jsonPath("$.payload[0].attributes.size()", is(13)))
                 .andExpect(jsonPath("$.errors.size()", is(0)))
                 .andExpect(jsonPath("$.metaData.size()", is(0)));
 
@@ -287,7 +293,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                 .andExpect(jsonPath("$.errors.size()", is(0)))
                 .andExpect(jsonPath("$.metaData.size()", is(0)))
                 .andExpect(jsonPath("$.payload[0].id", is(newContentId)))
-                .andExpect(jsonPath("$.payload[0].attributes.size()", is(12)))
+                .andExpect(jsonPath("$.payload[0].attributes.size()", is(13)))
                 .andExpect(jsonPath("$.payload[0].firstEditor", is("jack_bauer")))
                 .andExpect(jsonPath("$.payload[0].lastEditor", is("jack_bauer")))
                 .andExpect(jsonPath("$.payload[0].description", is("New Content for test")))
