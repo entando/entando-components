@@ -13,9 +13,19 @@
  */
 package org.entando.entando.plugins.jacms.aps.system.services.content;
 
+import static org.entando.entando.plugins.jacms.web.content.ContentController.ERRCODE_CONTENT_NOT_FOUND;
+import static org.entando.entando.plugins.jacms.web.content.ContentController.ERRCODE_CONTENT_REFERENCES;
+
 import com.agiletec.aps.system.common.IManager;
 import com.agiletec.aps.system.common.entity.IEntityManager;
+import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
+import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
+import com.agiletec.aps.system.common.entity.model.attribute.AbstractListAttribute;
+import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
+import com.agiletec.aps.system.common.entity.model.attribute.CompositeAttribute;
+import com.agiletec.aps.system.common.entity.model.attribute.ListAttribute;
+import com.agiletec.aps.system.common.entity.model.attribute.MonoListAttribute;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
@@ -34,12 +44,29 @@ import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentAut
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.PublicContentAuthorizationInfo;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.AbstractResourceAttribute;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.AttachAttribute;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.util.ICmsAttributeErrorCodes;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentRestriction;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModelManager;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentRenderizationInfo;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.IContentDispenser;
+import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceService;
+import com.agiletec.plugins.jacms.aps.system.services.resource.model.AbstractResource;
+import com.agiletec.plugins.jacms.aps.system.services.resource.model.AttachResource;
+import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceDto;
+import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 import com.agiletec.plugins.jacms.aps.system.services.searchengine.ICmsSearchEngineManager;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
@@ -47,10 +74,14 @@ import org.entando.entando.aps.system.services.DtoBuilder;
 import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.aps.system.services.category.CategoryServiceUtilizer;
 import org.entando.entando.aps.system.services.entity.AbstractEntityService;
+import org.entando.entando.aps.system.services.entity.model.EntityAttributeDto;
 import org.entando.entando.aps.system.services.group.GroupServiceUtilizer;
 import org.entando.entando.aps.system.services.page.PageServiceUtilizer;
+import org.entando.entando.plugins.jacms.aps.system.init.portdb.Resource;
+import org.entando.entando.plugins.jacms.aps.system.services.resource.ResourcesService;
 import org.entando.entando.plugins.jacms.web.content.ContentController;
 import org.entando.entando.plugins.jacms.web.content.validator.RestContentListRequest;
+import org.entando.entando.plugins.jacms.web.resource.model.AssetDto;
 import org.entando.entando.web.common.exceptions.ResourcePermissionsException;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.PagedMetadata;
@@ -59,16 +90,11 @@ import org.entando.entando.web.entity.validator.EntityValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
-
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static org.entando.entando.plugins.jacms.web.content.ContentController.ERRCODE_CONTENT_NOT_FOUND;
-import static org.entando.entando.plugins.jacms.web.content.ContentController.ERRCODE_CONTENT_REFERENCES;
 
 public class ContentService extends AbstractEntityService<Content, ContentDto>
         implements IContentService,
@@ -86,6 +112,9 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
     private IContentDispenser contentDispenser;
     private ICmsSearchEngineManager searchEngineManager;
     private ApplicationContext applicationContext;
+
+    @Autowired
+    private ResourcesService resourcesService;
 
     public ILangManager getLangManager() {
         return langManager;
@@ -147,9 +176,51 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
         return new DtoBuilder<Content, ContentDto>() {
             @Override
             protected ContentDto toDto(Content src) {
-                return new ContentDto(src);
+                ContentDto content = new ContentDto(src);
+                convertResourceAttributesToDto(src.getAttributeList(), content.getAttributes());
+                return content;
             }
         };
+    }
+
+    private void convertResourceAttributesToDto(List<AttributeInterface> srcAttrs, List<EntityAttributeDto> attrs) {
+        for (EntityAttributeDto attr : attrs) {
+            AttributeInterface contentAttr = null;
+            for (AttributeInterface srcAttr : srcAttrs) {
+                if (srcAttr.getName().equals(attr.getCode())) {
+                    contentAttr = srcAttr;
+                }
+            }
+
+            if (contentAttr == null) {
+                continue;
+            }
+
+            //Convert Resources to DTOs
+            if (attr.getCode().equals(contentAttr.getName()) && attr.getValues() != null
+                    && AbstractResourceAttribute.class.isAssignableFrom(contentAttr.getClass())) {
+                convertResourceAttributeToDto(attr);
+            } else if (attr.getCode().equals(contentAttr.getName()) && attr.getCompositeElements() != null
+                    && CompositeAttribute.class.isAssignableFrom(contentAttr.getClass())) {
+                CompositeAttribute compAttr = (CompositeAttribute) contentAttr;
+
+                convertResourceAttributesToDto(compAttr.getAttributes(), attr.getCompositeElements());
+            } else if (attr.getCode().equals(contentAttr.getName()) && attr.getElements() != null
+                    && (AbstractListAttribute.class.isAssignableFrom(contentAttr.getClass()))) {
+                AbstractListAttribute listAttr = (AbstractListAttribute) contentAttr;
+
+                convertResourceAttributesToDto(listAttr.getAttributes(), attr.getElements());
+            }
+        }
+    }
+
+    private void convertResourceAttributeToDto(EntityAttributeDto attr) {
+        attr.setValues(
+                attr.getValues().entrySet().stream()
+                        .filter(e -> e.getValue() != null)
+                        .map(e -> new AbstractMap.SimpleEntry<>(e.getKey(),
+                                resourcesService.convertResourceToDto((ResourceInterface) e.getValue())))
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
     }
 
     @Override
@@ -513,6 +584,39 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
         } catch (Exception e) {
             logger.error("Error saving content", e);
             throw new RestServerError("Error saving content", e);
+        }
+    }
+
+    @Override
+    protected void scanEntity(Content currentEntity, BindingResult bindingResult) {
+        super.scanEntity(currentEntity, bindingResult);
+
+        //Validate Resources Main Group
+        for (AttributeInterface attr : currentEntity.getAttributeList()) {
+            if (AbstractResourceAttribute.class.isAssignableFrom(attr.getClass())) {
+                AbstractResourceAttribute resAttr = (AbstractResourceAttribute) attr;
+
+                for(ResourceInterface res : resAttr.getResources().values()) {
+                    AssetDto resource;
+                    try {
+                        resource = resourcesService.getAsset(res.getId());
+                    } catch (ResourceNotFoundException e) {
+                        logger.error("Resource not found: " + res.getId());
+                        bindingResult.reject(EntityValidator.ERRCODE_ATTRIBUTE_INVALID,
+                                "Resource not found - " + res.getId());
+                        return;
+                    }
+
+                    String resourceMainGroup = resource.getGroup();
+
+                    if (!resourceMainGroup.equals(Group.FREE_GROUP_NAME)
+                            && !resourceMainGroup.equals(currentEntity.getMainGroup())
+                            && !currentEntity.getGroups().contains(resourceMainGroup)) {
+                        bindingResult.reject(EntityValidator.ERRCODE_ATTRIBUTE_INVALID,
+                                "Invalid resource group - " + resourceMainGroup);
+                    }
+                }
+            }
         }
     }
 

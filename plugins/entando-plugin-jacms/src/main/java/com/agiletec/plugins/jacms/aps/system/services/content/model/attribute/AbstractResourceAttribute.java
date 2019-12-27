@@ -439,39 +439,6 @@ public abstract class AbstractResourceAttribute extends TextAttribute
         return this.resources;
     }
 
-    @Override
-    public List<AttributeFieldError> validate(AttributeTracer tracer) {
-        List<AttributeFieldError> errors = super.validate(tracer);
-        try {
-            if (null == this.getResources()) {
-                return errors;
-            }
-            List<Lang> langs = super.getLangManager().getLangs();
-            for (int i = 0; i < langs.size(); i++) {
-                Lang lang = langs.get(i);
-                ResourceInterface resource = this.getResource(lang.getCode());
-                if (null == resource) {
-                    continue;
-                }
-                AttributeTracer resourceTracer = (AttributeTracer) tracer.clone();
-                resourceTracer.setLang(lang);
-                String resourceMainGroup = resource.getMainGroup();
-                Content parentContent = (Content) this.getParentEntity();
-                if (!resourceMainGroup.equals(Group.FREE_GROUP_NAME)
-                        && !resourceMainGroup.equals(parentContent.getMainGroup())
-                        && !parentContent.getGroups().contains(resourceMainGroup)) {
-                    AttributeFieldError fieldError = new AttributeFieldError(this, ICmsAttributeErrorCodes.INVALID_RESOURCE_GROUPS, resourceTracer);
-                    fieldError.setMessage("Invalid resource group - " + resourceMainGroup);
-                    errors.add(fieldError);
-                }
-            }
-        } catch (Throwable t) {
-            logger.error("Error validating text attribute", t);
-            throw new RuntimeException("Error validating text attribute", t);
-        }
-        return errors;
-    }
-
     protected ConfigInterface getConfigManager() {
         return configManager;
     }

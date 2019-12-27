@@ -124,6 +124,19 @@ public class ResourcesService {
         }
     }
 
+    public AssetDto getAsset(String resourceId) {
+        try {
+            ResourceInterface resource = resourceManager.loadResource(resourceId);
+            if (resource == null) {
+                throw new ResourceNotFoundException(ERRCODE_RESOURCE_NOT_FOUND, "asset", resourceId);
+            }
+
+            return convertResourceToDto(resource);
+        } catch (ApsSystemException e) {
+            throw new RestServerError("plugins.jacms.resources.resourceManager.error.get", e);
+        }
+    }
+
     public void deleteAsset(String resourceId) {
         try {
             ResourceInterface resource = resourceManager.loadResource(resourceId);
@@ -340,7 +353,7 @@ public class ResourcesService {
         return categories;
     }
 
-    private AssetDto convertResourceToDto(ResourceInterface resource) {
+    public AssetDto convertResourceToDto(ResourceInterface resource) {
         String type = unconvertResourceType(resource.getType());
 
         if (ImageAssetDto.RESOURCE_TYPE.equals(type)) {
