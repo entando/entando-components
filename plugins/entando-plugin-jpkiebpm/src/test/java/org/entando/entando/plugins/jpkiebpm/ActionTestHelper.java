@@ -2,19 +2,18 @@ package org.entando.entando.plugins.jpkiebpm;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
-import com.agiletec.aps.system.services.user.UserDetails;
+import com.agiletec.aps.system.services.user.User;
 import com.agiletec.apsadmin.system.BaseAction;
-import java.util.ArrayList;
-import java.util.List;
+import org.mockito.stubbing.Answer;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.mockito.ArgumentMatchers.any;
-import org.mockito.stubbing.Answer;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * This helper works if the action has both the InjectMocks and the Spy
@@ -67,7 +66,7 @@ public class ActionTestHelper {
 
     private void mockCurrentUser() {
 
-        UserDetails currentUser = mock(UserDetails.class);
+        User currentUser = mock(User.class);
 
         HttpSession session = mock(HttpSession.class);
         when(session.getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER))

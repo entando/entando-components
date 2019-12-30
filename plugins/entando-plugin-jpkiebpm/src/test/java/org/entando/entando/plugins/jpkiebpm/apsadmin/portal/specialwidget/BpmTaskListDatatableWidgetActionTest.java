@@ -3,8 +3,6 @@ package org.entando.entando.plugins.jpkiebpm.apsadmin.portal.specialwidget;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.IGroupManager;
-import java.util.Arrays;
-import java.util.HashMap;
 import org.entando.entando.plugins.jpkiebpm.ActionTestHelper;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.IKieFormManager;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;
@@ -17,11 +15,14 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import java.util.Arrays;
+import java.util.HashMap;
+
+import static com.opensymphony.xwork2.Action.SUCCESS;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
-import static com.opensymphony.xwork2.Action.SUCCESS;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 public class BpmTaskListDatatableWidgetActionTest {
 
@@ -51,6 +52,7 @@ public class BpmTaskListDatatableWidgetActionTest {
     public void testChooseForm() throws ApsSystemException {
         action.setKnowledgeSourcePath("default");
         action.setProcessPath("process");
+        action.setContainerId("test");
 
         assertEquals(SUCCESS, action.chooseForm());
         assertNotNull(action.getFieldsDatatable());
