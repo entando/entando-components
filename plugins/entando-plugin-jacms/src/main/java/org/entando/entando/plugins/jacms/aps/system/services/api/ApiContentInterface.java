@@ -13,6 +13,7 @@
  */
 package org.entando.entando.plugins.jacms.aps.system.services.api;
 
+import com.agiletec.aps.system.RequestContext;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -40,6 +41,8 @@ import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.group.IGroupManager;
+import com.agiletec.aps.system.services.lang.ILangManager;
+import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.UserDetails;
@@ -54,6 +57,7 @@ import com.agiletec.plugins.jacms.aps.system.services.dispenser.IContentDispense
 import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import javax.servlet.http.HttpServletRequest;
 import org.entando.entando.plugins.jacms.aps.system.services.api.model.CmsApiResponse;
 import org.entando.entando.plugins.jacms.aps.system.services.api.model.JAXBCmsResult;
 
@@ -128,12 +132,12 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
                 return null;
             }
             List<String> contentsId = this.extractContents(properties);
-            UserDetails user = (UserDetails) properties.get(SystemConstants.API_USER_PARAMETER);
+            HttpServletRequest request = (HttpServletRequest) properties.get(SystemConstants.API_REQUEST_PARAMETER);
             String langCode = properties.getProperty(SystemConstants.API_LANG_CODE_PARAMETER);
             render.append(this.getItemsStartElement());
             for (int i = 0; i < contentsId.size(); i++) {
                 render.append(this.getItemStartElement());
-                String renderedContent = this.getRenderedContent(contentsId.get(i), modelIdInteger, langCode, user);
+                String renderedContent = this.getRenderedContent(contentsId.get(i), modelIdInteger, langCode, request);
                 if (null != renderedContent) {
                     render.append(renderedContent);
                 }
@@ -184,12 +188,12 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
             if (null == modelId || modelId.trim().length() == 0) {
                 return null;
             }
-            UserDetails user = (UserDetails) properties.get(SystemConstants.API_USER_PARAMETER);
             Content mainContent = this.getPublicContent(id);
             Integer modelIdInteger = this.checkModel(modelId, mainContent);
             if (null != modelIdInteger) {
                 String langCode = properties.getProperty(SystemConstants.API_LANG_CODE_PARAMETER);
-                render = this.getRenderedContent(id, modelIdInteger, langCode, user);
+                HttpServletRequest request = (HttpServletRequest) properties.get(SystemConstants.API_REQUEST_PARAMETER);
+                render = this.getRenderedContent(id, modelIdInteger, langCode, request);
             }
         } catch (ApiException ae) {
             throw ae;
@@ -200,11 +204,18 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
         return render;
     }
 
-    protected String getRenderedContent(String id, int modelId, String langCode, UserDetails user) {
+    protected String getRenderedContent(String id, int modelId, String langCode, HttpServletRequest request) {
+        RequestContext reqCtx = new RequestContext();
+        reqCtx.setRequest(request);
+        Lang currentLang = this.getLangManager().getLang(langCode);
+        if (null == currentLang) {
+            currentLang = this.getLangManager().getDefaultLang();
+        }
+        reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG, currentLang);
         String renderedContent = null;
-        ContentRenderizationInfo renderizationInfo = this.getContentDispenser().getRenderizationInfo(id, modelId, langCode, user, true);
+        ContentRenderizationInfo renderizationInfo = this.getContentDispenser().getRenderizationInfo(id, modelId, currentLang.getCode(), reqCtx, true);
         if (null != renderizationInfo) {
-            this.getContentDispenser().resolveLinks(renderizationInfo, null);
+            this.getContentDispenser().resolveLinks(renderizationInfo, reqCtx);
             renderedContent = renderizationInfo.getRenderedContent();
         }
         return renderedContent;
@@ -493,9 +504,15 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
     protected IUserManager getUserManager() {
         return _userManager;
     }
-
     public void setUserManager(IUserManager userManager) {
         this._userManager = userManager;
+    }
+
+    public ILangManager getLangManager() {
+        return _langManager;
+    }
+    public void setLangManager(ILangManager langManager) {
+        this._langManager = langManager;
     }
 
     protected ICategoryManager getCategoryManager() {
@@ -579,6 +596,7 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
     }
 
     private IContentListHelper _contentListHelper;
+    private ILangManager _langManager;
     private IUserManager _userManager;
     private ICategoryManager _categoryManager;
     private IGroupManager _groupManager;

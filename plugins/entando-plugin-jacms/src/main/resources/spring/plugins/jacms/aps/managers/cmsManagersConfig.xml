@@ -191,6 +191,7 @@
         <property name="contentListHelper" ref="jacmsBaseContentListHelper" />
         <property name="contentDispenser" ref="jacmsBaseContentDispenser" />
         <property name="contentModelManager" ref="jacmsContentModelManager" />
+        <property name="langManager" ref="LangManager" />
     </bean>
 
     <bean id="jacmsApiContentTypeInterface" class="org.entando.entando.plugins.jacms.aps.system.services.api.ApiContentTypeInterface" >
