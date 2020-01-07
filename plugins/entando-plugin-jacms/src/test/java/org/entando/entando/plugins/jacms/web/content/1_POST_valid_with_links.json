@@ -1,0 +1,61 @@
+[{
+    "id":"anything",
+    "typeCode":"LNK",
+    "typeDescription":"Type for test",
+    "description":"New Content for test",
+    "mainGroup":"free",
+    "groups":[
+        "group1",
+        "group2"
+    ],
+    "attributes": [
+        {
+            "code": "link1",
+            "value": {
+                "destType": 1,
+                "urlDest": "https://myurl.com"
+            },
+            "values": {
+                "it": "My URL Link"
+            }
+        }, {
+            "code": "link2",
+            "value": {
+                "destType": 2,
+                "pageDest": "pagina_11"
+            },
+            "values": {
+                "it": "My Page Link"
+            }
+        }, {
+            "code": "link3",
+            "value": {
+                "destType": 3,
+                "contentDest": "ART1"
+            },
+            "values": {
+                "it": "My Content Link"
+            }
+        }, {
+            "code": "link4",
+            "value": {
+                "destType": 4,
+                "pageDest": "pagina_11",
+                "contentDest": "ART1"
+            },
+            "values": {
+                "it": "My Page with Content Link"
+            }
+        }, {
+            "code": "link5",
+            "value": {
+                "destType": 5,
+                "resourceDest": "44"
+            },
+            "values": {
+                "it": "My Resource Link"
+            }
+        }
+
+    ]
+}]

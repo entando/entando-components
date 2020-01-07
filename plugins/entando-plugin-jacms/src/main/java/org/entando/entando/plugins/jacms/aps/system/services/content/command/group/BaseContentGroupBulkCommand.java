@@ -13,6 +13,7 @@
  */
 package org.entando.entando.plugins.jacms.aps.system.services.content.command.group;
 
+import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
 import java.util.List;
 
 import org.entando.entando.plugins.jacms.aps.system.services.content.command.common.BaseContentPropertyBulkCommand;
@@ -33,7 +34,8 @@ public abstract class BaseContentGroupBulkCommand extends BaseContentPropertyBul
 	protected boolean checkContentReferences(Content content) {
 		List<Lang> systemLangs = this.getSystemLangs();
 		IPageManager pageManager = this.getPageManager();
-		SymbolicLinkValidator validator = new SymbolicLinkValidator(this.getApplier(), pageManager);
+		IResourceManager resourceManager = this.getResourceManager();
+		SymbolicLinkValidator validator = new SymbolicLinkValidator(this.getApplier(), pageManager, resourceManager);
 		for (AttributeInterface attribute : content.getAttributeList()) {
 			if (attribute instanceof IReferenceableAttribute) {
 				List<CmsAttributeReference> references = ((IReferenceableAttribute) attribute).getReferences(systemLangs);
@@ -94,7 +96,16 @@ public abstract class BaseContentGroupBulkCommand extends BaseContentPropertyBul
 		this._pageManager = pageManager;
 	}
 
+	public IResourceManager getResourceManager() {
+		return resourceManager;
+	}
+
+	public void setResourceManager(IResourceManager resourceManager) {
+		this.resourceManager = resourceManager;
+	}
+
 	private List<Lang> _systemLangs;
 	private IPageManager _pageManager;
+	private IResourceManager resourceManager;
 
 }
