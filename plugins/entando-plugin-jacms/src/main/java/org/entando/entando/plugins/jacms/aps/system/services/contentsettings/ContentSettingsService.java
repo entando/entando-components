@@ -182,7 +182,7 @@ public class ContentSettingsService {
 
     public List<String> editCropRatio(String ratio, String newRatio) {
         List<String> cropRatios = listCropRatios();
-        validateCropRatio(cropRatios, ratio);
+        validateCropRatio(cropRatios, newRatio);
         validateCropRatioExists(cropRatios, ratio);
 
         cropRatios.remove(ratio);
@@ -252,13 +252,6 @@ public class ContentSettingsService {
         if (StringUtils.isBlank(key) || StringUtils.isBlank(mapping) || !regex.matcher(key).matches()) {
             errors.reject(ERRCODE_INVALID_METADATA, "plugins.jacms.contentsettings.error.metadata.invalid");
             throw new ValidationGenericException(errors);
-        }
-
-        for(String value : mapping.split(",")) {
-            if (!regex.matcher(value.trim()).matches()) {
-                errors.reject(ERRCODE_INVALID_METADATA, "plugins.jacms.contentsettings.error.metadata.invalid");
-                throw new ValidationGenericException(errors);
-            }
         }
     }
 

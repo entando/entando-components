@@ -100,20 +100,11 @@
             "code": "img1",
             "values": {
                 "en": {
-                    "id": "44"
+                    "id": "1000"
                 },
                 "it": {
                     "id": "22"
                 }
-            }
-        }, {
-            "code": "link1",
-            "value": {
-                "destType": 1,
-                "urlDest": "https://myurl.com"
-            },
-            "values": {
-                "it": "My URL"
             }
         }
     ]
