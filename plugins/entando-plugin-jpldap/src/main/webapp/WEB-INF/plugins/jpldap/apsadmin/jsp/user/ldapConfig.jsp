@@ -1,12 +1,13 @@
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <%@ taglib uri="/apsadmin-core" prefix="wpsa" %>
 <%@ taglib prefix="wpsf" uri="/apsadmin-form" %>
+
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
     <li><s:text name="breadcrumb.integrations" /></li>
     <li><s:text name="breadcrumb.integrations.components" /></li>
-    <!--<li><s:text name="menu.configure"/></li>-->
-    <li class="page-title-container">
-        <s:text name="jpldap.name"/>
+    <li><s:text name="jpldap.name"/></li>
+    <li class="page-title-container">        
+        <s:text name="menu.configure"/>
     </li>
 </ol>
 <h1 class="page-title-container">
@@ -22,7 +23,7 @@
 </h1>
 <div class="text-right">
     <div class="form-group-separator"></div>
-</div>
+        </div>
 <br>
 <br>
 
@@ -45,12 +46,20 @@
                         <s:text name="label.active"/>
                     </label>
                     <div class="col-sm-9">
-                        <input type="checkbox" id="admin-settings-area-<s:property value="#paramName"/>" value="true"
-                               name="<s:property value="#paramName"/>" data-toggle="toggle"
-                               class="radiocheck bootstrap-switch"
-                               <s:if test="systemParams[#paramName]">checked="checked"</s:if> />
-                        <%--<s:include value="/WEB-INF/apsadmin/jsp/admin/simpleCheckboxParamBlock.jsp"/>--%>
-                        <wpsf:hidden name="%{#paramName + externalParamMarker}" value="true"/>
+                        <div class="btn-group" data-toggle="buttons">
+                            <s:set var="paramValueVar" value="%{systemParams[#paramName]}"/>
+                            <s:set var="selectedOptionVar" value="#paramValueVar == null || #paramValueVar == 'false'"/>
+                            <label class="btn btn-default <s:if test="#selectedOptionVar"> active</s:if>">
+                                <input type="radio" class="radiocheck" name="<s:property value="#paramName" />" value="false" <s:if test="#selectedOptionVar">checked="checked"</s:if> />
+                                <s:text name="label.no" />
+                            </label>
+                            <s:set var="selectedOptionVar" value="#paramValueVar == 'true'"/>
+                            <label class="btn btn-default <s:if test="#selectedOptionVar"> active</s:if>">
+                                <input type="radio" class="radiocheck" name="<s:property value="#paramName" />" value="true" <s:if test="#selectedOptionVar">checked="checked"</s:if> />
+                                <s:text name="label.yes" />
+                            </label>
+                            <wpsf:hidden name="%{#paramName + externalParamMarker}" value="true"/>
+                        </div>
                     </div>
                 </div>
 
@@ -208,12 +217,20 @@
                         <s:text name="jpldap.hookpoint.configSystemParams.userEditingActive"/>
                     </label>
                     <div class="col-sm-9">
-                        <input type="checkbox" id="admin-settings-area-<s:property value="#paramName"/>" value="true"
-                               name="<s:property value="#paramName"/>" data-toggle="toggle"
-                               class="radiocheck bootstrap-switch"
-                               <s:if test="systemParams[#paramName]">checked="checked"</s:if> />
-                        <%--<s:include value="/WEB-INF/apsadmin/jsp/admin/simpleCheckboxParamBlock.jsp"/>--%>
-                        <wpsf:hidden name="%{#paramName + externalParamMarker}" value="true"/>
+                        <div class="btn-group" data-toggle="buttons">
+                            <s:set var="paramValueVar" value="%{systemParams[#paramName]}"/>
+                            <s:set var="selectedOptionVar" value="#paramValueVar == null || #paramValueVar == 'false'"/>
+                            <label class="btn btn-default <s:if test="#selectedOptionVar"> active</s:if>">
+                                <input type="radio" class="radiocheck" name="<s:property value="#paramName" />" value="false" <s:if test="#selectedOptionVar">checked="checked"</s:if> />
+                                <s:text name="label.no" />
+                            </label>
+                            <s:set var="selectedOptionVar" value="#paramValueVar == 'true'"/>
+                            <label class="btn btn-default <s:if test="#selectedOptionVar"> active</s:if>">
+                                <input type="radio" class="radiocheck" name="<s:property value="#paramName" />" value="true" <s:if test="#selectedOptionVar">checked="checked"</s:if> />
+                                <s:text name="label.yes" />
+                            </label>
+                            <wpsf:hidden name="%{#paramName + externalParamMarker}" value="true"/>
+                        </div>
                     </div>
                 </div>
 
