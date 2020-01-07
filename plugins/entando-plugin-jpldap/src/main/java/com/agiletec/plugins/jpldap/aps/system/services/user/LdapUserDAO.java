@@ -281,15 +281,28 @@ public class LdapUserDAO implements ILdapUserDAO {
 
     private SearchResult search(String filterExpr) {
         SearchResult res = null;
-        DirContext dirCtx = null;
+        InitialLdapContext dirCtx = null;
         try {
             dirCtx = getDirContext();
             SearchControls ctls = new SearchControls();
             ctls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+            /*
             NamingEnumeration<SearchResult> answer = dirCtx.search("", filterExpr, ctls);
             if (answer.hasMore()) {
                 res = answer.next();
             }
+            */
+            int pageSize = 500;
+            dirCtx.setRequestControls(new Control[]{new PagedResultsControl(pageSize, true)});
+            byte[] cookie = null;
+            do {
+                NamingEnumeration<SearchResult> answer = dirCtx.search("", filterExpr, ctls);
+                if (answer != null && answer.hasMore()) {
+                    return answer.next();
+                }
+                cookie = parseControls(dirCtx.getResponseControls());
+                dirCtx.setRequestControls(new Control[]{new PagedResultsControl(pageSize, cookie, Control.CRITICAL)});
+            } while ((cookie != null) && (cookie.length != 0));
         } catch (ConnectException e) {
             logger.error("Extracting SearchResult : Directory not available", e);
         } catch (CommunicationException e) {
