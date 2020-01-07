@@ -204,11 +204,6 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             ListAttribute list = (ListAttribute) newContent.getAttribute("multilist");
             Assert.assertEquals(4, list.getAttributeList("en").size());
 
-            SymbolicLink link = (SymbolicLink) newContent.getAttributeList().get(12).getValue();
-            Assert.assertEquals(link.getSymbolicDestination(), "#!U;https://myurl.com!#");
-            Assert.assertEquals(link.getDestType(), SymbolicLink.URL_TYPE);
-            Assert.assertEquals(link.getUrlDest(), "https://myurl.com");
-
             ResultActions result5 = this
                     .executeContentPut("1_PUT_maingroup.json", newContentId, accessToken, status().isOk());
             result5.andExpect(jsonPath("$.payload[0].mainGroup", is("group1")))
@@ -223,6 +218,73 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             }
             if (null != this.contentManager.getEntityPrototype("TST")) {
                 ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("TST");
+            }
+        }
+    }
+
+    @Test
+    public void testAddContentWithLinkAttribute() throws Exception {
+        String newContentId = null;
+        try {
+            Assert.assertNull(this.contentManager.getEntityPrototype("LNK"));
+            String accessToken = this.createAccessToken();
+
+            this.executeContentTypePost("1_POST_type_with_links.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype("LNK"));
+
+            ResultActions result = this.executeContentPost("1_POST_valid_with_links.json", accessToken, status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.payload.size()", is(1)))
+                .andExpect(jsonPath("$.errors.size()", is(0)))
+                .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                .andExpect(jsonPath("$.payload[0].attributes[0].code", is("link1")))
+                .andExpect(jsonPath("$.payload[0].attributes[0].value.destType", is(SymbolicLink.URL_TYPE)))
+                .andExpect(jsonPath("$.payload[0].attributes[0].value.urlDest", is("https://myurl.com")))
+                .andExpect(jsonPath("$.payload[0].attributes[0].value.symbolicDestination", is("#!U;https://myurl.com!#")))
+                .andExpect(jsonPath("$.payload[0].attributes[0].values.it", is("My URL Link")))
+
+                .andExpect(jsonPath("$.payload[0].attributes[1].code", is("link2")))
+                .andExpect(jsonPath("$.payload[0].attributes[1].value.destType", is(SymbolicLink.PAGE_TYPE)))
+                .andExpect(jsonPath("$.payload[0].attributes[1].value.pageDest", is("pagina_11")))
+                .andExpect(jsonPath("$.payload[0].attributes[1].value.symbolicDestination", is("#!P;pagina_11!#")))
+                .andExpect(jsonPath("$.payload[0].attributes[1].values.it", is("My Page Link")))
+
+                .andExpect(jsonPath("$.payload[0].attributes[2].code", is("link3")))
+                .andExpect(jsonPath("$.payload[0].attributes[2].value.destType", is(SymbolicLink.CONTENT_TYPE)))
+                .andExpect(jsonPath("$.payload[0].attributes[2].value.contentDest", is("ART1")))
+                .andExpect(jsonPath("$.payload[0].attributes[2].value.symbolicDestination", is("#!C;ART1!#")))
+                .andExpect(jsonPath("$.payload[0].attributes[2].values.it", is("My Content Link")))
+
+                .andExpect(jsonPath("$.payload[0].attributes[3].code", is("link4")))
+                .andExpect(jsonPath("$.payload[0].attributes[3].value.destType", is(SymbolicLink.CONTENT_ON_PAGE_TYPE)))
+                .andExpect(jsonPath("$.payload[0].attributes[3].value.pageDest", is("pagina_11")))
+                .andExpect(jsonPath("$.payload[0].attributes[3].value.contentDest", is("ART1")))
+                .andExpect(jsonPath("$.payload[0].attributes[3].value.symbolicDestination", is("#!O;ART1;pagina_11!#")))
+                .andExpect(jsonPath("$.payload[0].attributes[3].values.it", is("My Page with Content Link")))
+
+                .andExpect(jsonPath("$.payload[0].attributes[4].code", is("link5")))
+                .andExpect(jsonPath("$.payload[0].attributes[4].value.destType", is(SymbolicLink.RESOURCE_TYPE)))
+                .andExpect(jsonPath("$.payload[0].attributes[4].value.resourceDest", is("44")))
+                .andExpect(jsonPath("$.payload[0].attributes[4].value.symbolicDestination", is("#!R;44!#")))
+                .andExpect(jsonPath("$.payload[0].attributes[4].values.it", is("My Resource Link")));
+
+            String bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
+            Content newContent = this.contentManager.loadContent(newContentId, false);
+
+            Assert.assertNotNull(newContent);
+
+        } finally {
+            if (null != newContentId) {
+                Content newContent = this.contentManager.loadContent(newContentId, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != this.contentManager.getEntityPrototype("LNK")) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("LNK");
             }
         }
     }

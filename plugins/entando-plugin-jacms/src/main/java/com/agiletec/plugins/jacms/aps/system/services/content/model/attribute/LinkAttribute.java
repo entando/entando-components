@@ -13,6 +13,7 @@
  */
 package com.agiletec.plugins.jacms.aps.system.services.content.model.attribute;
 
+import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +54,7 @@ public class LinkAttribute extends TextAttribute implements IReferenceableAttrib
         prototype.setContentManager(this.getContentManager());
         prototype.setLinkResolverManager(this.getLinkResolverManager());
         prototype.setPageManager(this.getPageManager());
+        prototype.setResourceManager(this.getResourceManager());
         return prototype;
     }
 
@@ -90,6 +92,12 @@ public class LinkAttribute extends TextAttribute implements IReferenceableAttrib
                     linkElement.addContent(dest);
                     dest = new Element("contentdest");
                     dest.addContent(this.getSymbolicLink().getContentDest());
+                    linkElement.addContent(dest);
+                    break;
+                case SymbolicLink.RESOURCE_TYPE:
+                    linkElement.setAttribute("type", "resource");
+                    dest = new Element("resourcedest");
+                    dest.addContent(this.getSymbolicLink().getResourceDest());
                     linkElement.addContent(dest);
                     break;
                 default:
@@ -212,7 +220,7 @@ public class LinkAttribute extends TextAttribute implements IReferenceableAttrib
             if (null == symbolicLink) {
                 return errors;
             }
-            SymbolicLinkValidator sler = new SymbolicLinkValidator(this.getContentManager(), this.getPageManager());
+            SymbolicLinkValidator sler = new SymbolicLinkValidator(this.getContentManager(), this.getPageManager(), this.getResourceManager());
             String linkErrorCode = sler.scan(symbolicLink, (Content) this.getParentEntity());
             if (null != linkErrorCode) {
                 AttributeFieldError error = new AttributeFieldError(this, linkErrorCode, tracer);
@@ -277,10 +285,19 @@ public class LinkAttribute extends TextAttribute implements IReferenceableAttrib
         this.linkResolverManager = linkResolverManager;
     }
 
+    public IResourceManager getResourceManager() {
+        return resourceManager;
+    }
+
+    public void setResourceManager(IResourceManager resourceManager) {
+        this.resourceManager = resourceManager;
+    }
+
     private SymbolicLink symbolicLink;
     private Map<String, String> linkProperties = new HashMap<>();
     private transient IContentManager contentManager;
     private transient IPageManager pageManager;
     private transient ILinkResolverManager linkResolverManager;
+    private transient IResourceManager resourceManager;
 
 }

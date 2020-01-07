@@ -210,6 +210,7 @@
 			value="com.agiletec.plugins.jacms.apsadmin.content.attribute.manager.HypertextAttributeManager" />
 		<property name="contentManager" ref="jacmsContentManager"/>
 		<property name="pageManager" ref="PageManager"/>
+        <property name="resourceManager" ref="jacmsResourceManager"/>
 	</bean>
 	
 	<bean id="jacmsLinkAttribute" class="com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.LinkAttribute" parent="abstractEntityAttribute" >
@@ -222,6 +223,7 @@
 		<property name="contentManager" ref="jacmsContentManager"/>
 		<property name="linkResolverManager" ref="jacmsLinkResolverManager"/>
 		<property name="pageManager" ref="PageManager"/>
+        <property name="resourceManager" ref="jacmsResourceManager"/>
 	</bean>
 	
 	<bean id="jacmsResourceAttributeHandler" class="com.agiletec.plugins.jacms.aps.system.services.content.parse.attribute.ResourceAttributeHandler" >

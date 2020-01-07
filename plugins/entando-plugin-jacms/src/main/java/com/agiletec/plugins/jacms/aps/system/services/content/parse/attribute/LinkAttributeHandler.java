@@ -37,7 +37,9 @@ public class LinkAttributeHandler extends TextAttributeHandler {
 			startPageDest(attributes, qName);
 		} else if (qName.equals("contentdest")) {
             startContentDest(attributes, qName);
-        } else if (qName.equals("properties")) {
+		} else if (qName.equals("resourcedest")) {
+			startResourceDest(attributes, qName);
+		} else if (qName.equals("properties")) {
             startProperties(attributes, qName);
         } else if (qName.equals("property")) {
             startProperty(attributes, qName);
@@ -70,6 +72,10 @@ public class LinkAttributeHandler extends TextAttributeHandler {
 	private void startContentDest(Attributes attributes, String qName) throws SAXException {
 		return; // niente da fare
 	}
+
+	private void startResourceDest(Attributes attributes, String qName) throws SAXException {
+		return; // niente da fare
+	}
 	
 	@Override
 	public void endAttribute(String qName, StringBuffer textBuffer) {
@@ -81,7 +87,9 @@ public class LinkAttributeHandler extends TextAttributeHandler {
 			endPageDest(textBuffer);
 		} else if (qName.equals("contentdest")) {
             endContentDest(textBuffer);
-        } else if (qName.equals("property")) {
+		} else if (qName.equals("resourcedest")) {
+			endResourceDest(textBuffer);
+		} else if (qName.equals("property")) {
             endProperty(textBuffer);
         } else if (qName.equals("properties")) {
             endProperties(textBuffer);
@@ -114,12 +122,14 @@ public class LinkAttributeHandler extends TextAttributeHandler {
 				symLink.setDestinationToPage(pageDest);
 			} else if (linkType.equals("contentonpage")) {
 				symLink.setDestinationToContentOnPage(contentDest, pageDest);
+			} else if (linkType.equals("resource")) {
+				symLink.setDestinationToResource(resourceDest);
 			}
-
 		}
 		contentDest = null;
 		urlDest = null;
 		pageDest = null;
+		resourceDest = null;
 	}
 	
 	private void endUrlDest(StringBuffer textBuffer){
@@ -139,11 +149,18 @@ public class LinkAttributeHandler extends TextAttributeHandler {
 			contentDest = textBuffer.toString();
 		}
 	}
+
+	private void endResourceDest(StringBuffer textBuffer){
+		if (null != textBuffer) {
+			resourceDest = textBuffer.toString();
+		}
+	}
 	
 	private String linkType;
 	private String urlDest;
 	private String pageDest;
 	private String contentDest;
+	private String resourceDest;
 	private String propertyKey;
 	
 }

@@ -13,6 +13,7 @@
  */
 package com.agiletec.plugins.jacms.aps.system.services.content.model.attribute;
 
+import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -160,7 +161,7 @@ public class CmsHypertextAttribute extends HypertextAttribute implements IRefere
                 }
                 List<SymbolicLink> links = HypertextAttributeUtil.getSymbolicLinksOnText(text);
                 if (null != links && !links.isEmpty()) {
-                    SymbolicLinkValidator sler = new SymbolicLinkValidator(this.getContentManager(), this.getPageManager());
+                    SymbolicLinkValidator sler = new SymbolicLinkValidator(this.getContentManager(), this.getPageManager(), this.getResourceManager());
                     for (SymbolicLink symbLink : links) {
                         String linkErrorCode = sler.scan(symbLink, (Content) this.getParentEntity());
                         if (null != linkErrorCode) {
@@ -195,6 +196,14 @@ public class CmsHypertextAttribute extends HypertextAttribute implements IRefere
         this.pageManager = pageManager;
     }
 
+    public IResourceManager getResourceManager() {
+        return resourceManager;
+    }
+
+    public void setResourceManager(IResourceManager resourceManager) {
+        this.resourceManager = resourceManager;
+    }
+
     @Override
     public boolean isSearchableOptionSupported() {
         return false;
@@ -202,5 +211,6 @@ public class CmsHypertextAttribute extends HypertextAttribute implements IRefere
 
     private transient IContentManager contentManager;
     private transient IPageManager pageManager;
+    private transient IResourceManager resourceManager;
 
 }

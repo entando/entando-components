@@ -39,6 +39,11 @@ public interface ICmsAttributeErrorCodes {
      * Codice messaggio : INVALID_CONTENT - Link a Contenuto referenziato non corretto.
      */
     public static final String INVALID_CONTENT = "INVALID_CONTENT";
+
+    /**
+     * Error code : INVALID_RESOURCE - Link to a resource.
+     */
+    public static final String INVALID_RESOURCE = "INVALID_RESOURCE";
     
     /**
      * Codice messaggio : INVALID_CONTENT_GROUPS - Link a Contenuto referenziata con gruppi incompatibili.
