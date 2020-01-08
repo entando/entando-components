@@ -13,6 +13,8 @@
  */
 package com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.util;
 
+import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
+import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 import java.util.Set;
 
 import com.agiletec.aps.system.services.group.Group;
@@ -33,9 +35,10 @@ import org.apache.commons.collections4.CollectionUtils;
  */
 public class SymbolicLinkValidator {
 
-    public SymbolicLinkValidator(IContentManager contentManager, IPageManager pageManager) {
+    public SymbolicLinkValidator(IContentManager contentManager, IPageManager pageManager, IResourceManager resourceManager) {
         this.setContentManager(contentManager);
         this.setPageManager(pageManager);
+        this.setResourceManager(resourceManager);
     }
 
     /**
@@ -62,6 +65,9 @@ public class SymbolicLinkValidator {
                     break;
                 case SymbolicLink.CONTENT_ON_PAGE_TYPE:
                     errorCode = this.checkContentOnPageDest(symbLink, content);
+                    break;
+                case SymbolicLink.RESOURCE_TYPE:
+                    errorCode = this.checkResourceDest(symbLink, content);
                     break;
             }
         }
@@ -116,6 +122,21 @@ public class SymbolicLinkValidator {
         return null;
     }
 
+    protected String checkResourceDest(SymbolicLink symbLink, Content content) {
+        ResourceInterface linkedResource = null;
+        try {
+            linkedResource = _resourceManager.loadResource(symbLink.getResourceDest());
+        } catch (Throwable e) {
+            throw new RuntimeException("Error loading resource " + symbLink.getResourceDest(), e);
+        }
+        if (null == linkedResource) {
+            return ICmsAttributeErrorCodes.INVALID_RESOURCE;
+        }
+
+        return null;
+    }
+
+
     private Set<String> extractContentGroups(Content content) {
         Set<String> groups = new HashSet<>();
         groups.add(content.getMainGroup());
@@ -166,7 +187,12 @@ public class SymbolicLinkValidator {
         this._pageManager = pageManager;
     }
 
+    public void setResourceManager(IResourceManager resourceManager) {
+        this._resourceManager = resourceManager;
+    }
+
     private IContentManager _contentManager;
     private IPageManager _pageManager;
+    private IResourceManager _resourceManager;
 
 }

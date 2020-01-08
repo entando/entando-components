@@ -218,6 +218,7 @@
                           value="com.agiletec.plugins.jacms.apsadmin.content.attribute.manager.HypertextAttributeManager" />
         <property name="contentManager" ref="jacmsContentManager"/>
         <property name="pageManager" ref="PageManager"/>
+        <property name="resourceManager" ref="jacmsResourceManager"/>
     </bean>
 	
     <bean id="jacmsLinkAttribute" class="com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.LinkAttribute" parent="abstractEntityAttribute" >
@@ -230,6 +231,7 @@
         <property name="contentManager" ref="jacmsContentManager"/>
         <property name="linkResolverManager" ref="jacmsLinkResolverManager"/>
         <property name="pageManager" ref="PageManager"/>
+        <property name="resourceManager" ref="jacmsResourceManager"/>
     </bean>
 	
     <bean id="jacmsResourceAttributeHandler" class="com.agiletec.plugins.jacms.aps.system.services.content.parse.attribute.ResourceAttributeHandler" >
@@ -237,7 +239,7 @@
     </bean>
 	
     <bean id="jacmsAbstractResourceAttribute" class="com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.AbstractResourceAttribute" 
-              parent="abstractEntityAttribute" abstract="true" >
+          parent="abstractEntityAttribute" abstract="true" >
         <property name="resourceManager" ref="jacmsResourceManager"/>
         <property name="configManager" ref="BaseConfigManager"/>
     </bean>
@@ -246,14 +248,14 @@
         <property name="type" value="Image" />
         <property name="handler" ref="jacmsResourceAttributeHandler" />
         <property name="attributeManagerClassName" 
-                          value="com.agiletec.plugins.jacms.apsadmin.content.attribute.manager.ResourceAttributeManager" />
+                  value="com.agiletec.plugins.jacms.apsadmin.content.attribute.manager.ResourceAttributeManager" />
     </bean>
 	
     <bean id="jacmsAttachAttribute" class="com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.AttachAttribute" parent="jacmsAbstractResourceAttribute" >
         <property name="type" value="Attach" />
         <property name="handler" ref="jacmsResourceAttributeHandler" />
         <property name="attributeManagerClassName" 
-                          value="com.agiletec.plugins.jacms.apsadmin.content.attribute.manager.ResourceAttributeManager" />
+                  value="com.agiletec.plugins.jacms.apsadmin.content.attribute.manager.ResourceAttributeManager" />
     </bean>
 	
     <bean id="jacmsEntityTypeDom" class="com.agiletec.plugins.jacms.aps.system.services.content.parse.ContentTypeDOM" parent="baseEntityTypeDom" scope="prototype">

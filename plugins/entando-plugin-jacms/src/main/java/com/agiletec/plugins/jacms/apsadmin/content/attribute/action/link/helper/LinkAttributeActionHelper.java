@@ -143,6 +143,9 @@ public class LinkAttributeActionHelper implements ILinkAttributeActionHelper {
         case SymbolicLink.URL_TYPE:
         	symbolicLink.setDestinationToUrl(destinations[0]);
             break;
+		case SymbolicLink.RESOURCE_TYPE:
+			symbolicLink.setDestinationToResource(destinations[3]);
+			break;
         default:
             symbolicLink.setDestinationToContent("");
             break;

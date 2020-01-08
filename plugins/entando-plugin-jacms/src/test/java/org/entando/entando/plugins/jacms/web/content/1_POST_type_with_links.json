@@ -1,0 +1,36 @@
+{
+    "code": "LNK",
+    "name": "Content Type LNK",
+    "attributes": [
+        {
+            "code": "link1",
+            "type": "Link",
+            "name": "Link Description 1",
+            "mandatory": false
+        },
+        {
+            "code": "link2",
+            "type": "Link",
+            "name": "Link Description 2",
+            "mandatory": false
+        },
+        {
+            "code": "link3",
+            "type": "Link",
+            "name": "Link Description 3",
+            "mandatory": false
+        },
+        {
+            "code": "link4",
+            "type": "Link",
+            "name": "Link Description 4",
+            "mandatory": false
+        },
+        {
+            "code": "link5",
+            "type": "Link",
+            "name": "Link Description 5",
+            "mandatory": false
+        }
+    ]
+}
