@@ -13,6 +13,8 @@
  */
 package com.agiletec.plugins.jacms.apsadmin.content.attribute.action.resource;
 
+import com.agiletec.aps.system.common.FieldSearchFilter;
+import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +28,9 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 import com.agiletec.plugins.jacms.apsadmin.content.ContentActionConstants;
 import com.agiletec.plugins.jacms.apsadmin.resource.ResourceFinderAction;
+import java.util.Arrays;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Classe action a servizio della gestione attributi risorsa, estensione della
@@ -35,7 +40,12 @@ import com.agiletec.plugins.jacms.apsadmin.resource.ResourceFinderAction;
  */
 public class ExtendedResourceFinderAction extends ResourceFinderAction {
 
-    private static final Logger _logger = LoggerFactory.getLogger(ExtendedResourceFinderAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(ExtendedResourceFinderAction.class);
+
+    private String contentOnSessionMarker;
+
+    private String resourceId;
+    private String entryContentAnchorDest;
 
     public String entryFindResource() {
         this.setCategoryCode(null);
@@ -46,19 +56,40 @@ public class ExtendedResourceFinderAction extends ResourceFinderAction {
     public List<String> getResources() throws Throwable {
         List<String> resourceIds = null;
         try {
-            List<String> groupCodes = new ArrayList<>();
-            groupCodes.add(Group.FREE_GROUP_NAME);
-            if (null != this.getContent().getMainGroup()) {
-                groupCodes.add(this.getContent().getMainGroup());
-            }
-            List<String> groupCodesForSearch = (groupCodes.contains(Group.ADMINS_GROUP_NAME)) ? null : groupCodes;
-            resourceIds = this.getResourceManager().searchResourcesId(this.createSearchFilters(),
-                    this.getCategoryCode(), groupCodesForSearch);
+            List<String> groupCodes = this.getGroupCodesForFilters();
+            resourceIds = this.getResourceManager().searchResourcesId(this.createSearchFilters(), this.getCategoryCode(), groupCodes);
         } catch (Throwable t) {
-            _logger.error("error in getResources", t);
+            logger.error("error in getResources", t);
             throw t;
         }
         return resourceIds;
+    }
+    
+    @Override
+    public SearcherDaoPaginatedResult<String> getPaginatedResourcesId(Integer limit) {
+        SearcherDaoPaginatedResult<String> result = null;
+        try {
+            List<String> groupCodes = this.getGroupCodesForFilters();
+            FieldSearchFilter[] filters = this.createSearchFilters();
+            if (null != limit) {
+                filters = ArrayUtils.add(filters, this.getPagerFilter(limit));
+            }
+            List<String> categories = (StringUtils.isBlank(this.getCategoryCode())) ? null : Arrays.asList(this.getCategoryCode());
+            result = this.getResourceManager().getPaginatedResourcesId(filters, categories, groupCodes);
+        } catch (Throwable t) {
+            logger.error("error in getPaginateResourcesId", t);
+            throw new RuntimeException("error in getPaginateResourcesId", t);
+        }
+        return result;
+    }
+    
+    private List<String> getGroupCodesForFilters() {
+        List<String> groupCodes = new ArrayList<>();
+        groupCodes.add(Group.FREE_GROUP_NAME);
+        if (null != this.getContent().getMainGroup()) {
+            groupCodes.add(this.getContent().getMainGroup());
+        }
+        return (groupCodes.contains(Group.ADMINS_GROUP_NAME)) ? null : groupCodes;
     }
 
     /**
@@ -85,7 +116,7 @@ public class ExtendedResourceFinderAction extends ResourceFinderAction {
             resources.add(resource);
             ResourceAttributeActionHelper.joinResources(resources, this.getRequest());
         } catch (Throwable t) {
-            _logger.error("error in joinResource", t);
+            logger.error("error in joinResource", t);
             return FAILURE;
         }
         return SUCCESS;
@@ -96,7 +127,7 @@ public class ExtendedResourceFinderAction extends ResourceFinderAction {
             ResourceInterface resource = this.getResourceManager().loadResource(resourceId);
             return resource;
         } catch (Throwable t) {
-            _logger.error("error loading resource", t);
+            logger.error("error loading resource", t);
             throw new RuntimeException("error loading resource " + resourceId, t);
         }
     }
@@ -112,35 +143,30 @@ public class ExtendedResourceFinderAction extends ResourceFinderAction {
     }
 
     public String getContentOnSessionMarker() {
-        return _contentOnSessionMarker;
+        return contentOnSessionMarker;
     }
 
     public void setContentOnSessionMarker(String contentOnSessionMarker) {
-        this._contentOnSessionMarker = contentOnSessionMarker;
+        this.contentOnSessionMarker = contentOnSessionMarker;
     }
 
     public String getResourceId() {
-        return _resourceId;
+        return resourceId;
     }
 
     public void setResourceId(String resourceId) {
-        this._resourceId = resourceId;
+        this.resourceId = resourceId;
     }
 
     public String getEntryContentAnchorDest() {
-        if (null == this._entryContentAnchorDest) {
+        if (null == this.entryContentAnchorDest) {
             this.buildEntryContentAnchorDest();
         }
-        return _entryContentAnchorDest;
+        return entryContentAnchorDest;
     }
 
     protected void setEntryContentAnchorDest(String entryContentAnchorDest) {
-        this._entryContentAnchorDest = entryContentAnchorDest;
+        this.entryContentAnchorDest = entryContentAnchorDest;
     }
-
-    private String _contentOnSessionMarker;
-
-    private String _resourceId;
-    private String _entryContentAnchorDest;
 
 }

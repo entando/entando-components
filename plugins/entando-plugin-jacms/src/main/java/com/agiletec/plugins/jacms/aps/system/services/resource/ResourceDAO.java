@@ -243,25 +243,26 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
     public List<String> searchResourcesId(String type, String text, String categoryCode, Collection<String> groupCodes) {
         return this.searchResourcesId(type, text, null, categoryCode, groupCodes);
     }
-
+    
     @Override
     public List<String> searchResourcesId(String type, String text, String filename, String categoryCode, Collection<String> groupCodes) {
         FieldSearchFilter[] filters = this.createFilters(type, text, filename, groupCodes);
-        return this.searchResourcesId(filters, categoryCode, groupCodes);
+        List<String> categories = (StringUtils.isBlank(categoryCode)) ? null : Arrays.asList(categoryCode);
+        return this.searchResourcesId(filters, categories);
     }
 
     private FieldSearchFilter[] createFilters(String type, String text, String filename, Collection<String> groupCodes) {
         FieldSearchFilter[] filters = new FieldSearchFilter[0];
         if (null != type && type.trim().length() > 0) {
-            FieldSearchFilter filterToAdd = new FieldSearchFilter(IResourceManager.RESOURCE_TYPE_FILTER_KEY, type, false);
+            FieldSearchFilter<String> filterToAdd = new FieldSearchFilter(IResourceManager.RESOURCE_TYPE_FILTER_KEY, type, false);
             filters = super.addFilter(filters, filterToAdd);
         }
         if (null != text && text.trim().length() > 0) {
-            FieldSearchFilter filterToAdd = new FieldSearchFilter(IResourceManager.RESOURCE_DESCR_FILTER_KEY, text, true);
+            FieldSearchFilter<String> filterToAdd = new FieldSearchFilter(IResourceManager.RESOURCE_DESCR_FILTER_KEY, text, true);
             filters = super.addFilter(filters, filterToAdd);
         }
         if (null != filename && filename.trim().length() > 0) {
-            FieldSearchFilter filterToAdd = new FieldSearchFilter(IResourceManager.RESOURCE_FILENAME_FILTER_KEY, filename, true);
+            FieldSearchFilter<String> filterToAdd = new FieldSearchFilter(IResourceManager.RESOURCE_FILENAME_FILTER_KEY, filename, true);
             filters = super.addFilter(filters, filterToAdd);
         }
         filters = this.addGroupFilter(filters, groupCodes);
@@ -275,19 +276,49 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
         if (groupCodes != null && groupCodes.size() > 0) {
             List<String> allowedValues = new ArrayList<>();
             allowedValues.addAll(groupCodes);
-            FieldSearchFilter filterToAdd = new FieldSearchFilter(IResourceManager.RESOURCE_MAIN_GROUP_FILTER_KEY, allowedValues, false);
+            FieldSearchFilter<String> filterToAdd = new FieldSearchFilter(IResourceManager.RESOURCE_MAIN_GROUP_FILTER_KEY, allowedValues, false);
             filters = super.addFilter(filters, filterToAdd);
         }
         return filters;
     }
 
     @Override
+    @Deprecated
     public List<String> searchResourcesId(FieldSearchFilter[] filters, String categoryCode, Collection<String> groupCodes) {
         filters = this.addGroupFilter(filters, groupCodes);
         List<String> categories = (StringUtils.isBlank(categoryCode)) ? null : Arrays.asList(categoryCode);
         return this.searchResourcesId(filters, categories);
     }
+    
+    @Override
+    public List<String> searchResourcesId(FieldSearchFilter[] filters, List<String> categories, Collection<String> groupCodes) {
+        filters = this.addGroupFilter(filters, groupCodes);
+        return this.searchResourcesId(filters, categories);
+    }
 
+    @Override
+    public Integer countResources(FieldSearchFilter[] filters, List<String> categories, Collection<String> groupCodes) {
+        Connection conn = null;
+        int count = 0;
+        PreparedStatement stat = null;
+        ResultSet result = null;
+        try {
+            conn = this.getConnection();
+            filters = this.addGroupFilter(filters, groupCodes);
+            stat = this.buildStatement(filters, categories, true, conn);
+            result = stat.executeQuery();
+            if (result.next()) {
+                count = result.getInt(1);
+            }
+        } catch (Throwable t) {
+            logger.error("Error while loading the count of IDs", t);
+            throw new RuntimeException("Error while loading the count of IDs", t);
+        } finally {
+            closeDaoResources(result, stat, conn);
+        }
+        return count;
+    }
+    
     @Override
     public List<String> searchResourcesId(FieldSearchFilter[] filters, List<String> categories) {
         Connection conn = null;
@@ -296,7 +327,7 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
         ResultSet res = null;
         try {
             conn = this.getConnection();
-            stat = this.buildStatement(filters, categories, conn);
+            stat = this.buildStatement(filters, categories, false, conn);
             res = stat.executeQuery();
             while (res.next()) {
                 String id = res.getString(this.getMasterTableIdFieldName());
@@ -313,8 +344,8 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
         return resources;
     }
 
-    private PreparedStatement buildStatement(FieldSearchFilter[] filters, List<String> categories, Connection conn) {
-        String query = this.createQueryString(filters, categories);
+    private PreparedStatement buildStatement(FieldSearchFilter[] filters, List<String> categories, boolean isCount, Connection conn) {
+        String query = this.createQueryString(filters, categories, isCount);
         PreparedStatement stat = null;
         try {
             stat = conn.prepareStatement(query);
@@ -332,8 +363,8 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
         return stat;
     }
 
-    private String createQueryString(FieldSearchFilter[] filters, List<String> categories) {
-        StringBuffer query = this.createBaseQueryBlock(filters, false, categories);
+    private String createQueryString(FieldSearchFilter[] filters, List<String> categories, boolean isCount) {
+        StringBuffer query = this.createBaseQueryBlock(filters, false, isCount, categories);
         boolean hasAppendWhereClause = this.appendMetadataFieldFilterQueryBlocks(filters, query, false);
         if (null != categories && categories.size() > 0) {
             hasAppendWhereClause = this.verifyWhereClauseAppend(query, hasAppendWhereClause);
@@ -344,12 +375,15 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
                 query.append("resourcerelations.refcategory = ? ");
             }
         }
-        super.appendOrderQueryBlocks(filters, query, false);
+        if (!isCount) {
+            super.appendOrderQueryBlocks(filters, query, false);
+            this.appendLimitQueryBlock(filters, query);
+        }
         return query.toString();
     }
 
-    private StringBuffer createBaseQueryBlock(FieldSearchFilter[] filters, boolean selectAll, List<String> categories) {
-        StringBuffer query = super.createBaseQueryBlock(filters, false, selectAll);
+    private StringBuffer createBaseQueryBlock(FieldSearchFilter[] filters, boolean selectAll, boolean isCount, List<String> categories) {
+        StringBuffer query = super.createBaseQueryBlock(filters, isCount, selectAll);
         if (null != categories && categories.size() > 0) {
             query.append("INNER JOIN resourcerelations ON resources.resid = resourcerelations.resid ");
         }

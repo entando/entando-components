@@ -17,52 +17,60 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
+import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * @author E.Santoboni
  */
 public class MockContentListTagBean implements IContentListTagBean {
 	
+	private String listName;
+	private String contentType;
+	private String[] categories = new String[0];
+	private EntitySearchFilter[] filters = new EntitySearchFilter[0];
+	private String category;
+	private List<UserFilterOptionBean> userFilterOptions = new ArrayList<>();
+	
 	@Override
 	public String getListName() {
-		return _listName;
+		return listName;
 	}
 	public void setListName(String listName) {
-		this._listName = listName;
+		this.listName = listName;
 	}
 	
 	@Override
 	public String getContentType() {
-		return _contentType;
+		return contentType;
 	}
 	@Override
 	public void setContentType(String contentType) {
-		this._contentType = contentType;
+		this.contentType = contentType;
 	}
 	
 	@Override
 	public String[] getCategories() {
-		return _categories;
+		return categories;
 	}
 	public void setCategories(String[] categories) {
-		this._categories = categories;
+		this.categories = categories;
 	}
 	
 	@Override
 	public EntitySearchFilter[] getFilters() {
-		return _filters;
+		return filters;
 	}
 	public void setFilters(EntitySearchFilter[] filters) {
-		this._filters = filters;
+		this.filters = filters;
 	}
 	
 	@Override
 	public String getCategory() {
-		return _category;
+		return category;
 	}
 	@Override
 	public void setCategory(String category) {
-		this._category = category;
+		this.category = category;
 	}
 	
 	@Override
@@ -72,47 +80,33 @@ public class MockContentListTagBean implements IContentListTagBean {
 	
 	@Override
 	public void addCategory(String category) {
-		int len = this._categories.length;
-		String[] newCategories = new String[len + 1];
-		for(int i=0; i < len; i++){
-			newCategories[i] = this._categories[i];
-		}
-		newCategories[len] = category;
-		this._categories = newCategories;
+        this.categories = ArrayUtils.add(this.categories, category);
 	}
 	
 	@Override
 	public void addFilter(EntitySearchFilter filter) {
-		int len = this._filters.length;
-		EntitySearchFilter[] newFilters = new EntitySearchFilter[len + 1];
-		for(int i=0; i < len; i++){
-			newFilters[i] = this._filters[i];
-		}
-		newFilters[len] = filter;
-		this._filters = newFilters;
+        this.filters = ArrayUtils.add(this.filters, filter);
 	}
 	@Override
 	public void addUserFilterOption(UserFilterOptionBean filter) {
 		if (null == filter) return;
 		if (null == this.getUserFilterOptions()) {
-			this.setUserFilterOptions(new ArrayList<UserFilterOptionBean>());
+			this.setUserFilterOptions(new ArrayList<>());
 		}
 		this.getUserFilterOptions().add(filter);
 	}
 	
 	@Override
 	public List<UserFilterOptionBean> getUserFilterOptions() {
-		return _userFilterOptions;
+		return userFilterOptions;
 	}
 	public void setUserFilterOptions(List<UserFilterOptionBean> userFilterOptions) {
-		this._userFilterOptions = userFilterOptions;
+		this.userFilterOptions = userFilterOptions;
 	}
-	
-	private String _listName;
-	private String _contentType;
-	private String[] _categories = new String[0];
-	private EntitySearchFilter[] _filters = new EntitySearchFilter[0];
-	private String _category;
-	private List<UserFilterOptionBean> _userFilterOptions = new ArrayList<UserFilterOptionBean>();
+
+    @Override
+    public boolean isOrClauseCategoryFilter() {
+        return false;
+    }
 	
 }

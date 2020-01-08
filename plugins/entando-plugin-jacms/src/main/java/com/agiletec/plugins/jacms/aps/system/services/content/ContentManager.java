@@ -51,12 +51,6 @@ public class ContentManager extends ApsEntityManager
     private IContentUpdaterService contentUpdaterService;
 
     @Override
-    public void init() throws Exception {
-        super.init();
-        logger.debug("{} ready. Initialized {} content types", this.getClass().getName(), super.getEntityTypes().size());
-    }
-
-    @Override
     protected String getConfigItemName() {
         return JacmsSystemConstants.CONFIG_ITEM_CONTENT_TYPES;
     }
@@ -161,18 +155,7 @@ public class ContentManager extends ApsEntityManager
      * @throws ApsSystemException In case of error.
      */
     @Override
-    //@Cacheable(value = ICacheInfoManager.DEFAULT_CACHE_NAME,
-    //        key = "T(com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants).CONTENT_CACHE_PREFIX.concat(#id)", condition = "#onLine")
-    //@CacheableInfo(groups = "T(com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager).getContentCacheGroupsCsv(#id)")
     public Content loadContent(String id, boolean onLine) throws ApsSystemException {
-        return this.loadContent(id, onLine, false);
-    }
-    
-    @Override
-    //@Cacheable(value = ICacheInfoManager.DEFAULT_CACHE_NAME,
-    //        key = "T(com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants).CONTENT_CACHE_PREFIX.concat(#id)", condition = "#onLine and #cacheable")
-    //@CacheableInfo(groups = "T(com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager).getContentCacheGroupsCsv(#id)")
-    public Content loadContent(String id, boolean onLine, boolean cacheable) throws ApsSystemException {
         try {
             ContentRecordVO contentVo = this.loadContentVO(id);
             return this.createContent(contentVo, onLine);
@@ -200,6 +183,7 @@ public class ContentManager extends ApsEntityManager
                     content.setOnLine(contentVo.isOnLine());
                     content.setMainGroup(contentVo.getMainGroupCode());
                     content.setSync(contentVo.isSync());
+                    content.setStatus(contentVo.getStatus());
                     if (null == content.getVersion()) {
                         content.setVersion(contentVo.getVersion());
                     }
@@ -217,9 +201,6 @@ public class ContentManager extends ApsEntityManager
                     }
                     if (null == content.getPublished()) {
                         content.setPublished(contentVo.getPublish());
-                    }
-                    if (null == content.getStatus()) {
-                        content.setStatus(contentVo.getStatus());
                     }
                 }
             }

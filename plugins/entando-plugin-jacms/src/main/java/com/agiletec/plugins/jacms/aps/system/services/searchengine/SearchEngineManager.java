@@ -23,6 +23,7 @@ import com.agiletec.aps.system.common.notify.ApsEvent;
 import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
 import com.agiletec.aps.system.common.tree.ITreeNode;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.util.DateConverter;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.event.PublicContentChangedEvent;
@@ -33,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -240,34 +242,64 @@ public class SearchEngineManager extends AbstractService
         SearchEngineFilter[] filters = new SearchEngineFilter[0];
         if (StringUtils.isNotEmpty(langCode) && StringUtils.isNotEmpty(word)) {
             SearchEngineFilter filter = new SearchEngineFilter(langCode, word);
-            filter.setIncludeAttachments(true);
+            filter.setFullTextSearch(true);
             filters = ArrayUtils.add(filters, filter);
         }
-        return this.searchEntityId(filters, null, allowedGroups);
-    }
-
-    public List<String> searchId(String sectionCode, SearchEngineFilter[] filters, Collection<String> allowedGroups) throws ApsSystemException {
         return this.searchEntityId(filters, null, allowedGroups);
     }
 
     public List<String> searchEntityId(SearchEngineFilter[] filters, Collection<ITreeNode> categories, Collection<String> allowedGroups) throws ApsSystemException {
         List<String> contentsId = null;
         try {
-            contentsId = this.getSearcherDao().searchContentsId(filters, categories, allowedGroups);
+            contentsId = this.getSearcherDao().searchContentsId(filters, this.extractCategoryFilters(categories), allowedGroups);
         } catch (Throwable t) {
             logger.error("Error searching content id list. ", t);
             throw new ApsSystemException("Error searching content id list", t);
         }
         return contentsId;
     }
-
+    
+    @Override
     public FacetedContentsResult searchFacetedEntities(SearchEngineFilter[] filters, Collection<ITreeNode> categories, Collection<String> allowedGroups) throws ApsSystemException {
-        FacetedContentsResult contentsId = null;
+        FacetedContentsResult result = null;
         try {
-            contentsId = this.getSearcherDao().searchFacetedContents(filters, categories, allowedGroups);
+            result = this.getSearcherDao().searchFacetedContents(filters, this.extractCategoryFilters(categories), allowedGroups);
         } catch (Throwable t) {
             logger.error("Error searching faceted contents", t);
             throw new ApsSystemException("Error searching faceted contents", t);
+        }
+        return result;
+    }
+    
+    private SearchEngineFilter[] extractCategoryFilters(Collection<ITreeNode> categories) {
+        SearchEngineFilter[] categoryFilterArray = null;
+        if (null != categories) {
+            List<SearchEngineFilter> categoryFilters = categories.stream().filter(c -> c != null).map(c -> new SearchEngineFilter("category", false, c.getCode())).collect(Collectors.toList());
+            categoryFilterArray = categoryFilters.toArray(new SearchEngineFilter[categoryFilters.size()]);
+        }
+        return categoryFilterArray;
+    }
+    
+    @Override
+    public FacetedContentsResult searchFacetedEntities(SearchEngineFilter[] filters, SearchEngineFilter[] categories, Collection<String> allowedGroups) throws ApsSystemException {
+        FacetedContentsResult result = null;
+        try {
+            result = this.getSearcherDao().searchFacetedContents(filters, categories, allowedGroups);
+        } catch (Throwable t) {
+            logger.error("Error searching faceted contents", t);
+            throw new ApsSystemException("Error searching faceted contents", t);
+        }
+        return result;
+    }
+
+    @Override
+    public List<String> loadContentsId(SearchEngineFilter[] filters, SearchEngineFilter[] facetNodeCodes, List<String> allowedGroups) throws ApsSystemException {
+        List<String> contentsId = null;
+        try {
+            contentsId = this.getSearcherDao().searchContentsId(filters, facetNodeCodes, allowedGroups);
+        } catch (Throwable t) {
+            logger.error("Error searching contents", t);
+            throw new ApsSystemException("Error searching contents", t);
         }
         return contentsId;
     }

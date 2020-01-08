@@ -75,7 +75,7 @@ public class ContentPageValidator implements IExternalPageValidator, Application
         List<String> referencingContent = ((PageUtilizer) this.getContentManager()).getPageUtilizers(page.getCode());
         if (null != referencingContent) {
             for (String contentId : referencingContent) {
-                Content content = this.getContentManager().loadContent(contentId, true, false);
+                Content content = this.getContentManager().loadContent(contentId, true);
                 if (null == content) {
                     continue;
                 }

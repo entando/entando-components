@@ -48,7 +48,7 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
     private Map<String, String> metadata;
 
     private String metadataIgnoreKeys;
-
+    
     /**
      * Inizializza gli elementi base costituenti la Risorsa.
      */
@@ -361,21 +361,6 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
         return this.getResourceStream(instance.getSize(), instance.getLangCode());
     }
 
-    /**
-     * Restitituisce il nome file corretto da utilizzare per i salvataggi di
-     * istanze risorse all'interno del fileSystem.
-     *
-     * @param masterFileName Il nome del file principale.
-     * @return Il nome file corretto.
-     * @deprecated from jAPS 2.1
-     */
-    @Deprecated
-    protected String getRevisedInstanceFileName(String masterFileName) {
-        String instanceFileName = masterFileName.replaceAll("[^ _.a-zA-Z0-9]", "");
-        instanceFileName = instanceFileName.trim().replace(' ', '_');
-        return instanceFileName;
-    }
-
     @Override
     public String getDefaultUrlPath() {
         ResourceInstance defaultInstance = this.getDefaultInstance();
@@ -397,11 +382,11 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
             //PATH di richiamo della servlet di autorizzazione
             //Sintassi /<RES_ID>/<SIZE>/<LANG_CODE>/
             final String def = "def";
-            urlPath.append(protectedBaseURL);
+            urlPath.append(this.getProtectedBaseURL());
             if (!urlPath.toString().endsWith("/")) {
                 urlPath.append("/");
             }
-            urlPath.append(id).append("/");
+            urlPath.append(this.getId()).append("/");
             if (instance.getSize() < 0) {
                 urlPath.append(def);
             } else {
@@ -415,19 +400,19 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
             }
             urlPath.append("/");
         } else {
-            StringBuilder subFolder = new StringBuilder(folder);
+            StringBuilder subFolder = new StringBuilder(this.getFolder());
             if (!subFolder.toString().endsWith("/")) {
                 subFolder.append("/");
             }
             subFolder.append(instance.getFileName());
-            String path = storageManager.getResourceUrl(subFolder.toString(), false);
+            String path = this.getStorageManager().getResourceUrl(subFolder.toString(), false);
             urlPath.append(path);
         }
         return urlPath.toString();
     }
 
     protected boolean isProtectedResource() {
-        return (!Group.FREE_GROUP_NAME.equals(mainGroup));
+        return (!Group.FREE_GROUP_NAME.equals(this.getMainGroup()));
     }
 
     protected File saveTempFile(String filename, InputStream is) throws ApsSystemException, IOException {
@@ -455,39 +440,40 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
         }
         return new File(filePath);
     }
-
-    String getUniqueBaseName(String originalFileName) {
+    
+    protected String getUniqueBaseName(String originalFileName) {
         Assert.hasLength(originalFileName, "File name must not be null or empty");
-
         String baseName = FilenameUtils.getBaseName(originalFileName);
         String extension = FilenameUtils.getExtension(originalFileName);
-
+        baseName = this.purgeBaseName(baseName);
         String suggestedName = baseName;
         int fileOrder = 1;
-        while(exists(createFilePlusExtensionName(suggestedName, extension))) {
-            suggestedName = baseName + '_' +fileOrder;
+        while(this.exists(this.createFileName(suggestedName, extension))) {
+            suggestedName = baseName + '_' + fileOrder;
             fileOrder ++;
         }
-
         return suggestedName;
     }
 
-    String getMultiFileUniqueBaseName(String baseName, String suffix, String extension) {
+    protected String getMultiFileUniqueBaseName(String baseName, String suffix, String extension) {
         Assert.hasLength(baseName, "base name of file can't be null or empty");
         Assert.notNull(suffix, "file suffix can't be null");
-
+        baseName = this.purgeBaseName(baseName);
         String suggestedName = baseName + suffix;
-
         int fileOrder = 1;
-        while(exists(createFilePlusExtensionName(suggestedName, extension))) {
+        while(this.exists(this.createFileName(suggestedName, extension))) {
             suggestedName = baseName + '_' + fileOrder + suffix;
             fileOrder ++;
         }
-
         return suggestedName;
     }
+    
+    private String purgeBaseName(String baseName) {
+        String purgedName = baseName.replaceAll("[^ _.a-zA-Z0-9]", "");
+        return purgedName.trim().replace(' ', '_');
+    }
 
-    String createFilePlusExtensionName(String baseName, String extension) {
+    protected String createFileName(String baseName, String extension) {
         return extension == null ? baseName : baseName + '.' + extension;
     }
 
@@ -528,4 +514,5 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
     public void setOwner(String owner) {
         this.owner = owner;
     }
+    
 }

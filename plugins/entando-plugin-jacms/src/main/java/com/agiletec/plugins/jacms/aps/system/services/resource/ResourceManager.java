@@ -16,6 +16,8 @@ package com.agiletec.plugins.jacms.aps.system.services.resource;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.FieldSearchFilter;
+import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
+import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.category.CategoryUtilizer;
@@ -25,6 +27,7 @@ import com.agiletec.aps.system.services.group.GroupUtilizer;
 import com.agiletec.aps.system.services.keygenerator.IKeyGeneratorManager;
 import com.agiletec.aps.util.DateConverter;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
+import com.agiletec.plugins.jacms.aps.system.services.content.IContentSearcherDAO;
 import com.agiletec.plugins.jacms.aps.system.services.resource.cache.IResourceManagerCacheWrapper;
 import com.agiletec.plugins.jacms.aps.system.services.resource.event.ResourceChangedEvent;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.*;
@@ -362,17 +365,37 @@ public class ResourceManager extends AbstractService implements IResourceManager
 
     @Override
     public List<String> searchResourcesId(FieldSearchFilter[] filters, String categoryCode, Collection<String> groupCodes) throws ApsSystemException {
+        List<String> categories = (StringUtils.isBlank(categoryCode)) ? null : Arrays.asList(categoryCode);
+        return this.searchResourcesId(filters, categories, groupCodes);
+    }
+    
+    @Override
+    public List<String> searchResourcesId(FieldSearchFilter[] filters, List<String> categories, Collection<String> groupCodes) throws ApsSystemException {
         this.checkFilterKeys(filters);
         List<String> resourcesId = null;
         try {
-            resourcesId = this.getResourceDAO().searchResourcesId(filters, categoryCode, groupCodes);
+            resourcesId = this.getResourceDAO().searchResourcesId(filters, categories, groupCodes);
         } catch (Throwable t) {
             logger.error("Error searching resources id", t);
             throw new ApsSystemException("Error searching resources id", t);
         }
         return resourcesId;
     }
-
+    
+    @Override
+    public SearcherDaoPaginatedResult<String> getPaginatedResourcesId(FieldSearchFilter[] filters, List<String> categories, Collection<String> userGroupCodes) throws ApsSystemException {
+        SearcherDaoPaginatedResult<String> pagedResult = null;
+        try {
+            int count = this.getResourceDAO().countResources(filters, categories, userGroupCodes);
+            List<String> resourcesId = this.getResourceDAO().searchResourcesId(filters, categories, userGroupCodes);
+            pagedResult = new SearcherDaoPaginatedResult<>(count, resourcesId);
+        } catch (Throwable t) {
+            logger.error("Error searching paginated resources id", t);
+            throw new ApsSystemException("Error searching paginated resources id", t);
+        }
+        return pagedResult;
+    }
+    
     protected void checkFilterKeys(FieldSearchFilter[] filters) {
         if (null != filters && filters.length > 0) {
             String[] allowedFilterKeys = {RESOURCE_ID_FILTER_KEY, RESOURCE_TYPE_FILTER_KEY, RESOURCE_DESCR_FILTER_KEY,
@@ -532,7 +555,7 @@ public class ResourceManager extends AbstractService implements IResourceManager
     public List<String> getGroupUtilizers(String groupName) throws ApsSystemException {
         List<String> resourcesId = null;
         try {
-            List<String> allowedGroups = new ArrayList<String>(1);
+            List<String> allowedGroups = new ArrayList<>(1);
             allowedGroups.add(groupName);
             resourcesId = this.getResourceDAO().searchResourcesId(null, null, null, null, allowedGroups);
         } catch (Throwable t) {

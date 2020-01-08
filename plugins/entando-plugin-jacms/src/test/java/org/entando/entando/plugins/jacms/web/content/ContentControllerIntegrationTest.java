@@ -633,7 +633,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
         String accessToken = mockOAuthInterceptor(user);
-        Content masterContent = this.contentManager.loadContent("EVN193", true, false);
+        Content masterContent = this.contentManager.loadContent("EVN193", true);
         masterContent.setId(null);
         masterContent.setDescription("Cloned content for test");
         DateAttribute dateAttribute = (DateAttribute) masterContent.getAttribute("DataInizio");

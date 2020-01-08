@@ -2,6 +2,7 @@
 <%@ taglib prefix="wpsa" uri="/apsadmin-core" %>
 <%@ taglib prefix="wp" uri="/aps-core" %>
 <%@ taglib prefix="wpsf" uri="/apsadmin-form" %>
+<%@ taglib prefix="jacmsapsadmin" uri="/jacms-apsadmin-core"%>
 
 <!-- Admin console Breadcrumbs -->
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
@@ -139,7 +140,10 @@
 
                 <div class="row">
                     <div class="col-xs-12">
-                        <wpsa:subset source="contents" count="10" objectName="groupContent" advanced="true" offset="5">
+                        <s:set var="maxSizeVar" value="10" />
+                        <s:set var="paginatedContentIdsVar" value="%{getPaginatedContentsId(#maxSizeVar)}" />
+                        <s:set var="contentIdsVar" value="#paginatedContentIdsVar.list" />
+                        <jacmsapsadmin:cmssubset pagerId="%{getPagerId()}" total="%{#paginatedContentIdsVar.count}" maxSize="#maxSizeVar" objectName="groupContent" offset="5" >
                             <s:set var="group" value="#groupContent" />
                             <p class="sr-only">
                                 <wpsf:hidden name="lastGroupBy" />
@@ -284,7 +288,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <s:iterator var="contentId">
+                                        <s:iterator var="contentId" value="#contentIdsVar" >
                                             <s:set var="content" value="%{getContentVo(#contentId)}"></s:set>
                                                 <tr>
                                                     <td class="text-center"><input type="radio" name="contentId" id="contentId_<s:property value="#content.id"/>" value="<s:property value="#content.id"/>" /></td>
@@ -301,7 +305,6 @@
                                         </s:iterator>
                                     </tbody>
                                 </table>
-
                                 <div class="content-view-pf-pagination table-view-pf-pagination clearfix">
                                     <div class="form-group">
                                         <span><s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" /></span>
@@ -312,7 +315,7 @@
                                 </div>
                             </div>
                         </div>
-                    </wpsa:subset>
+                    </jacmsapsadmin:cmssubset>
                 </div>
             </div>
         </div>

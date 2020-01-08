@@ -13,7 +13,7 @@
     <s:param name="linkTypeVar" value="2"/>
 </s:include>
 
-<s:form cssClass="form-horizontal">
+<s:form action="joinPageLink" cssClass="form-horizontal">
     <p class="sr-only">
         <wpsf:hidden name="contentOnSessionMarker" />
         <s:if test="contentId == null">
@@ -25,10 +25,8 @@
         </s:else>
         <s:iterator value="treeNodesToOpen" var="treeNodeToOpenVar"><wpsf:hidden name="treeNodesToOpen" value="%{#treeNodeToOpenVar}"/></s:iterator>
         </p>
-
         <div class="panel panel-default no-top-border">
             <div class="panel-body">
-
                 <div class="form-group mt-20">
                     <div class="col-xs-12">
                         <label class="col-sm-2 text-right">
@@ -46,7 +44,6 @@
                                 </s:iterator>
                             </p>
                         </s:if>
-
                         <div class="table-responsive">
                             <table id="pageTree" class="table table-bordered table-hover table-treegrid">
                                 <thead>
@@ -71,13 +68,13 @@
                                     <s:set var="selectedTreeNode" value="selectedNode" />
                                     <s:set var="liClassName" value="'page'" />
                                     <s:set var="treeItemIconName" value="'fa-folder'" />
-
                                     <wpsa:groupsByPermission permission="managePages" var="groupsByPermission" />
                                     <s:if test="#pageTreeStyleVar == 'classic'">
                                         <s:set var="currentRoot" value="allowedTreeRootNode" />
                                         <s:include value="/WEB-INF/apsadmin/jsp/common/treeBuilder.jsp" />
                                     </s:if>
                                     <s:elseif test="#pageTreeStyleVar == 'request'">
+                                        <s:set var="treeNodeExtraParamsMap" value="%{treeNodeExtraParamsMap}" />
                                         <s:set var="treeNodeActionMarkerCode" value="treeNodeActionMarkerCode" />
                                         <s:set var="targetNode" value="%{parentPageCode}" />
                                         <s:set var="treeNodesToOpen" value="treeNodesToOpen" />
@@ -100,7 +97,6 @@
 
             <!-- Link attributes -->
             <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/content/modules/include/entando-link-attributes.jsp" />
-
 
             <div class="form-group">
                 <div class="col-xs-12">

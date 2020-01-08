@@ -165,10 +165,14 @@
             </div>
         </div>
     </div>
+    
+    <s:set var="maxSizeVar" value="10" />
+    <s:set var="paginatedResourceIdsVar" value="%{getPaginatedResourcesId(#maxSizeVar)}" />
+    <s:set var="resourceIdsVar" value="#paginatedResourceIdsVar.list" />
+    <s:set var="pagerIdVar" value="%{getPagerId()}" />
 
     <div class="tab-content">
         <div id="table-view" class="tab-pane fade">
-
             <s:form action="search" class="container-fluid container-cards-pf">
                 <p class="sr-only">
                 <wpsf:hidden name="text"/>
@@ -185,12 +189,11 @@
                 <wpsf:hidden name="order" />
                 <wpsf:hidden name="contentOnSessionMarker"/>
                 </p>
-
-                <wpsa:subset source="resources" count="10" objectName="groupResource" advanced="true" offset="5">
+                <jacms:cmssubset pagerId="#pagerIdVar" total="%{#paginatedResourceIdsVar.count}" maxSize="#maxSizeVar" objectName="groupResource" offset="5">
                     <div class="row row-cards-pf">
                         <s:set var="group" value="#groupResource"/>
                         <s:set var="imageDimensionsVar" value="imageDimensions"/>
-                        <s:iterator var="resourceid" status="status">
+                        <s:iterator var="resourceid" status="status" value="#resourceIdsVar" >
                             <s:set var="resource" value="%{loadResource(#resourceid)}"/>
                             <s:set var="resourceInstance" value='%{#resource.getInstance(0,null)}'/>
                             <s:set var="URLoriginal" value="%{#resource.getImagePath(0)}"/>
@@ -281,7 +284,7 @@
                         <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" />
                         <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp" />
                     </div>
-                </wpsa:subset>
+                </jacms:cmssubset>
             </s:form>
         </div>
         <div id="list-view" class="tab-pane fade in active">
@@ -301,11 +304,11 @@
                 <wpsf:hidden name="order" />
                 <wpsf:hidden name="contentOnSessionMarker"/>
                 </p>
-                <wpsa:subset source="resources" count="10" objectName="groupResource" advanced="true" offset="5">
+                <jacms:cmssubset pagerId="#pagerIdVar" total="%{#paginatedResourceIdsVar.count}" maxSize="#maxSizeVar" objectName="groupResource" offset="5">
                     <div class="list-group list-view-pf list-view-pf-view">
                         <s:set var="group" value="#groupResource"/>
                         <s:set var="imageDimensionsVar" value="imageDimensions"/>
-                        <s:iterator var="resourceid" status="status">
+                        <s:iterator var="resourceid" status="status" value="#resourceIdsVar" >
                             <s:set var="resource" value="%{loadResource(#resourceid)}"/>
                             <s:set var="resourceInstance" value='%{#resource.getInstance(0,null)}'/>
                             <s:set var="URLoriginal" value="%{#resource.getImagePath(0)}"/>
@@ -426,12 +429,11 @@
                         <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" />
                         <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp" />
                     </div>
-                </wpsa:subset>
+                </jacms:cmssubset>
             </s:form>
         </div>
     </div>
     <script>
-
         $('#TabList button').click(function (e) {
             e.preventDefault();
             $(this).tab('show');
@@ -440,7 +442,6 @@
             var id = $(e.target).attr("href").substr(1);
             window.location.hash = id;
         });
-
         $('.filters a').click(function (e) {
             e.preventDefault();
             var newhash = window.location.hash;
@@ -450,8 +451,7 @@
         });
         var hash = window.location.hash;
         $('#TabList button[href="' + hash + '"]').tab('show');
-    </script>      
-
+    </script>
     <wp:ifauthorized permission="superuser">
         <s:if test="!onEditContent">
             <s:action name="openAdminProspect" namespace="/do/jacms/Resource/Admin" ignoreContextParams="true"
@@ -461,4 +461,3 @@
         </s:if>
     </wp:ifauthorized>
 </div>
-                    

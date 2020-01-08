@@ -196,7 +196,7 @@ public class ContentServiceTest {
         when((this.contentManager).loadPublicContentsId(Mockito.nullable(String[].class), Mockito.anyBoolean(),
                 Mockito.nullable(EntitySearchFilter[].class), Mockito.any(List.class))).thenReturn(contentsId);
         when((this.contentDispenser).getRenderizationInfo(Mockito.nullable(String.class), Mockito.anyLong(),
-                Mockito.nullable(String.class), Mockito.nullable(RequestContext.class), Mockito.anyBoolean())).thenReturn(Mockito.mock(ContentRenderizationInfo.class));
+                Mockito.nullable(String.class), Mockito.nullable(UserDetails.class), Mockito.anyBoolean())).thenReturn(Mockito.mock(ContentRenderizationInfo.class));
         this.createMockContent("ART");
         this.createMockContentModel("ART");
         PagedMetadata<ContentDto> metadata = this.contentService.getContents(requestList, user);

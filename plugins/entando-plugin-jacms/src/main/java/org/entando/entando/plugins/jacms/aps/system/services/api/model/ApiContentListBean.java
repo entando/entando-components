@@ -20,21 +20,29 @@ import java.util.List;
 import com.agiletec.aps.system.common.entity.helper.BaseFilterUtils;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentListBean;
+import java.util.stream.Collectors;
 
 /**
  * @author E.Santoboni
  */
 public class ApiContentListBean implements IContentListBean {
+    
+    private String contentType;
+    private EntitySearchFilter[] filters;
+    private String[] categories;
+    private boolean orClauseCategoryFilter; 
 
-    public ApiContentListBean(String contentType, EntitySearchFilter[] filters, String[] categories) {
+    public ApiContentListBean(String contentType, EntitySearchFilter[] filters, String[] categories, boolean orClauseCategoryFilter) {
         this.setContentType(contentType);
         this.setCategories(categories);
         this.setFilters(filters);
+        this.setOrClauseCategoryFilter(orClauseCategoryFilter);
     }
     
+    @Override
     public String getListName() {
-        StringBuffer buffer = new StringBuffer("listName_api");
-        buffer.append("-TYPE:" + this.getContentType());
+        StringBuilder buffer = new StringBuilder("listName_api");
+        buffer.append("-TYPE:").append(this.getContentType());
         buffer.append("_FILTERS:");
         if (null != this.getFilters() && this.getFilters().length > 0) {
             BaseFilterUtils filterUtils = new BaseFilterUtils();
@@ -44,47 +52,51 @@ public class ApiContentListBean implements IContentListBean {
         }
         buffer.append("_CATEGORIES:");
         if (null != this.getCategories() && this.getCategories().length > 0) {
-            List<String> categories = Arrays.asList(this.getCategories());
-            Collections.sort(categories);
-            for (int i = 0; i < categories.size(); i++) {
-                if (i > 0) {
-                    buffer.append("+");
-                }
-                buffer.append(categories.get(i));
-            }
+            List<String> categoryList = Arrays.asList(this.getCategories());
+            Collections.sort(categoryList);
+            buffer.append(categoryList.stream().collect(Collectors.joining("+")));
+            buffer.append("_ORCLAUSE:").append(this.isOrClauseCategoryFilter());
         } else {
             buffer.append("NULL");
         }
         return buffer.toString();
     }
     
+    @Override
     public String getContentType() {
-        return _contentType;
+        return contentType;
     }
     protected void setContentType(String contentType) {
-        this._contentType = contentType;
+        this.contentType = contentType;
     }
     
+    @Override
     public String[] getCategories() {
-        return this._categories;
+        return this.categories;
     }
     protected void setCategories(String[] categories) {
-        this._categories = categories;
+        this.categories = categories;
     }
     
+    @Override
     public EntitySearchFilter[] getFilters() {
-        return this._filters;
+        return this.filters;
     }
     protected void setFilters(EntitySearchFilter[] filters) {
-        this._filters = filters;
+        this.filters = filters;
     }
     
+    @Override
     public boolean isCacheable() {
         return true;
     }
     
-    private String _contentType;
-    private EntitySearchFilter[] _filters;
-    private String[] _categories;
+    @Override
+    public boolean isOrClauseCategoryFilter() {
+        return orClauseCategoryFilter;
+    }
+    public void setOrClauseCategoryFilter(boolean orClauseCategoryFilter) {
+        this.orClauseCategoryFilter = orClauseCategoryFilter;
+    }
     
 }

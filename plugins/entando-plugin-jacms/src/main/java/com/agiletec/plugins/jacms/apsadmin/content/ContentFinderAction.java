@@ -49,6 +49,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentRecordVO;
 import com.agiletec.plugins.jacms.apsadmin.content.helper.IContentActionHelper;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * Action per la ricerca contenuti.
@@ -199,7 +200,6 @@ public class ContentFinderAction extends AbstractApsEntityFinderAction {
             this.restoreCategorySearchState(searchInfo);
             this.restoreEntitySearchState(searchInfo);
             this.restorePagerSearchState(searchInfo);
-
             this.addFilter(searchInfo.getFilter(ContentFinderSearchInfo.ORDER_FILTER));
         } catch (Throwable t) {
             logger.error("error in results", t);
@@ -207,19 +207,58 @@ public class ContentFinderAction extends AbstractApsEntityFinderAction {
         }
         return SUCCESS;
     }
-
+    
+    public SearcherDaoPaginatedResult<String> getPaginatedContentsId(Integer limit) {
+        SearcherDaoPaginatedResult<String> result = null;
+        try {
+            ContentFinderSearchInfo searchInfo = this.getContentSearchInfo();
+            List<String> allowedGroups = this.getContentGroupCodes();
+            String[] categories = null;
+            Category category = this.getCategoryManager().getCategory(this.getCategoryCode());
+            if (null != category && !category.isRoot()) {
+                String catCode = this.getCategoryCode().trim();
+                categories = new String[]{catCode};
+                searchInfo.setCategoryCode(catCode);
+            } else {
+                searchInfo.setCategoryCode(null);
+            }
+            EntitySearchFilter[] filters = this.getFilters();
+            if (null != limit) {
+                filters = ArrayUtils.add(filters, this.getPagerFilter(limit));
+            }
+            result = this.getContentManager().getPaginatedWorkContentsId(categories, false, filters, allowedGroups);
+        } catch (Throwable t) {
+            logger.error("error in getPaginatedWorkContentsId", t);
+            throw new RuntimeException("error in getPaginatedWorkContentsId", t);
+        }
+        return result;
+    }
+    
+    protected EntitySearchFilter getPagerFilter(Integer limit) {
+        int pagerItem = new AdminPagerTagHelper().getItemNumber(this.getPagerId(), this.getRequest());
+        int item = (pagerItem > 0) ? pagerItem : 1;
+        int realLimit = (null != limit && limit > 0) ? limit : 10;
+        int offset = (item - 1) * realLimit;
+        return new EntitySearchFilter(realLimit, offset);
+    }
+    
+    public String getPagerId() {
+        return this.getClass().getSimpleName();
+    }
+    
     /**
      * Restituisce la lista identificativi di contenuti che deve essere erogata
-     * dall'interfaccia di visualizzazione dei contenuti. La lista deve essere
+     * dall'interfaccia di visualizzazione dei contenuti.La lista deve essere 
      * filtrata secondo i parametri di ricerca impostati.
      *
      * @return La lista di contenuti che deve essere erogata dall'interfaccia di
      * visualizzazione dei contenuti.
+     * @deprecated 
      */
     public List<String> getContents() {
         List<String> result = null;
         try {
-            ContentFinderSearchInfo searchInfo = getContentSearchInfo();
+            ContentFinderSearchInfo searchInfo = this.getContentSearchInfo();
             List<String> allowedGroups = this.getContentGroupCodes();
             String[] categories = null;
             Category category = this.getCategoryManager().getCategory(this.getCategoryCode());

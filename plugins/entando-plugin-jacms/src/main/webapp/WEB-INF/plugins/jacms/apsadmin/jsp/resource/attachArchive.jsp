@@ -153,8 +153,11 @@
             </div>
         </div>
     </div>
-
-
+    
+    <s:set var="maxSizeVar" value="10" />
+    <s:set var="paginatedResourceIdsVar" value="%{getPaginatedResourcesId(#maxSizeVar)}" />
+    <s:set var="resourceIdsVar" value="#paginatedResourceIdsVar.list" />
+    <s:set var="pagerIdVar" value="%{getPagerId()}" />
 
     <div class="tab-content">
         <div id="table-view" class="tab-pane fade">
@@ -174,9 +177,7 @@
                 <wpsf:hidden name="order" />
                 <wpsf:hidden name="contentOnSessionMarker"/>
                 </p>
-
-                <wpsa:subset source="resources" count="10" objectName="groupResource" advanced="true" offset="5">
-
+                <jacms:cmssubset pagerId="#pagerIdVar" total="%{#paginatedResourceIdsVar.count}" maxSize="#maxSizeVar" objectName="groupResource" offset="5">
                     <!--carte-->
                     <s:if test="onEditContent">
                         <h3><s:text name="title.chooseAttach"/></h3>
@@ -184,7 +185,7 @@
 
                     <div class="row row-cards-pf">
                         <s:set var="group" value="#groupResource"/>
-                        <s:iterator var="resourceid" status="status">
+                        <s:iterator var="resourceid" status="status" value="#resourceIdsVar" >
                             <s:set var="resource" value="%{loadResource(#resourceid)}"></s:set>
                             <s:set var="resourceInstance" value="%{#resource.getInstance()}"></s:set>
 
@@ -374,7 +375,7 @@
                         <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" />
                         <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp" />
                     </div>
-                </wpsa:subset>
+                </jacms:cmssubset>
             </s:form>
         </div>
 
@@ -395,21 +396,16 @@
                 <wpsf:hidden name="order" />
                 <wpsf:hidden name="contentOnSessionMarker"/>
                 </p>
-                <wpsa:subset source="resources" count="10" objectName="groupResource" advanced="true" offset="5">
-
-                    <!--lista attachment-->
-
+                <jacms:cmssubset pagerId="#pagerIdVar" total="%{#paginatedResourceIdsVar.count}" maxSize="#maxSizeVar" objectName="groupResource" offset="5">
                     <s:if test="onEditContent">
                         <h3><s:text name="title.chooseAttach"/></h3>
                     </s:if>
                     <div class="list-group list-view-pf list-view-pf-view">
                         <s:set var="group" value="#groupResource"/>
-
-                        <s:iterator var="resourceid" status="status">
+                        <s:iterator var="resourceid" status="status" value="#resourceIdsVar" >
                             <s:set var="resource" value="%{loadResource(#resourceid)}"></s:set>
                             <s:set var="resourceInstance" value="%{#resource.getInstance()}"></s:set>
                             <s:if test="onEditContent">
-
                                 <div class="list-group-item">
                                     <div class="list-view-pf-actions">
                                         <div class="dropdown pull-right dropdown-kebab-pf">
@@ -578,7 +574,7 @@
                         <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" />
                         <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp"/>
                     </div>
-                </wpsa:subset>
+                </jacms:cmssubset>
             </s:form>
             <script>
                 $('#TabAttachList button').click(function (e) {

@@ -21,7 +21,6 @@
  */
 package com.agiletec.plugins.jpldap.aps.system.services.user;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.plugins.jpldap.aps.system.LdapSystemConstants;
@@ -46,6 +45,9 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Hashtable;
 import java.util.List;
+import javax.naming.ldap.Control;
+import javax.naming.ldap.PagedResultsControl;
+import javax.naming.ldap.PagedResultsResponseControl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
@@ -93,9 +95,6 @@ public class LdapUserDAO implements ILdapUserDAO {
             Attributes attrs = new BasicAttributes(true); // case-ignore
             Attribute objclass = new BasicAttribute("objectClass");
             String[] classes = this.getOuObjectClasses();
-            //if (null == classes) {
-            //	classes = new String[]{"organizationalUnit", "top"};
-            //}
             for (int i = 0; i < classes.length; i++) {
                 objclass.add(classes[i]);
             }
@@ -244,7 +243,7 @@ public class LdapUserDAO implements ILdapUserDAO {
 
     @Override
     public void updateLastAccess(String username) {
-        ApsSystemUtils.getLogger().error("Method not supported");
+        logger.error("Method not supported");
     }
 
     @Override
@@ -277,20 +276,33 @@ public class LdapUserDAO implements ILdapUserDAO {
 
     protected SearchResult searchUserByFilterExpr(String uid) {
         String filterExpr = "(&(objectClass=" + this.getUserObjectClass() + ")(" + this.getUserIdAttributeName() + "=" + uid + ")" + this.getFilterGroupBlock() + ")";
-        return search(filterExpr);
+        return this.search(filterExpr);
     }
 
     private SearchResult search(String filterExpr) {
         SearchResult res = null;
-        DirContext dirCtx = null;
+        InitialLdapContext dirCtx = null;
         try {
             dirCtx = getDirContext();
             SearchControls ctls = new SearchControls();
             ctls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+            /*
             NamingEnumeration<SearchResult> answer = dirCtx.search("", filterExpr, ctls);
             if (answer.hasMore()) {
                 res = answer.next();
             }
+            */
+            int pageSize = 500;
+            dirCtx.setRequestControls(new Control[]{new PagedResultsControl(pageSize, true)});
+            byte[] cookie = null;
+            do {
+                NamingEnumeration<SearchResult> answer = dirCtx.search("", filterExpr, ctls);
+                if (answer != null && answer.hasMore()) {
+                    return answer.next();
+                }
+                cookie = parseControls(dirCtx.getResponseControls());
+                dirCtx.setRequestControls(new Control[]{new PagedResultsControl(pageSize, cookie, Control.CRITICAL)});
+            } while ((cookie != null) && (cookie.length != 0));
         } catch (ConnectException e) {
             logger.error("Extracting SearchResult : Directory not available", e);
         } catch (CommunicationException e) {
@@ -306,7 +318,6 @@ public class LdapUserDAO implements ILdapUserDAO {
     }
 
     protected boolean isAuth(String username, String password) {
-        Logger log = ApsSystemUtils.getLogger();
         boolean isAuth = false;
         DirContext dirCtx = null;
         try {
@@ -329,13 +340,13 @@ public class LdapUserDAO implements ILdapUserDAO {
                     isAuth = answer.hasMoreElements();
                     answer.close();
                     if (isAuth) {
-                        log.info("Found User '" + username + "'");
+                        logger.info("Found User '" + username + "'");
                     }
                 } catch (Throwable t) {
-                    log.info("Bad Login for User '" + username + "'");
+                    logger.info("Bad Login for User '" + username + "'");
                 }
             } else {
-                log.info("Not found User '" + username + "'");
+                logger.info("Not found User '" + username + "'");
             }
             answer.close();
         } catch (ConnectException e) {
@@ -406,14 +417,15 @@ public class LdapUserDAO implements ILdapUserDAO {
     }
 
     protected List<String> searchUsernamesByFilterExpr(String filterExpr) {
-        List<String> usernames = new ArrayList<String>();
-        DirContext dirCtx = null;
+        List<String> usernames = new ArrayList<>();
+        InitialLdapContext dirCtx = null;
         try {
             dirCtx = this.getDirContext();
             SearchControls ctls = new SearchControls();
             String[] attrIDs = {this.getUserIdAttributeName()};
             ctls.setReturningAttributes(attrIDs);
             ctls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+            /*
             if (this.getSearchResultMaxSize() > 0) {
                 ctls.setCountLimit(this.getSearchResultMaxSize());
             }
@@ -423,6 +435,24 @@ public class LdapUserDAO implements ILdapUserDAO {
                 Attributes attrs = res.getAttributes();
                 usernames.add((String) attrs.get(this.getUserIdAttributeName()).get(0));
             }
+            */
+            int pageSize = 500;
+            dirCtx.setRequestControls(new Control[]{new PagedResultsControl(pageSize, true)});
+            byte[] cookie = null;
+            int totalResults = 0;
+            do {
+                NamingEnumeration<SearchResult> results = dirCtx.search("", filterExpr, ctls);
+                while (results != null && results.hasMoreElements()) {
+                    SearchResult sr = results.next();
+                    //_logger.info("Search Result  Name : " + sr.getName());
+                    Attributes attrs = sr.getAttributes();
+                    usernames.add((String) attrs.get(this.getUserIdAttributeName()).get(0));
+                    totalResults++;
+                }
+                cookie = parseControls(dirCtx.getResponseControls());
+                dirCtx.setRequestControls(new Control[]{new PagedResultsControl(pageSize, cookie, Control.CRITICAL)});
+            } while ((cookie != null) && (cookie.length != 0));
+            logger.info("BaseDn '{}' - Total record retrieved for search : {}", this.getBaseDn(), totalResults);
         } catch (ConnectException e) {
             logger.error("Error loading users : Directory not available", e);
         } catch (CommunicationException e) {
@@ -439,14 +469,15 @@ public class LdapUserDAO implements ILdapUserDAO {
     }
 
     protected List<UserDetails> searchUsersByFilterExpr(String filterExpr) {
-        List<UserDetails> users = new ArrayList<UserDetails>();
-        DirContext dirCtx = null;
+        List<UserDetails> users = new ArrayList<>();
+        InitialLdapContext dirCtx = null;
         try {
             dirCtx = this.getDirContext();
             SearchControls ctls = new SearchControls();
             String[] attrIDs = {this.getUserIdAttributeName(), this.getUserPasswordAttributeName(), "cn", "sn"};
             ctls.setReturningAttributes(attrIDs);
             ctls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+            /*
             if (this.getSearchResultMaxSize() > 0) {
                 ctls.setCountLimit(this.getSearchResultMaxSize());
             }
@@ -457,6 +488,25 @@ public class LdapUserDAO implements ILdapUserDAO {
                 LdapUser user = this.createUserFromAttributes(attrs);
                 users.add(user);
             }
+            */
+            int pageSize = 500;
+            dirCtx.setRequestControls(new Control[]{new PagedResultsControl(pageSize, true)});
+            byte[] cookie = null;
+            int totalResults = 0;
+            do {
+                NamingEnumeration<SearchResult> results = dirCtx.search("", filterExpr, ctls);
+                while (results != null && results.hasMoreElements()) {
+                    SearchResult sr = results.next();
+                    //_logger.info("Search Result  Name : " + sr.getName());
+                    Attributes attrs = sr.getAttributes();
+                    LdapUser user = this.createUserFromAttributes(attrs);
+                    users.add(user);
+                    totalResults++;
+                }
+                cookie = parseControls(dirCtx.getResponseControls());
+                dirCtx.setRequestControls(new Control[]{new PagedResultsControl(pageSize, cookie, Control.CRITICAL)});
+            } while ((cookie != null) && (cookie.length != 0));
+            logger.info("BaseDn '{}' - Total record retrieved for search : {}", this.getBaseDn(), totalResults);
         } catch (ConnectException e) {
             logger.error("Error loading users : Directory not available", e);
         } catch (CommunicationException e) {
@@ -471,13 +521,13 @@ public class LdapUserDAO implements ILdapUserDAO {
         }
         return users;
     }
-
-    protected DirContext getDirContext() throws NamingException, CommunicationException, ConnectException {
-        DirContext dirCtx = null;
+    
+    protected InitialLdapContext getDirContext() throws NamingException, CommunicationException, ConnectException {
+        InitialLdapContext dirCtx = null;
         try {
             if (this.isTlsSecurityConnection()) {
                 dirCtx = new InitialLdapContext(this.getParams(true), null);
-                StartTlsResponse tls = (StartTlsResponse) ((InitialLdapContext) dirCtx).extendedOperation(new StartTlsRequest());
+                StartTlsResponse tls = (StartTlsResponse) dirCtx.extendedOperation(new StartTlsRequest());
                 if (this.isTlsFreeSecurityConnection()) {
                     // Set the (our) HostVerifier
                     tls.setHostnameVerifier(new MyTLSHostnameVerifier());
@@ -502,7 +552,7 @@ public class LdapUserDAO implements ILdapUserDAO {
                     dirCtx.addToEnvironment(Context.SECURITY_AUTHENTICATION, "simple");
                 }
             } else {
-                dirCtx = new InitialDirContext(this.getParams(false));
+                dirCtx = new InitialLdapContext(this.getParams(false), null);
             }
         } catch (IOException ex) {
             logger.error("error in getDirContext", ex);
@@ -512,12 +562,25 @@ public class LdapUserDAO implements ILdapUserDAO {
         return dirCtx;
     }
 
+    private static byte[] parseControls(Control[] controls) throws NamingException {
+        byte[] cookie = null;
+        if (controls != null) {
+            for (int i = 0; i < controls.length; i++) {
+                if (controls[i] instanceof PagedResultsResponseControl) {
+                    PagedResultsResponseControl prrc = (PagedResultsResponseControl) controls[i];
+                    cookie = prrc.getCookie();
+                }
+            }
+        }
+        return (cookie == null) ? new byte[0] : cookie;
+    }
+
     protected void closeDirContext(DirContext dirCtx) {
         if (null == dirCtx) {
             return;
         }
         try {
-            if (dirCtx instanceof InitialLdapContext) {
+            if (dirCtx instanceof InitialLdapContext && null != ((InitialLdapContext) dirCtx).getExtendedResponse()) {
                 ((StartTlsResponse) ((InitialLdapContext) dirCtx).getExtendedResponse()).close();
             }
             dirCtx.close();

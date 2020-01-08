@@ -44,6 +44,7 @@
         <property name="contentSchedulerManager" ref="jpcontentschedulerContentSchedulerManager" />
         <property name="contentManager" ref="jacmsContentManager" />
         <property name="categoryManager" ref="CategoryManager" />
+        <property name="treeHelper" ref="categoryActionHelper" />
     </bean>
 
 
