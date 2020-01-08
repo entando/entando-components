@@ -84,7 +84,7 @@ public class FacetNavTreeWidgetAction extends FacetNavResultWidgetAction impleme
 				String facetCode = this.getFacetCode();
 				List<String> facetCodes = this.getFacetRootCodes();
 				ITreeNode facet = this.getTreeNodeManager().getNode(this.getFacetCode());
-				if (facet != null && !facet.getCode().equals(facet.getParent().getCode()) && !facetCodes.contains(facetCode)) {//se esiste, non è la Home e non è 
+				if (facet != null && !facet.getCode().equals(facet.getParentCode()) && !facetCodes.contains(facetCode)) {//se esiste, non è la Home e non è 
 					facetCodes.add(facetCode);
 					String facetsFilter = FacetNavWidgetHelper.concatStrings(facetCodes, ",");
 					String configParamName = JpFacetNavSystemConstants.FACET_ROOTS_WIDGET_PARAM_NAME;

@@ -10,15 +10,8 @@
     <s:set var="treeItemIconNameVar" value="#treeItemIconName" />
 </s:else>
 
-<s:if test="%{null == #actionName}">
-    <s:set var="actionName" value="'joinCategory'"/>
-</s:if>
 <s:if test="%{null == #useAjax}">
     <s:set var="useAjax" value="%{false}"/>
-</s:if>
-<s:if test="%{null == #joinCategoryEndpoint}">
-    <%-- use current URL --%>
-    <s:set var="joinCategoryEndpoint" value="''"/>
 </s:if>
 
 <s:if test="null == #openTreeActionName"><s:set var="openTreeActionName" value="'openCloseTreeNode'" /></s:if>
@@ -100,35 +93,13 @@
             </s:if>
         </label>
     </td>
-    <s:if test="%{#skipJoinAction == null || #skipJoinAction.equals('false')}">
-        <td class="text-center">
-            <s:if test="%{!#currentRoot.isRoot()}">
-                <s:if test="#useAjax">
-                    <button type="button" class="btn btn-sm btn-link js_joinCategory"
-                            onclick="categoriesAjax.joinCategory('<s:property value="#joinCategoryEndpoint"/>', '<s:property value="#currentRoot.code"/>', '<s:property value="#actionName"/>')"
-                            title="<s:text name="label.join" />">
-                        <span class="icon fa fa-plus"></span>
-                    </button>
-                </s:if>
-                <s:else>
-                    <wpsa:actionParam action="joinCategory" var="joinCategoryActionName" >
-                        <wpsa:actionSubParam name="categoryCode" value="%{#currentRoot.code}" />
-                    </wpsa:actionParam>
-                    <wpsf:submit action="%{#joinCategoryActionName}" type="button"
-                                 title="%{getText('label.join')}" cssClass="btn btn-sm btn-link js_joinCategory">
-                        <span class="icon fa fa-plus"></span>
-                    </wpsf:submit>                    
-                </s:else>
-            </s:if>
-        </td>
-    </s:if>
 </tr>
 
 <s:if test="#currentRoot.children.length > 0">
     <ul class="treeToggler fa-ul" id="tree_<s:property value="#currentRoot.code" />">
         <s:iterator value="#currentRoot.children" var="node">
             <s:set var="currentRoot" value="#node" />
-            <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/common/treeBuilder-request-categories.jsp" />
+            <s:include value="/WEB-INF/plugins/jpwidgetutils/apsadmin/jsp/portal/specialwidget/replicator/treeBuilder-request-page.jsp" />
         </s:iterator>
     </ul>
 </s:if>

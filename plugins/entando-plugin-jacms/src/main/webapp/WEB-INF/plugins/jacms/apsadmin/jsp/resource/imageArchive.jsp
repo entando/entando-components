@@ -151,7 +151,6 @@
                 </a>
             </div>
         </s:else>
-
         <div class="toolbar-pf">
             <div class="toolbar-pf-action-right mt-10">
                 <div class="form-group toolbar-pf-view-selector" id="TabList">
@@ -166,10 +165,14 @@
             </div>
         </div>
     </div>
+    
+    <s:set var="maxSizeVar" value="10" />
+    <s:set var="paginatedResourceIdsVar" value="%{getPaginatedResourcesId(#maxSizeVar)}" />
+    <s:set var="resourceIdsVar" value="#paginatedResourceIdsVar.list" />
+    <s:set var="pagerIdVar" value="%{getPagerId()}" />
 
     <div class="tab-content">
         <div id="table-view" class="tab-pane fade">
-
             <s:form action="search" class="container-fluid container-cards-pf">
                 <p class="sr-only">
                 <wpsf:hidden name="text"/>
@@ -182,14 +185,15 @@
                         <wpsf:hidden name="treeNodesToOpen" value="%{#treeNodeToOpenVar}"/>
                     </s:iterator>
                 </s:if>
+                <wpsf:hidden name="groupBy" />
+                <wpsf:hidden name="order" />
                 <wpsf:hidden name="contentOnSessionMarker"/>
                 </p>
-
-                <wpsa:subset source="resources" count="10" objectName="groupResource" advanced="true" offset="5">
+                <jacms:cmssubset pagerId="#pagerIdVar" total="%{#paginatedResourceIdsVar.count}" maxSize="#maxSizeVar" objectName="groupResource" offset="5">
                     <div class="row row-cards-pf">
                         <s:set var="group" value="#groupResource"/>
                         <s:set var="imageDimensionsVar" value="imageDimensions"/>
-                        <s:iterator var="resourceid" status="status">
+                        <s:iterator var="resourceid" status="status" value="#resourceIdsVar" >
                             <s:set var="resource" value="%{loadResource(#resourceid)}"/>
                             <s:set var="resourceInstance" value='%{#resource.getInstance(0,null)}'/>
                             <s:set var="URLoriginal" value="%{#resource.getImagePath(0)}"/>
@@ -246,25 +250,27 @@
                                                     </s:if>
                                                 </ul>
                                             </div>
-
                                         </div>
-
                                         <div class="card-pf-top-element">
                                                 <%-- Dimension forced for img thumbnail --%>
                                             <img src="<s:property value="%{(null != #resource.getImagePath(1)) ? #resource.getImagePath(1) : #resource.getImagePath(0)}"/>" alt=" "
                                                  style="height:90px;max-width:130px" class="img-responsive center-block"/>
                                         </div>
                                         <h2 class="card-pf-title text-center">
-                                            <s:set var="fileNameVar" value="#resource.masterFileName"/>
-                                            <s:if test='%{#fileNameVar.length()>15}'>
-                                                <s:set var="fileNameVar"
-                                                       value='%{#fileNameVar.substring(0,7)+"..."+#fileNameVar.substring(#fileNameVar.length()-5)}'/>
-                                                <s:property value="#fileNameVar"/>
-                                            </s:if>
-                                            <s:else>
-                                                <s:property value="#fileNameVar"/>
-                                            </s:else>
+                                            <s:set var="fileDescriptionVar" value="#resource.description"/>
+                                            <s:if test='%{#fileDescriptionVar.length()>15}'>
+                                                <s:set var="fileDescriptionVar"
+                                                       value='%{#fileDescriptionVar.substring(0,7)+"..."+#fileDescriptionVar.substring(#fileDescriptionVar.length()-5)}'/>
+                                                <s:property value="#fileDescriptionVar"/>
+                                            </s:if><s:else><s:property value="#fileDescriptionVar"/></s:else>
                                             <div class="creation-dates-card">
+                                                <s:text name="label.filename" />&nbsp;
+                                                <s:set var="fileNameVar" value="#resource.masterFileName"/>
+                                                <s:if test='%{#fileNameVar.length()>15}'>
+                                                    <s:set var="fileNameVar"
+                                                           value='%{#fileNameVar.substring(0,7)+"..."+#fileNameVar.substring(#fileNameVar.length()-5)}'/>
+                                                    <s:property value="#fileNameVar"/>
+                                                </s:if><s:else><s:property value="#fileNameVar"/></s:else><br />
                                                 <s:text name="label.creationDate" />&nbsp;<s:date name="#resource.creationDate" format="dd/MM/yyyy HH:mm" /><br />
                                                 <s:text name="label.lastModified" />&nbsp;<s:date name="#resource.lastModified" format="dd/MM/yyyy HH:mm" />
                                             </div>
@@ -278,7 +284,7 @@
                         <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" />
                         <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp" />
                     </div>
-                </wpsa:subset>
+                </jacms:cmssubset>
             </s:form>
         </div>
         <div id="list-view" class="tab-pane fade in active">
@@ -294,15 +300,15 @@
                         <wpsf:hidden name="treeNodesToOpen" value="%{#treeNodeToOpenVar}"/>
                     </s:iterator>
                 </s:if>
+                <wpsf:hidden name="groupBy" />
+                <wpsf:hidden name="order" />
                 <wpsf:hidden name="contentOnSessionMarker"/>
                 </p>
-                <wpsa:subset source="resources" count="10" objectName="groupResource" advanced="true" offset="5">
-
-
+                <jacms:cmssubset pagerId="#pagerIdVar" total="%{#paginatedResourceIdsVar.count}" maxSize="#maxSizeVar" objectName="groupResource" offset="5">
                     <div class="list-group list-view-pf list-view-pf-view">
                         <s:set var="group" value="#groupResource"/>
                         <s:set var="imageDimensionsVar" value="imageDimensions"/>
-                        <s:iterator var="resourceid" status="status">
+                        <s:iterator var="resourceid" status="status" value="#resourceIdsVar" >
                             <s:set var="resource" value="%{loadResource(#resourceid)}"/>
                             <s:set var="resourceInstance" value='%{#resource.getInstance(0,null)}'/>
                             <s:set var="URLoriginal" value="%{#resource.getImagePath(0)}"/>
@@ -323,7 +329,6 @@
                                 <s:param name="ownerGroupName" value="%{ownerGroupName}"/>
                                 <s:param name="treeNodesToOpen" value="%{treeNodesToOpen}"/>
                             </s:url>
-
                             <div class="list-group-item">
                                 <div class="list-view-pf-actions">
                                     <div class="dropdown pull-right dropdown-kebab-pf">
@@ -362,19 +367,20 @@
                                     <div class="list-view-pf-body">
                                         <div class="list-view-pf">
                                             <div class="list-group-item-heading" style="font-size: 16px">
+                                                <s:set var="descriptionVar" value="%{#resource.description}" />
+                                                <s:if test='%{#descriptionVar.length()>90}'>
+                                                    <s:set var="descriptionVar"
+                                                           value='%{#descriptionVar.substring(0,30) + "..." + #descriptionVar.substring(#descriptionVar.length()-30)}'/>
+                                                    <s:property value="#descriptionVar"/>
+                                                </s:if><s:else><s:property value="#descriptionVar"/></s:else>
+                                            </div>
+                                            <div class="list-group-item-text">
                                                 <s:set var="fileNameVar" value="#resource.masterFileName"/>
-                                                <s:set var="fileDescVar" value="#resource.description"/>
                                                 <s:if test='%{#fileNameVar.length()>24}'>
                                                     <s:set var="fileNameVar"
                                                            value='%{#fileNameVar.substring(0,10)+"..."+#fileNameVar.substring(#fileNameVar.length()-10)}'/>
                                                     <s:property value="#fileNameVar"/>
-                                                </s:if>
-                                                <s:else>
-                                                    <s:property value="#fileNameVar"/>
-                                                </s:else>
-                                            </div>
-                                            <div class="list-group-item-text">
-                                                <s:property value="#fileDescVar"/>
+                                                </s:if><s:else><s:property value="#fileNameVar"/></s:else>
                                             </div>
                                             <div class="creation-dates">
                                                 <div class="list-date">
@@ -423,12 +429,11 @@
                         <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" />
                         <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formBlock.jsp" />
                     </div>
-                </wpsa:subset>
+                </jacms:cmssubset>
             </s:form>
         </div>
     </div>
     <script>
-
         $('#TabList button').click(function (e) {
             e.preventDefault();
             $(this).tab('show');
@@ -437,7 +442,6 @@
             var id = $(e.target).attr("href").substr(1);
             window.location.hash = id;
         });
-
         $('.filters a').click(function (e) {
             e.preventDefault();
             var newhash = window.location.hash;
@@ -447,8 +451,7 @@
         });
         var hash = window.location.hash;
         $('#TabList button[href="' + hash + '"]').tab('show');
-    </script>      
-
+    </script>
     <wp:ifauthorized permission="superuser">
         <s:if test="!onEditContent">
             <s:action name="openAdminProspect" namespace="/do/jacms/Resource/Admin" ignoreContextParams="true"

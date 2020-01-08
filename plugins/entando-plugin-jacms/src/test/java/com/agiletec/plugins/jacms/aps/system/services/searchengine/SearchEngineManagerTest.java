@@ -13,17 +13,22 @@
  */
 package com.agiletec.plugins.jacms.aps.system.services.searchengine;
 
+import static org.mockito.Mockito.when;
+
 import com.agiletec.aps.system.common.IManager;
 import com.agiletec.aps.system.common.entity.event.EntityTypesChangingEvent;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
+import com.agiletec.aps.system.common.tree.ITreeNode;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.apsadmin.system.ITreeAction;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.event.PublicContentChangedEvent;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
@@ -31,7 +36,6 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 
 /**
@@ -184,6 +188,7 @@ public class SearchEngineManagerTest {
     @Test
     public void testSearchIds() throws Exception {
         when(this.searcherDao.searchContentsId(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(new ArrayList<>(Arrays.asList("Art123", "Art456")));
+        when(this.factory.checkCurrentSubfolder()).thenReturn(Boolean.TRUE);
         List<String> resources = this.searchEngineManager.searchEntityId("it", "test", Arrays.asList("group1", "group2"));
         Assert.assertEquals(2, resources.size());
     }
@@ -191,6 +196,7 @@ public class SearchEngineManagerTest {
     @Test(expected = ApsSystemException.class)
     public void testSearchIds_withErrors() throws Exception {
         Mockito.doThrow(ApsSystemException.class).when(this.searcherDao).searchContentsId(Mockito.any(), Mockito.any(), Mockito.any());
+        when(this.factory.checkCurrentSubfolder()).thenReturn(Boolean.TRUE);
         this.searchEngineManager.searchEntityId("it", "test", Arrays.asList("group1", "group2"));
     }
 

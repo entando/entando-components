@@ -13,6 +13,7 @@
  */
 package com.agiletec.plugins.jacms.aps.system.services.content;
 
+import com.agiletec.aps.system.SystemConstants;
 import java.sql.BatchUpdateException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -35,12 +36,13 @@ import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.util.EntityAttributeIterator;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.Category;
+import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.util.DateConverter;
-import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.CmsAttributeReference;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentRecordVO;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.IReferenceableAttribute;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * DAO class for objects of type content.
@@ -51,6 +53,101 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 
 	private static final Logger _logger = LoggerFactory.getLogger(ContentDAO.class);
 
+	private final String DELETE_CONTENT = "DELETE FROM contents WHERE contentid = ? ";
+
+	private final String DELETE_CONTENT_REL_RECORD = "DELETE FROM contentrelations WHERE contentid = ? ";
+
+	private final String DELETE_WORK_CONTENT_REL_RECORD = "DELETE FROM workcontentrelations WHERE contentid = ? ";
+
+	private final String ADD_CONTENT_SEARCH_RECORD = "INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) "
+			+ "VALUES ( ? , ? , ? , ? , ? , ? )";
+
+	private final String DELETE_CONTENT_SEARCH_RECORD = "DELETE FROM contentsearch WHERE contentid = ? ";
+
+	private final String ADD_WORK_CONTENT_SEARCH_RECORD = "INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) "
+			+ "VALUES ( ? , ? , ? , ? , ? , ? )";
+
+	private final String DELETE_WORK_CONTENT_SEARCH_RECORD = "DELETE FROM workcontentsearch WHERE contentid = ? ";
+
+	private final String ADD_CONTENT_REL_RECORD = "INSERT INTO contentrelations "
+			+ "(contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ( ? , ? , ? , ? , ? , ? )";
+
+	private final String ADD_WORK_CONTENT_REL_RECORD = "INSERT INTO workcontentrelations (contentid, refcategory) VALUES ( ? , ? )";
+
+	private final String LOAD_CONTENTS_ID_MAIN_BLOCK = "SELECT DISTINCT contents.contentid FROM contents ";
+
+	private final String LOAD_REFERENCED_CONTENTS_FOR_PAGE = LOAD_CONTENTS_ID_MAIN_BLOCK
+			+ " RIGHT JOIN contentrelations ON contents.contentid = contentrelations.contentid WHERE refpage = ? "
+			+ "ORDER BY contents.contentid";
+
+	private final String LOAD_REFERENCED_CONTENTS_FOR_CONTENT = LOAD_CONTENTS_ID_MAIN_BLOCK
+			+ " RIGHT JOIN contentrelations ON contents.contentid = contentrelations.contentid WHERE refcontent = ? "
+			+ "ORDER BY contents.contentid";
+
+	private final String LOAD_REFERENCED_CONTENTS_FOR_GROUP = LOAD_CONTENTS_ID_MAIN_BLOCK
+			+ " RIGHT JOIN contentrelations ON contents.contentid = contentrelations.contentid WHERE refgroup = ? "
+			+ "ORDER BY contents.contentid";
+
+	private final String LOAD_REFERENCED_CONTENTS_FOR_RESOURCE = LOAD_CONTENTS_ID_MAIN_BLOCK
+			+ " RIGHT JOIN contentrelations ON contents.contentid = contentrelations.contentid WHERE refresource = ? "
+			+ "ORDER BY contents.contentid";
+
+	private final String LOAD_REFERENCED_CONTENTS_FOR_CATEGORY = LOAD_CONTENTS_ID_MAIN_BLOCK
+			+ " RIGHT JOIN contentrelations ON contents.contentid = contentrelations.contentid WHERE refcategory = ? "
+			+ "ORDER BY contents.contentid";
+
+	private final String LOAD_CONTENTS_VO_MAIN_BLOCK = "SELECT contents.contentid, contents.contenttype, contents.descr, "
+            + "contents.status, contents.workxml, contents.created, contents.lastmodified, contents.onlinexml, contents.published, "
+            + "contents.sync, contents.maingroup, contents.currentversion, contents.firsteditor, contents.lasteditor, contents.restriction FROM contents ";
+
+	private final String LOAD_CONTENT_VO = LOAD_CONTENTS_VO_MAIN_BLOCK + " WHERE contents.contentid = ? ";
+
+	private final String ADD_CONTENT = "INSERT INTO contents (contentid, contenttype, descr, status, workxml, "
+			+ "created, lastmodified, sync, maingroup, currentversion, firsteditor, lasteditor, restriction) "
+			+ "VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ?)";
+
+	private final String INSERT_ONLINE_CONTENT = "UPDATE contents SET contenttype = ? , descr = ? , status = ? , "
+			+ "workxml = ? , lastmodified = ? , onlinexml = ? , published = ? , sync = ? , maingroup = ? , currentversion = ? , lasteditor = ? , "
+			+ "restriction = ? WHERE contentid = ? ";
+
+	private final String INSERT_ONLINE_CONTENT_WITHOUT_DATE = "UPDATE contents SET contenttype = ? , descr = ? , status = ? , "
+			+ "workxml = ? , onlinexml = ? , sync = ? , maingroup = ? , currentversion = ? , lasteditor = ? , restriction = ? WHERE contentid = ? ";
+
+	private final String REMOVE_ONLINE_CONTENT = "UPDATE contents SET onlinexml = ? , published = ? , sync = ? , "
+            + "status = ? , workxml = ? , lastmodified = ? , currentversion = ? , lasteditor = ? , restriction = ? WHERE contentid = ? ";
+
+	private final String REMOVE_ONLINE_CONTENT_WITHOUT_DATE = "UPDATE contents SET onlinexml = ? , sync = ? , "
+            + "status = ? , workxml = ? , currentversion = ? , lasteditor = ? , restriction = ? WHERE contentid = ? ";
+
+	private final String UPDATE_CONTENT = "UPDATE contents SET contenttype = ? , descr = ? , status = ? , "
+			+ "workxml = ? , sync = ? , lastmodified = ? , maingroup = ? , currentversion = ? , lasteditor = ? , restriction = ? " + "WHERE contentid = ? ";
+
+	private final String UPDATE_CONTENT_WITHOUT_DATE = "UPDATE contents SET contenttype = ? , descr = ? , status = ? , "
+			+ "workxml = ? , sync = ? , maingroup = ? , currentversion = ? , lasteditor = ? , restriction = ? " + "WHERE contentid = ? ";
+
+	private final String LOAD_ALL_CONTENTS_ID = "SELECT contentid FROM contents";
+
+	private final String ADD_ATTRIBUTE_ROLE_RECORD = "INSERT INTO contentattributeroles (contentid, attrname, rolename) VALUES ( ? , ? , ? )";
+
+	private final String DELETE_ATTRIBUTE_ROLE_RECORD = "DELETE FROM contentattributeroles WHERE contentid = ? ";
+
+	private final String ADD_WORK_ATTRIBUTE_ROLE_RECORD = "INSERT INTO workcontentattributeroles (contentid, attrname, rolename) VALUES ( ? , ? , ? )";
+
+	private final String DELETE_WORK_ATTRIBUTE_ROLE_RECORD = "DELETE FROM workcontentattributeroles WHERE contentid = ? ";
+    
+	private static final String COUNT_OFFLINE_CONTENTS = 
+            "SELECT count(contents.contentid) from contents WHERE contents.sync = 0 and onlinexml is null";
+
+	private static final String COUNT_ONLINE_CONTENTS = 
+            "SELECT count(contentid) from contents WHERE contents.sync = 1";
+
+	private static final String COUNT_ONLINE_CONTENTS_WITH_DIFFS = 
+            "SELECT count(contents.contentid) from contents WHERE contents.sync = 0 and onlinexml is not null";
+    
+    private static final String LOAD_LAST_MODIFIED_DATE  = "SELECT MAX(lastmodified) FROM contents";
+    
+    private ICategoryManager categoryManager;
+
 	@Override
 	protected String getLoadEntityRecordQuery() {
 		return LOAD_CONTENT_VO;
@@ -58,25 +155,25 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 
 	@Override
 	protected ApsEntityRecord createEntityRecord(ResultSet res) throws Throwable {
-		ContentRecordVO contentVo = new ContentRecordVO();
-		contentVo.setId(res.getString(1));
-		contentVo.setTypeCode(res.getString(2));
-		contentVo.setDescription(res.getString(3));
-		contentVo.setStatus(res.getString(4));
-		String xmlWork = res.getString(5);
-		contentVo.setCreate(DateConverter.parseDate(res.getString(6), JacmsSystemConstants.CONTENT_METADATA_DATE_FORMAT));
-		contentVo.setModify(DateConverter.parseDate(res.getString(7), JacmsSystemConstants.CONTENT_METADATA_DATE_FORMAT));
-		String xmlOnLine = res.getString(8);
-		contentVo.setOnLine(null != xmlOnLine && xmlOnLine.length() > 0);
-		contentVo.setSync(xmlWork.equals(xmlOnLine));
-		String mainGroupCode = res.getString(9);
-		contentVo.setMainGroupCode(mainGroupCode);
+        ContentRecordVO contentVo = new ContentRecordVO();
+		contentVo.setId(res.getString("contentid"));
+		contentVo.setTypeCode(res.getString("contenttype"));
+		contentVo.setDescription(res.getString("descr"));
+		contentVo.setStatus(res.getString("status"));
+		String xmlWork = res.getString("workxml");
+		contentVo.setCreate(DateConverter.parseDate(res.getString("created"), SystemConstants.DATA_TYPE_METADATA_DATE_FORMAT));
+		contentVo.setModify(DateConverter.parseDate(res.getString("lastmodified"), SystemConstants.DATA_TYPE_METADATA_DATE_FORMAT));
+		contentVo.setPublish(DateConverter.parseDate(res.getString("published"), SystemConstants.DATA_TYPE_METADATA_DATE_FORMAT));
+		String xmlOnLine = res.getString("onlinexml");
+		contentVo.setOnLine(!StringUtils.isBlank(xmlOnLine));
+		contentVo.setSync(res.getInt("sync") == 1);
+		contentVo.setMainGroupCode(res.getString("maingroup"));
 		contentVo.setXmlWork(xmlWork);
 		contentVo.setXmlOnLine(xmlOnLine);
-		contentVo.setVersion(res.getString(10));
-		contentVo.setFirstEditor(res.getString(11));
-		contentVo.setLastEditor(res.getString(12));
-		contentVo.setRestriction(res.getString(13));
+		contentVo.setVersion(res.getString("currentversion"));
+		contentVo.setFirstEditor(res.getString("firsteditor"));
+		contentVo.setLastEditor(res.getString("lasteditor"));
+		contentVo.setRestriction(res.getString("restriction"));
 		return contentVo;
 	}
 
@@ -90,7 +187,7 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 	protected String getAddEntityRecordQuery() {
 		return ADD_CONTENT;
 	}
-
+    
 	@Override
 	protected void buildAddEntityStatement(IApsEntity entity, PreparedStatement stat) throws Throwable {
 		Content content = (Content) entity;
@@ -99,14 +196,15 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 		stat.setString(3, content.getDescription());
 		stat.setString(4, content.getStatus());
 		stat.setString(5, content.getXML());
-		String currentDate = DateConverter.getFormattedDate(new Date(), JacmsSystemConstants.CONTENT_METADATA_DATE_FORMAT);
+		String currentDate = DateConverter.getFormattedDate(new Date(), SystemConstants.DATA_TYPE_METADATA_DATE_FORMAT);
 		stat.setString(6, currentDate);
 		stat.setString(7, currentDate);
-		stat.setString(8, content.getMainGroup());
-		stat.setString(9, content.getVersion());
-		stat.setString(10, content.getFirstEditor());
-		stat.setString(11, content.getLastEditor());
-		stat.setString(12, content.getRestriction());
+		stat.setInt(8, 0);
+		stat.setString(9, content.getMainGroup());
+		stat.setString(10, content.getVersion());
+		stat.setString(11, content.getFirstEditor());
+		stat.setString(12, content.getLastEditor());
+		stat.setString(13, content.getRestriction());
 	}
 
 	@Override
@@ -177,8 +275,9 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 		stat.setString(index++, content.getDescription());
 		stat.setString(index++, content.getStatus());
 		stat.setString(index++, content.getXML());
+		stat.setInt(index++, 0);
 		if (updateDate) {
-			stat.setString(index++, DateConverter.getFormattedDate(new Date(), JacmsSystemConstants.CONTENT_METADATA_DATE_FORMAT));
+			stat.setString(index++, DateConverter.getFormattedDate(new Date(), SystemConstants.DATA_TYPE_METADATA_DATE_FORMAT));
 		}
 		stat.setString(index++, content.getMainGroup());
 		stat.setString(index++, content.getVersion());
@@ -266,10 +365,15 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 			stat.setString(index++, content.getStatus());
 			String xml = content.getXML();
 			stat.setString(index++, xml);
+            String cuttentDateString = DateConverter.getFormattedDate(new Date(), SystemConstants.DATA_TYPE_METADATA_DATE_FORMAT);
 			if (updateDate) {
-				stat.setString(index++, DateConverter.getFormattedDate(new Date(), JacmsSystemConstants.CONTENT_METADATA_DATE_FORMAT));
+				stat.setString(index++, cuttentDateString);
 			}
 			stat.setString(index++, xml);
+            if (updateDate) {
+				stat.setString(index++, cuttentDateString);
+			}
+            stat.setInt(index++, 1);
 			stat.setString(index++, content.getMainGroup());
 			stat.setString(index++, content.getVersion());
 			stat.setString(index++, content.getLastEditor());
@@ -401,10 +505,13 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 			}
 			int index = 1;
 			stat.setString(index++, null);
+			stat.setString(index++, null);
+			stat.setInt(index++, 0);
 			stat.setString(index++, content.getStatus());
 			stat.setString(index++, content.getXML());
+            String cuttentDateString = DateConverter.getFormattedDate(new Date(), SystemConstants.DATA_TYPE_METADATA_DATE_FORMAT);
 			if (updateDate) {
-				stat.setString(index++, DateConverter.getFormattedDate(new Date(), JacmsSystemConstants.CONTENT_METADATA_DATE_FORMAT));
+				stat.setString(index++, cuttentDateString);
 			}
 			stat.setString(index++, content.getVersion());
 			stat.setString(index++, content.getLastEditor());
@@ -465,14 +572,14 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 			}
 		}
 	}
-
-	private void addCategoryCode(Category category, Set<String> codes) {
-		codes.add(category.getCode());
-		Category parentCategory = (Category) category.getParent();
-		if (null != parentCategory && !parentCategory.getCode().equals(parentCategory.getParentCode())) {
-			this.addCategoryCode(parentCategory, codes);
-		}
-	}
+    
+    private void addCategoryCode(Category category, Set<String> codes) {
+        codes.add(category.getCode());
+        Category parentCategory = this.getCategoryManager().getCategory(category.getParentCode());
+        if (null != parentCategory && !parentCategory.getCode().equals(parentCategory.getParentCode())) {
+            this.addCategoryCode(parentCategory, codes);
+        }
+    }
 
 	private void addGroupRelationsRecord(Content content, PreparedStatement stat) throws ApsSystemException {
 		try {
@@ -635,7 +742,7 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 
 	protected List<String> getUtilizers(String referencedObjectCode, String query) throws Throwable {
 		Connection conn = null;
-		List<String> contentIds = new ArrayList<String>();
+		List<String> contentIds = new ArrayList<>();
 		PreparedStatement stat = null;
 		ResultSet res = null;
 		try {
@@ -666,7 +773,7 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 			int online = this.loadContentStatus(conn, COUNT_ONLINE_CONTENTS);
 			int offline = this.loadContentStatus(conn, COUNT_OFFLINE_CONTENTS);
 			int withDiffs = this.loadContentStatus(conn, COUNT_ONLINE_CONTENTS_WITH_DIFFS);
-			Date lastModified = this.loadContentStatusLastModified(conn, LOAD_LAST_MODIFIED);
+			Date lastModified = this.loadContentStatusLastModified(conn, LOAD_LAST_MODIFIED_DATE);
 			status = new ContentsStatus();
 			status.setDraft(offline);
 			status.setOnline(online);
@@ -692,7 +799,8 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 				count = res.getInt(1);
 			}
 		} catch (Throwable t) {
-			_logger.error("Error loading contents status. If you are runing Entando backed by Apache Derby it's a known issue");
+            _logger.error("Error loading contents status ", t);
+			throw new RuntimeException("Error loading contents status", t);
 		} finally {
 			closeDaoResources(res, stat);
 		}
@@ -707,8 +815,8 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 			stat = conn.prepareStatement(query);
 			res = stat.executeQuery();
 			if (res.next()) {
-				String lastMod = res.getString("lastmodified");
-				lastModified = DateConverter.parseDate(lastMod, JacmsSystemConstants.CONTENT_METADATA_DATE_FORMAT);
+				String lastMod = res.getString(1);
+				lastModified = DateConverter.parseDate(lastMod, SystemConstants.DATA_TYPE_METADATA_DATE_FORMAT);
 			}
 		} catch (Throwable t) {
 			_logger.error("Error loading contents status last modified date", t);
@@ -744,97 +852,12 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 		return LOAD_ALL_CONTENTS_ID;
 	}
 
-	private final String DELETE_CONTENT = "DELETE FROM contents WHERE contentid = ? ";
+    protected ICategoryManager getCategoryManager() {
+        return categoryManager;
+    }
 
-	private final String DELETE_CONTENT_REL_RECORD = "DELETE FROM contentrelations WHERE contentid = ? ";
-
-	private final String DELETE_WORK_CONTENT_REL_RECORD = "DELETE FROM workcontentrelations WHERE contentid = ? ";
-
-	private final String ADD_CONTENT_SEARCH_RECORD = "INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) "
-			+ "VALUES ( ? , ? , ? , ? , ? , ? )";
-
-	private final String DELETE_CONTENT_SEARCH_RECORD = "DELETE FROM contentsearch WHERE contentid = ? ";
-
-	private final String ADD_WORK_CONTENT_SEARCH_RECORD = "INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) "
-			+ "VALUES ( ? , ? , ? , ? , ? , ? )";
-
-	private final String DELETE_WORK_CONTENT_SEARCH_RECORD = "DELETE FROM workcontentsearch WHERE contentid = ? ";
-
-	private final String ADD_CONTENT_REL_RECORD = "INSERT INTO contentrelations "
-			+ "(contentid, refpage, refcontent, refresource, refcategory, refgroup) " + "VALUES ( ? , ? , ? , ? , ? , ? )";
-
-	private final String ADD_WORK_CONTENT_REL_RECORD = "INSERT INTO workcontentrelations (contentid, refcategory) VALUES ( ? , ? )";
-
-	private final String LOAD_CONTENTS_ID_MAIN_BLOCK = "SELECT DISTINCT contents.contentid FROM contents ";
-
-	private final String LOAD_REFERENCED_CONTENTS_FOR_PAGE = LOAD_CONTENTS_ID_MAIN_BLOCK
-			+ " RIGHT JOIN contentrelations ON contents.contentid = contentrelations.contentid WHERE refpage = ? "
-			+ "ORDER BY contents.contentid";
-
-	private final String LOAD_REFERENCED_CONTENTS_FOR_CONTENT = LOAD_CONTENTS_ID_MAIN_BLOCK
-			+ " RIGHT JOIN contentrelations ON contents.contentid = contentrelations.contentid WHERE refcontent = ? "
-			+ "ORDER BY contents.contentid";
-
-	private final String LOAD_REFERENCED_CONTENTS_FOR_GROUP = LOAD_CONTENTS_ID_MAIN_BLOCK
-			+ " RIGHT JOIN contentrelations ON contents.contentid = contentrelations.contentid WHERE refgroup = ? "
-			+ "ORDER BY contents.contentid";
-
-	private final String LOAD_REFERENCED_CONTENTS_FOR_RESOURCE = LOAD_CONTENTS_ID_MAIN_BLOCK
-			+ " RIGHT JOIN contentrelations ON contents.contentid = contentrelations.contentid WHERE refresource = ? "
-			+ "ORDER BY contents.contentid";
-
-	private final String LOAD_REFERENCED_CONTENTS_FOR_CATEGORY = LOAD_CONTENTS_ID_MAIN_BLOCK
-			+ " RIGHT JOIN contentrelations ON contents.contentid = contentrelations.contentid WHERE refcategory = ? "
-			+ "ORDER BY contents.contentid";
-
-	private final String LOAD_CONTENTS_VO_MAIN_BLOCK = "SELECT contents.contentid, contents.contenttype, contents.descr, contents.status, "
-			+ "contents.workxml, contents.created, contents.lastmodified, contents.onlinexml, contents.maingroup, "
-			+ "contents.currentversion, contents.firsteditor, contents.lasteditor, contents.restriction " + "FROM contents ";
-
-	private final String LOAD_CONTENT_VO = LOAD_CONTENTS_VO_MAIN_BLOCK + " WHERE contents.contentid = ? ";
-
-	private final String ADD_CONTENT = "INSERT INTO contents (contentid, contenttype, descr, status, workxml, "
-			+ "created, lastmodified, maingroup, currentversion, firsteditor, lasteditor, restriction) "
-			+ "VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ?, ?)";
-
-	private final String INSERT_ONLINE_CONTENT = "UPDATE contents SET contenttype = ? , descr = ? , status = ? , "
-			+ "workxml = ? , lastmodified = ? , onlinexml = ? , maingroup = ? , currentversion = ? , lasteditor = ? "
-			+ ", restriction = ? WHERE contentid = ? ";
-
-	private final String INSERT_ONLINE_CONTENT_WITHOUT_DATE = "UPDATE contents SET contenttype = ? , descr = ? , status = ? , "
-			+ "workxml = ? , onlinexml = ? , maingroup = ? , currentversion = ? , lasteditor = ? , restriction = ? "
-			+ "WHERE contentid = ? ";
-
-	private final String REMOVE_ONLINE_CONTENT = "UPDATE contents SET onlinexml = ? , status = ? , "
-			+ "workxml = ? , lastmodified = ? , currentversion = ? , lasteditor = ? , restriction = ? WHERE contentid = ? ";
-
-	private final String REMOVE_ONLINE_CONTENT_WITHOUT_DATE = "UPDATE contents SET onlinexml = ? , status = ? , "
-			+ "workxml = ? , currentversion = ? , lasteditor = ? , restriction = ? WHERE contentid = ? ";
-
-	private final String UPDATE_CONTENT = "UPDATE contents SET contenttype = ? , descr = ? , status = ? , "
-			+ "workxml = ? , lastmodified = ? , maingroup = ? , currentversion = ? , lasteditor = ? , restriction = ? " + "WHERE contentid = ? ";
-
-	private final String UPDATE_CONTENT_WITHOUT_DATE = "UPDATE contents SET contenttype = ? , descr = ? , status = ? , "
-			+ "workxml = ? , maingroup = ? , currentversion = ? , lasteditor = ? , restriction = ? " + "WHERE contentid = ? ";
-
-	private final String LOAD_ALL_CONTENTS_ID = "SELECT contentid FROM contents";
-
-	private final String ADD_ATTRIBUTE_ROLE_RECORD = "INSERT INTO contentattributeroles (contentid, attrname, rolename) VALUES ( ? , ? , ? )";
-
-	private final String DELETE_ATTRIBUTE_ROLE_RECORD = "DELETE FROM contentattributeroles WHERE contentid = ? ";
-
-	private final String ADD_WORK_ATTRIBUTE_ROLE_RECORD = "INSERT INTO workcontentattributeroles (contentid, attrname, rolename) VALUES ( ? , ? , ? )";
-
-	private final String DELETE_WORK_ATTRIBUTE_ROLE_RECORD = "DELETE FROM workcontentattributeroles WHERE contentid = ? ";
-
-	private static final String COUNT_OFFLINE_CONTENTS = "SELECT count(contentid) FROM contents " + "WHERE onlinexml IS NULL";
-
-	private static final String COUNT_ONLINE_CONTENTS = "SELECT count(contentid) FROM contents "
-			+ "WHERE onlinexml IS NOT NULL AND onlinexml = workxml";
-
-	private static final String COUNT_ONLINE_CONTENTS_WITH_DIFFS = "SELECT count(contentid) FROM contents "
-			+ "WHERE onlinexml IS NOT NULL AND onlinexml <> workxml";
-
-	private final String LOAD_LAST_MODIFIED = LOAD_CONTENTS_VO_MAIN_BLOCK + "order by contents.lastmodified desc";
+    public void setCategoryManager(ICategoryManager categoryManager) {
+        this.categoryManager = categoryManager;
+    }
 
 }

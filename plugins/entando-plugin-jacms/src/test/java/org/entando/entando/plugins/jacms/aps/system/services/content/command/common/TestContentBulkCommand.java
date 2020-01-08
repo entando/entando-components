@@ -140,7 +140,6 @@ public class TestContentBulkCommand extends BaseTestCase {
         cat.setDefaultLang("it");
         cat.setCode("cat_" + id);
         Category parent = categoryManager.getCategory("cat1");
-        cat.setParent(parent);
         cat.setParentCode(parent.getCode());
         ApsProperties titles = new ApsProperties();
         titles.put("it", "Titolo in Italiano per " + id);

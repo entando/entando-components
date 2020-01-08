@@ -21,7 +21,6 @@
  */
 package com.agiletec.plugins.jpcontentworkflow.apsadmin.content;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.SelectItem;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
@@ -33,20 +32,22 @@ import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author E.Santoboni
  */
 public class ContentAction extends com.agiletec.plugins.jacms.apsadmin.content.ContentAction {
 	
-	@Override
+	private static final Logger _logger = LoggerFactory.getLogger(ContentAction.class);
+    
+    @Override
 	protected String saveContent(boolean approve) {
-		Logger log = ApsSystemUtils.getLogger();
 		try {
 			Content currentContent = this.getContent();
 			if (null != currentContent) {
 				if (!this.getContentActionHelper().isUserAllowed(currentContent, this.getCurrentUser())) {
-					log.info("Utente non abilitato al salvataggio del contenuto " + currentContent.getId());
+					_logger.info("Utente non abilitato al salvataggio del contenuto " + currentContent.getId());
 					return USER_NOT_ALLOWED;
 				}
 				currentContent.setLastEditor(this.getCurrentUser().getUsername());
@@ -62,13 +63,13 @@ public class ContentAction extends com.agiletec.plugins.jacms.apsadmin.content.C
 				}
 				String sessionParamName = ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + this.getContentOnSessionMarker();
 				this.getRequest().getSession().removeAttribute(sessionParamName);
-				log.info("Salvato contenuto " + currentContent.getId() + 
+				_logger.info("Salvato contenuto " + currentContent.getId() + 
 						" - Descrizione: '" + currentContent.getDescription()+ "' - Utente: " + this.getCurrentUser().getUsername());
 			} else {
-				log.error("Tentativo Salvataggio/approvazione contenuto NULLO - Utente: " + this.getCurrentUser().getUsername());
+				_logger.error("Tentativo Salvataggio/approvazione contenuto NULLO - Utente: " + this.getCurrentUser().getUsername());
 			}
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "saveContent");
+		} catch (Exception e) {
+            _logger.error("Error extracting saving content", e);
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -79,7 +80,6 @@ public class ContentAction extends com.agiletec.plugins.jacms.apsadmin.content.C
 	 * @return Il codice del risultato dell'azione.
 	 */
 	public String previousStep() {
-		Logger log = ApsSystemUtils.getLogger();
 		try {
 			Content currentContent = this.updateContentOnSession();
 			if (null != currentContent) {
@@ -95,10 +95,10 @@ public class ContentAction extends com.agiletec.plugins.jacms.apsadmin.content.C
 					return INPUT;
 				}
 			} else {
-				log.error("Tentativo Salvataggio/approvazione contenuto NULLO - Utente: " + this.getCurrentUser().getUsername());
+				_logger.error("Tentativo Salvataggio/approvazione contenuto NULLO - Utente: " + this.getCurrentUser().getUsername());
 			}
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "prevStep");
+		} catch (Exception e) {
+            _logger.error("Error extracting prev step", e);
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -109,7 +109,6 @@ public class ContentAction extends com.agiletec.plugins.jacms.apsadmin.content.C
 	 * @return Il codice del risultato dell'azione.
 	 */
 	public String nextStep() {
-		Logger log = ApsSystemUtils.getLogger();
 		try {
 			Content currentContent = this.updateContentOnSession();
 			if (null != currentContent) {
@@ -125,10 +124,10 @@ public class ContentAction extends com.agiletec.plugins.jacms.apsadmin.content.C
 					return INPUT;
 				}
 			} else {
-				log.error("Tentativo Salvataggio/approvazione contenuto NULLO - Utente: " + this.getCurrentUser().getUsername());
+				_logger.error("Tentativo Salvataggio/approvazione contenuto NULLO - Utente: " + this.getCurrentUser().getUsername());
 			}
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "nextStep");
+		} catch (Exception e) {
+            _logger.error("Error extracting next step", e);
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -166,10 +165,13 @@ public class ContentAction extends com.agiletec.plugins.jacms.apsadmin.content.C
 	
 	@Override
 	public List<SelectItem> getAvalaibleStatus() {
-		List<SelectItem> items;
+		List<SelectItem> items = new ArrayList<>();
 		try {
 			Content content = this.getContent();
-			items = new ArrayList<SelectItem>(1);
+            if (null == content) {
+                _logger.warn("Null content on session");
+                return items;
+            }
 			String statusDescrKey = "name.contentStatus." +content.getStatus();
 			SelectItem item = null;
 			if (statusDescrKey.equals(this.getText(statusDescrKey))) {
@@ -184,9 +186,9 @@ public class ContentAction extends com.agiletec.plugins.jacms.apsadmin.content.C
 				item = new SelectItem(content.getStatus(), statusDescrKey);
 			}
 			items.add(item);
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getAvalaibleStatus");
-			throw new RuntimeException("Error in getAvalaibleStatus");
+		} catch (Exception e) {
+            _logger.error("Error extracting status", e);
+			throw new RuntimeException("Error in getAvalaibleStatus", e);
 		}
 		return items;
 	}

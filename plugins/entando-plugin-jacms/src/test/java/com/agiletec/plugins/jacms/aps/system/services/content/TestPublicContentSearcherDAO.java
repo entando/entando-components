@@ -36,7 +36,7 @@ public class TestPublicContentSearcherDAO extends BaseTestCase {
     public void testLoadContentsId_1() throws Throwable {
     	List<String> list = null;
 		try {
-			list = _contentSearcherDao.loadPublicContentsId("ART", null, null, null);
+			list = _contentSearcherDao.loadContentsId("ART", null, false, null, null);
 		} catch (Throwable t) {
 			throw t;
 		}
@@ -51,9 +51,9 @@ public class TestPublicContentSearcherDAO extends BaseTestCase {
     public void testLoadContentsId_2() throws Throwable {
 		List<String> list = null;
 		try {
-			List<String> groups = new ArrayList<String>();
+			List<String> groups = new ArrayList<>();
 			groups.add("customers");
-			list = _contentSearcherDao.loadPublicContentsId("ART", null, null, groups);
+			list = _contentSearcherDao.loadContentsId("ART", null, false, null, groups);
 		} catch (Throwable t) {
 			throw t;
 		}

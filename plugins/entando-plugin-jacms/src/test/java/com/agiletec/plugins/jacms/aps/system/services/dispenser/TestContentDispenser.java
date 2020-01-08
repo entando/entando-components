@@ -18,6 +18,7 @@ import org.entando.entando.aps.system.services.cache.CacheInfoManager;
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
@@ -43,23 +44,42 @@ public class TestContentDispenser extends BaseTestCase {
         assertEquals(this.replaceNewLine(_attendedEnART1_cached.trim()), this.replaceNewLine(outputInfo.getCachedRenderedContent().trim()));
         this._contentDispenser.resolveLinks(outputInfo, reqCtx);
         assertEquals(this.replaceNewLine(_attendedEnART1.trim()), this.replaceNewLine(outputInfo.getRenderedContent().trim()));
+        
+        ContentRenderizationInfo outputInfoForUser = this._contentDispenser.getRenderizationInfo("ART1", 2, "en", this.getUserOnSession(), false);
+        assertEquals(outputInfo.getCachedRenderedContent().trim(), outputInfoForUser.getCachedRenderedContent().trim());
 
         this.setUserOnSession("admin");
         outputInfo = this._contentDispenser.getRenderizationInfo("ART1", 2, "en", reqCtx);
         assertEquals(this.replaceNewLine(_attendedEnART1_cached.trim()), this.replaceNewLine(outputInfo.getCachedRenderedContent().trim()));
         this._contentDispenser.resolveLinks(outputInfo, reqCtx);
         assertEquals(this.replaceNewLine(_attendedEnART1.trim()), this.replaceNewLine(outputInfo.getRenderedContent().trim()));
-
+        
+        outputInfoForUser = this._contentDispenser.getRenderizationInfo("ART1", 2, "en", this.getUserOnSession(), false);
+        assertEquals(outputInfo.getCachedRenderedContent().trim(), outputInfoForUser.getCachedRenderedContent().trim());
+        
         outputInfo = this._contentDispenser.getRenderizationInfo("ART104", 2, "it", reqCtx);
         assertEquals(this.replaceNewLine(_attendedItART104_cached.trim()), this.replaceNewLine(outputInfo.getCachedRenderedContent().trim()));
-
+        
+        outputInfoForUser = this._contentDispenser.getRenderizationInfo("ART104", 2, "it", this.getUserOnSession(), false);
+        assertEquals(outputInfo.getCachedRenderedContent().trim(), outputInfoForUser.getCachedRenderedContent().trim());
+        
         this.setUserOnSession("editorCoach");
         outputInfo = this._contentDispenser.getRenderizationInfo("ART104", 2, "it", reqCtx);
         assertEquals(this.replaceNewLine(_attendedItART104_cached.trim()), this.replaceNewLine(outputInfo.getCachedRenderedContent().trim()));
+        
+        outputInfoForUser = this._contentDispenser.getRenderizationInfo("ART104", 2, "it", this.getUserOnSession(), false);
+        assertEquals(outputInfo.getCachedRenderedContent().trim(), outputInfoForUser.getCachedRenderedContent().trim());
 
         this.setUserOnSession("pageManagerCoach");
         outputInfo = this._contentDispenser.getRenderizationInfo("ART104", 2, "it", reqCtx);
         assertEquals(this.replaceNewLine(_attendedItART104_cached.trim()), this.replaceNewLine(outputInfo.getCachedRenderedContent().trim()));
+        
+        outputInfoForUser = this._contentDispenser.getRenderizationInfo("ART104", 2, "it", this.getUserOnSession(), false);
+        assertEquals(outputInfo.getCachedRenderedContent().trim(), outputInfoForUser.getCachedRenderedContent().trim());
+    }
+    
+    private UserDetails getUserOnSession() {
+        return (UserDetails) super.getRequestContext().getRequest().getSession().getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
     }
 
     public void testGetRenderedContent_2() throws Throwable {
@@ -86,22 +106,58 @@ public class TestContentDispenser extends BaseTestCase {
         assertEquals(this.replaceNewLine(_attendedEnART122_cached.trim()), this.replaceNewLine(outputInfo.getCachedRenderedContent().trim()));
     }
     
-    public void testGetRenderedContent_3() throws Throwable {
+    public void testGetRenderedContent_3_1() throws Throwable {
+        this.executeTestGetRenderedContent_3(Boolean.FALSE, false);
+        this.executeTestGetRenderedContent_3(Boolean.FALSE, true);
+    }
+    
+    public void testGetRenderedContent_3_2() throws Throwable {
+        this.executeTestGetRenderedContent_3(Boolean.TRUE, false);
+        this.executeTestGetRenderedContent_3(Boolean.TRUE, true);
+    }
+    
+    public void testGetRenderedContent_3_3() throws Throwable {
+        this.executeTestGetRenderedContent_3(null, false);
+    }
+    
+    protected void executeTestGetRenderedContent_3(Boolean cached, boolean useCurrentUser) throws Throwable {
         Content content = this._contentManager.loadContent("ART120", true);
         content.setId(null);
         try {
             RequestContext reqCtx = this.getRequestContext();
             this.setUserOnSession("admin");
+            UserDetails currentUser = (UserDetails) reqCtx.getRequest().getSession().getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
+            assertEquals("admin", currentUser.getUsername());
             this._contentManager.insertOnLineContent(content);
-            ContentRenderizationInfo outputInfo = this._contentDispenser.getRenderizationInfo(content.getId(), 2, "it", reqCtx);
+            String cacheKey = (useCurrentUser) ? 
+                    BaseContentDispenser.getRenderizationInfoCacheKey(content.getId(), 2, "it", reqCtx) :
+                    BaseContentDispenser.getRenderizationInfoCacheKey(content.getId(), 2, "it", currentUser);
+            assertNull(this._cacheInfoManager.getFromCache(ICacheInfoManager.DEFAULT_CACHE_NAME, cacheKey));
+            ContentRenderizationInfo outputInfo = null; 
+            if (null == cached) {
+                outputInfo = this._contentDispenser.getRenderizationInfo(content.getId(), 2, "it", reqCtx);
+            } else {
+                if (useCurrentUser) {
+                    outputInfo = this._contentDispenser.getRenderizationInfo(content.getId(), 2, "it", currentUser, cached);
+                } else {
+                    outputInfo = this._contentDispenser.getRenderizationInfo(content.getId(), 2, "it", reqCtx, cached);
+                }
+            }
             assertNotNull(outputInfo);
-            String cacheKey = BaseContentDispenser.getRenderizationInfoCacheKey(content.getId(), 2, "it", reqCtx);
             this.waitNotifyingThread();
-            assertNotNull(this._cacheInfoManager.getFromCache(ICacheInfoManager.DEFAULT_CACHE_NAME, cacheKey));
-            assertNotNull(this._cacheInfoManager.getFromCache(ICacheInfoManager.DEFAULT_CACHE_NAME, JacmsSystemConstants.CONTENT_AUTH_INFO_CACHE_PREFIX + content.getId()));
+            Object renderedInfoInCache = this._cacheInfoManager.getFromCache(ICacheInfoManager.DEFAULT_CACHE_NAME, cacheKey);
+            Object contentAuthInfoInCache = this._cacheInfoManager.getFromCache(ICacheInfoManager.DEFAULT_CACHE_NAME, JacmsSystemConstants.CONTENT_AUTH_INFO_CACHE_PREFIX + content.getId());
+            if (cached != null && !cached) {
+                assertNull(renderedInfoInCache);
+                assertNull(contentAuthInfoInCache);
+            } else {
+                assertNotNull(renderedInfoInCache);
+                assertNotNull(contentAuthInfoInCache);
+            }
             this._contentManager.insertOnLineContent(content);
             this.waitNotifyingThread();
             assertNull(this._cacheInfoManager.getFromCache(ICacheInfoManager.DEFAULT_CACHE_NAME, cacheKey));
+            assertNull(this._cacheInfoManager.getFromCache(ICacheInfoManager.DEFAULT_CACHE_NAME, JacmsSystemConstants.CONTENT_AUTH_INFO_CACHE_PREFIX + content.getId()));
         } catch (Throwable t) {
             throw t;
         } finally {
@@ -175,7 +231,7 @@ public class TestContentDispenser extends BaseTestCase {
         input = input.replaceAll("\\r", "");
         return input;
     }
-
+    
     private void init() throws Exception {
         try {
             this._contentDispenser = (IContentDispenser) this.getService(JacmsSystemConstants.CONTENT_DISPENSER_MANAGER);

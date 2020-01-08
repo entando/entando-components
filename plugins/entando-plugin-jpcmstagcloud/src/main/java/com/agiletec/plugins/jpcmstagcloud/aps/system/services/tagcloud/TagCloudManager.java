@@ -49,7 +49,7 @@ import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.aps.util.DateConverter;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
-import com.agiletec.plugins.jacms.aps.system.services.content.IPublicContentSearcherDAO;
+import com.agiletec.plugins.jacms.aps.system.services.content.IContentSearcherDAO;
 import com.agiletec.plugins.jacms.aps.system.services.content.event.PublicContentChangedEvent;
 import com.agiletec.plugins.jacms.aps.system.services.content.event.PublicContentChangedObserver;
 import com.agiletec.plugins.jpcmstagcloud.aps.system.JpcmstagcloudSystemConstants;
@@ -85,7 +85,6 @@ public class TagCloudManager extends AbstractService
 				titles.put(langCode, "Tag Cloud Root");
 			}
 			tagCloudRoot.setTitles(titles);
-			tagCloudRoot.setParent(root);
 			tagCloudRoot.setParentCode(root.getCode());
 			this.getCategoryManager().addCategory(tagCloudRoot);
 			_logger.debug("TagCloud category root Created ");
@@ -121,23 +120,23 @@ public class TagCloudManager extends AbstractService
 			Category root = this.getCategoryManager().getCategory(this.getTagCloudCategoryRoot());
 			if (root == null || root.getChildrenCodes() == null || root.getChildrenCodes().length == 0) {
 				_logger.error("Category Root '{}' null or dosn't has children", this.getTagCloudCategoryRoot());
-				return new HashMap<ITreeNode, Integer>();
+				return new HashMap<>();
 			}
 			Set<String> userGroupCodes = this.getGroupsForSearch(currentUser);
 			String key = this.createGroupMappingKey(userGroupCodes);
 			Map<String, Integer> cloudInfosSmall = this.getGlobalCloudInfos().get(key);
 			if (null == cloudInfosSmall) {
-				cloudInfosSmall = new HashMap<String, Integer>();
+				cloudInfosSmall = new HashMap<>();
 				this.getGlobalCloudInfos().put(key, cloudInfosSmall);
 				EntitySearchFilter[] filters = (null != this.getDelayDays() && this.getDelayDays().intValue() > 0) ? new EntitySearchFilter[]{this.getStartDateFilter()} : null;
 				String[] childrenCodes = root.getChildrenCodes();
 				for (int i = 0; i < childrenCodes.length; i++) {
 					Category child = this.getCategoryManager().getCategory(childrenCodes[i]);
-					List<String> contentsId = this.getTagCloudDAO().loadPublicContentsId(new String[]{child.getCode()}, filters, userGroupCodes);
+					List<String> contentsId = this.getTagCloudDAO().loadContentsId(new String[]{child.getCode()}, false, filters, userGroupCodes);
 					cloudInfosSmall.put(child.getCode(), new Integer(contentsId.size()));
 				}
 			}
-			cloudInfos = new HashMap<ITreeNode, Integer>(cloudInfosSmall.size());
+			cloudInfos = new HashMap<>(cloudInfosSmall.size());
 			Iterator<String> iterCodes = cloudInfosSmall.keySet().iterator();
 			while (iterCodes.hasNext()) {
 				String categoryCode = iterCodes.next();
@@ -170,7 +169,7 @@ public class TagCloudManager extends AbstractService
 			return Group.ADMINS_GROUP_NAME;
 		} else {
 			StringBuilder buffer = new StringBuilder();
-			List<String> groups = new ArrayList<String>(groupSet);
+			List<String> groups = new ArrayList<>(groupSet);
 			Collections.sort(groups);
 			for (int i = 0; i < groups.size(); i++) {
 				if (i > 0) {
@@ -183,7 +182,7 @@ public class TagCloudManager extends AbstractService
 	}
 
 	private Set<String> getGroupsForSearch(UserDetails currentUser) {
-		Set<String> groupForSearch = new HashSet<String>();
+		Set<String> groupForSearch = new HashSet<>();
 		groupForSearch.add(Group.FREE_GROUP_NAME);
 		List<Authorization> authorizations = currentUser.getAuthorizations();
 		for (int i = 0; i < authorizations.size(); i++) {
@@ -281,11 +280,11 @@ public class TagCloudManager extends AbstractService
 		this._configManager = configManager;
 	}
 
-	protected IPublicContentSearcherDAO getTagCloudDAO() {
+	protected IContentSearcherDAO getTagCloudDAO() {
 		return _tagCloudDAO;
 	}
 
-	public void setTagCloudDAO(IPublicContentSearcherDAO tagCloudDAO) {
+	public void setTagCloudDAO(IContentSearcherDAO tagCloudDAO) {
 		this._tagCloudDAO = tagCloudDAO;
 	}
 
@@ -298,6 +297,6 @@ public class TagCloudManager extends AbstractService
 	private IGroupManager _groupManager;
 	private ConfigInterface _configManager;
 
-	private IPublicContentSearcherDAO _tagCloudDAO;
+	private IContentSearcherDAO _tagCloudDAO;
 
 }

@@ -36,6 +36,7 @@ import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.widget.IContentListTagBean;
 import com.agiletec.plugins.jacms.aps.system.services.content.widget.IContentListWidgetHelper;
 import com.agiletec.plugins.jacms.aps.system.services.content.widget.UserFilterOptionBean;
+import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * Loads a list of contents IDs by applying the filters (if any).
@@ -44,6 +45,23 @@ import com.agiletec.plugins.jacms.aps.system.services.content.widget.UserFilterO
 public class ContentListTag extends TagSupport implements IContentListTagBean {
 
 	private static final Logger _logger = LoggerFactory.getLogger(ContentListTag.class);
+	
+	private String listName;
+	private String contentType;
+	private String[] categories = new String[0];
+	private EntitySearchFilter[] filters = new EntitySearchFilter[0];
+	
+	private boolean cacheable = true;
+	
+	private List<UserFilterOptionBean> userFilterOptions;
+	
+	@Deprecated
+	private boolean listEvaluated;
+	
+	private String titleVar;
+	private String pageLinkVar;
+	private String pageLinkDescriptionVar;
+	private String userFilterOptionsVar;
 	
 	public ContentListTag() {
 		super();
@@ -142,12 +160,12 @@ public class ContentListTag extends TagSupport implements IContentListTagBean {
 	
 	@Override
 	public void release() {
-		this._listName = null;
-		this._contentType = null;
-		this._categories = new String[0];
-		this._filters = new EntitySearchFilter[0];
-		this._listEvaluated = false;
-		this._cacheable = true;
+		this.listName = null;
+		this.contentType = null;
+		this.categories = new String[0];
+		this.filters = new EntitySearchFilter[0];
+		this.listEvaluated = false;
+		this.cacheable = true;
 		this.setUserFilterOptions(null);
 		this.setTitleVar(null);
 		this.setPageLinkVar(null);
@@ -157,13 +175,7 @@ public class ContentListTag extends TagSupport implements IContentListTagBean {
 	
 	@Override
 	public void addFilter(EntitySearchFilter filter) {
-		int len = this._filters.length;
-		EntitySearchFilter[] newFilters = new EntitySearchFilter[len + 1];
-		for (int i=0; i < len; i++){
-			newFilters[i] = this._filters[i];
-		}
-		newFilters[len] = filter;
-		this._filters = newFilters;
+        this.filters = ArrayUtils.add(this.filters, filter);
 	}
 	
 	protected void addUserFilterOptions(List<UserFilterOptionBean> userFilterOptions) {
@@ -177,14 +189,14 @@ public class ContentListTag extends TagSupport implements IContentListTagBean {
 	public void addUserFilterOption(UserFilterOptionBean userFilterOption) {
 		if (null == userFilterOption) return;
 		if (null == this.getUserFilterOptions()) {
-			this.setUserFilterOptions(new ArrayList<UserFilterOptionBean>());
+			this.setUserFilterOptions(new ArrayList<>());
 		}
 		this.getUserFilterOptions().add(userFilterOption);
 	}
 	
 	@Override
 	public EntitySearchFilter[] getFilters() {
-		return this._filters;
+		return this.filters;
 	}
 	
 	/**
@@ -193,7 +205,7 @@ public class ContentListTag extends TagSupport implements IContentListTagBean {
 	 */
 	@Override
 	public String getListName() {
-		return _listName;
+		return listName;
 	}
 
 	/**
@@ -201,7 +213,7 @@ public class ContentListTag extends TagSupport implements IContentListTagBean {
 	 * @param listName The listName to set.
 	 */
 	public void setListName(String listName) {
-		this._listName = listName;
+		this.listName = listName;
 	}
 
 	/**
@@ -210,7 +222,7 @@ public class ContentListTag extends TagSupport implements IContentListTagBean {
 	 */
 	@Override
 	public String getContentType() {
-		return _contentType;
+		return contentType;
 	}
 	
 	/**
@@ -219,7 +231,7 @@ public class ContentListTag extends TagSupport implements IContentListTagBean {
 	 */
 	@Override
 	public void setContentType(String contentType) {
-		this._contentType = contentType;
+		this.contentType = contentType;
 	}
 	
 	/**
@@ -243,28 +255,27 @@ public class ContentListTag extends TagSupport implements IContentListTagBean {
 	
 	@Override
 	public String[] getCategories() {
-		return this._categories;
+		return this.categories;
 	}
 	
 	@Override
 	public void addCategory(String category) {
 		if (null == category) return;
-		int len = this._categories.length;
-		String[] newCategories = new String[len + 1];
-		for (int i=0; i < len; i++){
-			newCategories[i] = this._categories[i];
-		}
-		newCategories[len] = category;
-		this._categories = newCategories;
+        this.categories = ArrayUtils.add(this.categories, category);
 	}
-
+    
+    @Override
+    public boolean isOrClauseCategoryFilter() {
+        return false;
+    }
+    
 	/**
 	 * Checks if the list if the list has been previously stored in the startTag method.
 	 * @return true if the list wad evalued into start tag
 	 * @deprecated the startTag method isn't extended
 	 */
 	protected boolean isListEvaluated() {
-		return _listEvaluated;
+		return listEvaluated;
 	}
 	
 	/**
@@ -273,7 +284,7 @@ public class ContentListTag extends TagSupport implements IContentListTagBean {
 	 * @deprecated the startTag method isn't extended
 	 */
 	protected void setListEvaluated(boolean listEvaluated) {
-		this._listEvaluated = listEvaluated;
+		this.listEvaluated = listEvaluated;
 	}
 	
 	/**
@@ -282,7 +293,7 @@ public class ContentListTag extends TagSupport implements IContentListTagBean {
 	 */
 	@Override
 	public boolean isCacheable() {
-		return _cacheable;
+		return cacheable;
 	}
 	
 	/**
@@ -291,61 +302,43 @@ public class ContentListTag extends TagSupport implements IContentListTagBean {
 	 * @param cacheable
 	 */
 	public void setCacheable(boolean cacheable) {
-		this._cacheable = cacheable;
+		this.cacheable = cacheable;
 	}
 	
 	@Override
 	public List<UserFilterOptionBean> getUserFilterOptions() {
-		return _userFilterOptions;
+		return userFilterOptions;
 	}
 	protected void setUserFilterOptions(List<UserFilterOptionBean> userFilterOptions) {
-		this._userFilterOptions = userFilterOptions;
+		this.userFilterOptions = userFilterOptions;
 	}
 	
 	public String getTitleVar() {
-		return _titleVar;
+		return titleVar;
 	}
 	public void setTitleVar(String titleVar) {
-		this._titleVar = titleVar;
+		this.titleVar = titleVar;
 	}
 	
 	public String getPageLinkVar() {
-		return _pageLinkVar;
+		return pageLinkVar;
 	}
 	public void setPageLinkVar(String pageLinkVar) {
-		this._pageLinkVar = pageLinkVar;
+		this.pageLinkVar = pageLinkVar;
 	}
 	
 	public String getPageLinkDescriptionVar() {
-		return _pageLinkDescriptionVar;
+		return pageLinkDescriptionVar;
 	}
 	public void setPageLinkDescriptionVar(String pageLinkDescriptionVar) {
-		this._pageLinkDescriptionVar = pageLinkDescriptionVar;
+		this.pageLinkDescriptionVar = pageLinkDescriptionVar;
 	}
 	
 	public String getUserFilterOptionsVar() {
-		return _userFilterOptionsVar;
+		return userFilterOptionsVar;
 	}
 	public void setUserFilterOptionsVar(String userFilterOptionsVar) {
-		this._userFilterOptionsVar = userFilterOptionsVar;
+		this.userFilterOptionsVar = userFilterOptionsVar;
 	}
-	
-	private String _listName;
-	private String _contentType;
-	private String[] _categories = new String[0];
-	private EntitySearchFilter[] _filters = new EntitySearchFilter[0];
-	
-	private boolean _cacheable = true;
-	
-	private List<UserFilterOptionBean> _userFilterOptions;
-	
-	@Deprecated
-	private boolean _listEvaluated;
-	
-	private String _titleVar;
-	private String _pageLinkVar;
-	private String _pageLinkDescriptionVar;
-	
-	private String _userFilterOptionsVar;
 	
 }

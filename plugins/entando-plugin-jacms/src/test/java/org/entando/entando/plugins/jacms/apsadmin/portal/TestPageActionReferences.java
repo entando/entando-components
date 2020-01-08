@@ -18,7 +18,9 @@ import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.Page;
+import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.system.services.pagemodel.IPageModelManager;
+import com.agiletec.aps.system.services.pagemodel.PageModel;
 import com.agiletec.apsadmin.ApsAdminBaseTestCase;
 import com.agiletec.apsadmin.portal.PageAction;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
@@ -41,7 +43,7 @@ public class TestPageActionReferences extends ApsAdminBaseTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         this.init();
-        Page testPage = createPage(TEST_PAGE_CODE);
+        Page testPage = this.createPage(TEST_PAGE_CODE);
         this.pageManager.addPage(testPage);
     }
 
@@ -98,12 +100,13 @@ public class TestPageActionReferences extends ApsAdminBaseTestCase {
         Page page = new Page();
         Page parent = (Page) this.pageManager.getDraftRoot();
         page.setParentCode(parent.getCode());
-        page.setParent(parent);
         page.setTitle("it", code);
         page.setTitle("en", code);
         page.setGroup(Group.FREE_GROUP_NAME);
-        page.setModel(this.pageModelManager.getPageModel("internal"));
+        PageModel pageModel = this.pageModelManager.getPageModel("internal");
+        page.setModel(pageModel);
         page.setCode(code);
+        page.setWidgets(new Widget[pageModel.getFrames().length]);
         return page;
     }
 

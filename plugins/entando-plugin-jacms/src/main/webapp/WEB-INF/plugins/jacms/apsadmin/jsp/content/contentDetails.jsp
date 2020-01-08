@@ -150,7 +150,7 @@
                                     <s:if test="!content.categories.empty">
                                         <ul class="list-unstyled">
                                             <s:iterator var="curCategory" value="content.categories" status="catStatus">
-                                                <li><s:property value="%{#curCategory.getFullTitle(currentLang.code)}"/></li>
+                                                <li><s:property value="%{getFullTitle(#curCategory, currentLang.code)}"/></li>
                                                 </s:iterator>
                                         </ul>
                                     </s:if>
@@ -204,10 +204,10 @@
                                                 <wp:ifauthorized groupName="${curReferencingPageMainGroupCode}" permission="managePages"><s:set var="canEdit" value="%{true}" /></wp:ifauthorized>
                                                 <s:if test="#canEdit">
                                                     <s:url var="pageEditURL" action="viewTree" namespace="/do/Page"><s:param name="selectedNode" value="#curReferencedPage.code" /></s:url>
-                                                    <a href="<s:property value="#pageEditURL" />" title="<s:text name="label.edit" />:&#32;<s:property value="#curReferencedPage.getFullTitle(currentLang.code)"/>&#32;(<s:property value="#curReferencedPage.code" />)"><s:property value="#curReferencedPage.getFullTitle(currentLang.code)"/>&#32;(<s:property value="#curReferencedPage.code" />)</a>
+                                                    <a href="<s:property value="#pageEditURL" />" title="<s:text name="label.edit" />:&#32;<s:property value="%{getFullTitle(#curReferencedPage, currentLang.code)}"/>&#32;(<s:property value="#curReferencedPage.code" />)"><s:property value="%{getFullTitle(#curReferencedPage, currentLang.code)}"/>&#32;(<s:property value="#curReferencedPage.code" />)</a>
                                                 </s:if>
                                                 <s:else>
-                                                    <s:property value="#curReferencedPage.getFullTitle(currentLang.code)" />&#32;(<s:property value="#curReferencedPage.code" />)
+                                                    <s:property value="%{getFullTitle(#curReferencedPage, currentLang.code)}" />&#32;(<s:property value="#curReferencedPage.code" />)
                                                 </s:else>
                                             </dd>
                                         </s:iterator>
@@ -259,10 +259,10 @@
                                                 <wp:ifauthorized groupName="${curReferencingPageMainGroupCode}" permission="managePages"><s:set var="canEdit" value="%{true}" /></wp:ifauthorized>
                                                 <s:if test="#canEdit">
                                                     <s:url var="pageEditURL" action="viewTree" namespace="/do/Page"><s:param name="selectedNode" value="#curReferencingPage.code" /></s:url>
-                                                    <a href="<s:property value="#pageEditURL" />" title="<s:text name="label.edit" />:&#32;<s:property value="#curReferencingPage.getFullTitle(currentLang.code)"/>&#32;(<s:property value="#curReferencingPage.code" />)"><s:property value="#curReferencingPage.getFullTitle(currentLang.code)"/>&#32;(<s:property value="#curReferencingPage.code" />)</a>
+                                                    <a href="<s:property value="#pageEditURL" />" title="<s:text name="label.edit" />:&#32;<s:property value="%{getFullTitle(#curReferencingPage, currentLang.code)}"/>&#32;(<s:property value="#curReferencingPage.code" />)"><s:property value="%{getFullTitle(#curReferencingPage, currentLang.code)}"/>&#32;(<s:property value="#curReferencingPage.code" />)</a>
                                                 </s:if>
                                                 <s:else>
-                                                    <s:property value="#curReferencingPage.getFullTitle(currentLang.code)" />&#32;(<s:property value="#curReferencingPage.code" />)
+                                                    <s:property value="%{getFullTitle(#curReferencingPage, currentLang.code)}" />&#32;(<s:property value="#curReferencingPage.code" />)
                                                 </s:else>
                                             </dd>
                                         </s:iterator>

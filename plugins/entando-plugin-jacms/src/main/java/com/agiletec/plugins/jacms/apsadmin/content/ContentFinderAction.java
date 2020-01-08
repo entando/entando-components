@@ -33,6 +33,7 @@ import com.agiletec.aps.system.common.entity.model.ApsEntity;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.SmallEntityType;
+import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.group.Group;
@@ -47,6 +48,8 @@ import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentRecordVO;
 import com.agiletec.plugins.jacms.apsadmin.content.helper.IContentActionHelper;
+import java.util.stream.Collectors;
+import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * Action per la ricerca contenuti.
@@ -134,28 +137,23 @@ public class ContentFinderAction extends AbstractApsEntityFinderAction {
     public List<ContentJO> getLastUpdateContentResponse() {
         List<ContentJO> response = null;
         try {
-
-            EntitySearchFilter modifyOrder = new EntitySearchFilter(IContentManager.CONTENT_MODIFY_DATE_FILTER_KEY,
-                    false);
+            List<String> groupCodes = this.getGroupManager().getGroups().stream().map(group -> group.getName()).collect(Collectors.toList());
+            EntitySearchFilter modifyOrder = new EntitySearchFilter(IContentManager.CONTENT_MODIFY_DATE_FILTER_KEY, false);
             modifyOrder.setOrder(EntitySearchFilter.DESC_ORDER);
-
-            List<String> ids = this.getContentManager().searchId(new EntitySearchFilter[]{modifyOrder});
+            EntitySearchFilter paginationFilter = new EntitySearchFilter(this.getLastUpdateResponseSize(), 0);
+            EntitySearchFilter[] filters = {modifyOrder, paginationFilter};
+            SearcherDaoPaginatedResult<String> paginatedContentsId = this.getContentManager().getPaginatedWorkContentsId(null, false, filters, groupCodes);
+            List<String> ids = paginatedContentsId.getList();
             if (null != ids && !ids.isEmpty()) {
-                if (this.getLastUpdateResponseSize() > ids.size() - 1) {
-                    this.setLastUpdateResponseSize(ids.size() - 1);
-                }
-                List<String> subList = ids.subList(0, this.getLastUpdateResponseSize());
-                response = new ArrayList<ContentJO>();
-                Iterator<String> sublist = subList.iterator();
+                response = new ArrayList<>();
+                Iterator<String> sublist = ids.iterator();
                 while (sublist.hasNext()) {
                     String contentId = sublist.next();
                     Content content = this.getContentManager().loadContent(contentId, false);
-                    ContentRecordVO vo = this.getContentManager().loadContentVO(contentId);
-                    ContentJO contentJO = new ContentJO(content, vo);
+                    ContentJO contentJO = new ContentJO(content);
                     response.add(contentJO);
                 }
             }
-
         } catch (Throwable t) {
             logger.error("Error loading last updated content response", t);
             throw new RuntimeException("Error loading last updated content response", t);
@@ -202,7 +200,6 @@ public class ContentFinderAction extends AbstractApsEntityFinderAction {
             this.restoreCategorySearchState(searchInfo);
             this.restoreEntitySearchState(searchInfo);
             this.restorePagerSearchState(searchInfo);
-
             this.addFilter(searchInfo.getFilter(ContentFinderSearchInfo.ORDER_FILTER));
         } catch (Throwable t) {
             logger.error("error in results", t);
@@ -210,19 +207,58 @@ public class ContentFinderAction extends AbstractApsEntityFinderAction {
         }
         return SUCCESS;
     }
-
+    
+    public SearcherDaoPaginatedResult<String> getPaginatedContentsId(Integer limit) {
+        SearcherDaoPaginatedResult<String> result = null;
+        try {
+            ContentFinderSearchInfo searchInfo = this.getContentSearchInfo();
+            List<String> allowedGroups = this.getContentGroupCodes();
+            String[] categories = null;
+            Category category = this.getCategoryManager().getCategory(this.getCategoryCode());
+            if (null != category && !category.isRoot()) {
+                String catCode = this.getCategoryCode().trim();
+                categories = new String[]{catCode};
+                searchInfo.setCategoryCode(catCode);
+            } else {
+                searchInfo.setCategoryCode(null);
+            }
+            EntitySearchFilter[] filters = this.getFilters();
+            if (null != limit) {
+                filters = ArrayUtils.add(filters, this.getPagerFilter(limit));
+            }
+            result = this.getContentManager().getPaginatedWorkContentsId(categories, false, filters, allowedGroups);
+        } catch (Throwable t) {
+            logger.error("error in getPaginatedWorkContentsId", t);
+            throw new RuntimeException("error in getPaginatedWorkContentsId", t);
+        }
+        return result;
+    }
+    
+    protected EntitySearchFilter getPagerFilter(Integer limit) {
+        int pagerItem = new AdminPagerTagHelper().getItemNumber(this.getPagerId(), this.getRequest());
+        int item = (pagerItem > 0) ? pagerItem : 1;
+        int realLimit = (null != limit && limit > 0) ? limit : 10;
+        int offset = (item - 1) * realLimit;
+        return new EntitySearchFilter(realLimit, offset);
+    }
+    
+    public String getPagerId() {
+        return this.getClass().getSimpleName();
+    }
+    
     /**
      * Restituisce la lista identificativi di contenuti che deve essere erogata
-     * dall'interfaccia di visualizzazione dei contenuti. La lista deve essere
+     * dall'interfaccia di visualizzazione dei contenuti.La lista deve essere 
      * filtrata secondo i parametri di ricerca impostati.
      *
      * @return La lista di contenuti che deve essere erogata dall'interfaccia di
      * visualizzazione dei contenuti.
+     * @deprecated 
      */
     public List<String> getContents() {
         List<String> result = null;
         try {
-            ContentFinderSearchInfo searchInfo = getContentSearchInfo();
+            ContentFinderSearchInfo searchInfo = this.getContentSearchInfo();
             List<String> allowedGroups = this.getContentGroupCodes();
             String[] categories = null;
             Category category = this.getCategoryManager().getCategory(this.getCategoryCode());

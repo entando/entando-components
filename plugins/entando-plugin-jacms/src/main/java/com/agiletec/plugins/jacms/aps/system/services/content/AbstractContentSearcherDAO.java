@@ -13,6 +13,7 @@
  */
 package com.agiletec.plugins.jacms.aps.system.services.content;
 
+import com.agiletec.aps.system.SystemConstants;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -30,14 +31,77 @@ import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.util.DateConverter;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentRecordVO;
+import java.util.ArrayList;
+import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Abstract Data access object used to search contents.
  * @author E.Santoboni
  */
-public abstract class AbstractContentSearcherDAO extends AbstractEntitySearcherDAO {
+public abstract class AbstractContentSearcherDAO extends AbstractEntitySearcherDAO implements IContentSearcherDAO {
 
 	private static final Logger _logger =  LoggerFactory.getLogger(AbstractContentSearcherDAO.class);
+    
+    @Override
+    public int countContents(String[] categories, boolean orClauseCategoryFilter, 
+            EntitySearchFilter[] filters, Collection<String> userGroupCodes) {
+        Connection conn = null;
+        int count = 0;
+        PreparedStatement stat = null;
+        ResultSet result = null;
+        try {
+            conn = this.getConnection();
+            stat = this.buildStatement(filters, categories, 
+                    orClauseCategoryFilter, userGroupCodes, true, false, conn);
+            result = stat.executeQuery();
+            if (result.next()) {
+                count = result.getInt(1);
+            }
+        } catch (Throwable t) {
+            _logger.error("Error while loading the count of IDs", t);
+            throw new RuntimeException("Error while loading the count of IDs", t);
+        } finally {
+            closeDaoResources(result, stat, conn);
+        }
+        return count;
+    }
+    
+    @Override
+	public List<String> loadContentsId(String contentType, String[] categories, boolean orClauseCategoryFilter, 
+			EntitySearchFilter[] filters, Collection<String> userGroupCodes) {
+		if (!StringUtils.isBlank(contentType)) {
+			EntitySearchFilter typeFilter = new EntitySearchFilter(IContentManager.ENTITY_TYPE_CODE_FILTER_KEY, false, contentType, false);
+			filters = this.addFilter(filters, typeFilter);
+		}
+		return this.loadContentsId(categories, orClauseCategoryFilter, filters, userGroupCodes);
+	}
+    
+    @Override
+    public List<String> loadContentsId(String[] categories, 
+			boolean orClauseCategoryFilter, EntitySearchFilter[] filters, Collection<String> userGroupCodes) {
+		List<String> contentsId = new ArrayList<>();
+		Connection conn = null;
+		PreparedStatement stat = null;
+		ResultSet result = null;
+		try {
+			conn = this.getConnection();
+			stat = this.buildStatement(filters, categories, orClauseCategoryFilter, userGroupCodes, false, false, conn);
+			result = stat.executeQuery();
+            while (result.next()) {
+                String id = result.getString(this.getMasterTableIdFieldName());
+                if (!contentsId.contains(id)) {
+                    contentsId.add(id);
+                }
+            }
+		} catch (Throwable t) {
+			_logger.error("Error loading contents id list",  t);
+			throw new RuntimeException("Error loading contents id list", t);
+		} finally {
+			closeDaoResources(result, stat, conn);
+		}
+		return contentsId;
+	}
 	
 	@Override
 	protected String getTableFieldName(String metadataFieldKey) {
@@ -53,6 +117,8 @@ public abstract class AbstractContentSearcherDAO extends AbstractEntitySearcherD
 			return "created";
 		} else if (metadataFieldKey.equals(IContentManager.CONTENT_MODIFY_DATE_FILTER_KEY)) {
 			return "lastmodified";
+		} else if (metadataFieldKey.equals(IContentManager.CONTENT_PUBLISH_DATE_FILTER_KEY)) {
+			return "published";
 		} else if (metadataFieldKey.equals(IContentManager.CONTENT_ONLINE_FILTER_KEY)) {
 			return "onlinexml";
 		} else if (metadataFieldKey.equals(IContentManager.CONTENT_MAIN_GROUP_FILTER_KEY)) {
@@ -72,20 +138,20 @@ public abstract class AbstractContentSearcherDAO extends AbstractEntitySearcherD
 	
 	protected PreparedStatement buildStatement(EntitySearchFilter[] filters,
 			Collection<String> userGroupCodes, boolean selectAll, Connection conn) {
-		return this.buildStatement(filters, null, false, userGroupCodes, selectAll, conn);
+		return this.buildStatement(filters, null, false, userGroupCodes, false, selectAll, conn);
 	}
 	
 	protected PreparedStatement buildStatement(EntitySearchFilter[] filters,
 			String[] categories, Collection<String> userGroupCodes, boolean selectAll, Connection conn) {
-		return this.buildStatement(filters, categories, false, userGroupCodes, selectAll, conn);
+		return this.buildStatement(filters, categories, false, userGroupCodes, false, selectAll, conn);
 	}
 	
 	protected PreparedStatement buildStatement(EntitySearchFilter[] filters,
 			String[] categories, boolean orClauseCategoryFilter, 
-			Collection<String> userGroupCodes, boolean selectAll, Connection conn) {
+			Collection<String> userGroupCodes, boolean isCount, boolean selectAll, Connection conn) {
 		Collection<String> groupsForSelect = this.getGroupsForSelect(userGroupCodes);
 
-		String query = this.createQueryString(filters, null, categories, orClauseCategoryFilter, groupsForSelect, selectAll);
+		String query = this.createQueryString(filters, null, categories, orClauseCategoryFilter, groupsForSelect, isCount, selectAll);
 		//System.out.println("QUERY : " + query);
 		PreparedStatement stat = null;
 		try {
@@ -125,18 +191,17 @@ public abstract class AbstractContentSearcherDAO extends AbstractEntitySearcherD
 	}
 	
 	protected String createQueryString(EntitySearchFilter[] filters, Collection<String> groupsForSelect, boolean selectAll) {
-		return this.createQueryString(filters, null, null, false, groupsForSelect, selectAll);
+		return this.createQueryString(filters, null, null, false, groupsForSelect, false, selectAll);
 	}
 	
 	protected String createQueryString(EntitySearchFilter[] filters, 
 			String[] categories, Collection<String> groupsForSelect, boolean selectAll) {
-		return this.createQueryString(filters, null, categories, false, groupsForSelect, selectAll);
+		return this.createQueryString(filters, null, categories, false, groupsForSelect, false, selectAll);
 	}
 	
 	protected String createQueryString(EntitySearchFilter[] filters, String[] groups,
-			String[] categories, boolean orClauseCategoryFilter, Collection<String> groupsForSelect, boolean selectAll) {
-
-		StringBuffer query = this.createBaseQueryBlock(filters, selectAll);
+			String[] categories, boolean orClauseCategoryFilter, Collection<String> groupsForSelect, boolean isCount, boolean selectAll) {
+		StringBuffer query = this.createBaseQueryBlock(filters, isCount, selectAll);
 		boolean hasAppendWhereClause = this.appendFullAttributeFilterQueryBlocks(filters, query, false);
 		hasAppendWhereClause = this.appendMetadataFieldFilterQueryBlocks(filters, query, hasAppendWhereClause);
 		if (null != groupsForSelect && !groupsForSelect.isEmpty()) {
@@ -151,7 +216,10 @@ public abstract class AbstractContentSearcherDAO extends AbstractEntitySearcherD
 			hasAppendWhereClause = this.verifyWhereClauseAppend(query, hasAppendWhereClause);
 			this.addGroupsQueryBlock(query, groups);
 		}
-		boolean ordered = appendOrderQueryBlocks(filters, query, false);
+        if (!isCount) {
+            boolean ordered = this.appendOrderQueryBlocks(filters, query, false);
+            this.appendLimitQueryBlock(filters, query);
+        }
 		//System.out.println("********** " + query.toString());
 		return query.toString();
 	}
@@ -204,7 +272,7 @@ public abstract class AbstractContentSearcherDAO extends AbstractEntitySearcherD
 		if (userGroupCodes != null && userGroupCodes.contains(Group.ADMINS_GROUP_NAME)) {
 			return null;
 		} else {
-			Collection<String> groupsForSelect = new HashSet<String>();
+			Collection<String> groupsForSelect = new HashSet<>();
 			if (userGroupCodes != null) groupsForSelect.addAll(userGroupCodes);
 			return groupsForSelect;
 		}
@@ -215,14 +283,15 @@ public abstract class AbstractContentSearcherDAO extends AbstractEntitySearcherD
 		ContentRecordVO contentVo = new ContentRecordVO();
 		contentVo.setId(result.getString("contentid"));
 		contentVo.setTypeCode(result.getString("contenttype"));
-		contentVo.setDescr(result.getString("descr"));
+		contentVo.setDescription(result.getString("descr"));
 		contentVo.setStatus(result.getString("status"));
 		String xmlWork = result.getString("workxml");
-		contentVo.setCreate(DateConverter.parseDate(result.getString("created"), this.DATE_FORMAT));
-		contentVo.setModify(DateConverter.parseDate(result.getString("lastmodified"), this.DATE_FORMAT));
+        contentVo.setCreate(DateConverter.parseDate(result.getString("created"), SystemConstants.DATA_TYPE_METADATA_DATE_FORMAT));
+		contentVo.setModify(DateConverter.parseDate(result.getString("lastmodified"), SystemConstants.DATA_TYPE_METADATA_DATE_FORMAT));
+		contentVo.setPublish(DateConverter.parseDate(result.getString("published"), SystemConstants.DATA_TYPE_METADATA_DATE_FORMAT));
 		String xmlOnLine = result.getString("onlinexml");
-		contentVo.setOnLine(null != xmlOnLine && xmlOnLine.length() > 0);
-		contentVo.setSync(xmlWork.equals(xmlOnLine));
+        contentVo.setOnLine(!StringUtils.isBlank(xmlOnLine));
+		contentVo.setSync(result.getInt("sync") == 1);
 		String mainGroupCode = result.getString("maingroup");
 		contentVo.setMainGroupCode(mainGroupCode);
 		contentVo.setXmlWork(xmlWork);
@@ -247,7 +316,5 @@ public abstract class AbstractContentSearcherDAO extends AbstractEntitySearcherD
 	}
 	
 	protected abstract String getContentRelationsTableName();
-	
-	protected final String DATE_FORMAT = "yyyyMMddHHmmss";
 	
 }

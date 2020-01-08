@@ -48,6 +48,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.plugins.jacms.aps.system.services.content.IContentService;
 import org.entando.entando.plugins.jacms.web.content.validator.BatchContentStatusRequest;
 import org.entando.entando.plugins.jacms.web.content.validator.ContentStatusRequest;
@@ -71,7 +72,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
     private ICmsSearchEngineManager searchEngineManager;
 
     private ObjectMapper mapper = new ObjectMapper();
-
+    
     @Test
     public void testGetContentWithModel() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
@@ -81,9 +82,14 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         String result1 = result.andReturn().getResponse().getContentAsString();
         System.out.println(result1);
         result.andExpect(status().isOk());
+        String html1 = JsonPath.read(result1, "$.payload.html");
+        Assert.assertTrue(!StringUtils.isBlank(html1));
+        
         result.andExpect(MockMvcResultMatchers.jsonPath("$.payload.html", Matchers.anything()));
         result = this.performGetContent("ART180", "11", true, null, true, user);
         String result2 = result.andReturn().getResponse().getContentAsString();
+        String html2 = JsonPath.read(result2, "$.payload.html");
+        Assert.assertTrue(!StringUtils.isBlank(html2));
         System.out.println(result2);
 
         result.andExpect(status().isOk());
@@ -92,20 +98,27 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         String result1_copy = result.andReturn().getResponse().getContentAsString();
         System.out.println(result1_copy);
         result.andExpect(status().isOk());
-        Assert.assertEquals(result1, result1_copy);
+        String htmlCopy = JsonPath.read(result1_copy, "$.payload.html");
+        Assert.assertTrue(!StringUtils.isBlank(htmlCopy));
+        Assert.assertEquals(html1, htmlCopy);
+        
         result = this.performGetContent("ART180", "list", true, null, true, user);
         result.andExpect(MockMvcResultMatchers.jsonPath("$.payload.html", Matchers.anything()));
         String result2_copy = result.andReturn().getResponse().getContentAsString();
         System.out.println(result2);
+        String html2Copy = JsonPath.read(result2_copy, "$.payload.html");
+        Assert.assertTrue(!StringUtils.isBlank(html2Copy));
         result.andExpect(status().isOk());
-        Assert.assertEquals(result2, result2_copy);
+        Assert.assertTrue(!StringUtils.isBlank(html2Copy));
+        Assert.assertEquals(html2, html2Copy);
 
         result = this.performGetContent("ART180", "list", true, "en", true, user);
         result.andExpect(MockMvcResultMatchers.jsonPath("$.payload.html", Matchers.anything()));
         String result2_copy_en = result.andReturn().getResponse().getContentAsString();
         System.out.println(result2_copy_en);
+        String html2Copy_en = JsonPath.read(result2_copy_en, "$.payload.html");
         result.andExpect(status().isOk());
-        Assert.assertNotEquals(result2_copy_en, result2_copy);
+        Assert.assertNotEquals(html2Copy_en, html2Copy);
     }
 
     @Test
@@ -1004,7 +1017,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "tempRole", Permission.BACKOFFICE).build();
         String accessToken = mockOAuthInterceptor(user);
-        Content masterContent = this.contentManager.loadContent("EVN193", true, false);
+        Content masterContent = this.contentManager.loadContent("EVN193", true);
         masterContent.setId(null);
         masterContent.setDescription("Cloned content for test");
         DateAttribute dateAttribute = (DateAttribute) masterContent.getAttribute("DataInizio");
@@ -1501,7 +1514,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.payload.size()", is(0)));
     }
-
+    
     @Test
     public void testFilteredContent_14() throws Throwable {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
@@ -1522,7 +1535,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.payload.size()", is(3)));
     }
-
+    
     @Test
     public void testFilteredContent_15() throws Throwable {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
@@ -1549,7 +1562,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.payload.size()", is(1)));
     }
-
+    
     @Test
     public void testFilteredContent_16() throws Throwable {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
@@ -1750,5 +1763,5 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             Assert.assertEquals(expectedContentsId[i], extractedId);
         }
     }
-
+    
 }

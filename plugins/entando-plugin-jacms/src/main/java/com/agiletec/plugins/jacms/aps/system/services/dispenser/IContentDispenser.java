@@ -14,6 +14,7 @@
 package com.agiletec.plugins.jacms.aps.system.services.dispenser;
 
 import com.agiletec.aps.system.RequestContext;
+import com.agiletec.aps.system.services.user.UserDetails;
 
 /**
  * Basic interface for service providers formatted content.
@@ -46,6 +47,9 @@ public interface IContentDispenser {
 	
 	public ContentRenderizationInfo getRenderizationInfo(String contentId, 
 			long modelId, String langCode, RequestContext reqCtx, boolean useCache);
+	
+	public ContentRenderizationInfo getRenderizationInfo(String contentId, 
+			long modelId, String langCode, UserDetails user, boolean useCache);
 	
 	public void resolveLinks(ContentRenderizationInfo renderizationInfo, RequestContext reqCtx);
 	

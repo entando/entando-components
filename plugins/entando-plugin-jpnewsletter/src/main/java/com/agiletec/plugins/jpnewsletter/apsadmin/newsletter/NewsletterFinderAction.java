@@ -31,6 +31,7 @@ import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.SmallEntityType;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.Category;
+import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SmallContentType;
 import com.agiletec.plugins.jacms.apsadmin.content.ContentFinderAction;
@@ -186,7 +187,7 @@ public class NewsletterFinderAction extends ContentFinderAction {
 		Category categoryTemp = category;
 		while (!contain && !categoryTemp.getCode().equals(categoryTemp.getParentCode())) {
 			contain = (categories.contains(categoryTemp.getCode()));
-			categoryTemp = categoryTemp.getParent();
+            categoryTemp = this.getCategoryManager().getCategory(categoryTemp.getParentCode());
 		}
 		return contain;
 	}
@@ -218,10 +219,10 @@ public class NewsletterFinderAction extends ContentFinderAction {
 	}
 	
 	protected INewsletterManager getNewsletterManager() {
-		return _newsletterManager;
+		return newsletterManager;
 	}
 	public void setNewsletterManager(INewsletterManager newsletterManager) {
-		this._newsletterManager = newsletterManager;
+		this.newsletterManager = newsletterManager;
 	}
 	
 	private List<String> _contentQueue;
@@ -229,6 +230,6 @@ public class NewsletterFinderAction extends ContentFinderAction {
 	private Integer _inQueue;
 	private Integer _sent;
 	
-	private INewsletterManager _newsletterManager;
+	private INewsletterManager newsletterManager;
 	
 }

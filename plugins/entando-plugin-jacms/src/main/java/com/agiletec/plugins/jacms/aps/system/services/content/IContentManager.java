@@ -19,6 +19,7 @@ import java.util.Map;
 
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
+import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentRecordVO;
@@ -99,8 +100,6 @@ public interface IContentManager extends IEntityManager {
      * @throws ApsSystemException in caso di errore nell'accesso al db.
      */
     public Content loadContent(String id, boolean onLine) throws ApsSystemException;
-
-    public Content loadContent(String id, boolean onLine, boolean cacheable) throws ApsSystemException;
 
     /**
      * Restituisce un VO contenente le informazioni del record su db
@@ -201,35 +200,18 @@ public interface IContentManager extends IEntityManager {
     public List<String> loadPublicContentsId(String[] categories, boolean orClauseCategoryFilter,
             EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException;
 
-    /**
-     * Carica una lista di identificativi di contenuti in base ai parametri
-     * immessi.
-     *
-     * @param categories La categorie dei contenuti da cercare.
-     * @param filters L'insieme dei filtri sugli attibuti, su cui la ricerca
-     * deve essere effettuata.
-     * @param userGroupCodes I codici dei gruppi utenti dell'utente richiedente
-     * la lista. Se la collezione è vuota o nulla, gli identificativi di
-     * contenuto erogati saranno relativi al gruppo definito "ad accesso
-     * libero". Nel caso nella collezione sia presente il codice del gruppo
-     * degli amministratori, non sarà applicato alcun filtro sul gruppo.
-     * @param onlyOwner Implica se il filtro sulla ricerca và applicato anche
-     * sui gruppi extra dei contenuti e non esclusivamente sul gruppo
-     * proprietario.
-     * @return La lista degli id dei contenuti cercati.
-     * @throws ApsSystemException in caso di errore nell'accesso al db.
-     * @deprecated From jAPS 2.0 version 2.0.9. Use loadWorkContentsId or
-     * loadPublicContentsId
-     */
-    public List<String> loadContentsId(String[] categories, EntitySearchFilter[] filters,
-            Collection<String> userGroupCodes, boolean onlyOwner) throws ApsSystemException;
-
     public List<String> loadWorkContentsId(EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException;
 
     public List<String> loadWorkContentsId(String[] categories, EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException;
 
     public List<String> loadWorkContentsId(String[] categories, boolean orClauseCategoryFilter, EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException;
-
+    
+    public SearcherDaoPaginatedResult<String> getPaginatedWorkContentsId(String[] categories, 
+            boolean orClauseCategoryFilter, EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException;
+    
+    public SearcherDaoPaginatedResult<String> getPaginatedPublicContentsId(String[] categories, 
+            boolean orClauseCategoryFilter, EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException;
+    
     /**
      * Extract contents statistics
      *
@@ -279,6 +261,8 @@ public interface IContentManager extends IEntityManager {
 
     public static final String CONTENT_MODIFY_DATE_FILTER_KEY = "modified";
 
+    public static final String CONTENT_PUBLISH_DATE_FILTER_KEY = "published";
+
     public static final String CONTENT_ONLINE_FILTER_KEY = "online";
 
     public static final String CONTENT_MAIN_GROUP_FILTER_KEY = "maingroup";
@@ -295,7 +279,7 @@ public interface IContentManager extends IEntityManager {
 
     public static final String[] METADATA_FILTER_KEYS = {IEntityManager.ENTITY_ID_FILTER_KEY, IEntityManager.ENTITY_TYPE_CODE_FILTER_KEY,
         CONTENT_DESCR_FILTER_KEY, CONTENT_STATUS_FILTER_KEY, CONTENT_CREATION_DATE_FILTER_KEY,
-        CONTENT_MODIFY_DATE_FILTER_KEY, CONTENT_ONLINE_FILTER_KEY, CONTENT_MAIN_GROUP_FILTER_KEY,
+        CONTENT_MODIFY_DATE_FILTER_KEY, CONTENT_PUBLISH_DATE_FILTER_KEY, CONTENT_ONLINE_FILTER_KEY, CONTENT_MAIN_GROUP_FILTER_KEY,
         CONTENT_CURRENT_VERSION_FILTER_KEY, CONTENT_FIRST_EDITOR_FILTER_KEY, CONTENT_LAST_EDITOR_FILTER_KEY, CONTENT_GROUP_FILTER_KEY,
         CONTENT_RESTRICTION_FILTER_KEY};
 

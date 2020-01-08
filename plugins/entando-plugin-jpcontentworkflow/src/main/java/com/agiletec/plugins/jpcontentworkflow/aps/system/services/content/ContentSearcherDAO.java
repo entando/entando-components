@@ -107,11 +107,9 @@ public class ContentSearcherDAO extends com.agiletec.plugins.jacms.aps.system.se
 	
 	private String createQueryString(List<WorkflowSearchFilter> workflowFilters, EntitySearchFilter[] filters, String[] categories, 
 			Collection<String> groupsForSelect) {
-		StringBuffer query = this.createBaseQueryBlock(filters, false);
-		
+		StringBuffer query = this.createBaseQueryBlock(filters, false, false);
 		boolean hasAppendWhereClause = this.appendFullAttributeFilterQueryBlocks(filters, query, false);
 		hasAppendWhereClause = this.appendMetadataFieldFilterQueryBlocks(filters, query, hasAppendWhereClause);
-		
 		if (groupsForSelect != null && !groupsForSelect.isEmpty()) {
 			hasAppendWhereClause = this.verifyWhereClauseAppend(query, hasAppendWhereClause);
 			this.addGroupsQueryBlock(query, groupsForSelect);

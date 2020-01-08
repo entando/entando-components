@@ -13,18 +13,15 @@
         <wpsf:hidden name="contentOnSessionMarker" />
     </p>
     <div class="searchPanel form-group">
-
         <div class="well col-md-offset-3 col-md-6">
             <p class="search-label col-sm-12"><s:text name="label.search.label"/></p>
             <div class="form-group">
-                <s:form action="search" cssClass="search-pf has-button">
-                    <label class="col-sm-2 control-label">
-                        <s:text name="label.search.by" />
-                    </label>
-                    <div class="col-sm-9">
-                        <wpsf:textfield name="text" id="text" cssClass="form-control"  title="%{getText('label.search.by')+' '+getText('label.description')}" placeholder="%{getText('label.name')}"/>
-                    </div>
-                </s:form>
+                <label class="col-sm-2 control-label">
+                    <s:text name="label.search.by" />
+                </label>
+                <div class="col-sm-9">
+                    <wpsf:textfield name="text" id="text" cssClass="form-control"  title="%{getText('label.search.by')+' '+getText('label.description')}" placeholder="%{getText('label.description')}"/>
+                </div>
             </div>
             <div class="panel-group" id="accordion-markup" >
                 <div class="panel panel-default">

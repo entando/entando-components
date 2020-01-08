@@ -71,7 +71,7 @@ public class HasToOpenFacetNodeTag extends AbstractFacetNavTag {
 			String requiredFacet = requiredFacets.get(i);
 			ITreeNode facet = facetManager.getNode(requiredFacet);
 			if (null != facet) {
-				boolean check = this.checkSelectChild(facet, this.getFacetNodeCode());
+				boolean check = this.checkSelectChild(facet, this.getFacetNodeCode(), facetManager);
 				if (check) {
 					return true;
 				}
@@ -87,13 +87,13 @@ public class HasToOpenFacetNodeTag extends AbstractFacetNavTag {
 	 * @param codeForCheck
 	 * @return true if a child is selected
 	 */
-	private boolean checkSelectChild(ITreeNode facet, String codeForCheck) {
+	private boolean checkSelectChild(ITreeNode facet, String codeForCheck, ITreeNodeManager facetManager) {
 		if (facet.getCode().equals(codeForCheck)) {
 			return true;
 		}
-		ITreeNode parentFacet = facet.getParent();
-		if (null != parentFacet && !parentFacet.getCode().equals(parentFacet.getParent().getCode())) {
-			return this.checkSelectChild(parentFacet, codeForCheck);
+		ITreeNode parentFacet = facetManager.getNode(facet.getParentCode());
+		if (null != parentFacet && !parentFacet.getCode().equals(parentFacet.getParentCode())) {
+			return this.checkSelectChild(parentFacet, codeForCheck, facetManager);
 		}
 		return false;
 	}

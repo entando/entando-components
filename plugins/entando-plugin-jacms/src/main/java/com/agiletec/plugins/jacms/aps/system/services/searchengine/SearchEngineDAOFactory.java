@@ -15,6 +15,7 @@ package com.agiletec.plugins.jacms.aps.system.services.searchengine;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
+import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import org.slf4j.Logger;
@@ -39,6 +40,7 @@ public class SearchEngineDAOFactory implements ISearchEngineDAOFactory {
 
     private ConfigInterface configManager;
     private ILangManager langManager;
+    private ICategoryManager categoryManager;
 
     @Override
     public void init() throws Exception {
@@ -75,6 +77,7 @@ public class SearchEngineDAOFactory implements ISearchEngineDAOFactory {
             Class indexerClass = Class.forName(this.getIndexerClassName());
             indexerDao = (IIndexerDAO) indexerClass.newInstance();
             indexerDao.setLangManager(this.getLangManager());
+            indexerDao.setTreeNodeManager(this.getCategoryManager());
             indexerDao.init(this.getDirectory(subDir));
         } catch (Throwable t) {
             logger.error("Error getting indexer", t);
@@ -90,6 +93,8 @@ public class SearchEngineDAOFactory implements ISearchEngineDAOFactory {
             Class searcherClass = Class.forName(this.getSearcherClassName());
             searcherDao = (ISearcherDAO) searcherClass.newInstance();
             searcherDao.init(this.getDirectory(subDir));
+            searcherDao.setTreeNodeManager(this.getCategoryManager());
+            searcherDao.setLangManager(this.getLangManager());
         } catch (Throwable t) {
             logger.error("Error creating new searcher", t);
             throw new ApsSystemException("Error creating new searcher", t);
@@ -187,6 +192,14 @@ public class SearchEngineDAOFactory implements ISearchEngineDAOFactory {
 
     public void setLangManager(ILangManager langManager) {
         this.langManager = langManager;
+    }
+
+    protected ICategoryManager getCategoryManager() {
+        return categoryManager;
+    }
+
+    public void setCategoryManager(ICategoryManager categoryManager) {
+        this.categoryManager = categoryManager;
     }
 
 }

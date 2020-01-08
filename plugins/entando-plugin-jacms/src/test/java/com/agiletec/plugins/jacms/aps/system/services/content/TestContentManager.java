@@ -36,10 +36,12 @@ import com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.NumberAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.TextAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.ThreeStateAttribute;
+import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.group.Group;
+import com.agiletec.aps.system.services.group.IGroupManager;
 import com.agiletec.aps.util.DateConverter;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
@@ -49,6 +51,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.Im
 import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.LinkAttribute;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.ResourceAttributeInterface;
 import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
+import java.util.stream.Collectors;
 import org.entando.entando.aps.system.common.entity.model.attribute.EnumeratorMapAttribute;
 
 /**
@@ -106,9 +109,35 @@ public class TestContentManager extends BaseTestCase {
         String[] expected5 = {"EVN191", "ART120"};
         assertEquals(expected5.length, contentIds.size());
         this.verifyOrder(contentIds, expected5);
-
     }
-
+    
+    public void testSearchPaginatedContents_1_1() throws Throwable {
+        List<String> groupCodes = this._groupManager.getGroups().stream().map(group -> group.getName()).collect(Collectors.toList());
+        EntitySearchFilter<String> creationOrder = new EntitySearchFilter(IContentManager.CONTENT_CREATION_DATE_FILTER_KEY, false);
+        creationOrder.setOrder(EntitySearchFilter.ASC_ORDER);
+        EntitySearchFilter<String> descrFilter = new EntitySearchFilter(IContentManager.CONTENT_DESCR_FILTER_KEY, false, "Cont", true);
+        EntitySearchFilter<String> paginationFilter = new EntitySearchFilter<>(3, 0);
+        EntitySearchFilter[] filters1 = {creationOrder, descrFilter, paginationFilter};
+        SearcherDaoPaginatedResult<String> paginatedContentsId = this._contentManager.getPaginatedWorkContentsId(null, false, filters1, groupCodes);
+        assertNotNull(paginatedContentsId);
+        String[] totalExpected = {"RAH101", "ART102", "EVN103", "ART104", "ART111", "ART112", "ART120", "ART121", "ART122"};
+        assertEquals(totalExpected.length, paginatedContentsId.getCount().intValue());
+        assertEquals(3, paginatedContentsId.getList().size());
+        for (int i = 0; i < 3; i++) {
+            assertEquals(totalExpected[i], paginatedContentsId.getList().get(i));
+        }
+        
+        EntitySearchFilter<String> paginationFilter2 = new EntitySearchFilter<>(5, 2);
+        EntitySearchFilter[] filters2 = {creationOrder, descrFilter, paginationFilter2};
+        paginatedContentsId = this._contentManager.getPaginatedWorkContentsId(null, false, filters2, groupCodes);
+        assertNotNull(paginatedContentsId);
+        assertEquals(totalExpected.length, paginatedContentsId.getCount().intValue());
+        assertEquals(5, paginatedContentsId.getList().size());
+        for (int i = 2; i < (5+2); i++) {
+            assertEquals(totalExpected[i], paginatedContentsId.getList().get(i-2));
+        }
+    }
+    
     public void testSearchContents_1_2() throws Throwable {
         EntitySearchFilter versionFilter = new EntitySearchFilter(IContentManager.CONTENT_CURRENT_VERSION_FILTER_KEY, false, "0.", true);
         EntitySearchFilter[] filters3 = {versionFilter};
@@ -126,9 +155,6 @@ public class TestContentManager extends BaseTestCase {
     }
 
     public void testSearchContents_1_4() throws Throwable {
-        //forcing case insensitive search
-        WorkContentSearcherDAO searcherDao = (WorkContentSearcherDAO) this.getApplicationContext().getBean("jacmsWorkContentSearcherDAO");
-
         List<String> contentIds = this._contentManager.searchId(null);
         assertNotNull(contentIds);
         assertEquals(25, contentIds.size());
@@ -150,11 +176,8 @@ public class TestContentManager extends BaseTestCase {
         assertEquals(expected1.length, contentIds.size());
         this.verifyOrder(contentIds, expected1);
     }
-
+    
     public void testSearchContents_1_5() throws Throwable {
-        //forcing case insensitive search
-        WorkContentSearcherDAO searcherDao = (WorkContentSearcherDAO) this.getApplicationContext().getBean("jacmsWorkContentSearcherDAO");
-
         EntitySearchFilter creationOrder = new EntitySearchFilter(IContentManager.CONTENT_CREATION_DATE_FILTER_KEY, false);
         creationOrder.setOrder(EntitySearchFilter.ASC_ORDER);
         EntitySearchFilter descrFilter = new EntitySearchFilter(IContentManager.CONTENT_DESCR_FILTER_KEY, false, "co", true, FieldSearchFilter.LikeOptionType.COMPLETE);
@@ -188,11 +211,37 @@ public class TestContentManager extends BaseTestCase {
         String[] expected4 = {};
         assertEquals(expected4.length, contentIds.size());
     }
-
+    
+    public void testSearchPaginatedContents_1_5() throws Throwable {
+        List<String> groupCodes = this._groupManager.getGroups().stream().map(group -> group.getName()).collect(Collectors.toList());
+        EntitySearchFilter creationOrder = new EntitySearchFilter(IContentManager.CONTENT_CREATION_DATE_FILTER_KEY, false);
+        creationOrder.setOrder(EntitySearchFilter.ASC_ORDER);
+        EntitySearchFilter descrFilter = new EntitySearchFilter(IContentManager.CONTENT_DESCR_FILTER_KEY, false, "co", true, FieldSearchFilter.LikeOptionType.COMPLETE);
+        EntitySearchFilter<String> paginationFilter = new EntitySearchFilter<>(4, 0);
+        EntitySearchFilter[] filters1 = {creationOrder, descrFilter, paginationFilter};
+        SearcherDaoPaginatedResult<String> paginatedContentsId1 = this._contentManager.getPaginatedWorkContentsId(null, true, filters1, groupCodes);
+        assertNotNull(paginatedContentsId1);
+        String[] totalExpected1 = {"ART1", "RAH1", "ART187", "RAH101", "ART102", "EVN103", "ART104", "ART111", "ART112", "EVN23", "ART120", "ART121", "ART122"};
+        assertEquals(totalExpected1.length, paginatedContentsId1.getCount().intValue());
+        assertEquals(4, paginatedContentsId1.getList().size());
+        for (int i = 0; i < 4; i++) {
+            assertEquals(totalExpected1[i], paginatedContentsId1.getList().get(i));
+        }
+        
+        descrFilter = new EntitySearchFilter(IContentManager.CONTENT_DESCR_FILTER_KEY, false, "co", true, FieldSearchFilter.LikeOptionType.RIGHT);
+        EntitySearchFilter<String> paginationFilter2 = new EntitySearchFilter<>(6, 3);
+        EntitySearchFilter[] filters2 = {creationOrder, descrFilter, paginationFilter2};
+        SearcherDaoPaginatedResult<String> paginatedContentsId2 = this._contentManager.getPaginatedWorkContentsId(null, true, filters2, groupCodes);
+        assertNotNull(paginatedContentsId2);
+        String[] totalExpected2 = {"RAH101", "ART102", "EVN103", "ART104", "ART111", "ART112", "EVN23", "ART120", "ART121", "ART122"};
+        assertEquals(totalExpected2.length, paginatedContentsId2.getCount().intValue());
+        assertEquals(6, paginatedContentsId2.getList().size());
+        for (int i = 3; i < (6+3); i++) {
+            assertEquals(totalExpected2[i], paginatedContentsId2.getList().get(i-3));
+        }
+    }
+    
     public void testSearchContents_1_6() throws Throwable {
-        //forcing case sensitive search
-        WorkContentSearcherDAO searcherDao = (WorkContentSearcherDAO) this.getApplicationContext().getBean("jacmsWorkContentSearcherDAO");
-
         EntitySearchFilter creationOrder = new EntitySearchFilter(IContentManager.CONTENT_CREATION_DATE_FILTER_KEY, false);
         creationOrder.setOrder(EntitySearchFilter.ASC_ORDER);
         EntitySearchFilter descrFilter = new EntitySearchFilter(IContentManager.CONTENT_DESCR_FILTER_KEY, false, "CoNt", true);
@@ -288,10 +337,7 @@ public class TestContentManager extends BaseTestCase {
     }
 
     public void testSearchWorkContents_2_b() throws Throwable {
-        //forcing case insensitive search
-        WorkContentSearcherDAO searcherDao = (WorkContentSearcherDAO) this.getApplicationContext().getBean("jacmsWorkContentSearcherDAO");
-
-        List<String> groupCodes = new ArrayList<String>();
+        List<String> groupCodes = new ArrayList<>();
         groupCodes.add("customers");
         groupCodes.add(Group.FREE_GROUP_NAME);
         EntitySearchFilter creationOrder = new EntitySearchFilter(IContentManager.CONTENT_CREATION_DATE_FILTER_KEY, false);
@@ -306,7 +352,7 @@ public class TestContentManager extends BaseTestCase {
     }
 
     public void testSearchWorkContents_3() throws Throwable {
-        List<String> groupCodes = new ArrayList<String>();
+        List<String> groupCodes = new ArrayList<>();
         groupCodes.add(Group.ADMINS_GROUP_NAME);
         EntitySearchFilter creationOrder = new EntitySearchFilter(IContentManager.CONTENT_CREATION_DATE_FILTER_KEY, false);
         creationOrder.setOrder(EntitySearchFilter.DESC_ORDER);
@@ -346,13 +392,13 @@ public class TestContentManager extends BaseTestCase {
             assertNull(this._contentManager.loadContent(newContent.getId(), false));
         }
     }
-
+    
     private void verifyOrder(List<String> contents, String[] order) {
         for (int i = 0; i < contents.size(); i++) {
             assertEquals(order[i], contents.get(i));
         }
     }
-
+    
     public void testLoadContent() throws Throwable {
         Content content = this._contentManager.loadContent("ART111", false);
         assertEquals(Content.STATUS_PUBLIC, content.getStatus());
@@ -578,7 +624,7 @@ public class TestContentManager extends BaseTestCase {
         }
         assertFalse(contents.contains("EVN103"));
 
-        List<String> groups = new ArrayList<String>();
+        List<String> groups = new ArrayList<>();
         groups.add("coach");
         contents = _contentManager.loadPublicContentsId("EVN", null, null, groups);
         assertEquals(expectedFreeContentsId.length + 2, contents.size());
@@ -590,7 +636,7 @@ public class TestContentManager extends BaseTestCase {
     }
 
     public void testLoadPublicEvents_2() throws ApsSystemException {
-        List<String> groups = new ArrayList<String>();
+        List<String> groups = new ArrayList<>();
         groups.add("coach");
         groups.add(Group.ADMINS_GROUP_NAME);
         Date start = DateConverter.parseDate("1997-06-10", "yyyy-MM-dd");
@@ -628,10 +674,7 @@ public class TestContentManager extends BaseTestCase {
     }
 
     public void testLoadPublicEvents_2_1() throws ApsSystemException {
-        //forcing case insensitive search
-        PublicContentSearcherDAO searcherDao = (PublicContentSearcherDAO) this.getApplicationContext().getBean("jacmsPublicContentSearcherDAO");
-
-        List<String> groups = new ArrayList<String>();
+        List<String> groups = new ArrayList<>();
         groups.add("coach");
         groups.add(Group.ADMINS_GROUP_NAME);
         Date start = DateConverter.parseDate("1997-06-10", "yyyy-MM-dd");
@@ -648,10 +691,7 @@ public class TestContentManager extends BaseTestCase {
     }
 
     public void testLoadPublicEvents_2_2() throws ApsSystemException {
-        //forcing case sensitive search
-        PublicContentSearcherDAO searcherDao = (PublicContentSearcherDAO) this.getApplicationContext().getBean("jacmsPublicContentSearcherDAO");
-
-        List<String> groups = new ArrayList<String>();
+        List<String> groups = new ArrayList<>();
         groups.add("coach");
         groups.add(Group.ADMINS_GROUP_NAME);
         Date start = DateConverter.parseDate("1997-06-10", "yyyy-MM-dd");
@@ -675,7 +715,7 @@ public class TestContentManager extends BaseTestCase {
     }
 
     public void testLoadPublicEvents_3() throws ApsSystemException {
-        List<String> groups = new ArrayList<String>();
+        List<String> groups = new ArrayList<>();
         groups.add(Group.ADMINS_GROUP_NAME);
         Date value = DateConverter.parseDate("1999-04-14", "yyyy-MM-dd");
         EntitySearchFilter filter = new EntitySearchFilter("DataInizio", true, value, false);
@@ -692,7 +732,7 @@ public class TestContentManager extends BaseTestCase {
     }
 
     protected void testLoadPublicEvents_4(boolean useRoleFilter) throws ApsSystemException {
-        List<String> groups = new ArrayList<String>();
+        List<String> groups = new ArrayList<>();
         groups.add(Group.ADMINS_GROUP_NAME);
         EntitySearchFilter filter1 = (useRoleFilter)
                 ? EntitySearchFilter.createRoleFilter(JacmsSystemConstants.ATTRIBUTE_ROLE_TITLE, "Ce", "TF")
@@ -719,9 +759,9 @@ public class TestContentManager extends BaseTestCase {
     }
 
     public void testLoadPublicEvents_5() throws ApsSystemException {
-        List<String> groups = new ArrayList<String>();
+        List<String> groups = new ArrayList<>();
         groups.add(Group.ADMINS_GROUP_NAME);
-        List<Date> allowedDates = new ArrayList<Date>();
+        List<Date> allowedDates = new ArrayList<>();
         allowedDates.add(DateConverter.parseDate("1999-04-14", "yyyy-MM-dd"));//EVN192
         allowedDates.add(DateConverter.parseDate("2008-02-13", "yyyy-MM-dd"));//EVN23
         EntitySearchFilter filter = new EntitySearchFilter("DataInizio", true, allowedDates, false);
@@ -741,9 +781,9 @@ public class TestContentManager extends BaseTestCase {
     }
 
     protected void testLoadPublicEvents_6(boolean useRoleFilter) throws ApsSystemException {
-        List<String> groups = new ArrayList<String>();
+        List<String> groups = new ArrayList<>();
         groups.add(Group.ADMINS_GROUP_NAME);
-        List<String> allowedDescription = new ArrayList<String>();
+        List<String> allowedDescription = new ArrayList<>();
         allowedDescription.add("Mostra");//EVN21, EVN20
         allowedDescription.add("Collezione");//EVN23
         EntitySearchFilter filter = (useRoleFilter)
@@ -766,9 +806,9 @@ public class TestContentManager extends BaseTestCase {
     }
 
     protected void testLoadPublicEvents_7(boolean useRoleFilter) throws ApsSystemException {
-        List<String> groups = new ArrayList<String>();
+        List<String> groups = new ArrayList<>();
         groups.add(Group.ADMINS_GROUP_NAME);
-        List<String> allowedDescription = new ArrayList<String>();
+        List<String> allowedDescription = new ArrayList<>();
         allowedDescription.add("Mostra Zootecnica");//EVN20
         allowedDescription.add("Title B - Event 2");//EVN192
         EntitySearchFilter filter1 = (useRoleFilter)
@@ -792,9 +832,9 @@ public class TestContentManager extends BaseTestCase {
     }
 
     protected void testLoadPublicEvents_8(boolean useRoleFilter) throws ApsSystemException {
-        List<String> groups = new ArrayList<String>();
+        List<String> groups = new ArrayList<>();
         groups.add(Group.ADMINS_GROUP_NAME);
-        List<String> allowedDescription = new ArrayList<String>();
+        List<String> allowedDescription = new ArrayList<>();
         allowedDescription.add("Castello");//EVN24
         allowedDescription.add("dei bambini");//EVN24
         EntitySearchFilter filter = (useRoleFilter)
@@ -817,9 +857,7 @@ public class TestContentManager extends BaseTestCase {
     }
 
     protected void testLoadPublicEvents_9_b(boolean useRoleFilter) throws ApsSystemException {
-        //forcing case insensitive search
-        PublicContentSearcherDAO searcherDao = (PublicContentSearcherDAO) this.getApplicationContext().getBean("jacmsPublicContentSearcherDAO");
-        List<String> groups = new ArrayList<String>();
+        List<String> groups = new ArrayList<>();
         groups.add(Group.ADMINS_GROUP_NAME);
         EntitySearchFilter filter = (useRoleFilter)
                 ? EntitySearchFilter.createRoleFilter(JacmsSystemConstants.ATTRIBUTE_ROLE_TITLE, "le", true)
@@ -841,9 +879,7 @@ public class TestContentManager extends BaseTestCase {
     }
 
     protected void testLoadPublicEvents_9_c(boolean useRoleFilter) throws ApsSystemException {
-        //forcing case sensitive search
-        PublicContentSearcherDAO searcherDao = (PublicContentSearcherDAO) this.getApplicationContext().getBean("jacmsPublicContentSearcherDAO");
-        List<String> groups = new ArrayList<String>();
+        List<String> groups = new ArrayList<>();
         groups.add(Group.ADMINS_GROUP_NAME);
         EntitySearchFilter filter = (useRoleFilter)
                 ? EntitySearchFilter.createRoleFilter(JacmsSystemConstants.ATTRIBUTE_ROLE_TITLE, "LE", true)
@@ -860,12 +896,9 @@ public class TestContentManager extends BaseTestCase {
     }
 
     public void testLoadWorkEvents_1_b() throws ApsSystemException {
-        //forcing case insensitive search
-        WorkContentSearcherDAO searcherDao = (WorkContentSearcherDAO) this.getApplicationContext().getBean("jacmsWorkContentSearcherDAO");
-
-        List<String> groups = new ArrayList<String>();
+        List<String> groups = new ArrayList<>();
         groups.add(Group.ADMINS_GROUP_NAME);
-        List<String> allowedDescription = new ArrayList<String>();
+        List<String> allowedDescription = new ArrayList<>();
         allowedDescription.add("descrizione");//"ART179" "ART180" "ART187"
         allowedDescription.add("on line");//"ART179"
         allowedDescription.add("customers");//"ART102" "RAH101"
@@ -1011,7 +1044,7 @@ public class TestContentManager extends BaseTestCase {
 
     public void testLoadFutureEvents_3() throws ApsSystemException {
         Date today = DateConverter.parseDate("2005-01-01", "yyyy-MM-dd");
-        List<String> groups = new ArrayList<String>();
+        List<String> groups = new ArrayList<>();
         groups.add("coach");
         EntitySearchFilter filter = new EntitySearchFilter("DataInizio", true, today, null);
         filter.setOrder(EntitySearchFilter.DESC_ORDER);
@@ -1063,7 +1096,7 @@ public class TestContentManager extends BaseTestCase {
         filter.setOrder(EntitySearchFilter.ASC_ORDER);
         EntitySearchFilter[] filters = {filter};
 
-        List<String> groups = new ArrayList<String>();
+        List<String> groups = new ArrayList<>();
         groups.add("coach");
         List<String> contents = _contentManager.loadPublicContentsId("EVN", null, filters, groups);
         String[] expectedOrderedContentsId = {"EVN191", "EVN192", "EVN103",
@@ -1075,7 +1108,7 @@ public class TestContentManager extends BaseTestCase {
     }
 
     public void testLoadWorkContentsForCategory_1() throws ApsSystemException {
-        List<String> groups = new ArrayList<String>();
+        List<String> groups = new ArrayList<>();
         groups.add(Group.ADMINS_GROUP_NAME);
         String[] categories1 = {"general_cat1"};
         List<String> contents = this._contentManager.loadWorkContentsId(categories1, null, groups);
@@ -1098,7 +1131,7 @@ public class TestContentManager extends BaseTestCase {
     }
 
     public void testLoadWorkContentsForCategory_2() throws ApsSystemException {
-        List<String> groups = new ArrayList<String>();
+        List<String> groups = new ArrayList<>();
         groups.add(Group.ADMINS_GROUP_NAME);
         String[] categories1 = {"general_cat1"};
         EntitySearchFilter filter1 = new EntitySearchFilter(IContentManager.ENTITY_TYPE_CODE_FILTER_KEY, false, "ART", false);
@@ -1197,7 +1230,7 @@ public class TestContentManager extends BaseTestCase {
     }
 
     public void testLoadPublicEventsForCategory_2() throws ApsSystemException {
-        List<String> groups = new ArrayList<String>();
+        List<String> groups = new ArrayList<>();
         groups.add(Group.ADMINS_GROUP_NAME);
         String[] categories1 = {"general_cat1"};
         EntitySearchFilter filter1 = new EntitySearchFilter(IContentManager.ENTITY_TYPE_CODE_FILTER_KEY, false, "ART", false);
@@ -1260,7 +1293,7 @@ public class TestContentManager extends BaseTestCase {
             assertTrue(contents.contains(expectedFreeContentsId[i]));
         }
 
-        Collection<String> allowedGroup = new HashSet<String>();
+        Collection<String> allowedGroup = new HashSet<>();
         allowedGroup.add(Group.FREE_GROUP_NAME);
         allowedGroup.add("customers");
 
@@ -1285,7 +1318,7 @@ public class TestContentManager extends BaseTestCase {
     }
 
     public void testLoadWorkContentsByAttribute_1() throws ApsSystemException {
-        List<String> groups = new ArrayList<String>();
+        List<String> groups = new ArrayList<>();
         groups.add(Group.ADMINS_GROUP_NAME);
 
         EntitySearchFilter filter0 = new EntitySearchFilter(IContentManager.ENTITY_ID_FILTER_KEY, false);
@@ -1315,7 +1348,7 @@ public class TestContentManager extends BaseTestCase {
     }
 
     public void testLoadWorkContentsByAttribute_2() throws ApsSystemException {
-        List<String> groups = new ArrayList<String>();
+        List<String> groups = new ArrayList<>();
         groups.add(Group.ADMINS_GROUP_NAME);
         EntitySearchFilter filter0 = new EntitySearchFilter(IContentManager.ENTITY_ID_FILTER_KEY, false);
         filter0.setOrder(EntitySearchFilter.ASC_ORDER);
@@ -1531,7 +1564,7 @@ public class TestContentManager extends BaseTestCase {
             }
         }
     }
-
+    
     protected String[] addDraftContentsForTest(String[] masterContentIds, boolean publish) throws Throwable {
         String[] newContentIds = new String[masterContentIds.length];
         for (int i = 0; i < masterContentIds.length; i++) {
@@ -1563,11 +1596,13 @@ public class TestContentManager extends BaseTestCase {
     private void init() throws Exception {
         try {
             this._contentManager = (IContentManager) this.getService(JacmsSystemConstants.CONTENT_MANAGER);
+            this._groupManager = (IGroupManager) this.getService(SystemConstants.GROUP_MANAGER);
         } catch (Throwable t) {
             throw new Exception(t);
         }
     }
 
     private IContentManager _contentManager = null;
-
+    private IGroupManager _groupManager;
+    
 }

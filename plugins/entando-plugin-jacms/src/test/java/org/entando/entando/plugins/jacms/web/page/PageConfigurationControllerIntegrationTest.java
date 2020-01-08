@@ -137,26 +137,27 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
                             .param("status", IPageService.STATUS_DRAFT)
                             .header("Authorization", "Bearer " + accessToken));
             result.andExpect(status().isOk());
-            String getResult = result.andReturn().getResponse().getContentAsString();
 
-            String payloadWithInvalidModelId = "{\n"
+            String payloadWithOtherModelId = "{\n"
                     + "  \"code\": \"content_viewer\",\n"
                     + "  \"config\": {\n"
-                    + " \"modelId\": \"default\",\n"
+                    + " \"modelId\": \"list\",\n"
                     + " \"contentId\": \"EVN24\"\n"
                     + "  }\n"
                     + "}";
-
             result = mockMvc
                     .perform(put("/pages/{pageCode}/widgets/{frame}", new Object[]{pageCode, 0})
                             .param("status", IPageService.STATUS_DRAFT)
-                            .content(payloadWithInvalidModelId)
+                            .content(payloadWithOtherModelId)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken));
-
-            String putResult = result.andReturn().getResponse().getContentAsString();
             result.andExpect(status().isOk());
-            assertThat(putResult, is(getResult));
+            
+            result
+                .andExpect(jsonPath("$.errors", hasSize(0)))
+                .andExpect(jsonPath("$.payload.code", is("content_viewer")))
+                .andExpect(jsonPath("$.payload.config.modelId", is("list")))
+                .andExpect(jsonPath("$.payload.config.contentId", is("EVN24")));
 
         } finally {
             this.pageManager.deletePage(pageCode);
@@ -500,8 +501,12 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
                             .header("Authorization", "Bearer " + accessToken));
 
             Widget[] defaultWidgetConfiguration = pageModel.getDefaultWidget();
-
+            
             result.andExpect(status().isOk());
+            String stringResult = result.andReturn().getResponse().getContentAsString();
+            System.out.println("*********************************************");
+            System.out.println(stringResult);
+            System.out.println("*********************************************");
             result.andExpect(jsonPath("$.payload.widgets", Matchers.hasSize(pageModel.getConfiguration().length)));
             for (int i = 0; i < pageModel.getConfiguration().length; i++) {
                 String path = String.format("$.payload.widgets[%d]", i);
@@ -536,11 +541,12 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
         if (null == pageModel) {
             pageModel = parentPage.getMetadata().getModel();
         }
-        PageMetadata metadata = PageTestUtil.createPageMetadata(pageModel.getCode(), true, pageCode + "_title", null, null, false, null, null);
-        ApsProperties config = PageTestUtil.createProperties("contentId", "EVN24", "modelId", "default");
+        PageMetadata metadata = PageTestUtil.createPageMetadata(pageModel, true, pageCode + "_title", null, null, false, null, null);
+        ApsProperties config = PageTestUtil.createProperties("modelId", "default", "contentId", "EVN24");
         Widget widgetToAdd = PageTestUtil.createWidget("content_viewer", config, this.widgetTypeManager);
-        Widget[] widgets = {widgetToAdd};
-        Page pageToAdd = PageTestUtil.createPage(pageCode, parentPage, "free", metadata, widgets);
+        Widget[] widgets = new Widget[pageModel.getFrames().length];
+        widgets[0] = widgetToAdd;
+        Page pageToAdd = PageTestUtil.createPage(pageCode, parentPage.getCode(), "free", metadata, widgets);
         return pageToAdd;
     }
 

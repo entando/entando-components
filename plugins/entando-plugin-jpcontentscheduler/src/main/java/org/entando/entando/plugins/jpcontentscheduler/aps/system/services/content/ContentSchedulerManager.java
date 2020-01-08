@@ -57,7 +57,7 @@ import com.agiletec.aps.system.services.keygenerator.IKeyGeneratorManager;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
-import com.agiletec.plugins.jacms.aps.system.services.content.IWorkContentSearcherDAO;
+import com.agiletec.plugins.jacms.aps.system.services.content.IContentSearcherDAO;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jpmail.aps.services.mail.IMailManager;
 
@@ -70,7 +70,7 @@ public class ContentSchedulerManager extends AbstractService implements IContent
 	private static final Logger _logger = LoggerFactory.getLogger(ContentSchedulerManager.class);
 	private static final long serialVersionUID = 6880576602469119814L;
 
-	private IWorkContentSearcherDAO _workContentSearcherDAO;
+	private IContentSearcherDAO _workContentSearcherDAO;
 
 	private ConfigInterface configManager;
 	private ContentThreadConfig config;
@@ -159,7 +159,7 @@ public class ContentSchedulerManager extends AbstractService implements IContent
 	 */
 	@Override
 	public List<ContentSuspendMove> getContentAttrDataFine() throws ApsSystemException {
-		List<ContentSuspendMove> ans = new ArrayList<ContentSuspendMove>();
+		List<ContentSuspendMove> ans = new ArrayList<>();
 		try {
 			for (Iterator<ContentTypeElem> i = this.config.getTypesList().iterator(); i.hasNext();) {
 				ContentTypeElem elem = i.next();
@@ -278,12 +278,10 @@ public class ContentSchedulerManager extends AbstractService implements IContent
 	 * @return
 	 */
 	private List<ContentState> contentOfTypes(List<ContentState> contentList, List<String> types) {
-		List<ContentState> ans = new ArrayList<ContentState>();
-
+		List<ContentState> ans = new ArrayList<>();
 		for (Iterator<ContentState> itContent = contentList.iterator(); itContent.hasNext();) {
 			ContentState currElem = itContent.next();
 			String currType = currElem.getType();
-
 			if ((types != null && types.size() == 1 && types.get(0).equals(ContentThreadConstants.ALL_TYPES))) {
 				ans.add(currElem);
 			} else {
@@ -321,7 +319,7 @@ public class ContentSchedulerManager extends AbstractService implements IContent
 		try {
 			List<String> usernames = this.getAuthorizationManager().getUsersByGroup(groupName, false);
 			if (usernames.size() > 0) {
-				users = new ArrayList<UserDetails>();
+				users = new ArrayList<>();
 				for (int i = 0; i < usernames.size(); i++) {
 					UserDetails u = this.getUserManager().getUser(usernames.get(i));
 					users.add(u);
@@ -372,11 +370,11 @@ public class ContentSchedulerManager extends AbstractService implements IContent
 		this._userManager = userManager;
 	}
 
-	protected IWorkContentSearcherDAO getWorkContentSearcherDAO() {
+	protected IContentSearcherDAO getWorkContentSearcherDAO() {
 		return _workContentSearcherDAO;
 	}
 
-	public void setWorkContentSearcherDAO(IWorkContentSearcherDAO workContentSearcherDAO) {
+	public void setWorkContentSearcherDAO(IContentSearcherDAO workContentSearcherDAO) {
 		this._workContentSearcherDAO = workContentSearcherDAO;
 	}
 

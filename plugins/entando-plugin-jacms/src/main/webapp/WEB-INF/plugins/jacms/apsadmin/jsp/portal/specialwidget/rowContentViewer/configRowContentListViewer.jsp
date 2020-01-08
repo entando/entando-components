@@ -217,8 +217,13 @@
                                 <s:text name="label.page" />
                             </label>
                             <div class="col-sm-10">
-                                <wpsf:select list="pages" name="pageLink" id="pageLink" listKey="code" listValue="getShortFullTitle(currentLang.code)" value="%{widget.config.get('pageLink')}" headerKey=""
-                                             headerValue="%{getText('label.none')}" cssClass="form-control" />
+                                <select name="pageLink" id="pageLink" class="form-control">
+                                    <option value=""><s:text name="label.none" /></option>
+                                    <s:iterator value="pages" var="pageVar">
+                                        <option <s:if test="%{widget.config.get('pageLink') == #pageVar.code}">selected="selected"</s:if> 
+                                            value="<s:property value="#pageVar.code"/>"><s:property value="%{getShortFullTitle(#pageVar, currentLang.code)}"/></option>
+                                    </s:iterator>
+                                </select>
                             </div>
                         </div>
 

@@ -300,7 +300,7 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
             List<ContentDto> masterList = new ArrayList<>();
             for (String contentId : sublist) {
                 masterList.add(this.buildContentDto(contentId, online,
-                        requestList.getModel(), requestList.getLang(), requestList.isResolveLink(), bindingResult));
+                        requestList.getModel(), requestList.getLang(), requestList.isResolveLink(), user, bindingResult));
             }
             pagedMetadata.setBody(masterList);
             return pagedMetadata;
@@ -336,13 +336,13 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(code, "content");
         boolean online = (IContentService.STATUS_ONLINE.equalsIgnoreCase(status));
         this.checkContentAuthorization(user, code, online, false, bindingResult);
-        ContentDto dto = this.buildContentDto(code, online, modelId, langCode, resolveLink, bindingResult);
+        ContentDto dto = this.buildContentDto(code, online, modelId, langCode, resolveLink, user, bindingResult);
         dto.setReferences(this.getReferencesInfo(dto.getId()));
         return dto;
     }
 
     protected ContentDto buildContentDto(String code, boolean onLine,
-            String modelId, String langCode, boolean resolveLink, BindingResult bindingResult) {
+            String modelId, String langCode, boolean resolveLink, UserDetails user, BindingResult bindingResult) {
         ContentDto dto = null;
         try {
             Content content = this.getContentManager().loadContent(code, onLine);
@@ -356,13 +356,13 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
             logger.error("Error extracting content", e);
             throw new RestServerError("error extracting content", e);
         }
-        dto.setHtml(this.extractRenderedContent(dto, modelId, langCode, resolveLink, bindingResult));
+        dto.setHtml(this.extractRenderedContent(dto, modelId, langCode, resolveLink, user, bindingResult));
         dto.setReferences(this.getReferencesInfo(dto.getId()));
         return dto;
     }
 
     protected String extractRenderedContent(ContentDto dto, String modelId,
-            String langCode, boolean resolveLink, BindingResult bindingResult) {
+            String langCode, boolean resolveLink, UserDetails user, BindingResult bindingResult) {
         String render = null;
         if (null == modelId || modelId.trim().length() == 0) {
             return null;
@@ -378,7 +378,7 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
                     throw new ValidationGenericException(bindingResult);
                 }
             }
-            ContentRenderizationInfo renderizationInfo = this.getContentDispenser().getRenderizationInfo(dto.getId(), modelIdInteger, lang.getCode(), null, true);
+            ContentRenderizationInfo renderizationInfo = this.getContentDispenser().getRenderizationInfo(dto.getId(), modelIdInteger, lang.getCode(), user, true);
             if (null != renderizationInfo) {
                 if (resolveLink) {
                     this.getContentDispenser().resolveLinks(renderizationInfo, null);

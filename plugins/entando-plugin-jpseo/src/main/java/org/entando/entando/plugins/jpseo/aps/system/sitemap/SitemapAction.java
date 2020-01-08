@@ -116,7 +116,7 @@ public class SitemapAction extends BaseAction {
                     String viewPageCode = contentManager.getViewPage(contentId);
                     if (null != viewPageCode && null != pageManager.getOnlinePage(viewPageCode)) {
                         IPage viewPage = pageManager.getOnlinePage(viewPageCode);
-                        if (viewPage.isChildOf(root.getCode())) {
+                        if (viewPage.isChildOf(root.getCode(), pageManager)) {
                             PageURL seoUrl = (PageURL) urlManager.createURL(reqCtx);
                             seoUrl.setPage(viewPage);
                             seoUrl.setLang(lang);

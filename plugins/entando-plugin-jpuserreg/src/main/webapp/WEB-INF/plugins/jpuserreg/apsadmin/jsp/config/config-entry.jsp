@@ -242,9 +242,13 @@
                 </a>
             </label>
             <div class="col-sm-10">
-                <wpsf:select name="config.activationPageCode" id="activationPageCode" list="%{activationPages}"
-                    listKey="code" listValue="%{getShortFullTitle(currentLang.code)}" headerKey=""
-                    headerValue="%{getText('note.choose')}" cssClass="form-control" />
+                <select name="config.activationPageCode" id="activationPageCode" class="form-control">
+                    <option value=""><s:text name="note.choose" /></option>
+                    <s:iterator value="activationPages" var="pageVar">
+                        <option <s:if test="%{config.activationPageCode == #pageVar.code}">selected="selected"</s:if> 
+                            value="<s:property value="#pageVar.code"/>"><s:property value="%{getShortFullTitle(#pageVar, currentLang.code)}"/></option>
+                    </s:iterator>
+                </select>
                 <s:if test="#inputHasFieldErrorVar">
                     <p class="text-danger no-mb"><s:iterator value="#inputFieldErrorsVar">
                             <s:property />
@@ -325,9 +329,13 @@
                 </a>
             </label>
             <div class="col-sm-10">
-                <wpsf:select name="config.reactivationPageCode" id="reactivationPageCode" list="%{reactivationPages}"
-                    listKey="code" listValue="%{getShortFullTitle(currentLang.code)}" headerKey=""
-                    headerValue="%{getText('note.choose')}" cssClass="form-control" />
+                <select name="config.reactivationPageCode" id="reactivationPageCode" class="form-control">
+                    <option value=""><s:text name="note.choose" /></option>
+                    <s:iterator value="reactivationPages" var="pageVar">
+                        <option <s:if test="%{config.activationPageCode == #pageVar.code}">selected="selected"</s:if> 
+                            value="<s:property value="#pageVar.code"/>"><s:property value="%{getShortFullTitle(#pageVar, currentLang.code)}"/></option>
+                    </s:iterator>
+                </select>
                 <s:if test="#inputHasFieldErrorVar">
                     <p class="text-danger no-mb"><s:iterator value="#inputFieldErrorsVar">
                             <s:property />

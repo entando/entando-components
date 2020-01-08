@@ -179,11 +179,11 @@
                                 <li>
                                     <span class="label label-info">
                                         <span class="icon fa fa-tag"></span>&#32;
-                                        <abbr title="<s:property value="#ideaCategory.getFullTitle(currentLang.code)"/>"><s:property value="#ideaCategory.getShortFullTitle(currentLang.code)" /></abbr>&#32;
+                                        <abbr title="<s:property value="%{getFullTitle(#ideaCategory, currentLang.code)}"/>"><s:property value="%{getShortFullTitle(#ideaCategory, currentLang.code)}" /></abbr>&#32;
                                         <wpsa:actionParam action="removeCategory" var="actionName" >
                                             <wpsa:actionSubParam name="categoryCode" value="%{#ideaCategory.code}" />
                                         </wpsa:actionParam>
-                                        <wpsf:submit type="button" action="%{#actionName}" title="%{getText('label.remove') + ' ' + #ideaCategory.defaultFullTitle}" cssClass="btn btn-link">
+                                        <wpsf:submit type="button" action="%{#actionName}" title="%{getText('label.remove') + ' ' + getDefaultFullTitle(#ideaCategory)}" cssClass="btn btn-link">
                                             <span class="pficon pficon-close white"></span>
                                             <span class="sr-only">x</span>
                                         </wpsf:submit>

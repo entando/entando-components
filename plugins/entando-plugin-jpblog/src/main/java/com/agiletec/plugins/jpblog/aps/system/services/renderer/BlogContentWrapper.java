@@ -29,6 +29,7 @@ import java.util.List;
 import org.springframework.beans.factory.BeanFactory;
 
 import com.agiletec.aps.system.services.category.Category;
+import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.renderer.ContentWrapper;
 
@@ -84,7 +85,7 @@ public class BlogContentWrapper extends ContentWrapper {
 	}
 
 	public List<Category> getSpecialCategories() {
-		List<Category> categories = new ArrayList<Category>();
+		List<Category> categories = new ArrayList<>();
 		List<Category> allCategories = super.getCategories();
 		if (null != allCategories) {
 			Iterator<Category> it = allCategories.iterator();
@@ -92,7 +93,7 @@ public class BlogContentWrapper extends ContentWrapper {
 				Category cat = it.next();
 				for (int i = 0; i < this._specialCategoriesRootCodes.size(); i++) {
 					String rootCode = this._specialCategoriesRootCodes.get(i);
-					if (cat.isChildOf(rootCode)) {
+					if (cat.isChildOf(rootCode, this.getCategoryManager())) {
 						categories.add(cat);
 						break;
 					}
@@ -143,12 +144,20 @@ public class BlogContentWrapper extends ContentWrapper {
 		this._specialCategoriesRootCodes = specialCategoriesRootCodes;
 	}
 
+    protected ICategoryManager getCategoryManager() {
+        return categoryManager;
+    }
 
-
+    protected void setCategoryManager(ICategoryManager categoryManager) {
+        this.categoryManager = categoryManager;
+    }
+    
 	private int _commentsCount;
 	private int _ratingCount;
 	private double _ratingAverage;
-	private List<String> _specialCategoriesRootCodes = new ArrayList<String>();
+	private List<String> _specialCategoriesRootCodes = new ArrayList<>();
+    
+    private ICategoryManager categoryManager;
 
 }
 

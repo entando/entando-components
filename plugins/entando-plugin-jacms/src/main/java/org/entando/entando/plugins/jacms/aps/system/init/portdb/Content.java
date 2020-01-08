@@ -29,64 +29,71 @@ public class Content {
 			dataType = DataType.STRING, 
 			width = 16, 
 			canBeNull = false, id = true)
-	private String _contentId;
+	private String contentId;
 	
 	@DatabaseField(columnName = "contenttype", 
 			dataType = DataType.STRING, 
 			width = 30, 
 			canBeNull = false, index = true)
-	private String _contentType;
+	private String contentType;
 	
 	@DatabaseField(columnName = "descr", 
 			dataType = DataType.STRING, 
 			canBeNull = false)
-	private String _description;
-	
+	private String description;
+    
 	@DatabaseField(columnName = "status", 
 			dataType = DataType.STRING, 
 			width = 12, 
 			canBeNull = false, index = true)
-	private String _status;
+	private String status;
 	
 	@DatabaseField(columnName = "workxml", 
 			dataType = DataType.LONG_STRING, 
 			canBeNull = false)
-	private String _workXml;
+	private String workXml;
 	
 	@DatabaseField(columnName = "created", 
 			dataType = DataType.STRING, 
-			width = 20, 
-			canBeNull = true)
-	private String _created;
+			width = 20, canBeNull = true)
+	private String created;
 	
 	@DatabaseField(columnName = "lastmodified", 
 			dataType = DataType.STRING, 
-			width = 20, 
-			canBeNull = true, index = true)
-	private String _lastModified;
+			width = 20, canBeNull = true, index = true)
+	private String lastModified;
 	
 	@DatabaseField(columnName = "onlinexml", 
 			dataType = DataType.LONG_STRING, 
 			canBeNull = true)
-	private String _onlineXml;
+	private String onlineXml;
+	
+	@DatabaseField(columnName = "published", 
+			dataType = DataType.STRING, 
+			width = 20, canBeNull = true, index = true)
+	private String published;
+    
+    @DatabaseField(columnName = "sync",
+            dataType = DataType.SHORT)
+    private short sync;
 	
 	@DatabaseField(columnName = "maingroup", 
 			dataType = DataType.STRING, 
 			width = 20, 
 			canBeNull = false, index = true)
-	private String _mainGroup;
+	private String mainGroup;
 	
 	@DatabaseField(columnName = "currentversion", 
 			dataType = DataType.STRING, 
 			width = 7, 
 			canBeNull = false)
-	private String _currentVersion;
+	private String currentVersion;
 	
 	@DatabaseField(columnName = "lasteditor", 
 			dataType = DataType.STRING, 
 			width = 40, 
 			canBeNull = true)
-	private String _lastEditor;
+	private String lastEditor;
 	
 	@DatabaseField(columnName = "firsteditor", 
 			dataType = DataType.STRING, 
@@ -103,22 +110,3 @@ public class Content {
 	public static final String TABLE_NAME = "contents";
 	
 }
-/*
-CREATE TABLE contents
-(
-  contentid character varying(16) NOT NULL,
-  contenttype character varying(30) NOT NULL,
-  descr character varying(260) NOT NULL,
-  status character varying(12) NOT NULL,
-  workxml character varying NOT NULL,
-  created character varying(20),
-  lastmodified character varying(20),
-  onlinexml character varying,
-  maingroup character varying(20) NOT NULL,
-  currentversion character varying(7) NOT NULL,
-  firsteditor character varying(40),
-  lasteditor character varying(40),
-  restriction character varying(40),
-  CONSTRAINT contents_pkey PRIMARY KEY (contentid )
-)
- */

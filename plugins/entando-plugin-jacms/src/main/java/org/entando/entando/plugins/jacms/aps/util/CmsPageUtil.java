@@ -68,8 +68,12 @@ public class CmsPageUtil extends PageUtils {
      * page.
      */
     public static boolean isContentPublishableOnPageDraft(Content publishingContent, IPage page) {
+        if (null == page) {
+            logger.error("Null page");
+            return false;
+        }
         if (page.isOnlineInstance()) {
-            logger.warn("this check expects a draft instance of the page");
+            logger.warn("this check expects a draft instance of the page {}", page.getCode());
             return false;
         }
         return isContentPublishableOnPage(publishingContent, page);
@@ -186,7 +190,7 @@ public class CmsPageUtil extends PageUtils {
             addPublishedContents(page.getWidgets(), contents, applicationContext);
         } catch (Throwable t) {
             String msg = "Error extracting published contents on page '" + pageCode + "'";
-            logger.error("Error extracting published contents on page '{}'", pageCode, t);
+            logger.error(msg, t);
             throw new RuntimeException(msg, t);
         }
         return contents;
@@ -217,7 +221,7 @@ public class CmsPageUtil extends PageUtils {
             }
         } catch (Throwable t) {
             String msg = "Error extracting published contents on page";
-            logger.error("Error extracting published contents on page", t);
+            logger.error(msg, t);
             throw new RuntimeException(msg, t);
         }
     }
@@ -225,7 +229,7 @@ public class CmsPageUtil extends PageUtils {
     private static void addContent(Collection<Content> contents, String contentId, IContentManager contentManager) {
         try {
             if (null != contentId) {
-                Content content = contentManager.loadContent(contentId, true, false);
+                Content content = contentManager.loadContent(contentId, true);
                 if (null != content) {
                     contents.add(content);
                 }

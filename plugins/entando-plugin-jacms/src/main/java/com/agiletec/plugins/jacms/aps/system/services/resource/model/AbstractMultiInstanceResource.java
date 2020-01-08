@@ -40,7 +40,7 @@ public abstract class AbstractMultiInstanceResource extends AbstractResource {
     @Override
     public void deleteResourceInstances() throws ApsSystemException {
         try {
-            Collection<ResourceInstance> resources = instances.values();
+            Collection<ResourceInstance> resources = this.getInstances().values();
             for (ResourceInstance currentInstance : resources) {
                 String fileName = currentInstance.getFileName();
                 String subPath = this.getDiskSubFolder() + fileName;
@@ -72,7 +72,7 @@ public abstract class AbstractMultiInstanceResource extends AbstractResource {
     @Override
     public String getXML() {
         ResourceDOM resourceDom = getResourceDOM();
-        List<ResourceInstance> resources = new ArrayList<>(instances.values());
+        List<ResourceInstance> resources = new ArrayList<>(this.getInstances().values());
         for (ResourceInstance currentInstance : resources) {
             resourceDom.addInstance(currentInstance.getJDOMElement());
         }
@@ -108,19 +108,15 @@ public abstract class AbstractMultiInstanceResource extends AbstractResource {
     String getNewInstanceFileName(String masterFileName, int size, String langCode) {
         String baseName = FilenameUtils.getBaseName(masterFileName);
         String extension = FilenameUtils.getExtension(masterFileName);
-
         String suffix = "";
-
         if (size >= 0) {
             suffix += "_d" + size;
         }
-
         if (langCode != null) {
             suffix += "_" + langCode;
         }
-
-        return createFilePlusExtensionName(
-                getMultiFileUniqueBaseName(baseName, suffix, extension),
+        return this.createFileName(
+                super.getMultiFileUniqueBaseName(baseName, suffix, extension),
                 extension
         );
     }

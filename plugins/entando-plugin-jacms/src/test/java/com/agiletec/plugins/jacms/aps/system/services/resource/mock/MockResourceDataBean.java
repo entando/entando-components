@@ -23,6 +23,7 @@ import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceDataBean;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author E.Santoboni
@@ -33,19 +34,18 @@ public class MockResourceDataBean implements ResourceDataBean {
     private String _descr;
     private String _mainGroup;
     private File _file;
-    private List<Category> _categories = new ArrayList<Category>();
+    private String filename;
+    private List<Category> _categories = new ArrayList<>();
     private String _mimeType;
-    private Map<String,String> metadata = new HashMap<String, String>();
+    private Map<String,String> metadata = new HashMap<>();
     private String owner;
+    
+    @Override
     public String getResourceId() {
         return null;
     }
 
-    /**
-     * Restituisce il tipo di risorsa.
-     *
-     * @return Il tipo di risorsa.
-     */
+    @Override
     public String getResourceType() {
         return _resourceType;
     }
@@ -59,20 +59,11 @@ public class MockResourceDataBean implements ResourceDataBean {
         this._resourceType = type;
     }
 
-    /**
-     * Setta la descrizione della risorsa.
-     *
-     * @param descr La descrizione della risorsa.
-     */
     public void setDescr(String descr) {
         this._descr = descr;
     }
 
-    /**
-     * Restituisce la descrizione della risorsa.
-     *
-     * @return La descrizione della risorsa.
-     */
+    @Override
     public String getDescr() {
         return _descr;
     }
@@ -86,6 +77,7 @@ public class MockResourceDataBean implements ResourceDataBean {
         this._file = file;
     }
 
+    @Override
     public String getMainGroup() {
         return _mainGroup;
     }
@@ -94,6 +86,7 @@ public class MockResourceDataBean implements ResourceDataBean {
         this._mainGroup = mainGroup;
     }
 
+    @Override
     public List<Category> getCategories() {
         return _categories;
     }
@@ -102,19 +95,29 @@ public class MockResourceDataBean implements ResourceDataBean {
         this._categories = categories;
     }
 
+    @Override
     public int getFileSize() {
         return (int) this._file.length() / 1000;
     }
 
+    @Override
     public InputStream getInputStream() throws Throwable {
         return new FileInputStream(this._file);
     }
 
+    @Override
     public String getFileName() {
-        String filename = _file.getName().substring(_file.getName().lastIndexOf('/') + 1).trim();
-        return filename;
+        if (!StringUtils.isBlank(this.filename)) {
+            return filename;
+        }
+        return _file.getName().substring(_file.getName().lastIndexOf('/') + 1).trim();
     }
 
+    public void setFileName(String filename) {
+        this.filename = filename;
+    }
+
+    @Override
     public String getMimeType() {
         return _mimeType;
     }

@@ -21,6 +21,7 @@
  */
 package org.entando.entando.plugins.jpseo.aps.system.services.page;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import org.entando.entando.plugins.jpseo.aps.system.services.metatag.Metatag;
@@ -28,7 +29,7 @@ import org.entando.entando.plugins.jpseo.aps.system.services.metatag.Metatag;
 /**
  * @author E.Santoboni
  */
-public class PageMetatag {
+public class PageMetatag implements Serializable {
     
     private String keyAttribute = Metatag.ATTRIBUTE_NAME_NAME;
     private String key;
@@ -40,6 +41,13 @@ public class PageMetatag {
         this.setLangCode(langCode);
         this.setKey(key);
         this.setValue(value);
+    }
+    
+    @Override
+    public PageMetatag clone() {
+        PageMetatag meta = new PageMetatag(this.getLangCode(), this.getKey(), this.getValue());
+        meta.setKeyAttribute(this.getKeyAttribute());
+        return meta;
     }
 
     @Override

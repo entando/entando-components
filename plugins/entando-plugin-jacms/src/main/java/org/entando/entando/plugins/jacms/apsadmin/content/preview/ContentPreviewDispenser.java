@@ -56,16 +56,10 @@ public class ContentPreviewDispenser extends BaseContentDispenser {
 	
 	@Override
 	public ContentRenderizationInfo getBaseRenderizationInfo(PublicContentAuthorizationInfo authInfo, 
-			String contentId, long modelId, String langCode, UserDetails currentUser, RequestContext reqCtx, boolean cacheable) {
-		return this.getBaseRenderizationInfo(authInfo, contentId, modelId, langCode, currentUser, reqCtx);
-	}
-	
-	@Override
-	public ContentRenderizationInfo getBaseRenderizationInfo(PublicContentAuthorizationInfo authInfo, 
 			String contentId, long modelId, String langCode, UserDetails currentUser, RequestContext reqCtx) {
 		ContentRenderizationInfo renderInfo = null;
 		try {
-			List<Group> userGroups = (null != currentUser) ? this.getAuthorizationManager().getUserGroups(currentUser) : new ArrayList<Group>();
+			List<Group> userGroups = (null != currentUser) ? this.getAuthorizationManager().getUserGroups(currentUser) : new ArrayList<>();
 			if (authInfo.isUserAllowed(userGroups)) {
 				Content contentOnSession = this.extractContentOnSession(reqCtx);
 				String renderedContent = this.buildRenderedContent(contentOnSession, modelId, langCode, reqCtx);

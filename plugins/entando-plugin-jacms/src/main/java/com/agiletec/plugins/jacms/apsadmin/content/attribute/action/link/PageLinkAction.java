@@ -103,7 +103,7 @@ public class PageLinkAction extends PageTreeAction {
 
 	@Override
 	protected Collection<String> getNodeGroupCodes() {
-		Set<String> groupCodes = new HashSet<String>();
+		Set<String> groupCodes = new HashSet<>();
 		groupCodes.add(Group.FREE_GROUP_NAME);
 		Content currentContent = this.getContent();
 		if (null != currentContent.getMainGroup()) {
@@ -128,6 +128,14 @@ public class PageLinkAction extends PageTreeAction {
 		}
 		return contentVo;
 	}
+    
+    public Map<String, String> getTreeNodeExtraParamsMap() {
+        Map<String, String> map = new HashMap<>();
+        if (!StringUtils.isBlank(this.getContentId())) {
+            map.put("contentId", this.getContentId());
+        }
+        return map;
+    }
 	
 	public String getContentOnSessionMarker() {
 		return _contentOnSessionMarker;

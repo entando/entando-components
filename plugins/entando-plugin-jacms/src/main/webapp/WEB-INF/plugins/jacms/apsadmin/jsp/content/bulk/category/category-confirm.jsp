@@ -97,7 +97,7 @@
                     <li>
                         <span class="label label-info">
                             <span class="icon fa fa-tag"></span>&#32;
-                            <span title="<s:property value="#category.getFullTitle(currentLang.code)"/>"><s:property value="#category.getShortFullTitle(currentLang.code)" /></span>&#32;
+                            <span title="<s:property value="%{getFullTitle(#category, currentLang.code)}"/>"><s:property value="%{getShortFullTitle(#category, currentLang.code)}" /></span>&#32;
                             <wpsa:actionParam action="disjoin" var="actionName" >
                                 <wpsa:actionSubParam name="categoryCode" value="%{#category.code}" />
                             </wpsa:actionParam>

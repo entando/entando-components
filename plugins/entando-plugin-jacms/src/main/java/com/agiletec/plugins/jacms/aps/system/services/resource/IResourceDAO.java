@@ -85,10 +85,15 @@ public interface IResourceDAO {
      * @return La lista di identificativi di risorse.
      */
     public List<String> searchResourcesId(String type, String text, String filename, String categoryCode, Collection<String> groupCodes);
-
+    
+    @Deprecated
     public List<String> searchResourcesId(FieldSearchFilter[] filters, String categoryCode, Collection<String> groupCodes);
-
+    
     public List<String> searchResourcesId(FieldSearchFilter[] filters, List<String> categories);
+
+    public List<String> searchResourcesId(FieldSearchFilter[] filters, List<String> categories, Collection<String> groupCodes);
+
+    public Integer countResources(FieldSearchFilter[] filters, List<String> categories, Collection<String> groupCodes);
 
     /**
      * Carica un record di risorse in funzione dell'idRisorsa. Questo record è

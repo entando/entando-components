@@ -16,16 +16,22 @@ package org.entando.entando.plugins.jacms.apsadmin.content.rs.model;
 import java.util.Date;
 
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
-import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentRecordVO;
 
 public class ContentJO {
 
-	public ContentJO(Content content, ContentRecordVO vo) {
+	private String _description;
+	private String _author;
+	private String _type;
+	private Date _lastModified;
+	private Boolean _online;
+	private Boolean _changed;
+
+	public ContentJO(Content content) {
 		this.setDescription(content.getDescription());
 		this.setAuthor(content.getLastEditor());
 		this.setType(content.getTypeDescription());
 		this.setOnline(content.isOnLine());
-		this.setChanged(!vo.isSync());
+		this.setChanged(!content.isSync());
 		this.setLastModified(content.getLastModified());
 	}
 
@@ -76,12 +82,5 @@ public class ContentJO {
 	public void setChanged(Boolean changed) {
 		this._changed = changed;
 	}
-
-	private String _description;
-	private String _author;
-	private String _type;
-	private Date _lastModified;
-	private Boolean _online;
-	private Boolean _changed;
 
 }

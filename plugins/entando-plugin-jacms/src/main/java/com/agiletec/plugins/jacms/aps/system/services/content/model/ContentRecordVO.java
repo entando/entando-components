@@ -22,8 +22,24 @@ import com.agiletec.aps.system.common.entity.model.ApsEntityRecord;
  */
 public class ContentRecordVO extends ApsEntityRecord {
 	
+	private String description;
+	private String status;
+	private Date create;
+	private Date modify;
+	private Date publish;
+	private boolean onLine;
+	private boolean sync;
+	private String xmlOnLine;
+	
+	private String mainGroupCode;
+    
+	private String version;
+	private String firstEditor;
+	private String lastEditor;
+    private String restriction;
+	
 	public String getDescription() {
-		return _description;
+		return description;
 	}
 	@Deprecated
 	public String getDescr() {
@@ -31,7 +47,7 @@ public class ContentRecordVO extends ApsEntityRecord {
 	}
 	
 	public void setDescription(String description) {
-		this._description = description;
+		this.description = description;
 	}
 	@Deprecated
 	public void setDescr(String description) {
@@ -39,25 +55,32 @@ public class ContentRecordVO extends ApsEntityRecord {
 	}
 	
 	public String getStatus() {
-		return _status;
+		return status;
 	}
 	public void setStatus(String status) {
-		this._status = status;
+		this.status = status;
 	}
 	
 	public Date getCreate() {
-		return _create;
+		return create;
 	}
 	public void setCreate(Date create) {
-		this._create = create;
+		this.create = create;
 	}
 	
 	public Date getModify() {
-		return _modify;
+		return modify;
 	}
 	public void setModify(Date modify) {
-		this._modify = modify;
+		this.modify = modify;
 	}
+
+    public Date getPublish() {
+        return publish;
+    }
+    public void setPublish(Date publish) {
+        this.publish = publish;
+    }
 	
 	public String getXmlWork() {
 		return super.getXml();
@@ -67,74 +90,59 @@ public class ContentRecordVO extends ApsEntityRecord {
 	}
 	
 	public boolean isOnLine() {
-		return _onLine;
+		return onLine;
 	}
 	public void setOnLine(boolean onLine) {
-		this._onLine = onLine;
+		this.onLine = onLine;
 	}
 	
 	public boolean isSync() {
-		return _sync;
+		return sync;
 	}
 	public void setSync(boolean sync) {
-		this._sync = sync;
+		this.sync = sync;
 	}
 	
 	public String getXmlOnLine() {
-		return _xmlOnLine;
+		return xmlOnLine;
 	}
 	public void setXmlOnLine(String xmlOnLine) {
-		this._xmlOnLine = xmlOnLine;
+		this.xmlOnLine = xmlOnLine;
 	}
 	
 	public String getMainGroupCode() {
-		return _mainGroupCode;
+		return mainGroupCode;
 	}
 	public void setMainGroupCode(String mainGroupCode) {
-		this._mainGroupCode = mainGroupCode;
+		this.mainGroupCode = mainGroupCode;
 	}
 	
 	public String getVersion() {
-		return _version;
+		return version;
 	}
 	public void setVersion(String version) {
-		this._version = version;
+		this.version = version;
 	}
 	
 	public String getFirstEditor() {
-		return _firstEditor;
+		return firstEditor;
 	}
 	public void setFirstEditor(String firstEditor) {
-		this._firstEditor = firstEditor;
+		this.firstEditor = firstEditor;
 	}
 	
 	public String getLastEditor() {
-		return _lastEditor;
+		return lastEditor;
 	}
 	public void setLastEditor(String lastEditor) {
-		this._lastEditor = lastEditor;
+		this.lastEditor = lastEditor;
 	}
 
 	public String getRestriction() {
-		return _restriction;
+		return restriction;
 	}
-	public void setRestriction(String _restriction) {
-		this._restriction = _restriction;
+	public void setRestriction(String restriction) {
+		this.restriction = restriction;
 	}
-
-	private String _description;
-	private String _status;
-	private Date _create;
-	private Date _modify;
-	private boolean _onLine;
-	private boolean _sync;
-	private String _xmlOnLine;
-	
-	private String _mainGroupCode;
-	
-	private String _version;
-	private String _firstEditor;
-	private String _lastEditor;
-	private String _restriction;
 	
 }

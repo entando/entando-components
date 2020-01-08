@@ -16,8 +16,10 @@ package com.agiletec.plugins.jacms.aps.system.services.searchengine;
 import java.io.File;
 
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
+import com.agiletec.aps.system.common.tree.ITreeNodeManager;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.lang.ILangManager;
+import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 
 /**
  * Data Access Object dedita alla indicizzazione di documenti.
@@ -51,12 +53,19 @@ public interface IIndexerDAO {
 	
 	public void setLangManager(ILangManager langManager);
     
+    public void setTreeNodeManager(ITreeNodeManager treeNodeManager);
+    
 	public static final String FIELD_PREFIX = "entity:"; 
     public static final String CONTENT_ID_FIELD_NAME = FIELD_PREFIX + "id";
     public static final String CONTENT_TYPE_FIELD_NAME = FIELD_PREFIX + "type";
     public static final String CONTENT_GROUP_FIELD_NAME = FIELD_PREFIX + "group";
     public static final String CONTENT_CATEGORY_FIELD_NAME = FIELD_PREFIX + "category";
 	public static final String CONTENT_CATEGORY_SEPARATOR = "/";
-	public static final String ATTACHMENT_FIELD_SUFFIX = "_attachment";
+    
+    public static final String CONTENT_DESCRIPTION_FIELD_NAME = FIELD_PREFIX + IContentManager.CONTENT_DESCR_FILTER_KEY;
+    public static final String CONTENT_LAST_MODIFY_FIELD_NAME = FIELD_PREFIX + IContentManager.CONTENT_MODIFY_DATE_FILTER_KEY;
+    public static final String CONTENT_CREATION_FIELD_NAME = FIELD_PREFIX + IContentManager.CONTENT_CREATION_DATE_FILTER_KEY;
+    public static final String CONTENT_TYPE_CODE_FIELD_NAME = FIELD_PREFIX + IContentManager.ENTITY_TYPE_CODE_FILTER_KEY;
+    public static final String CONTENT_MAIN_GROUP_FIELD_NAME = FIELD_PREFIX + IContentManager.CONTENT_MAIN_GROUP_FILTER_KEY;
 	
 }

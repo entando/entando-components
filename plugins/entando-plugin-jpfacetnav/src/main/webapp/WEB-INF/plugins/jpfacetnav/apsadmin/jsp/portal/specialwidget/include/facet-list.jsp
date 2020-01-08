@@ -65,7 +65,7 @@
                         <s:set var="treeItemIconName" value="'fa-folder'" />
                         <s:set var="actionName" value="'joinFacet'" />
                         <s:if test="#categoryTreeStyleVar == 'classic'">
-                            <s:set var="currentRoot" value="facetRoot" />
+                            <s:set var="currentRoot" value="allowedTreeRootNode" />
                             <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/common/treeBuilderCategoriesJoin.jsp" />
                         </s:if>
                         <s:elseif test="#categoryTreeStyleVar == 'request'">
@@ -91,17 +91,15 @@
                             <span class="label label-tag">
                                 <span class="icon fa fa-tag"></span>
                                 &#32;
-                                <abbr title="<s:property value="#currentFacet.defaultFullTitle"/>">
-                                    <s:property value="#currentFacet.defaultFullTitle" />
+                                <abbr title="<s:property value="%{getDefaultFullTitle(#currentFacet)}"/>">
+                                    <s:property value="%{getDefaultFullTitle(#currentFacet)}" />
                                 </abbr>
                                 &#32; &#32;
                                 <wpsa:actionParam action="removeFacet" var="actionName">
                                     <wpsa:actionSubParam name="facetCode" value="%{#currentFacetCode}" />
                                 </wpsa:actionParam>
-                                <wpsf:submit type="button" action="%{#actionName}"
-                                    title="%{getText('label.remove') + 
-                                ' ' + #currentFacetCode.defaultFullTitle}"
-                                    cssClass="btn btn-link">
+                                <wpsf:submit type="button" action="%{#actionName}" 
+                                    title="%{getText('label.remove') + ' ' + getDefaultFullTitle(#currentFacetCode)}" cssClass="btn btn-link">
                                     <span class="pficon pficon-close white"></span>
                                     <span class="sr-only">x</span>
                                 </wpsf:submit>

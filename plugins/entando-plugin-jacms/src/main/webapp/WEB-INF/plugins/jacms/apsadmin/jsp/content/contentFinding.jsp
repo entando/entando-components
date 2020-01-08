@@ -3,7 +3,7 @@
 <%@ taglib prefix="wpsa" uri="/apsadmin-core"%>
 <%@ taglib prefix="wpsf" uri="/apsadmin-form"%>
 <%-- radios + checkboxes only --%>
-<%@ taglib prefix="jacmswpsa" uri="/jacms-apsadmin-core"%>
+<%@ taglib prefix="jacmsapsadmin" uri="/jacms-apsadmin-core"%>
 
 <s:set var="targetNS" value="%{'/do/jacms/Content'}" />
 
@@ -316,7 +316,7 @@
                 </button>
                 <ul class="dropdown-menu" role="menu">
                     <s:iterator var="contentTypeVar" value="#contentTypesVar">
-                        <jacmswpsa:contentType typeCode="%{#contentTypeVar.typeCode}"
+                        <jacmsapsadmin:contentType typeCode="%{#contentTypeVar.typeCode}"
                                                property="isAuthToEdit" var="isAuthToEditVar" />
                         <s:if test="%{#isAuthToEditVar}">
                             <li>
@@ -417,20 +417,18 @@
                     </ul>
                 </div>
             </s:if>
-
-            <s:set var="contentIdsVar" value="contents" />
-
+            
+            <s:set var="maxSizeVar" value="10" />
+            <s:set var="paginatedContentIdsVar" value="%{getPaginatedContentsId(#maxSizeVar)}" />
+            <s:set var="contentIdsVar" value="#paginatedContentIdsVar.list" />
             <s:if test="%{#contentIdsVar.size() > 0}">
-
                 <!-- Content List -->
-                <wpsa:subset source="#contentIdsVar" count="10" objectName="groupContent" advanced="true" offset="5">
+                <jacmsapsadmin:cmssubset pagerId="%{getPagerId()}" total="%{#paginatedContentIdsVar.count}" maxSize="#maxSizeVar" objectName="groupContent" offset="5" >
                     <s:set var="group" value="#groupContent" />
-
                     <!-- Toolbar -->
                     <div class="col-xs-12 no-padding" id="content-list-toolbar">
                         <div class="row toolbar-pf table-view-pf-toolbar border-bottom">
                             <div class="col-xs-12">
-
                                 <!-- toolbar first row  -->
                                 <div class="toolbar-pf-actions">
                                     <!-- items selected -->
@@ -439,13 +437,11 @@
                                             <span class="selected-items-counter">0</span> <s:text name="title.itemSelected" />
                                         </div>
                                     </div>
-
                                     <!-- toolbar -->
                                     <div class="col-xs-6 no-padding">
                                         <label class="col-xs-5 control-label">
                                             <s:text name="label.setAs" />
                                         </label>
-
                                         <div class="col-xs-7 no-padding">
                                             <div class="btn-toolbar">
                                                 <wp:ifauthorized permission="validateContents">
@@ -458,7 +454,6 @@
                                                         </wpsf:submit>
                                                     </div>
                                                 </wp:ifauthorized>
-
                                                 <wpsa:hookPoint
                                                     key="jacms.contentFinding.allContents.actions"
                                                     objectName="hookpoint_contentFinding_allContents">
@@ -469,7 +464,6 @@
                                                         </s:iterator>
                                                     </div>
                                                 </wpsa:hookPoint>
-
                                                 <div class="btn-group pull-right">
                                                     <wpsf:submit action="bulkRemove" type="button"
                                                                  title="%{getText('note.button.delete')}"
@@ -481,18 +475,13 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <!-- toolbar second row -->
                                 <div class="row toolbar-pf-results">
-
-                                    <div class="col-xs-6 no-padding">
-                                    </div>
-
+                                    <div class="col-xs-6 no-padding"></div>
                                     <div class="col-xs-6 no-padding">
                                         <label class="col-xs-5 control-label">
                                             <s:text name="label.actions" />
                                         </label>
-
                                         <div class="col-xs-7 no-padding">
                                             <div class="btn-toolbar">
                                                 <div class="dropdown" style="margin:10px 0 0px -4px;">
@@ -525,7 +514,6 @@
                             </div>
                         </div>
                     </div>
-
                     <!-- Content List - Table -->
                     <div class="col-xs-12 no-padding">
                         <div class="alert alert-warning hidden selectall-box no-mb mt-20">
@@ -536,7 +524,6 @@
                             <wpsf:checkbox name="allContentsSelected" id="allContentsSelected" cssClass="bootstrap-switch" value="false"/>
                         </div>
                     </div>
-
                     <div class="col-xs-12 no-padding">
                         <div class="mt-20">
                             <table class="table table-striped table-bordered table-hover content-list" id="contentListTable" style="width:100%">
@@ -601,7 +588,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <s:iterator var="contentId">
+                                    <s:iterator var="contentId" value="#contentIdsVar" >
                                         <s:set var="content" value="%{getContentVo(#contentId)}"></s:set>
                                             <tr>
                                                 <td class="text-center">
@@ -687,8 +674,7 @@
                                                         <wpsa:hookPoint key="jacms.contentFinding.contentRow.actions" objectName="hookpoint_contentFinding_contentRow">
                                                             <s:iterator value="#hookpoint_contentFinding_contentRow" var="hookPointElement">
                                                                 <li>
-                                                                    <wpsa:include value="%{#hookPointElement.filePath}">
-                                                                    </wpsa:include>
+                                                                    <wpsa:include value="%{#hookPointElement.filePath}"></wpsa:include>
                                                                 </li>
                                                             </s:iterator>
                                                         </wpsa:hookPoint>
@@ -701,18 +687,15 @@
                             </table>
                         </div>
                     </div>
-
                     <div class="content-view-pf-pagination table-view-pf-pagination clearfix mt-20 mb-20">
                         <div class="form-group">
-                            <span><s:include
-                                    value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" /></span>
+                            <span><s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" /></span>
                             <div class="mt-5">
-                                <s:include
-                                    value="/WEB-INF/apsadmin/jsp/common/inc/pager_formTable.jsp" />
+                                <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formTable.jsp" />
                             </div>
                         </div>
                     </div>
-                </wpsa:subset>
+                </jacmsapsadmin:cmssubset>
             </s:if>
             <s:else>
                 <div class="alert alert-info">
@@ -721,6 +704,5 @@
                 </div>
             </s:else>
         </div>
-
     </s:form>
 </div>

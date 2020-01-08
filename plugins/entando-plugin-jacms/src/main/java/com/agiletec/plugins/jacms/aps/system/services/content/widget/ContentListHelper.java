@@ -39,7 +39,6 @@ import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.BaseContentListHelper;
-import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentListFilterBean;
 import com.agiletec.plugins.jacms.aps.system.services.content.widget.util.FilterUtils;
 import java.util.Arrays;
 import java.util.Collections;
@@ -66,28 +65,10 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
         return super.getFilters(contentType, filtersShowletParam, currentLang.getCode());
     }
 
-    /**
-     * @deprecated From Entando 3.0 version 3.0.1. Use getFilter(String,
-     * IEntityFilterBean, RequestContext) method
-     */
-    @Override
-    public EntitySearchFilter getFilter(String contentType, IContentListFilterBean bean, RequestContext reqCtx) {
-        return this.getFilter(contentType, (IEntityFilterBean) bean, reqCtx);
-    }
-
     @Override
     public EntitySearchFilter getFilter(String contentType, IEntityFilterBean bean, RequestContext reqCtx) {
         Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
         return super.getFilter(contentType, bean, currentLang.getCode());
-    }
-
-    /**
-     * @deprecated From Entando 3.0 version 3.0.1. Use
-     * getUserFilterOption(String, IEntityFilterBean, RequestContext) method
-     */
-    @Override
-    public UserFilterOptionBean getUserFilterOption(String contentType, IContentListFilterBean bean, RequestContext reqCtx) {
-        return this.getUserFilterOption(contentType, (IEntityFilterBean) bean, reqCtx);
     }
 
     @Override
