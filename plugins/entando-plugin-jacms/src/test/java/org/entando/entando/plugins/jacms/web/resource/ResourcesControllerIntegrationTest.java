@@ -29,6 +29,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.startsWith;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -222,7 +223,6 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
                 .andExpect(jsonPath("$.payload[0].id", is("22")))
                 .andExpect(jsonPath("$.payload[0].type", is("image")));
     }
-
 
     @Test
     public void testCreateEditDeleteImageResource() throws Exception {
@@ -509,6 +509,132 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
     }
 
     @Test
+    public void testCreateCloneDeleteFileResource() throws Exception {
+        UserDetails user = createAccessToken();
+        String createdId = null;
+        String clonedId = null;
+
+        try {
+            ResultActions result = performCreateResource(user, "file", "free", Arrays.stream(new String[]{"resCat1, resCat2"}).collect(Collectors.toList()), "application/pdf")
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload.categories.size()", is(2)))
+                    .andExpect(jsonPath("$.payload.categories[0]", is("resCat1")))
+                    .andExpect(jsonPath("$.payload.categories[1]", is("resCat2")))
+                    .andExpect(jsonPath("$.payload.group", is("free")))
+                    .andExpect(jsonPath("$.payload.description", is("file_test.jpeg")))
+                    .andExpect(jsonPath("$.payload.size", is("2 Kb")))
+                    .andExpect(jsonPath("$.payload.path", startsWith("/Entando/resources/cms/documents/file_test")));
+
+            createdId = JsonPath.read(result.andReturn().getResponse().getContentAsString(), "$.payload.id");
+
+            ResultActions result2 = performCloneResource(user, createdId)
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.id", not(createdId)))
+                    .andExpect(jsonPath("$.payload.categories.size()", is(2)))
+                    .andExpect(jsonPath("$.payload.categories[0]", is("resCat1")))
+                    .andExpect(jsonPath("$.payload.categories[1]", is("resCat2")))
+                    .andExpect(jsonPath("$.payload.group", is("free")))
+                    .andExpect(jsonPath("$.payload.description", is("file_test.jpeg")))
+                    .andExpect(jsonPath("$.payload.size", is("2 Kb")))
+                    .andExpect(jsonPath("$.payload.path", startsWith("/Entando/resources/cms/documents/file_test")));
+
+            clonedId = JsonPath.read(result2.andReturn().getResponse().getContentAsString(), "$.payload.id");
+
+        } finally {
+
+            if (clonedId != null) {
+                performDeleteResource(user, "file", clonedId)
+                        .andDo(print())
+                        .andExpect(status().isOk());
+
+                performGetResources(user, "file", null)
+                        .andDo(print())
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.payload.size()", is(4)));
+            }
+
+            if (createdId != null) {
+                performDeleteResource(user, "file", createdId)
+                        .andDo(print())
+                        .andExpect(status().isOk());
+
+                performGetResources(user, "file", null)
+                        .andDo(print())
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.payload.size()", is(3)));
+            }
+        }
+    }
+
+    @Test
+    public void testCreateCloneDeleteImageResource() throws Exception {
+        UserDetails user = createAccessToken();
+        String createdId = null;
+        String clonedId = null;
+
+        try {
+            ResultActions result = performCreateResource(user, "image", "free", Arrays.stream(new String[]{"resCat1, resCat2"}).collect(Collectors.toList()), "application/jpeg")
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload.categories.size()", is(2)))
+                    .andExpect(jsonPath("$.payload.categories[0]", is("resCat1")))
+                    .andExpect(jsonPath("$.payload.categories[1]", is("resCat2")))
+                    .andExpect(jsonPath("$.payload.group", is("free")))
+                    .andExpect(jsonPath("$.payload.description", is("image_test.jpeg")))
+                    .andExpect(jsonPath("$.payload.owner", is("jack_bauer")))
+                    .andExpect(jsonPath("$.payload.versions.size()", is(4)))
+                    .andExpect(jsonPath("$.payload.versions[0].size", is("2 Kb")))
+                    .andExpect(jsonPath("$.payload.versions[0].path", startsWith("/Entando/resources/cms/images/image_test")));
+
+            createdId = JsonPath.read(result.andReturn().getResponse().getContentAsString(), "$.payload.id");
+
+            ResultActions result2 = performCloneResource(user, createdId)
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.id", not(createdId)))
+                    .andExpect(jsonPath("$.payload.categories.size()", is(2)))
+                    .andExpect(jsonPath("$.payload.categories[0]", is("resCat1")))
+                    .andExpect(jsonPath("$.payload.categories[1]", is("resCat2")))
+                    .andExpect(jsonPath("$.payload.group", is("free")))
+                    .andExpect(jsonPath("$.payload.description", is("image_test.jpeg")))
+                    .andExpect(jsonPath("$.payload.owner", is("jack_bauer")))
+                    .andExpect(jsonPath("$.payload.versions.size()", is(4)))
+                    .andExpect(jsonPath("$.payload.versions[0].size", is("2 Kb")))
+                    .andExpect(jsonPath("$.payload.versions[0].path", startsWith("/Entando/resources/cms/images/image_test")));
+
+            clonedId = JsonPath.read(result2.andReturn().getResponse().getContentAsString(), "$.payload.id");
+
+        } finally {
+
+            if (clonedId != null) {
+                performDeleteResource(user, "image", clonedId)
+                        .andDo(print())
+                        .andExpect(status().isOk());
+
+                performGetResources(user, "image", null)
+                        .andDo(print())
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.payload.size()", is(4)));
+            }
+
+            if (createdId != null) {
+                performDeleteResource(user, "image", createdId)
+                        .andDo(print())
+                        .andExpect(status().isOk());
+
+                performGetResources(user, "image", null)
+                        .andDo(print())
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.payload.size()", is(3)));
+            }
+        }
+    }
+
+    @Test
     public void testEditResourceNotFound() throws Exception {
         UserDetails user = createAccessToken();
 
@@ -530,6 +656,14 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
                 .andExpect(status().isNotFound());
 
         performDeleteResource(user, "image", "99999")
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void testCloneResourceNotFound() throws Exception {
+        UserDetails user = createAccessToken();
+        performCloneResource(user, "999999")
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
@@ -664,6 +798,18 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
         }
 
         return mockMvc.perform(request);
+    }
+
+    private ResultActions performCloneResource(UserDetails user, String resourceId) throws Exception {
+
+        String path = String.format("/plugins/cms/assets/%s/clone", resourceId);
+
+        if (null == user) {
+            return mockMvc.perform(post(path));
+        }
+
+        return mockMvc.perform(post(path)
+                .header("Authorization", "Bearer " + mockOAuthInterceptor(user)));
     }
 
 }

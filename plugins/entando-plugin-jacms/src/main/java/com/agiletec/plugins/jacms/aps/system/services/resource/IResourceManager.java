@@ -129,6 +129,15 @@ public interface IResourceManager {
     public void updateResource(ResourceDataBean bean) throws ApsSystemException;
 
     /**
+     * Clone una risorsa nel db, indipendentemente dal tipo.
+     *
+     * @param resource La risorsa da clonare.
+     * @return la risorsa aggiunta.
+     * @throws ApsSystemException in caso di errore.
+     */
+    public ResourceInterface cloneResource(ResourceInterface resource) throws ApsSystemException;
+
+    /**
      * Carica una lista di identificativi di risorse in base al tipo, ad una
      * parola chiave e dalla categoria della risorsa.
      *

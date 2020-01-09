@@ -16,7 +16,6 @@ package com.agiletec.plugins.jacms.aps.system.services.resource;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.FieldSearchFilter;
-import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
@@ -27,7 +26,6 @@ import com.agiletec.aps.system.services.group.GroupUtilizer;
 import com.agiletec.aps.system.services.keygenerator.IKeyGeneratorManager;
 import com.agiletec.aps.util.DateConverter;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
-import com.agiletec.plugins.jacms.aps.system.services.content.IContentSearcherDAO;
 import com.agiletec.plugins.jacms.aps.system.services.resource.cache.IResourceManagerCacheWrapper;
 import com.agiletec.plugins.jacms.aps.system.services.resource.event.ResourceChangedEvent;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.*;
@@ -243,13 +241,29 @@ public class ResourceManager extends AbstractService implements IResourceManager
         }
     }
 
+    @Override
+    public ResourceInterface cloneResource(ResourceInterface resource) throws ApsSystemException {
+        try {
+            resource.setId(String.valueOf(getUniqueKey()));
+            this.getResourceDAO().addResource(resource);
+            return resource;
+        } catch (Throwable t) {
+            logger.error("Error adding resource", t);
+            throw new ApsSystemException("Error adding resource", t);
+        }
+    }
+
     protected void generateAndSetResourceId(ResourceInterface resource, String id) throws ApsSystemException {
         if (null == id || id.trim().length() == 0) {
-            IKeyGeneratorManager keyGenerator
-                    = (IKeyGeneratorManager) this.getBeanFactory().getBean(SystemConstants.KEY_GENERATOR_MANAGER);
-            int newId = keyGenerator.getUniqueKeyCurrentValue();
+            int newId = getUniqueKey();
             resource.setId(String.valueOf(newId));
         }
+    }
+    
+    private int getUniqueKey() throws ApsSystemException  {
+        IKeyGeneratorManager keyGenerator
+                = (IKeyGeneratorManager) this.getBeanFactory().getBean(SystemConstants.KEY_GENERATOR_MANAGER);
+        return keyGenerator.getUniqueKeyCurrentValue();
     }
 
     @Override
