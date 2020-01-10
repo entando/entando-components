@@ -166,6 +166,29 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
     }
 
     @Test
+    public void testUpdateNonExistentContentType() throws Exception {
+        String typeCode = "TX2";
+        try {
+            ContentTypeDto createdContentType = createContentType(typeCode);
+            createdContentType.setCode("999");
+
+            ResultActions result = mockMvc.perform(put("/plugins/cms/contentTypes")
+                    .header("Authorization", "Bearer " + accessToken)
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .content(jsonMapper.writeValueAsString(createdContentType))
+                    .accept(MediaType.APPLICATION_JSON_UTF8));
+
+            result.andDo(print())
+                    .andExpect(status().isNotFound());
+        } finally {
+            if (null != this.contentManager.getEntityPrototype(typeCode)) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype(typeCode);
+            }
+            Assert.assertNull(this.contentManager.getEntityPrototype(typeCode));
+        }
+    }
+
+    @Test
     public void testDeleteContentType() throws Exception {
         String typeCode = "TX3";
         try {
