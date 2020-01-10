@@ -27,7 +27,8 @@ public class ContentModelDto {
     @JsonProperty("descr")
     @ApiModelProperty(required = true, value = "description")
     private String descr;
-    
+
+    @NotNull
     @JsonProperty("contentShape")
     private String contentShape;
     
