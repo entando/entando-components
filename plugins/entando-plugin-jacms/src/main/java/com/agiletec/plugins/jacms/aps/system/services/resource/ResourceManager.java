@@ -228,15 +228,13 @@ public class ResourceManager extends AbstractService implements IResourceManager
      * Salva una lista di risorse nel db, indipendentemente dal tipo.y
      *
      * @param resource La risorsa da salvare.
-     * @return la risorsa aggiunta.
      * @throws ApsSystemException in caso di errore.
      */
     @Override
-    public ResourceInterface addResource(ResourceInterface resource) throws ApsSystemException {
+    public void addResource(ResourceInterface resource) throws ApsSystemException {
         try {
             this.generateAndSetResourceId(resource, resource.getId());
             this.getResourceDAO().addResource(resource);
-            return resource;
         } catch (Throwable t) {
             logger.error("Error adding resource", t);
             throw new ApsSystemException("Error adding resource", t);
