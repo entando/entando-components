@@ -228,23 +228,13 @@ public class ResourceManager extends AbstractService implements IResourceManager
      * Salva una lista di risorse nel db, indipendentemente dal tipo.y
      *
      * @param resource La risorsa da salvare.
+     * @return la risorsa aggiunta.
      * @throws ApsSystemException in caso di errore.
      */
     @Override
-    public void addResource(ResourceInterface resource) throws ApsSystemException {
+    public ResourceInterface addResource(ResourceInterface resource) throws ApsSystemException {
         try {
             this.generateAndSetResourceId(resource, resource.getId());
-            this.getResourceDAO().addResource(resource);
-        } catch (Throwable t) {
-            logger.error("Error adding resource", t);
-            throw new ApsSystemException("Error adding resource", t);
-        }
-    }
-
-    @Override
-    public ResourceInterface cloneResource(ResourceInterface resource) throws ApsSystemException {
-        try {
-            resource.setId(String.valueOf(getUniqueKey()));
             this.getResourceDAO().addResource(resource);
             return resource;
         } catch (Throwable t) {
@@ -255,15 +245,11 @@ public class ResourceManager extends AbstractService implements IResourceManager
 
     protected void generateAndSetResourceId(ResourceInterface resource, String id) throws ApsSystemException {
         if (null == id || id.trim().length() == 0) {
-            int newId = getUniqueKey();
+            IKeyGeneratorManager keyGenerator
+                    = (IKeyGeneratorManager) this.getBeanFactory().getBean(SystemConstants.KEY_GENERATOR_MANAGER);
+            int newId = keyGenerator.getUniqueKeyCurrentValue();
             resource.setId(String.valueOf(newId));
         }
-    }
-    
-    private int getUniqueKey() throws ApsSystemException  {
-        IKeyGeneratorManager keyGenerator
-                = (IKeyGeneratorManager) this.getBeanFactory().getBean(SystemConstants.KEY_GENERATOR_MANAGER);
-        return keyGenerator.getUniqueKeyCurrentValue();
     }
 
     @Override

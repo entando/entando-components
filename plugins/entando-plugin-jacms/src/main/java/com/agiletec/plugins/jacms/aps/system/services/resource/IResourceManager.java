@@ -89,9 +89,10 @@ public interface IResourceManager {
      * Salva una risorsa nel db, indipendentemente dal tipo.
      *
      * @param resource La risorsa da salvare.
+     * @return la risorsa aggiunta.
      * @throws ApsSystemException in caso di errore.
      */
-    public void addResource(ResourceInterface resource) throws ApsSystemException;
+    public ResourceInterface addResource(ResourceInterface resource) throws ApsSystemException;
 
     /**
      * Salva una lista di risorse nel db con incluse nel filesystem,
@@ -127,15 +128,6 @@ public interface IResourceManager {
      * @throws ApsSystemException in caso di errore.
      */
     public void updateResource(ResourceDataBean bean) throws ApsSystemException;
-
-    /**
-     * Clone una risorsa nel db, indipendentemente dal tipo.
-     *
-     * @param resource La risorsa da clonare.
-     * @return la risorsa aggiunta.
-     * @throws ApsSystemException in caso di errore.
-     */
-    public ResourceInterface cloneResource(ResourceInterface resource) throws ApsSystemException;
 
     /**
      * Carica una lista di identificativi di risorse in base al tipo, ad una
