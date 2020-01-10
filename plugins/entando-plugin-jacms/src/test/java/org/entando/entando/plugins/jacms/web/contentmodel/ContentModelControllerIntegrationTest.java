@@ -345,6 +345,56 @@ public class ContentModelControllerIntegrationTest extends AbstractControllerInt
     }
 
     @Test
+    public void testChangeWithInvalidContentType() throws Exception {
+        long modelId = 2001;
+        try {
+            String payload = null;
+
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+            String accessToken = mockOAuthInterceptor(user);
+
+            ContentModelDto request = new ContentModelDto();
+            request.setId(modelId);
+            request.setContentType("ART");
+            request.setDescr("testChangeContentType");
+            request.setContentShape("testChangeContentType");
+
+            payload = mapper.writeValueAsString(request);
+
+            ResultActions result = mockMvc
+                    .perform(post(BASE_URI)
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .content(payload)
+                            .header("Authorization", "Bearer " + accessToken));
+
+            result.andExpect(status().isOk());
+
+            request.setId(modelId);
+            request.setContentType("EV9");
+            request.setDescr("testCrudContentModel".toUpperCase());
+            request.setContentShape("testCrudContentModel".toUpperCase());
+            request.setStylesheet("Stylesheet".toUpperCase());
+
+            payload = mapper.writeValueAsString(request);
+
+            result = mockMvc
+                    .perform(put(BASE_URI + "/{id}", modelId)
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .content(payload)
+                            .header("Authorization", "Bearer " + accessToken));
+
+            result.andExpect(status().isConflict())
+                    .andExpect(jsonPath("$.errors[0].code", is(String.valueOf("6"))));
+
+        } finally {
+            ContentModel model = this.contentModelManager.getContentModel(modelId);
+            if (null != model) {
+                this.contentModelManager.removeContentModel(model);
+            }
+        }
+    }
+
+    @Test
     public void testDeleteReferencedModel() throws Throwable {
 
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
