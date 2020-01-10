@@ -89,10 +89,9 @@ public interface IResourceManager {
      * Salva una risorsa nel db, indipendentemente dal tipo.
      *
      * @param resource La risorsa da salvare.
-     * @return la risorsa aggiunta.
      * @throws ApsSystemException in caso di errore.
      */
-    public ResourceInterface addResource(ResourceInterface resource) throws ApsSystemException;
+    public void addResource(ResourceInterface resource) throws ApsSystemException;
 
     /**
      * Salva una lista di risorse nel db con incluse nel filesystem,

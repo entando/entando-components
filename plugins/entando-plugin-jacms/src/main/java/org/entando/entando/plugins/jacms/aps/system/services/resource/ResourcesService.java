@@ -131,9 +131,9 @@ public class ResourcesService {
     public AssetDto cloneAsset(String resourceId) {
 
         try {
-            ResourceInterface baseResource = loadResource(resourceId);
-            baseResource.setId(null);
-            ResourceInterface clonedResource = resourceManager.addResource(baseResource);
+            ResourceInterface clonedResource = loadResource(resourceId);
+            clonedResource.setId(null);
+            resourceManager.addResource(clonedResource);
 
             return convertResourceToDto(resourceManager.loadResource(clonedResource.getId()));
         } catch (ApsSystemException e) {
