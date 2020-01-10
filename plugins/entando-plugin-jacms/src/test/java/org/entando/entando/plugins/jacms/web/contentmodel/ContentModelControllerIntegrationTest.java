@@ -292,6 +292,41 @@ public class ContentModelControllerIntegrationTest extends AbstractControllerInt
     }
 
     @Test
+    public void testAddWithIdAboveMax() throws Exception {
+        long modelId = new Long("2147483648");
+        try {
+            String payload = null;
+
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+            String accessToken = mockOAuthInterceptor(user);
+
+            ContentModelDto request = new ContentModelDto();
+            request.setId(modelId);
+            request.setContentType("EVN");
+            request.setDescr("testChangeContentType");
+            request.setContentShape("testChangeContentType");
+
+            payload = mapper.writeValueAsString(request);
+
+            ResultActions result = mockMvc
+                    .perform(post(BASE_URI)
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .content(payload)
+                            .header("Authorization", "Bearer " + accessToken));
+
+            result.andExpect(status().isBadRequest());
+            result.andExpect(jsonPath("$.errors[0].code", is("56")));
+
+        } finally {
+            ContentModel model = this.contentModelManager.getContentModel(modelId);
+            if (null != model) {
+
+                this.contentModelManager.removeContentModel(model);
+            }
+        }
+    }
+
+    @Test
     public void testChangeContentType() throws Exception {
         long modelId = 2001;
         try {

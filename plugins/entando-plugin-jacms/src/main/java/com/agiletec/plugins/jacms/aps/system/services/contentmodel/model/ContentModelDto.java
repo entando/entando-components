@@ -3,6 +3,7 @@ package com.agiletec.plugins.jacms.aps.system.services.contentmodel.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -13,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 public class ContentModelDto {
 
     @Min(value = 0)
+    @Max(value = 2147483647)
     @JsonProperty("id")
     @ApiModelProperty(required = true)
     private Long id;
