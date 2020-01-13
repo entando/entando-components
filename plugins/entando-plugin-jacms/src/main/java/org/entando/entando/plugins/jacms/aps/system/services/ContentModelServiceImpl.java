@@ -124,6 +124,7 @@ public class ContentModelServiceImpl implements ContentModelService {
     public ContentModelDto update(ContentModelDto entity) {
         try {
             long modelId = entity.getId();
+
             ContentModel contentModel = this.contentModelManager.getContentModel(entity.getId());
             if (null == contentModel) {
                 logger.warn("no contentModel found with id {}", modelId);
@@ -204,7 +205,7 @@ public class ContentModelServiceImpl implements ContentModelService {
     protected BeanPropertyBindingResult validateForAdd(ContentModel contentModel) {
         BeanPropertyBindingResult errors = new BeanPropertyBindingResult(contentModel, "contentModel");
         validateIdIsUnique(contentModel, errors);
-        validateContentType(contentModel, errors);
+        validateContentType(contentModel.getContentType(), errors);
         return errors;
     }
 
@@ -219,7 +220,7 @@ public class ContentModelServiceImpl implements ContentModelService {
 
     protected BeanPropertyBindingResult validateForUpdate(ContentModelDto request, ContentModel contentModel) {
         BeanPropertyBindingResult errors = new BeanPropertyBindingResult(contentModel, "contentModel");
-        this.validateContentType(contentModel, errors);
+        this.validateContentType(request.getContentType(), errors);
         return errors;
     }
 
@@ -238,9 +239,7 @@ public class ContentModelServiceImpl implements ContentModelService {
         }
     }
 
-    protected void validateContentType(ContentModel contentModel, BeanPropertyBindingResult errors) {
-        String contentType = contentModel.getContentType();
-
+    protected void validateContentType(String contentType, BeanPropertyBindingResult errors) {
         if (!this.contentManager.getSmallContentTypesMap().containsKey(contentType)) {
             Object[] args = {contentType};
             errors.reject(ContentModelValidator.ERRCODE_CONTENTMODEL_TYPECODE_NOT_FOUND, args, "contentmodel.contentType.notFound");
