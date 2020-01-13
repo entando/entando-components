@@ -24,7 +24,11 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ImageResour
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInstance;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.util.IImageDimensionReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -124,6 +128,19 @@ public class ResourcesService {
         }
     }
 
+    public AssetDto cloneAsset(String resourceId) {
+
+        try {
+            ResourceInterface clonedResource = loadResource(resourceId);
+            clonedResource.setId(null);
+            resourceManager.addResource(clonedResource);
+
+            return convertResourceToDto(resourceManager.loadResource(clonedResource.getId()));
+        } catch (ApsSystemException e) {
+            throw new RestServerError("plugins.jacms.resources.resourceManager.error.list", e);
+        }
+    }
+
     public AssetDto getAsset(String resourceId) {
         try {
             ResourceInterface resource = resourceManager.loadResource(resourceId);
@@ -149,12 +166,24 @@ public class ResourcesService {
         }
     }
 
-    public AssetDto editAsset(String resourceId, MultipartFile file, String description, List<String> categories) {
+    private ResourceInterface loadResource(String resourceId) {
+
         try {
             ResourceInterface resource = resourceManager.loadResource(resourceId);
+
             if (resource == null) {
                 throw new ResourceNotFoundException(ERRCODE_RESOURCE_NOT_FOUND, "asset", resourceId);
             }
+
+            return resource;
+        } catch (ApsSystemException e) {
+            throw new RestServerError("plugins.jacms.resources.resourceManager.error.persistence", e);
+        }
+    }
+
+    public AssetDto editAsset(String resourceId, MultipartFile file, String description, List<String> categories) {
+        try {
+            ResourceInterface resource = loadResource(resourceId);
 
             BaseResourceDataBean resourceFile = new BaseResourceDataBean();
             resourceFile.setResourceType(resource.getType());

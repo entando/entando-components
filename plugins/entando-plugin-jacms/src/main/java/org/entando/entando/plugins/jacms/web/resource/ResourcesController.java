@@ -93,6 +93,18 @@ public class ResourcesController {
         return ResponseEntity.ok(new SimpleRestResponse<>(result));
     }
 
+    @ApiOperation(value = "CLONE Resource", nickname = "cloneResource", tags = {"resources-controller"})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 401, message = "Unauthorized")})
+    @PostMapping("/plugins/cms/assets/{resourceId}/clone")
+    @RestAccessControl(permission = Permission.CONTENT_EDITOR)
+    public ResponseEntity<SimpleRestResponse<AssetDto>> cloneAsset(@PathVariable("resourceId") String resourceId) {
+        logger.debug("REST request - clone resource");
+        AssetDto result = service.cloneAsset(resourceId);
+        return ResponseEntity.ok(new SimpleRestResponse<>(result));
+    }
+
     @ApiOperation(value = "EDIT Resource", nickname = "editResource", tags = {"resources-controller"})
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
