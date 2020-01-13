@@ -13,10 +13,10 @@ export const REST_CALL_FAIL = 'REST_CALL_FAIL';
 // //ENTANDO DEPLOYMENT UNCOMMENT THIS
 
 const APP_NAME = window.location.pathname.split('/')[1];
-const GET_TASK_DETAILS_ENDPOINT = "http://" + window.location.host + "/" + APP_NAME + "/legacyapi/rs/en/jpkiebpm/taskData.json";
+const GET_TASK_DETAILS_ENDPOINT = "http://" + window.location.host + "/" + APP_NAME + "/api/rs/en/jpkiebpm/taskData.json";
 
 // NPM START UNCOMMENT THIS
-//const GET_TASK_DETAILS_ENDPOINT = "http://localhost:8082/entando/legacyapi/rs/en/jpkiebpm/taskData.json";
+//const GET_TASK_DETAILS_ENDPOINT = "http://localhost:8082/entando/api/rs/en/jpkiebpm/taskData.json";
 
 export const getTaskDetails = (payload) => {
   return {

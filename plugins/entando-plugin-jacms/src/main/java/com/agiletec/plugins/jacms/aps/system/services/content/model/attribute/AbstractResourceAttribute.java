@@ -377,7 +377,7 @@ public abstract class AbstractResourceAttribute extends TextAttribute
             value.setResourceId(resource.getId());
             StringBuilder restResourcePath = new StringBuilder();
             restResourcePath.append(this.getConfigManager().getParam("applicationBaseURL"));
-            restResourcePath.append("legacyapi/rs/").append(langCode).append("/jacms/");
+            restResourcePath.append("api/rs/").append(langCode).append("/jacms/");
             if (this.getType().equals(JacmsSystemConstants.RESOURE_ATTACH_CODE)) {
                 restResourcePath.append("attachment");
             } else {

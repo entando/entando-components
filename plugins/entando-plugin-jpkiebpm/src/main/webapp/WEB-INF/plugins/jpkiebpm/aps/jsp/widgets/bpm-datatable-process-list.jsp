@@ -29,7 +29,7 @@
 
         function  loadDataTable(idTable) {
             var configId =${configId};
-            var context = "<wp:info key="systemParam" paramName="applicationBaseURL" />legacyapi/rs/<wp:info key="currentLang"/>/jpkiebpm/";
+            var context = "<wp:info key="systemParam" paramName="applicationBaseURL" />api/rs/<wp:info key="currentLang"/>/jpkiebpm/";
             var url = context + "processInstanceList.json?configId="+configId;
             var extraConfig = {
                 onClickRow: function (ev, rowData) {}
