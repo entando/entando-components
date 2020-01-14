@@ -13,18 +13,28 @@
  */
 package org.entando.entando.plugins.jacms.aps.system.services;
 
+import static org.entando.entando.plugins.jacms.web.resource.ResourcesController.ERRCODE_RESOURCE_NOT_FOUND;
+
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
-import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.*;
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentTypeDto;
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentTypeDtoBuilder;
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentTypeDtoRequest;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.aps.system.services.entity.AbstractEntityTypeService;
-import org.entando.entando.aps.system.services.entity.model.*;
-import org.entando.entando.web.common.model.*;
+import org.entando.entando.aps.system.services.entity.model.AttributeTypeDto;
+import org.entando.entando.aps.system.services.entity.model.EntityTypeAttributeFullDto;
+import org.entando.entando.aps.system.services.entity.model.EntityTypeShortDto;
+import org.entando.entando.aps.system.services.entity.model.EntityTypesStatusDto;
+import org.entando.entando.web.common.model.PagedMetadata;
+import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.entity.model.EntityTypeDtoRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
-
-import java.util.*;
 
 @Service
 public class ContentTypeService extends AbstractEntityTypeService<Content, ContentTypeDto> {
@@ -54,7 +64,12 @@ public class ContentTypeService extends AbstractEntityTypeService<Content, Conte
     }
 
     public ContentTypeDto update(ContentTypeDtoRequest contentTypeRequest, BindingResult bindingResult) {
-        return updateEntityType(CONTENT_MODEL_MANAGER, contentTypeRequest, bindingResult);
+        String code = contentTypeRequest.getCode();
+        if (findOne(code).isPresent()) {
+            return updateEntityType(CONTENT_MODEL_MANAGER, contentTypeRequest, bindingResult);
+        } else {
+            throw new ResourceNotFoundException(ERRCODE_RESOURCE_NOT_FOUND, "contentType", code);
+        }
     }
 
     public PagedMetadata<String> findManyAttributes(RestListRequest requestList) {

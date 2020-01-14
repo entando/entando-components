@@ -83,16 +83,19 @@ public class ContentModelControllerUnitTest extends AbstractControllerTest {
 
         String contentType = "AAA";
         String description = "description";
+        String contentShape = "contentShape";
 
         ContentModelDto contentModelDto = new ContentModelDto();
         contentModelDto.setId(4l);
         contentModelDto.setContentType(contentType);
+        contentModelDto.setContentShape(contentShape);
         contentModelDto.setDescr(description);
 
         ResultActions result = performRequest(post(BASE_URI), contentModelDto);
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$.payload.id", is(4)));
         result.andExpect(jsonPath("$.payload.contentType", is(contentType)));
+        result.andExpect(jsonPath("$.payload.contentShape", is(contentShape)));
         result.andExpect(jsonPath("$.payload.descr", is(description)));
     }
 
@@ -124,6 +127,7 @@ public class ContentModelControllerUnitTest extends AbstractControllerTest {
         contentModelDto.setId(1l);
         contentModelDto.setContentType("AAA");
         contentModelDto.setDescr("updated");
+        contentModelDto.setContentShape("contentShape");
 
         ResultActions result = performRequest(put(BASE_URI + "/{id}", 1), contentModelDto);
         result.andExpect(status().isOk());
