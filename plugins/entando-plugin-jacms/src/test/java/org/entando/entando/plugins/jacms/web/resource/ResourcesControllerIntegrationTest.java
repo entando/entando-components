@@ -225,6 +225,116 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
     }
 
     @Test
+    public void testFilterResourceByCreatedAt() throws Exception {
+        UserDetails user = createAccessToken();
+        Map<String,String> params = new HashMap<>();
+
+        params.put("filters[0].attribute", "createdAt");
+        params.put("filters[0].value", "2011-01-01 01:00:00");
+        params.put("filters[0].operator", "gt");
+
+        performGetResources(user, "image", params)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(1)))
+                .andExpect(jsonPath("$.payload[0].id", is("82")))
+                .andExpect(jsonPath("$.payload[0].type", is("image")));
+    }
+
+    @Test
+    public void testFilterResourceByCreatedAt2() throws Exception {
+        UserDetails user = createAccessToken();
+        Map<String,String> params = new HashMap<>();
+
+        params.put("filters[0].attribute", "createdAt");
+        params.put("filters[0].value", "2009-01-01-00.00.00");
+        params.put("filters[0].operator", "lt");
+
+        performGetResources(user, "image", params)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(1)))
+                .andExpect(jsonPath("$.payload[0].id", is("22")))
+                .andExpect(jsonPath("$.payload[0].type", is("image")));
+    }
+
+    @Test
+    public void testFilterResourceByCreatedAt3() throws Exception {
+        UserDetails user = createAccessToken();
+        Map<String,String> params = new HashMap<>();
+
+        params.put("filters[0].attribute", "createdAt");
+        params.put("filters[0].value", "2009-01-01 01:00:00");
+        params.put("filters[0].operator", "gt");
+
+        params.put("filters[1].attribute", "createdAt");
+        params.put("filters[1].value", "2011-01-01 01:00:00");
+        params.put("filters[1].operator", "lt");
+
+        performGetResources(user, "image", params)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(1)))
+                .andExpect(jsonPath("$.payload[0].id", is("44")))
+                .andExpect(jsonPath("$.payload[0].type", is("image")));
+    }
+
+    @Test
+    public void testFilterResourceByUpdatedAt() throws Exception {
+        UserDetails user = createAccessToken();
+        Map<String,String> params = new HashMap<>();
+
+        params.put("filters[0].attribute", "updatedAt");
+        params.put("filters[0].value", "2015-01-01 01:00:00");
+        params.put("filters[0].operator", "gt");
+
+        performGetResources(user, "image", params)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(1)))
+                .andExpect(jsonPath("$.payload[0].id", is("22")))
+                .andExpect(jsonPath("$.payload[0].type", is("image")));
+    }
+
+    @Test
+    public void testFilterResourceByUpdatedAt2() throws Exception {
+        UserDetails user = createAccessToken();
+        Map<String,String> params = new HashMap<>();
+
+        params.put("filters[0].attribute", "updatedAt");
+        params.put("filters[0].value", "2015-11-25 19:19:00");
+        params.put("filters[0].operator", "lt");
+
+        performGetResources(user, "image", params)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(2)))
+                .andExpect(jsonPath("$.payload[0].id", is("82")))
+                .andExpect(jsonPath("$.payload[0].type", is("image")));
+    }
+
+    @Test
+    public void testFilterResourceByUpdatedAt3() throws Exception {
+        UserDetails user = createAccessToken();
+        Map<String,String> params = new HashMap<>();
+
+        params.put("filters[0].attribute", "updatedAt");
+        params.put("filters[0].value", "2013-01-01 01:00:00");
+        params.put("filters[0].operator", "gt");
+
+        params.put("filters[1].attribute", "updatedAt");
+        params.put("filters[1].value", "2017-01-01 01:00:00");
+        params.put("filters[1].operator", "lt");
+
+        performGetResources(user, "image", params)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(2)))
+                .andExpect(jsonPath("$.payload[0].id", is("82")))
+                .andExpect(jsonPath("$.payload[0].type", is("image")));
+    }
+
+    @Test
     public void testCreateEditDeleteImageResource() throws Exception {
         UserDetails user = createAccessToken();
         String createdId = null;

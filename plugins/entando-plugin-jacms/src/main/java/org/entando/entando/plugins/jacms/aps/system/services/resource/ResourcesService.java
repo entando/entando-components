@@ -7,6 +7,7 @@ import static org.entando.entando.plugins.jacms.web.resource.ResourcesController
 import static org.entando.entando.plugins.jacms.web.resource.ResourcesController.ERRCODE_RESOURCE_NOT_FOUND;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
+import com.agiletec.aps.system.common.FieldSearchFilter.LikeOptionType;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.exception.ApsException;
@@ -47,6 +48,7 @@ import org.entando.entando.plugins.jacms.web.resource.model.ImageAssetDto;
 import org.entando.entando.plugins.jacms.web.resource.model.ImageMetadataDto;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.Filter;
+import org.entando.entando.web.common.model.FilterOperator;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -314,11 +316,11 @@ public class ResourcesService {
                     useLikeOption = true;
                     break;
                 case "createdAt":
-                    attr = IResourceManager.RESOURCE_CREATION_DATE_FILTER_KEY;
-                    break;
+                    filters.add(createEntitySearchFilter(IResourceManager.RESOURCE_CREATION_DATE_FILTER_KEY, filter));
+                    continue;
                 case "updatedAt":
-                    attr = IResourceManager.RESOURCE_MODIFY_DATE_FILTER_KEY;
-                    break;
+                    filters.add(createEntitySearchFilter(IResourceManager.RESOURCE_MODIFY_DATE_FILTER_KEY, filter));
+                    continue;
                 case "group":
                     groups.add(filter.getValue());
                     continue;
@@ -333,6 +335,7 @@ public class ResourcesService {
             filters.add(
                 new FieldSearchFilter(attr, filter.getValue(), useLikeOption)
             );
+
         }
 
         if (groups.size() > 0) {
@@ -344,6 +347,26 @@ public class ResourcesService {
         filters.add(createOrderFilter(requestList));
 
         return filters.stream().toArray(FieldSearchFilter[]::new);
+    }
+
+    private EntitySearchFilter createEntitySearchFilter(String attribute, Filter filter) {
+        EntitySearchFilter result = null;
+
+        if (FilterOperator.GREATER.getValue().equalsIgnoreCase(filter.getOperator())) {
+            result = new EntitySearchFilter(attribute, false, filter.getValue(), null);
+        } else if (FilterOperator.LOWER.getValue().equalsIgnoreCase(filter.getOperator())) {
+            result = new EntitySearchFilter(attribute, false, null, filter.getValue());
+        } else if (FilterOperator.NOT_EQUAL.getValue().equalsIgnoreCase(filter.getOperator())) {
+            result = new EntitySearchFilter(attribute, false, filter.getValue(), false);
+            result.setNotOption(true);
+        } else {
+            result = new EntitySearchFilter(attribute, false, filter.getValue(),
+                    FilterOperator.LIKE.getValue().equalsIgnoreCase(filter.getOperator()),
+                    LikeOptionType.COMPLETE);
+        }
+        result.setOrder(filter.getOrder());
+
+        return result;
     }
 
     private EntitySearchFilter createOrderFilter(RestListRequest requestList) {
