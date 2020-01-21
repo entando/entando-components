@@ -124,7 +124,7 @@
         <dependency>
             <groupId>org.infinispan</groupId>
             <artifactId>infinispan-core</artifactId>
-            <version>9.2.0.Final</version>
+            <version>10.0.0.Final</version>
             <exclusions>
                 <exclusion>
                     <groupId>commons-logging</groupId>
