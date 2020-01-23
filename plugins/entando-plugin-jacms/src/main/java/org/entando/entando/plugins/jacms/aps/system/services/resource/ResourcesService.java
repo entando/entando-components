@@ -384,6 +384,8 @@ public class ResourcesService {
             key = IResourceManager.RESOURCE_FILENAME_FILTER_KEY;
         } else if ("owner".equals(groupBy)) {
             key = IResourceManager.RESOURCE_OWNER_FILTER_KEY;
+        } else if ("group".equals(groupBy)) {
+            key = IResourceManager.RESOURCE_MAIN_GROUP_FILTER_KEY;
         }
 
         EntitySearchFilter filter = new EntitySearchFilter(key, true);

@@ -13,6 +13,7 @@
  */
 package org.entando.entando.plugins.jacms.web.resource;
 
+import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
@@ -132,6 +133,34 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.payload.size()", is(1)))
             .andExpect(jsonPath("$.payload.[0].id", is("8")));
+    }
+
+    @Test
+    public void testSortByGroupAsc() throws Exception {
+        UserDetails user = createAccessToken();
+        Map<String,String> params = new HashMap<>();
+        params.put("sort", "group");
+        params.put("direction", FieldSearchFilter.ASC_ORDER);
+
+        performGetResources(user, "file", params)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(3)))
+                .andExpect(jsonPath("$.payload.[0].id", is("8")));
+    }
+
+    @Test
+    public void testSortByGroupDesc() throws Exception {
+        UserDetails user = createAccessToken();
+        Map<String,String> params = new HashMap<>();
+        params.put("sort", "group");
+        params.put("direction", FieldSearchFilter.DESC_ORDER);
+
+        performGetResources(user, "file", params)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(3)))
+                .andExpect(jsonPath("$.payload.[2].id", is("8")));
     }
 
     @Test
