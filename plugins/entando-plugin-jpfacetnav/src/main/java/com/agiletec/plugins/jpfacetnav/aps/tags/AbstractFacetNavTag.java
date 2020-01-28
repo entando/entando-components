@@ -40,46 +40,64 @@ import com.agiletec.plugins.jpfacetnav.aps.system.services.content.widget.IFacet
 import com.agiletec.plugins.jpfacetnav.aps.tags.util.FacetBreadCrumbs;
 
 import com.agiletec.aps.system.services.page.Widget;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author E.Santoboni
  */
 public abstract class AbstractFacetNavTag extends TagSupport {
+    
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	/**
 	 * Returns required facets
 	 * @return Required facets
 	 */
-	protected List<String> getRequiredFacets() {
-		ServletRequest request = this.pageContext.getRequest();
-		String facetNodesParamName = this.getFacetNodesParamName();
-		if (null == facetNodesParamName) facetNodesParamName = "facetNode";
-		List<String> requiredFacets = new ArrayList<String>();
-		int index = 1;
-		while (null != request.getParameter(facetNodesParamName+"_"+index)) {
-			String paramName = facetNodesParamName+"_"+index;
-			String value = request.getParameter(paramName);
-			this.addFacet(requiredFacets, value);
-			index++;
-		}
-		Enumeration<String> paramNames = request.getParameterNames();
-		while (paramNames.hasMoreElements()) {
-			String paramName = paramNames.nextElement();
-			if (paramName.equals(facetNodesParamName)) {
-				String[] values = request.getParameterValues(paramName);
-				for (int i=0; i<values.length; i++) {
-					String value = values[i];
-					this.addFacet(requiredFacets, value);
-				}
-			}
-		}
-		String selectedNode = request.getParameter("selectedNode");
-		this.addFacet(requiredFacets, selectedNode);
-		this.removeSelections(requiredFacets);
-		this.manageCurrentSelect(selectedNode, requiredFacets);
-		return requiredFacets;
-	}
+    protected List<String> getRequiredFacets() {
+        List<String> requiredFacets = new ArrayList<>();
+        try {
+            ServletRequest request = this.pageContext.getRequest();
+            String facetNodesParamName = this.getFacetNodesParamName();
+            if (null == facetNodesParamName) {
+                facetNodesParamName = "facetNode";
+            }
+            int index = 1;
+            while (null != request.getParameter(facetNodesParamName + "_" + index)) {
+                String paramName = facetNodesParamName + "_" + index;
+                String value = StringEscapeUtils.unescapeHtml(request.getParameter(paramName));
+                this.addFacet(requiredFacets, value);
+                index++;
+            }
+            Enumeration<String> paramNames = request.getParameterNames();
+            while (paramNames.hasMoreElements()) {
+                String paramName = paramNames.nextElement();
+                if (paramName.equals(facetNodesParamName)) {
+                    String[] values = request.getParameterValues(paramName);
+                    for (int i = 0; i < values.length; i++) {
+                        String value = values[i];
+                        if (!StringUtils.isBlank(value)) {
+                            this.addFacet(requiredFacets, StringEscapeUtils.unescapeHtml(value));
+                        }
+                    }
+                }
+            }
+            String selectedNode = request.getParameter("selectedNode");
+            if (!StringUtils.isBlank(selectedNode)) {
+                selectedNode = StringEscapeUtils.unescapeHtml(selectedNode);
+                this.addFacet(requiredFacets, selectedNode);
+            }
+            this.removeSelections(requiredFacets);
+            this.manageCurrentSelect(selectedNode, requiredFacets);
+        } catch (Exception e) {
+            logger.error("Error extracting system required facets", e);
+            throw new RuntimeException("Error extracting required facets", e);
+        }
+        return requiredFacets;
+    }
 
 	/**
 	 * Delete the facets selected through checkboxes selected.
@@ -172,7 +190,7 @@ public abstract class AbstractFacetNavTag extends TagSupport {
 		List<ITreeNode> roots = this.getFacetRoots(reqCtx);
 		if (null == roots) return null;
 		List<ITreeNode> finalNodes = this.getFinalNodes(requiredFacets);
-		List<FacetBreadCrumbs> breadCrumbs = new ArrayList<FacetBreadCrumbs>();
+		List<FacetBreadCrumbs> breadCrumbs = new ArrayList<>();
 		for (int i=0; i<finalNodes.size(); i++) {
 			ITreeNode requiredNode = finalNodes.get(i);
 			for (int j = 0; j < roots.size(); j++) {
@@ -191,8 +209,8 @@ public abstract class AbstractFacetNavTag extends TagSupport {
 	 * @return Final Nodes
 	 */
 	private List<ITreeNode> getFinalNodes(List<String> requiredFacets) {
-		List<ITreeNode> finalNodes = new ArrayList<ITreeNode>();
-		List<String> requiredFacetsCopy = new ArrayList<String>(requiredFacets);
+		List<ITreeNode> finalNodes = new ArrayList<>();
+		List<String> requiredFacetsCopy = new ArrayList<>(requiredFacets);
 		for (int i=0; i<requiredFacets.size(); i++) {
 			String nodeToAnalize = requiredFacets.get(i);
 			this.removeParentOf(nodeToAnalize, requiredFacetsCopy);
@@ -212,7 +230,7 @@ public abstract class AbstractFacetNavTag extends TagSupport {
 	 */
 	private void removeParentOf(String nodeFromAnalize, List<String> requiredFacetsCopy) {
 		ITreeNode nodeFrom = this.getFacetManager().getNode(nodeFromAnalize);
-		List<String> nodesToRemove = new ArrayList<String>();
+		List<String> nodesToRemove = new ArrayList<>();
 		Iterator<String> requiredFacetIterator = requiredFacetsCopy.iterator();
 		while (requiredFacetIterator.hasNext()) {
 			String reqNode = (String) requiredFacetIterator.next();
@@ -257,7 +275,7 @@ public abstract class AbstractFacetNavTag extends TagSupport {
 	 * @return facet roots
 	 */
 	protected List<ITreeNode> getFacetRoots(String facetRootNodesParam) {
-		List<ITreeNode> nodes = new ArrayList<ITreeNode>();
+		List<ITreeNode> nodes = new ArrayList<>();
 		String[] facetCodes = facetRootNodesParam.split(",");
 		for (int j = 0; j < facetCodes.length; j++) {
 			String facetCode = facetCodes[j].trim();
