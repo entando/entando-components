@@ -1,0 +1,18 @@
+{
+    "code": "ATT",
+    "name": "Content Type ATT",
+    "attributes": [
+        {
+            "code": "att1",
+            "type": "Attach",
+            "name": "Attach Description 1",
+            "mandatory": false
+        },
+        {
+            "code": "att2",
+            "type": "Attach",
+            "name": "Attach Description 2",
+            "mandatory": false
+        }
+    ]
+}

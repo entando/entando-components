@@ -1,0 +1,35 @@
+[{
+    "id": "ATT1",
+    "typeCode": "ATT",
+    "typeDescription": "Content Type ATT",
+    "description": "ATT1",
+    "mainGroup": "free",
+    "attributes": [
+        {
+            "code": "att1",
+            "values": {
+                "en": {
+                    "id": "resourceIdPlaceHolder",
+                    "name": "name att en1"
+                },
+                "it": {
+                    "id": "resourceIdPlaceHolder",
+                    "name": "name att it1"
+                }
+            }
+        },
+        {
+            "code": "att2",
+            "values": {
+                "en": {
+                    "id": "resourceIdPlaceHolder",
+                    "name": "name att en2"
+                },
+                "it": {
+                    "id": "resourceIdPlaceHolder",
+                    "name": "name att it2"
+                }
+            }
+        }
+    ]
+}]

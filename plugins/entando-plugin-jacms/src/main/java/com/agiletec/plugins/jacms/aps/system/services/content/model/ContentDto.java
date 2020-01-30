@@ -25,15 +25,15 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.io.Serializable;
-import java.util.Map.Entry;
-import org.entando.entando.aps.system.services.entity.model.EntityAttributeDto;
-import org.entando.entando.aps.system.services.entity.model.EntityDto;
 import java.util.Date;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
+import org.entando.entando.aps.system.services.entity.model.EntityAttributeDto;
+import org.entando.entando.aps.system.services.entity.model.EntityDto;
 import org.entando.entando.web.common.json.JsonDateDeserializer;
 import org.entando.entando.web.common.json.JsonDateSerializer;
 import org.springframework.validation.BindingResult;
-import sun.awt.Symbol;
 
 public class ContentDto extends EntityDto implements Serializable {
 
@@ -205,12 +205,24 @@ public class ContentDto extends EntityDto implements Serializable {
                 for (Entry<String, Object> resEntry : attr.getValues().entrySet()) {
                     String langCode = resEntry.getKey();
                     String resourceId = (String) ((Map<String, Object>) resEntry.getValue()).get("id");
+                    String name = (String) ((Map<String, Object>) resEntry.getValue()).get("name");
 
                     AbstractResourceAttribute resAttr = (AbstractResourceAttribute) contentAttr;
+                    if (name != null) {
+                        resAttr.setText(name, langCode);
+                    }
+
                     ResourceInterface resource = new AttachResource();
                     resource.setId(resourceId);
-
                     resAttr.setResource(resource, langCode);
+
+                    Map<String, Object> values = (Map<String, Object>) ((Map<String, Object>) resEntry.getValue()).get("metadata");
+
+                    if (values != null) {
+                        Map<String, String> metadata = values.entrySet().stream()
+                                .collect(Collectors.toMap(Map.Entry::getKey, e -> (String) e.getValue()));
+                        resAttr.setMetadataMap(langCode, metadata);
+                    }
                 }
             } else if (LinkAttribute.class.isAssignableFrom(contentAttr.getClass())) {
                 SymbolicLink link = new SymbolicLink();

@@ -1,0 +1,47 @@
+[{
+    "id": "IMG1",
+    "typeCode": "IMG",
+    "typeDescription": "Content Type IMG",
+    "description": "IMG1",
+    "mainGroup": "free",
+    "attributes": [
+        {
+            "code": "img1",
+            "values": {
+                "en": {
+                    "id": "resourceIdPlaceHolder",
+                    "metadata": {
+                        "legend": "legend en1",
+                        "alt": "alt en1"
+                    }
+                },
+                "it": {
+                    "id": "resourceIdPlaceHolder",
+                    "metadata": {
+                        "legend": "legend it1",
+                        "alt": "alt it1"
+                    }
+                }
+            }
+        },
+        {
+            "code": "img2",
+            "values": {
+                "en": {
+                    "id": "resourceIdPlaceHolder",
+                    "metadata": {
+                        "legend": "legend en2",
+                        "alt": "alt en2"
+                    }
+                },
+                "it": {
+                    "id": "resourceIdPlaceHolder",
+                    "metadata": {
+                        "legend": "legend it2",
+                        "alt": "alt it2"
+                    }
+                }
+            }
+        }
+    ]
+}]

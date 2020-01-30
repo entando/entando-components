@@ -1,0 +1,51 @@
+[{
+    "id": "IMG1",
+    "typeCode": "IMG",
+    "typeDescription": "Content Type IMG",
+    "description": "IMG1",
+    "mainGroup": "free",
+    "attributes": [
+        {
+            "code": "img1",
+            "values": {
+                "en": {
+                    "id": "resourceIdPlaceHolder",
+                    "name": "text en1",
+                    "metadata": {
+                        "legend": "legend en1",
+                        "alt": "alt en1"
+                    }
+                },
+                "it": {
+                    "id": "resourceIdPlaceHolder",
+                    "name": "text it1",
+                    "metadata": {
+                        "legend": "legend it1",
+                        "alt": "alt it1"
+                    }
+                }
+            }
+        },
+        {
+            "code": "img2",
+            "values": {
+                "en": {
+                    "id": "resourceIdPlaceHolder",
+                    "name": "text en2",
+                    "metadata": {
+                        "legend": "legend en2",
+                        "alt": "alt en2"
+                    }
+                },
+                "it": {
+                    "id": "resourceIdPlaceHolder",
+                    "name": "text it2",
+                    "metadata": {
+                        "legend": "legend it2",
+                        "alt": "alt it2"
+                    }
+                }
+            }
+        }
+    ]
+}]
