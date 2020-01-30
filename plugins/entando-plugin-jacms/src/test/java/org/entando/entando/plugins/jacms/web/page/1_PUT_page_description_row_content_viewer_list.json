@@ -1,0 +1,11 @@
+{
+    "code": "row_content_viewer_list",
+    "config": {
+        "contents": [
+            {
+                "contentDescription": "content EVN21 description",
+                "contentId": "EVN21"
+            }
+        ]
+    }
+}
