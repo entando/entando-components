@@ -29,7 +29,11 @@ public class RowContentListHelper {
 		if (StringUtils.isBlank(contentsParameter)) {
 			return contents;
 		}
-		String parse1 = (contentsParameter.startsWith("[")) ? contentsParameter.substring(1) : contentsParameter;
+		String parse0 = contentsParameter
+				.replaceAll(", contentId=", ",contentId=")
+				.replaceAll(", modelId=", ",modelId=")
+				.replaceAll("\\}, \\{", "\\},\\{");
+		String parse1 = (parse0.startsWith("[")) ? parse0.substring(1) : parse0;
 		String parse2 = (parse1.endsWith("]")) ? parse1.substring(0, parse1.length()-1) : parse1;
 		if (!StringUtils.isBlank(parse2)) {
 			String parse11 = (parse2.startsWith("{")) ? parse2.substring(1) : parse2;
