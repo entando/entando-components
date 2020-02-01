@@ -307,7 +307,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         }
     }
 
-    @Test
+    /*@Test
     public void testAddContentWithImageAttributeWithAllFields() throws Exception {
         String newContentId = null;
         String resourceId = null;
@@ -590,7 +590,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                 ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("IAT");
             }
         }
-    }
+    }*/
 
     @Test
     public void testAddContentInvalidResourceGroup() throws Exception {
