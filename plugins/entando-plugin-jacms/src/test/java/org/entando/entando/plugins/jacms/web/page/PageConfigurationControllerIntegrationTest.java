@@ -1,6 +1,8 @@
 package org.entando.entando.plugins.jacms.web.page;
 
+import com.agiletec.aps.util.FileTextReader;
 import com.opensymphony.xwork2.mock.MockResult;
+import java.io.InputStream;
 import java.util.Map;
 
 import com.agiletec.aps.system.services.page.IPage;
@@ -365,6 +367,47 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
                             .header("Authorization", "Bearer " + accessToken));
             result.andExpect(status().isNotFound());
             result.andExpect(jsonPath("$.errors[0].code", is("2")));
+
+        } finally {
+            this.pageManager.deletePage(pageCode);
+        }
+    }
+
+    @Test
+    public void testPutPageDescription() throws Exception {
+        String pageCode = "draft_page_100";
+        try {
+            Page mockPage = createPage(pageCode, null);//, "row_content_viewer_list");
+            this.pageManager.addPage(mockPage);
+            IPage onlinePage = this.pageManager.getOnlinePage(pageCode);
+            assertThat(onlinePage, is(nullValue()));
+            IPage draftPage = this.pageManager.getDraftPage(pageCode);
+            assertThat(draftPage, is(not(nullValue())));
+
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+            String accessToken = mockOAuthInterceptor(user);
+
+            ResultActions result = mockMvc
+                    .perform(get("/pages/{pageCode}/widgets/{frame}", new Object[]{pageCode, 0})
+                            .param("status", IPageService.STATUS_DRAFT)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isOk());
+
+            InputStream isJsonPostValid = this.getClass().getResourceAsStream("1_PUT_page_description_row_content_viewer_list.json");
+            String jsonPostValid = FileTextReader.getText(isJsonPostValid);
+
+            result = mockMvc
+                    .perform(put("/pages/{pageCode}/widgets/{frame}", new Object[]{pageCode, 0})
+                            .param("status", IPageService.STATUS_DRAFT)
+                            .content(jsonPostValid)
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isOk())
+                    .andDo(print())
+                    .andExpect(jsonPath("$.errors", hasSize(0)))
+                    .andExpect(jsonPath("$.payload.code", is("row_content_viewer_list")))
+                    .andExpect(jsonPath("$.payload.config.contents[0].contentId", is("EVN21")))
+                    .andExpect(jsonPath("$.payload.config.contents[0].contentDescription", is("content EVN21 description")));
 
         } finally {
             this.pageManager.deletePage(pageCode);

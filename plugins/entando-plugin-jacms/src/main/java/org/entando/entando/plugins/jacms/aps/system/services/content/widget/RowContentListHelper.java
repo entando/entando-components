@@ -29,8 +29,7 @@ public class RowContentListHelper {
 		if (StringUtils.isBlank(contentsParameter)) {
 			return contents;
 		}
-		String parse0 = contentsParameter.replaceAll("\\s","");
-		String parse1 = (parse0.startsWith("[")) ? parse0.substring(1) : parse0;
+		String parse1 = (contentsParameter.startsWith("[")) ? contentsParameter.substring(1) : contentsParameter;
 		String parse2 = (parse1.endsWith("]")) ? parse1.substring(0, parse1.length()-1) : parse1;
 		if (!StringUtils.isBlank(parse2)) {
 			String parse11 = (parse2.startsWith("{")) ? parse2.substring(1) : parse2;
@@ -43,7 +42,7 @@ public class RowContentListHelper {
 					for (int j = 0; j < keysAndValues.length; j++) {
 						String[] entry = keysAndValues[j].split("=");
 						if (entry.length == 2) {
-							properties.put(entry[0], entry[1]);
+							properties.put(entry[0].trim(), entry[1].trim());
 						}
 					}
 					contents.add(properties);

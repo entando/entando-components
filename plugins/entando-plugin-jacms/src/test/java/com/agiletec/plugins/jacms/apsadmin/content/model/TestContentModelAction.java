@@ -362,7 +362,7 @@ public class TestContentModelAction extends ApsAdminBaseTestCase {
         WidgetType widgetType = this._widgetTypeManager.getWidgetType("row_content_viewer_list");
         widget.setType(widgetType);
         ApsProperties widgetConfig = new ApsProperties();
-        widgetConfig.put("contents", "[{contentId=ART1, modelId=2}, {modelId=2, contentId=ART187}]");
+        widgetConfig.put("contents", "[{contentId=ART1,modelId=2},{modelId=2,contentId=ART187}]");
         widgetConfig.put("modelId", "2");
         widget.setConfig(widgetConfig);
         return widget;
