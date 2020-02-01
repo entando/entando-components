@@ -426,6 +426,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
     @Test
     public void testAddContentWithImageAttributeWithoutName() throws Exception {
         String resourceId = null;
+        String newContentId = null;
         String accessToken = this.createAccessToken();
         try {
             Assert.assertNull(this.contentManager.getEntityPrototype("IMG"));
@@ -456,11 +457,23 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                     .andExpect(jsonPath("$.payload[0].attributes[1].values.it.metadata.legend", is("legend it2")))
                     .andExpect(jsonPath("$.payload[0].attributes[1].values.it.metadata.alt", is("alt it2")));
 
+            String bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
+            Content newContent = this.contentManager.loadContent(newContentId, false);
+
+            Assert.assertNotNull(newContent);
+
         } finally {
             if (null != resourceId) {
                 performDeleteResource(accessToken, "image", resourceId)
                         .andDo(print())
                         .andExpect(status().isOk());
+            }
+            if (null != newContentId) {
+                Content newContent = this.contentManager.loadContent(newContentId, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
             }
             if (null != this.contentManager.getEntityPrototype("IMG")) {
                 ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("IMG");
@@ -468,7 +481,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         }
     }
 
-    /*@Test
+    @Test
     public void testAddContentWithAttachAttribute() throws Exception {
         String newContentId = null;
         String resourceId = null;
@@ -524,7 +537,8 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
 
     @Test
     public void testAddContentWithAttachAndImageAttribute() throws Exception {
-        String newContentId = null;
+        String newContentId1 = null;
+        String newContentId2 = null;
         String imageResourceId = null;
         String accessToken = this.createAccessToken();
         try {
@@ -569,10 +583,15 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                     .andExpect(jsonPath("$.payload[1].attributes[1].values.it.name", is("text att it2")));
 
             String bodyResult = result.andReturn().getResponse().getContentAsString();
-            newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
-            Content newContent = this.contentManager.loadContent(newContentId, false);
 
-            Assert.assertNotNull(newContent);
+            newContentId1 = JsonPath.read(bodyResult, "$.payload[0].id");
+            Content newContent1 = this.contentManager.loadContent(newContentId1, false);
+            Assert.assertNotNull(newContent1);
+
+            newContentId2 = JsonPath.read(bodyResult, "$.payload[1].id");
+            Content newContent2 = this.contentManager.loadContent(newContentId2, false);
+            Assert.assertNotNull(newContent2);
+
 
         } finally {
             if (null != imageResourceId) {
@@ -580,8 +599,14 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .andDo(print())
                         .andExpect(status().isOk());
             }
-            if (null != newContentId) {
-                Content newContent = this.contentManager.loadContent(newContentId, false);
+            if (null != newContentId1) {
+                Content newContent = this.contentManager.loadContent(newContentId1, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != newContentId2) {
+                Content newContent = this.contentManager.loadContent(newContentId2, false);
                 if (null != newContent) {
                     this.contentManager.deleteContent(newContent);
                 }
@@ -590,7 +615,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                 ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("IAT");
             }
         }
-    }*/
+    }
 
     @Test
     public void testAddContentInvalidResourceGroup() throws Exception {
