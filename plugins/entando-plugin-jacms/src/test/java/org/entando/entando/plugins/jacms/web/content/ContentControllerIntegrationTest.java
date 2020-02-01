@@ -369,7 +369,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         }
     }
 
-    /*@Test
+    @Test
     public void testAddContentWithImageAttributeWithoutMetadata() throws Exception {
         String newContentId = null;
         String resourceId = null;
@@ -468,7 +468,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         }
     }
 
-    @Test
+    /*@Test
     public void testAddContentWithAttachAttribute() throws Exception {
         String newContentId = null;
         String resourceId = null;
