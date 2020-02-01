@@ -1,0 +1,18 @@
+{
+    "code": "IAT",
+    "name": "Content Type IAT",
+    "attributes": [
+        {
+            "code": "img1",
+            "type": "Image",
+            "name": "Image Description 1",
+            "mandatory": false
+        },
+        {
+            "code": "att1",
+            "type": "Attach",
+            "name": "Attach Description 2",
+            "mandatory": false
+        }
+    ]
+}

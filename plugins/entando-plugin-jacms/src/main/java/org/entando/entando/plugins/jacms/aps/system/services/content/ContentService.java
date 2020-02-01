@@ -46,14 +46,21 @@ import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentRestri
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModelManager;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentRenderizationInfo;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.IContentDispenser;
+import com.agiletec.plugins.jacms.aps.system.services.resource.model.AttachResource;
+import com.agiletec.plugins.jacms.aps.system.services.resource.model.ImageResource;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 import com.agiletec.plugins.jacms.aps.system.services.searchengine.ICmsSearchEngineManager;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.StringReader;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Properties;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
@@ -69,6 +76,7 @@ import org.entando.entando.plugins.jacms.aps.system.services.resource.ResourcesS
 import org.entando.entando.plugins.jacms.web.content.ContentController;
 import org.entando.entando.plugins.jacms.web.content.validator.RestContentListRequest;
 import org.entando.entando.plugins.jacms.web.resource.model.AssetDto;
+import org.entando.entando.plugins.jacms.web.resource.model.ImageAssetDto;
 import org.entando.entando.web.common.exceptions.ResourcePermissionsException;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.PagedMetadata;
@@ -186,7 +194,7 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
             //Convert Resources to DTOs
             if (attr.getCode().equals(contentAttr.getName()) && attr.getValues() != null
                     && AbstractResourceAttribute.class.isAssignableFrom(contentAttr.getClass())) {
-                convertResourceAttributeToDto(attr);
+                convertResourceAttributeToDto((AbstractResourceAttribute) contentAttr, attr);
             } else if (attr.getCode().equals(contentAttr.getName()) && attr.getCompositeElements() != null
                     && CompositeAttribute.class.isAssignableFrom(contentAttr.getClass())) {
                 CompositeAttribute compAttr = (CompositeAttribute) contentAttr;
@@ -201,13 +209,19 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
         }
     }
 
-    private void convertResourceAttributeToDto(EntityAttributeDto attr) {
+    private void convertResourceAttributeToDto(AbstractResourceAttribute contentAttr, EntityAttributeDto attr) {
         attr.setValues(
                 attr.getValues().entrySet().stream()
                         .filter(e -> e.getValue() != null)
-                        .map(e -> new AbstractMap.SimpleEntry<>(e.getKey(),
-                                resourcesService.convertResourceToDto((ResourceInterface) e.getValue())))
-                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
+                        .map(e -> {
+                            AssetDto assetDto = resourcesService.convertResourceToDto((ResourceInterface) e.getValue());
+                            if (contentAttr.getMetadatas() != null && ImageAssetDto.class.isAssignableFrom(assetDto.getClass())) {
+                                ((ImageAssetDto)assetDto).setMetadata(contentAttr.getMetadatas().get(e.getKey()));
+                            }
+                            assetDto.setName(contentAttr.getTextForLang(e.getKey()));
+
+                            return new AbstractMap.SimpleEntry<>(e.getKey(), assetDto);
+                        }).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
     }
 
     @Override

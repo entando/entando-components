@@ -1,0 +1,82 @@
+[{
+    "id": "IAT1",
+    "typeCode": "IAT",
+    "typeDescription": "Content Type IAT",
+    "description": "IAT1",
+    "mainGroup": "free",
+    "attributes": [
+        {
+            "code": "img1",
+            "values": {
+                "en": {
+                    "id": "resourceIdPlaceHolder",
+                    "name": "text img en1",
+                    "metadata": {
+                        "legend": "legend img en1",
+                        "alt": "alt img en1"
+                    }
+                },
+                "it": {
+                    "id": "resourceIdPlaceHolder",
+                    "name": "text img it1",
+                    "metadata": {
+                        "legend": "legend img it1",
+                        "alt": "alt img it1"
+                    }
+                }
+            }
+        },
+        {
+            "code": "att1",
+            "values": {
+                "en": {
+                    "id": "resourceIdPlaceHolder",
+                    "name": "text att en1"
+                },
+                "it": {
+                    "id": "resourceIdPlaceHolder",
+                    "name": "text att it1"
+                }
+            }
+        }
+    ]
+},
+    {
+        "id": "IAT2",
+        "typeCode": "IAT",
+        "typeDescription": "Content Type IAT",
+        "description": "IAT1",
+        "mainGroup": "free",
+        "attributes": [
+            {
+                "code": "img1",
+                "values": {
+                    "en": {
+                        "id": "resourceIdPlaceHolder",
+                        "name": "text img en2"
+                    },
+                    "it": {
+                        "id": "resourceIdPlaceHolder",
+                        "name": "text img it2",
+                        "metadata": {
+                            "legend": "legend img it2",
+                            "alt": "alt img it2"
+                        }
+                    }
+                }
+            },
+            {
+                "code": "att1",
+                "values": {
+                    "en": {
+                        "id": "resourceIdPlaceHolder",
+                        "name": "text att en2"
+                    },
+                    "it": {
+                        "id": "resourceIdPlaceHolder",
+                        "name": "text att it2"
+                    }
+                }
+            }
+        ]
+    }]

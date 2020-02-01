@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import java.util.Map.Entry;
 import org.jdom.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -271,7 +272,7 @@ public abstract class AbstractResourceAttribute extends TextAttribute
             return;
         }
         Element metadatasElement = new Element("metadatas");
-        this.getMetadatas().keySet().stream().forEach(key -> {
+        this.getMetadatas().keySet().stream().filter(key -> key != null).forEach(key -> {
             Map<String, String> map = this.getMetadatas().get(key);
             map.keySet().stream().forEach(langCode -> {
                 Element metadataElement = new Element("metadata");

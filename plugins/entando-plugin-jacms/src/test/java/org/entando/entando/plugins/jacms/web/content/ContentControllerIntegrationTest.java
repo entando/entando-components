@@ -16,6 +16,7 @@ package org.entando.entando.plugins.jacms.web.content;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -48,19 +49,23 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.plugins.jacms.aps.system.services.content.IContentService;
 import org.entando.entando.plugins.jacms.web.content.validator.BatchContentStatusRequest;
 import org.entando.entando.plugins.jacms.web.content.validator.ContentStatusRequest;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
+import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 public class ContentControllerIntegrationTest extends AbstractControllerIntegrationTest {
@@ -298,6 +303,316 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             }
             if (null != this.contentManager.getEntityPrototype("LNK")) {
                 ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("LNK");
+            }
+        }
+    }
+
+    @Test
+    public void testAddContentWithImageAttributeWithAllFields() throws Exception {
+        String newContentId = null;
+        String resourceId = null;
+        String accessToken = this.createAccessToken();
+        try {
+            Assert.assertNull(this.contentManager.getEntityPrototype("IMG"));
+
+            this.executeContentTypePost("1_POST_type_with_image.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype("IMG"));
+
+            ResultActions resourceResult = this.performCreateResource(accessToken, "image", "free", "application/jpeg");
+
+            resourceId = JsonPath.read(resourceResult.andReturn().getResponse().getContentAsString(), "$.payload.id");
+
+            ResultActions result = this.executeContentPost("1_POST_valid_with_image_all_fields.json", accessToken, status().isOk(), resourceId)
+                    .andDo(print())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("img1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].values.en.name", is("text en1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].values.en.metadata.legend", is("legend en1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].values.en.metadata.alt", is("alt en1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].values.it.name", is("text it1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].values.it.metadata.legend", is("legend it1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].values.it.metadata.alt", is("alt it1")))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[1].code", is("img2")))
+                    .andExpect(jsonPath("$.payload[0].attributes[1].values.en.name", is("text en2")))
+                    .andExpect(jsonPath("$.payload[0].attributes[1].values.en.metadata.legend", is("legend en2")))
+                    .andExpect(jsonPath("$.payload[0].attributes[1].values.en.metadata.alt", is("alt en2")))
+                    .andExpect(jsonPath("$.payload[0].attributes[1].values.it.name", is("text it2")))
+                    .andExpect(jsonPath("$.payload[0].attributes[1].values.it.metadata.legend", is("legend it2")))
+                    .andExpect(jsonPath("$.payload[0].attributes[1].values.it.metadata.alt", is("alt it2")));
+
+            String bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
+            Content newContent = this.contentManager.loadContent(newContentId, false);
+
+            Assert.assertNotNull(newContent);
+
+        } finally {
+            if (null != resourceId) {
+                performDeleteResource(accessToken, "image", resourceId)
+                        .andDo(print())
+                        .andExpect(status().isOk());
+            }
+            if (null != newContentId) {
+                Content newContent = this.contentManager.loadContent(newContentId, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != this.contentManager.getEntityPrototype("IMG")) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("IMG");
+            }
+        }
+    }
+
+    @Test
+    public void testAddContentWithImageAttributeWithoutMetadata() throws Exception {
+        String newContentId = null;
+        String resourceId = null;
+        String accessToken = this.createAccessToken();
+        try {
+            Assert.assertNull(this.contentManager.getEntityPrototype("IMG"));
+
+            this.executeContentTypePost("1_POST_type_with_image.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype("IMG"));
+
+            ResultActions resourceResult = this.performCreateResource(accessToken, "image", "free", "application/jpeg");
+
+            resourceId = JsonPath.read(resourceResult.andReturn().getResponse().getContentAsString(), "$.payload.id");
+
+            ResultActions result = this.executeContentPost("1_POST_valid_with_image_no_metadata.json", accessToken, status().isOk(), resourceId)
+                    .andDo(print())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("img1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].values.en.name", is("text en1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].values.it.name", is("text it1")))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[1].code", is("img2")))
+                    .andExpect(jsonPath("$.payload[0].attributes[1].values.en.name", is("text en2")))
+                    .andExpect(jsonPath("$.payload[0].attributes[1].values.it.name", is("text it2")));
+
+            String bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
+            Content newContent = this.contentManager.loadContent(newContentId, false);
+
+            Assert.assertNotNull(newContent);
+
+        } finally {
+            if (null != resourceId) {
+                performDeleteResource(accessToken, "image", resourceId)
+                        .andDo(print())
+                        .andExpect(status().isOk());
+            }
+            if (null != newContentId) {
+                Content newContent = this.contentManager.loadContent(newContentId, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != this.contentManager.getEntityPrototype("IMG")) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("IMG");
+            }
+        }
+    }
+
+    @Test
+    public void testAddContentWithImageAttributeWithoutName() throws Exception {
+        String resourceId = null;
+        String newContentId = null;
+        String accessToken = this.createAccessToken();
+        try {
+            Assert.assertNull(this.contentManager.getEntityPrototype("IMG"));
+
+            this.executeContentTypePost("1_POST_type_with_image.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype("IMG"));
+
+            ResultActions resourceResult = this.performCreateResource(accessToken, "image", "free", "application/jpeg");
+
+            resourceId = JsonPath.read(resourceResult.andReturn().getResponse().getContentAsString(), "$.payload.id");
+
+            ResultActions result = this.executeContentPost("1_POST_valid_with_image_no_name.json", accessToken, status().isOk(), resourceId)
+                    .andDo(print())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("img1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].values.en.metadata.legend", is("legend en1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].values.en.metadata.alt", is("alt en1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].values.it.metadata.legend", is("legend it1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].values.it.metadata.alt", is("alt it1")))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[1].code", is("img2")))
+                    .andExpect(jsonPath("$.payload[0].attributes[1].values.en.metadata.legend", is("legend en2")))
+                    .andExpect(jsonPath("$.payload[0].attributes[1].values.en.metadata.alt", is("alt en2")))
+                    .andExpect(jsonPath("$.payload[0].attributes[1].values.it.metadata.legend", is("legend it2")))
+                    .andExpect(jsonPath("$.payload[0].attributes[1].values.it.metadata.alt", is("alt it2")));
+
+            String bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
+            Content newContent = this.contentManager.loadContent(newContentId, false);
+
+            Assert.assertNotNull(newContent);
+
+        } finally {
+            if (null != resourceId) {
+                performDeleteResource(accessToken, "image", resourceId)
+                        .andDo(print())
+                        .andExpect(status().isOk());
+            }
+            if (null != newContentId) {
+                Content newContent = this.contentManager.loadContent(newContentId, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != this.contentManager.getEntityPrototype("IMG")) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("IMG");
+            }
+        }
+    }
+
+    @Test
+    public void testAddContentWithAttachAttribute() throws Exception {
+        String newContentId = null;
+        String resourceId = null;
+        String accessToken = this.createAccessToken();
+        try {
+            Assert.assertNull(this.contentManager.getEntityPrototype("ATT"));
+
+            this.executeContentTypePost("1_POST_type_with_attach.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype("ATT"));
+
+            ResultActions resourceResult = this.performCreateResource(accessToken, "file", "free", "application/pdf");
+
+            resourceId = JsonPath.read(resourceResult.andReturn().getResponse().getContentAsString(), "$.payload.id");
+
+            ResultActions result = this.executeContentPost("1_POST_valid_with_attach.json", accessToken, status().isOk(), resourceId)
+                    .andDo(print())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("att1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].values.en.name", is("name att en1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].values.it.name", is("name att it1")))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[1].code", is("att2")))
+                    .andExpect(jsonPath("$.payload[0].attributes[1].values.en.name", is("name att en2")))
+                    .andExpect(jsonPath("$.payload[0].attributes[1].values.it.name", is("name att it2")));
+
+            String bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
+            Content newContent = this.contentManager.loadContent(newContentId, false);
+
+            Assert.assertNotNull(newContent);
+
+        } finally {
+            if (null != resourceId) {
+                performDeleteResource(accessToken, "file", resourceId)
+                        .andDo(print())
+                        .andExpect(status().isOk());
+            }
+            if (null != newContentId) {
+                Content newContent = this.contentManager.loadContent(newContentId, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != this.contentManager.getEntityPrototype("ATT")) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("ATT");
+            }
+        }
+    }
+
+    @Test
+    public void testAddContentWithAttachAndImageAttribute() throws Exception {
+        String newContentId1 = null;
+        String newContentId2 = null;
+        String imageResourceId = null;
+        String accessToken = this.createAccessToken();
+        try {
+            Assert.assertNull(this.contentManager.getEntityPrototype("IAT"));
+
+            this.executeContentTypePost("1_POST_type_with_image_and_attach.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype("IAT"));
+
+            ResultActions resourceResult = this.performCreateResource(accessToken, "image", "free", "application/jpeg");
+
+            imageResourceId = JsonPath.read(resourceResult.andReturn().getResponse().getContentAsString(), "$.payload.id");
+
+            ResultActions result = this
+                    .executeContentPost("1_POST_valid_with_attach_and_image.json", accessToken, status().isOk(), imageResourceId)
+                    .andDo(print())
+                    .andExpect(jsonPath("$.payload.size()", is(2)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("img1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].values.en.name", is("text img en1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].values.en.metadata.legend", is("legend img en1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].values.en.metadata.alt", is("alt img en1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].values.it.name", is("text img it1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].values.it.metadata.legend", is("legend img it1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].values.it.metadata.alt", is("alt img it1")))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[1].code", is("att1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[1].values.en.name", is("text att en1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[1].values.it.name", is("text att it1")))
+
+                    .andExpect(jsonPath("$.payload[1].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[1].attributes[0].code", is("img1")))
+                    .andExpect(jsonPath("$.payload[1].attributes[0].values.en.name", is("text img en2")))
+                    .andExpect(jsonPath("$.payload[1].attributes[0].values.it.name", is("text img it2")))
+                    .andExpect(jsonPath("$.payload[1].attributes[0].values.it.metadata.legend", is("legend img it2")))
+                    .andExpect(jsonPath("$.payload[1].attributes[0].values.it.metadata.alt", is("alt img it2")))
+
+                    .andExpect(jsonPath("$.payload[1].attributes[1].code", is("att1")))
+                    .andExpect(jsonPath("$.payload[1].attributes[1].values.en.name", is("text att en2")))
+                    .andExpect(jsonPath("$.payload[1].attributes[1].values.it.name", is("text att it2")));
+
+            String bodyResult = result.andReturn().getResponse().getContentAsString();
+
+            newContentId1 = JsonPath.read(bodyResult, "$.payload[0].id");
+            Content newContent1 = this.contentManager.loadContent(newContentId1, false);
+            Assert.assertNotNull(newContent1);
+
+            newContentId2 = JsonPath.read(bodyResult, "$.payload[1].id");
+            Content newContent2 = this.contentManager.loadContent(newContentId2, false);
+            Assert.assertNotNull(newContent2);
+
+
+        } finally {
+            if (null != imageResourceId) {
+                performDeleteResource(accessToken, "image", imageResourceId)
+                        .andDo(print())
+                        .andExpect(status().isOk());
+            }
+            if (null != newContentId1) {
+                Content newContent = this.contentManager.loadContent(newContentId1, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != newContentId2) {
+                Content newContent = this.contentManager.loadContent(newContentId2, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != this.contentManager.getEntityPrototype("IAT")) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("IAT");
             }
         }
     }
@@ -654,8 +969,15 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
     }
 
     private ResultActions executeContentPost(String fileName, String accessToken, ResultMatcher expected) throws Exception {
+        return executeContentPost(fileName, accessToken, expected, null);
+    }
+
+    private ResultActions executeContentPost(String fileName, String accessToken, ResultMatcher expected, String resourceId) throws Exception {
         InputStream isJsonPostValid = this.getClass().getResourceAsStream(fileName);
         String jsonPostValid = FileTextReader.getText(isJsonPostValid);
+        if (resourceId != null) {
+            jsonPostValid = jsonPostValid.replace("resourceIdPlaceHolder", resourceId);
+        }
         ResultActions result = mockMvc
                 .perform(post("/plugins/cms/contents")
                         .content(jsonPostValid)
@@ -688,6 +1010,36 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(expected);
         return result;
+    }
+
+    private ResultActions performCreateResource(String accessToken, String type, String group, String mimeType) throws Exception {
+        String path = String.format("/plugins/cms/assets", type);
+        String contents = "content";
+
+        MockMultipartFile file;
+        if ("image".equals(type)) {
+            file = new MockMultipartFile("file", "image_test.jpeg", mimeType, contents.getBytes());
+        } else {
+            file = new MockMultipartFile("file", "file_test.jpeg", mimeType, contents.getBytes());
+        }
+
+        MockHttpServletRequestBuilder request = multipart(path)
+                .file(file)
+                .param("group", group)
+                .header("Authorization", "Bearer " + accessToken);
+
+        if (type != null) {
+            request.param("type", type);
+        }
+
+        return mockMvc.perform(request);
+    }
+
+    private ResultActions performDeleteResource(String accessToken, String type, String resourceId) throws Exception {
+        String path = String.format("/plugins/cms/assets/%s", resourceId);
+        return mockMvc.perform(
+                delete(path)
+                        .header("Authorization", "Bearer " + accessToken));
     }
 
     @Test
