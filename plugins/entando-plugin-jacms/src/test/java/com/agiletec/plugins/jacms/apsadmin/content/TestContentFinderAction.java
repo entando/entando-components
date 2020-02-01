@@ -13,7 +13,6 @@
  */
 package com.agiletec.plugins.jacms.apsadmin.content;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +31,7 @@ public class TestContentFinderAction extends AbstractBaseTestContentAction {
 		String result = this.executeGetList("admin");
 		assertEquals(Action.SUCCESS, result);
 		List<String> contents = (List<String>) ((ContentFinderAction)this.getAction()).getContents();
-		assertEquals(27, contents.size());
+		assertEquals(25, contents.size());
 		
 		result = this.executeGetList("editorCoach");
 		assertEquals(Action.SUCCESS, result);
@@ -62,7 +61,6 @@ public class TestContentFinderAction extends AbstractBaseTestContentAction {
 				"EVN20","EVN41","EVN25","EVN24","EVN23","ART102","ART104","EVN103",
 				"RAH101","EVN192","EVN191","RAH1","ART180","EVN194","EVN193","ART1","ART187"};
 		List<String> contents = action.getContents();
-		assertEquals(Arrays.asList(order1), Arrays.asList(order1).subList(0, order1.length-1));
 		assertEquals(order1.length, contents.size());
 		for (int i=0; i<contents.size(); i++) {
     		assertEquals(order1[i], contents.get(i));
