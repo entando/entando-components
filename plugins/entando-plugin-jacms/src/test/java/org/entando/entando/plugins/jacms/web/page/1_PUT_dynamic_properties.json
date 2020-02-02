@@ -1,0 +1,18 @@
+{
+    "config":{
+        "contents":[
+            {
+                "contentId":"EVN21",
+                "modelId":"list",
+                "contentDescription":"Description for dynamic properties"
+            }
+        ],
+        "maxElemForItem":"4",
+        "title_en":"eng title",
+        "title_it":"it title",
+        "pageLink":"errorpage",
+        "linkDescr_en":"en ltext",
+        "linkDescr_it":"it ltext"
+    },
+    "code":"row_content_viewer_list"
+}

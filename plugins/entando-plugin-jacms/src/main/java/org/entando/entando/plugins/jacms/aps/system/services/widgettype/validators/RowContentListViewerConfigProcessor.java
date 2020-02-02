@@ -42,16 +42,7 @@ public class RowContentListViewerConfigProcessor implements WidgetConfigurationP
     @Override
     public Object buildConfiguration(WidgetConfigurationRequest widget) {
         ApsProperties properties = new ApsProperties();
-        List<RowContentListConfigurationEntry> entryList = (List<RowContentListConfigurationEntry>) widget.getProcessInfo().get(WidgetConfigurationValidator.PROCESS_INFO_CONFIG);
-        if (null != entryList && !entryList.isEmpty()) {
-            StringBuffer sbuffer = new StringBuffer("[");
-            List<String> configTokens = entryList
-                    .stream()
-                    .map(i -> i.toCfg()).collect(Collectors.toList());
-            sbuffer.append(StringUtils.join(configTokens, ","));
-            sbuffer.append("]");
-            properties.put("contents", sbuffer.toString());
-        }
+        properties.putAll(widget.getConfig());
         return properties;
     }
 
@@ -60,7 +51,7 @@ public class RowContentListViewerConfigProcessor implements WidgetConfigurationP
     /**
      * try to build the configuration from a complex structure or from a string
      *
-     * @param widget
+     * @param widgetProperties
      * @return
      * @throws IOException
      * @throws JsonMappingException
@@ -68,10 +59,11 @@ public class RowContentListViewerConfigProcessor implements WidgetConfigurationP
      */
     @Override
     public ApsProperties extractConfiguration(ApsProperties widgetProperties) {
+        ApsProperties smartProperties = new ApsProperties();
+        smartProperties.putAll(widgetProperties);
         List<Properties> props = RowContentListHelper.fromParameterToContents(widgetProperties.getProperty(WIDGET_CONFIG_KEY_CONTENTS));
         Map<String, List<Properties>> map = new HashMap<>();
         map.put(WIDGET_CONFIG_KEY_CONTENTS, props);
-        ApsProperties smartProperties = new ApsProperties();
         smartProperties.putAll(map);
         return smartProperties;
     }
