@@ -415,6 +415,54 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
     }
 
     @Test
+    public void testPutDynamicProperties() throws Exception {
+        String pageCode = "draft_page_100";
+        try {
+            Page mockPage = createPage(pageCode, null);//, "row_content_viewer_list");
+            this.pageManager.addPage(mockPage);
+            IPage onlinePage = this.pageManager.getOnlinePage(pageCode);
+            assertThat(onlinePage, is(nullValue()));
+            IPage draftPage = this.pageManager.getDraftPage(pageCode);
+            assertThat(draftPage, is(not(nullValue())));
+
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+            String accessToken = mockOAuthInterceptor(user);
+
+            ResultActions result = mockMvc
+                    .perform(get("/pages/{pageCode}/widgets/{frame}", new Object[]{pageCode, 0})
+                            .param("status", IPageService.STATUS_DRAFT)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isOk());
+
+            InputStream isJsonPostValid = this.getClass().getResourceAsStream("1_PUT_dynamic_properties.json");
+            String jsonPostValid = FileTextReader.getText(isJsonPostValid);
+
+            result = mockMvc
+                    .perform(put("/pages/{pageCode}/widgets/{frame}", new Object[]{pageCode, 0})
+                            .param("status", IPageService.STATUS_DRAFT)
+                            .content(jsonPostValid)
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isOk())
+                    .andDo(print())
+                    .andExpect(jsonPath("$.errors", hasSize(0)))
+                    .andExpect(jsonPath("$.payload.code", is("row_content_viewer_list")))
+                    .andExpect(jsonPath("$.payload.config.contents[0].contentId", is("EVN21")))
+                    .andExpect(jsonPath("$.payload.config.contents[0].modelId", is("list")))
+                    .andExpect(jsonPath("$.payload.config.contents[0].contentDescription", is("Description for dynamic properties")))
+                    .andExpect(jsonPath("$.payload.config.maxElemForItem", is("4")))
+                    .andExpect(jsonPath("$.payload.config.title_en", is("eng title")))
+                    .andExpect(jsonPath("$.payload.config.title_it", is("it title")))
+                    .andExpect(jsonPath("$.payload.config.pageLink", is("errorpage")))
+                    .andExpect(jsonPath("$.payload.config.linkDescr_en", is("en ltext")))
+                    .andExpect(jsonPath("$.payload.config.linkDescr_it", is("it ltext")));
+
+        } finally {
+            this.pageManager.deletePage(pageCode);
+        }
+    }
+
+    @Test
     public void testDeletePageConfigurationWithInvalidFrameId() throws Exception {
         String pageCode = "draft_page_100";
         try {
