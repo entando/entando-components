@@ -102,7 +102,7 @@
             <s:if test="#modelIdHasFieldErrorVar">
                 <p class="text-danger padding-small-vertical">
                     <s:iterator value="#modelIdFieldErrorsVar">
-                        <s:property />
+                        <s:property escapeHtml="false" />
                     </s:iterator>
                 </p>
             </s:if>
@@ -126,7 +126,7 @@
             <s:if test="#descriptionHasFieldErrors">
                 <p class="text-danger padding-small-vertical">
                     <s:iterator value="#descriptionFieldErrorsVar">
-                        <s:property />
+                        <s:property escapeHtml="false" />
                     </s:iterator>
                 </p>
             </s:if>
@@ -144,20 +144,17 @@
         </label>
 
         <div class="col-sm-10">
-
             <div class="mb-10">
                 <a href="#" id="popover-inline-editing-assist" class="btn btn-success" data-placement="right" data-trigger="focus" data-toggle="popover" data-html="true" title="<s:text name="INLINE.EDITING.ASSIST" />" data-content="<s:text name="inline.edit.assist.help" />">
                     <s:text name="INLINE.EDITING.ASSIST" />
                 </a>
             </div>
-
             <div class="display-block">
                 <s:textarea name="contentShape" id="contentShape"  cssClass="form-control" />
-
                 <s:if test="#contentShapeHasFieldErrorVar">
                     <p class="text-danger padding-small-vertical">
                         <s:iterator value="#contentShapeFieldErrorsVar">
-                            <s:property />
+                            <s:property escapeHtml="false" />
                         </s:iterator>
                     </p>
                 </s:if>
