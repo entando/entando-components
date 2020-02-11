@@ -1,0 +1,12 @@
+{
+    "code": "CML",
+    "name": "Content Type CML",
+    "attributes": [
+        {
+            "code": "link1",
+            "type": "Link",
+            "name": "Link Description 1",
+            "mandatory": false
+        }
+    ]
+}
