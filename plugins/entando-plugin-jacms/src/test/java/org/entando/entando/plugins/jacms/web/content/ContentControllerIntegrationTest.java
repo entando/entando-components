@@ -318,7 +318,6 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             Assert.assertNotNull(this.contentManager.getEntityPrototype("CML"));
 
             ResultActions result = this.executeContentPost("1_POST_valid_with_link.json", accessToken, status().isOk())
-                    .andDo(print())
                     .andExpect(jsonPath("$.payload.size()", is(1)))
                     .andExpect(jsonPath("$.errors.size()", is(0)))
                     .andExpect(jsonPath("$.metaData.size()", is(0)))
@@ -333,7 +332,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
 
             Assert.assertNotNull(newContent);
 
-            this.executeContentPut("1_PUT_valid_with_link.json", newContentId, accessToken, status().isOk()).andDo(print())
+            this.executeContentPut("1_PUT_valid_with_link.json", newContentId, accessToken, status().isOk())
                     .andExpect(jsonPath("$.payload.size()", is(1)))
                     .andExpect(jsonPath("$.errors.size()", is(0)))
                     .andExpect(jsonPath("$.metaData.size()", is(0)))
@@ -1047,7 +1046,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .content(jsonPutValid)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));
-        result.andExpect(expected);
+        result.andDo(print()).andExpect(expected);
         return result;
     }
 
