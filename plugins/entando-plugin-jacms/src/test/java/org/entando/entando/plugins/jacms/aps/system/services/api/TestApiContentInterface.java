@@ -161,8 +161,7 @@ public class TestApiContentInterface extends ApiBaseTestCase {
 		Object singleResult = apiContentInterface.getContent(properties);
 		assertNotNull(singleResult);
 		String toString = this.marshall(singleResult, mediaType);
-		InputStream stream = new ByteArrayInputStream(toString.getBytes());
-		JAXBContent jaxbContent = (JAXBContent) UnmarshalUtils.unmarshal(super.getApplicationContext(), JAXBContent.class, stream, mediaType);
+		JAXBContent jaxbContent = (JAXBContent) UnmarshalUtils.unmarshal(JAXBContent.class, toString, mediaType);
 		assertNotNull(jaxbContent);
 		return jaxbContent;
 	}
