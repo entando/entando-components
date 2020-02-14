@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	   xmlns:context="http://www.springframework.org/schema/context"
-	   xmlns:aop="http://www.springframework.org/schema/aop"
-	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 			http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
-	
-	<aop:aspectj-autoproxy />
-	
-	<bean id="jpseoEntryPageHookPoint" class="com.agiletec.apsadmin.system.plugin.HookPointElementContainer" >
-		<property name="filePath"><value>/WEB-INF/plugins/jpseo/apsadmin/jsp/portal/entryPage-jack.jsp</value></property>
-		<property name="hookPointKey"><value>core.entryPage</value></property>
-	</bean>
+    
+    <aop:aspectj-autoproxy />
+    
+    <bean id="jpseoEntryPageHookPoint" class="com.agiletec.apsadmin.system.plugin.HookPointElementContainer" >
+        <property name="filePath"><value>/WEB-INF/plugins/jpseo/apsadmin/jsp/portal/entryPage-jack.jsp</value></property>
+        <property name="hookPointKey"><value>core.entryPage</value></property>
+    </bean>
     
     <bean id="jpseoEntryPageLangElementHookPoint" class="com.agiletec.apsadmin.system.plugin.HookPointElementContainer" >
-		<property name="filePath"><value>/WEB-INF/plugins/jpseo/apsadmin/jsp/portal/entryPageLang-jack.jsp</value></property>
-		<property name="hookPointKey"><value>core.entryPage.langElement</value></property>
-	</bean>
+        <property name="filePath"><value>/WEB-INF/plugins/jpseo/apsadmin/jsp/portal/entryPageLang-jack.jsp</value></property>
+        <property name="hookPointKey"><value>core.entryPage.langElement</value></property>
+    </bean>
     
     <bean id="jpseoPageSettingsHookPoint" class="com.agiletec.apsadmin.system.plugin.HookPointElementContainer" >
-		<property name="filePath"><value>/WEB-INF/plugins/jpseo/apsadmin/jsp/portal/pageSettings-jack.jsp</value></property>
-		<property name="hookPointKey"><value>core.pageSettings</value></property>
-	</bean>
+        <property name="filePath"><value>/WEB-INF/plugins/jpseo/apsadmin/jsp/portal/pageSettings-jack.jsp</value></property>
+        <property name="hookPointKey"><value>core.pageSettings</value></property>
+    </bean>
     
     <bean id="jpseoPageAction" scope="prototype" 
           class="org.entando.entando.plugins.jpseo.apsadmin.portal.SeoPageAction" parent="abstractPortalAction">
@@ -35,22 +35,22 @@
         <property name="allowedMimeTypesCSV"><value>${page.mimeType.allowedValues}</value></property>
         <property name="allowedCharsetsCSV"><value>${page.charset.allowedValues}</value></property>
     </bean>
-	
-	<bean id="jpseoPageActionAspect" scope="prototype"
-			class="org.entando.entando.plugins.jpseo.apsadmin.portal.PageActionAspect">
-		<property name="langManager" ref="LangManager" />
-		<property name="seoMappingManager" ref="jpseoSeoMappingManager" />
-		<property name="pageManager" ref="PageManager" />
-	</bean>
-	
-	<bean id="jpseoPageSettingsActionAspect" 
-			class="org.entando.entando.plugins.jpseo.apsadmin.portal.PageSettingsActionAspect">
-		<property name="storageManager" ref="StorageManager" />
-		<property name="configManager" ref="BaseConfigManager" />
-	</bean>
-	
-	<bean id="jpseoPageSettingsAction" scope="prototype"
-			class="org.entando.entando.plugins.jpseo.apsadmin.portal.SeoPageSettingsAction" parent="baseAdminAction">
-	</bean>
-	
+    
+    <bean id="jpseoPageActionAspect" scope="prototype"
+              class="org.entando.entando.plugins.jpseo.apsadmin.portal.PageActionAspect">
+        <property name="langManager" ref="LangManager" />
+        <property name="seoMappingManager" ref="jpseoSeoMappingManager" />
+        <property name="pageManager" ref="PageManager" />
+    </bean>
+    
+    <bean id="jpseoPageSettingsActionAspect" 
+              class="org.entando.entando.plugins.jpseo.apsadmin.portal.PageSettingsActionAspect">
+        <property name="storageManager" ref="StorageManager" />
+        <property name="configManager" ref="BaseConfigManager" />
+    </bean>
+    
+    <bean id="jpseoPageSettingsAction" scope="prototype"
+              class="org.entando.entando.plugins.jpseo.apsadmin.portal.SeoPageSettingsAction" parent="baseAdminAction">
+    </bean>
+    
 </beans>
