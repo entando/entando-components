@@ -344,6 +344,14 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                     .andExpect(jsonPath("$.payload[0].attributes[0].value.symbolicDestination", is("#!P;pagina_11!#")))
                     .andExpect(jsonPath("$.payload[0].attributes[0].values.it", is("pagina_11")));
 
+            this.executeContentPut("1_PUT_invalid_with_link.json", newContentId, accessToken, status().isBadRequest())
+                    .andExpect(jsonPath("$.payload.size()", is(0)))
+                    .andExpect(jsonPath("$.errors.size()", is(1)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.errors[0].code", is("4")))
+                    .andExpect(jsonPath("$.errors[0].message", is("Attribute 'link1' Invalid: Invalid link - page pagina_11invalid - content null - Error code INVALID_PAGE")));
+
         } finally {
             if (null != newContentId) {
                 Content newContent = this.contentManager.loadContent(newContentId, false);

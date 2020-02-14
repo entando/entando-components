@@ -1,0 +1,24 @@
+[{
+    "groups":[
+    ],
+    "mainGroup":"free",
+    "description":"ContentWithLinkToAPage",
+    "categories":[
+        "cat1"
+    ],
+    "attributes":[
+        {
+            "code": "link1",
+            "value":{
+                "symbolicDestination":"#!P;pagina_11invalid!#",
+                "destType":2,
+                "pageDest":"pagina_11invalid"
+            },
+            "values":{
+                "it":"pagina_11"
+            }
+        }
+    ],
+    "id":"**MARKER**",
+    "typeCode":"CML"
+}]
