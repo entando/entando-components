@@ -31,8 +31,10 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import org.entando.entando.aps.system.services.entity.model.EntityAttributeDto;
 import org.entando.entando.aps.system.services.entity.model.EntityDto;
+import org.entando.entando.plugins.jacms.web.content.validator.ContentValidator;
 import org.entando.entando.web.common.json.JsonDateDeserializer;
 import org.entando.entando.web.common.json.JsonDateSerializer;
+import org.entando.entando.web.user.validator.UserValidator;
 import org.springframework.validation.BindingResult;
 
 public class ContentDto extends EntityDto implements Serializable {
@@ -201,54 +203,58 @@ public class ContentDto extends EntityDto implements Serializable {
         // Load Resources from DTO ids
         for (EntityAttributeDto attr : this.getAttributes()) {
             AttributeInterface contentAttr = content.getAttributeMap().get(attr.getCode());
-            if (AbstractResourceAttribute.class.isAssignableFrom(contentAttr.getClass())) {
-                for (Entry<String, Object> resEntry : attr.getValues().entrySet()) {
-                    String langCode = resEntry.getKey();
-                    String resourceId = (String) ((Map<String, Object>) resEntry.getValue()).get("id");
-                    String name = (String) ((Map<String, Object>) resEntry.getValue()).get("name");
+            if (contentAttr != null) {
+                if (AbstractResourceAttribute.class.isAssignableFrom(contentAttr.getClass())) {
+                    for (Entry<String, Object> resEntry : attr.getValues().entrySet()) {
+                        String langCode = resEntry.getKey();
+                        String resourceId = (String) ((Map<String, Object>) resEntry.getValue()).get("id");
+                        String name = (String) ((Map<String, Object>) resEntry.getValue()).get("name");
 
-                    AbstractResourceAttribute resAttr = (AbstractResourceAttribute) contentAttr;
-                    if (name != null) {
-                        resAttr.setText(name, langCode);
+                        AbstractResourceAttribute resAttr = (AbstractResourceAttribute) contentAttr;
+                        if (name != null) {
+                            resAttr.setText(name, langCode);
+                        }
+
+                        ResourceInterface resource = new AttachResource();
+                        resource.setId(resourceId);
+                        resAttr.setResource(resource, langCode);
+
+                        Map<String, Object> values = (Map<String, Object>) ((Map<String, Object>) resEntry.getValue()).get("metadata");
+
+                        if (values != null) {
+                            Map<String, String> metadata = values.entrySet().stream()
+                                    .collect(Collectors.toMap(Map.Entry::getKey, e -> (String) e.getValue()));
+                            resAttr.setMetadataMap(langCode, metadata);
+                        }
                     }
+                } else if (LinkAttribute.class.isAssignableFrom(contentAttr.getClass())) {
+                    SymbolicLink link = new SymbolicLink();
 
-                    ResourceInterface resource = new AttachResource();
-                    resource.setId(resourceId);
-                    resAttr.setResource(resource, langCode);
-
-                    Map<String, Object> values = (Map<String, Object>) ((Map<String, Object>) resEntry.getValue()).get("metadata");
-
-                    if (values != null) {
-                        Map<String, String> metadata = values.entrySet().stream()
-                                .collect(Collectors.toMap(Map.Entry::getKey, e -> (String) e.getValue()));
-                        resAttr.setMetadataMap(langCode, metadata);
+                    int destType = (Integer) ((Map)attr.getValue()).get("destType");
+                    switch (destType) {
+                        case SymbolicLink.URL_TYPE:
+                            link.setDestinationToUrl((String) ((Map)attr.getValue()).get("urlDest"));
+                            break;
+                        case SymbolicLink.PAGE_TYPE:
+                            link.setDestinationToPage((String) ((Map)attr.getValue()).get("pageDest"));
+                            break;
+                        case SymbolicLink.RESOURCE_TYPE:
+                            link.setDestinationToResource((String) ((Map)attr.getValue()).get("resourceDest"));
+                            break;
+                        case SymbolicLink.CONTENT_TYPE:
+                            link.setDestinationToContent((String) ((Map)attr.getValue()).get("contentDest"));
+                            break;
+                        case SymbolicLink.CONTENT_ON_PAGE_TYPE:
+                            link.setDestinationToContentOnPage((String) ((Map)attr.getValue()).get("contentDest"),
+                                    (String) ((Map)attr.getValue()).get("pageDest"));
+                            break;
                     }
-                }
-            } else if (LinkAttribute.class.isAssignableFrom(contentAttr.getClass())) {
-                SymbolicLink link = new SymbolicLink();
+                    LinkAttribute linkAttr = (LinkAttribute) contentAttr;
 
-                int destType = (Integer) ((Map)attr.getValue()).get("destType");
-                switch (destType) {
-                    case SymbolicLink.URL_TYPE:
-                        link.setDestinationToUrl((String) ((Map)attr.getValue()).get("urlDest"));
-                        break;
-                    case SymbolicLink.PAGE_TYPE:
-                        link.setDestinationToPage((String) ((Map)attr.getValue()).get("pageDest"));
-                        break;
-                    case SymbolicLink.RESOURCE_TYPE:
-                        link.setDestinationToResource((String) ((Map)attr.getValue()).get("resourceDest"));
-                        break;
-                    case SymbolicLink.CONTENT_TYPE:
-                        link.setDestinationToContent((String) ((Map)attr.getValue()).get("contentDest"));
-                        break;
-                    case SymbolicLink.CONTENT_ON_PAGE_TYPE:
-                        link.setDestinationToContentOnPage((String) ((Map)attr.getValue()).get("contentDest"),
-                                (String) ((Map)attr.getValue()).get("pageDest"));
-                        break;
+                    linkAttr.setSymbolicLink(link);
                 }
-                LinkAttribute linkAttr = (LinkAttribute) contentAttr;
-
-                linkAttr.setSymbolicLink(link);
+            } else {
+                bindingResult.reject(ContentValidator.ERRCODE_ATTRIBUTE_INVALID, new String[]{attr.getCode()}, "content.attribute.code.invalid");
             }
         }
     }
