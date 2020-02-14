@@ -4,7 +4,7 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
-	
+    
     <bean id="jacmsLinkResolverManager" class="org.entando.entando.plugins.jpseo.aps.system.services.linkresolver.LinkResolverManager" 
               parent="abstractService" >
         <property name="contentManager" ref="jacmsContentManager" />
@@ -16,12 +16,12 @@
         <property name="authorizationManager" ref="AuthorizationManager" />
         <property name="seoMappingManager" ref="jpseoSeoMappingManager" />
     </bean>
-	
+    
     <bean id="jacmsContentViewerHelper" class="org.entando.entando.plugins.jpseo.aps.system.services.content.widget.ContentViewerHelper" >
         <property name="contentDispenser" ref="jacmsBaseContentDispenser" />
         <property name="contentManager" ref="jacmsContentManager" />
         <property name="contentModelManager" ref="jacmsContentModelManager" />
         <property name="contentAuthorizationHelper" ref="jacmsContentAuthorizationHelper" />
     </bean>
-	
+    
 </beans>
