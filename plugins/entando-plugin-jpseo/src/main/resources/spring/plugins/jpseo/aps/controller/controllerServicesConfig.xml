@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-		xmlns:context="http://www.springframework.org/schema/context"
-		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
-			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
-	
-	<bean id="RequestValidatorControlService" class="org.entando.entando.plugins.jpseo.aps.system.services.controller.control.RequestValidator" 
-			parent="abstractControlService" >
-		<property name="langManager" ref="LangManager"/>
-		<property name="pageManager" ref="PageManager"/>
-		<property name="configManager" ref="BaseConfigManager"/>
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    
+    <bean id="RequestValidatorControlService" class="org.entando.entando.plugins.jpseo.aps.system.services.controller.control.RequestValidator" 
+              parent="abstractControlService" >
+        <property name="langManager" ref="LangManager"/>
+        <property name="pageManager" ref="PageManager"/>
+        <property name="configManager" ref="BaseConfigManager"/>
         <property name="seoMappingManager" ref="jpseoSeoMappingManager" />
         <property name="contentManager" ref="jacmsContentManager" />
-	</bean>
-	
+    </bean>
+    
 </beans>
