@@ -192,15 +192,36 @@ public class ContentDto extends EntityDto implements Serializable {
 
     @Override
     public void fillEntity(IApsEntity prototype, ICategoryManager categoryManager, BindingResult bindingResult) {
+        Content content = (Content) prototype;
+        clearAttributeData(content);
+
         super.fillEntity(prototype, categoryManager, bindingResult);
 
-        Content content = (Content) prototype;
         content.setFirstEditor(getFirstEditor() == null ? content.getFirstEditor() : getFirstEditor());
         content.setLastEditor(getLastEditor());
         content.setRestriction(ContentRestriction.getRestrictionValue(getMainGroup()));
         content.setStatus(getStatus() == null ? content.getStatus() : getStatus());
 
         // Load Resources from DTO ids
+        fillAttributeData(bindingResult, content);
+    }
+
+    private void clearAttributeData(Content content) {
+        for (AttributeInterface contentAttr : content.getAttributeList()) {
+            if (AbstractResourceAttribute.class.isAssignableFrom(contentAttr.getClass())) {
+                AbstractResourceAttribute resAttr = (AbstractResourceAttribute) contentAttr;
+                resAttr.getTextMap().clear();
+                resAttr.getResources().clear();
+                resAttr.getMetadatas().clear();
+            } else if (LinkAttribute.class.isAssignableFrom(contentAttr.getClass())) {
+                LinkAttribute linkAttr = (LinkAttribute) contentAttr;
+                linkAttr.getTextMap().clear();
+                linkAttr.setSymbolicLink(null);
+            }
+        }
+    }
+
+    private void fillAttributeData(BindingResult bindingResult, Content content) {
         for (EntityAttributeDto attr : this.getAttributes()) {
             AttributeInterface contentAttr = content.getAttributeMap().get(attr.getCode());
             if (contentAttr != null) {

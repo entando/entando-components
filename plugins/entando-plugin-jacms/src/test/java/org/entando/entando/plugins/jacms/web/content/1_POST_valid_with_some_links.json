@@ -1,0 +1,32 @@
+[{
+    "id":"anything",
+    "typeCode":"LNK",
+    "typeDescription":"Type for test",
+    "description":"New Content for test",
+    "mainGroup":"free",
+    "groups":[
+        "group1",
+        "group2"
+    ],
+    "attributes": [
+        {
+            "code": "link1",
+            "value": {
+                "destType": 1,
+                "urlDest": "https://myurl.com"
+            },
+            "values": {
+                "it": "My URL Link"
+            }
+        }, {
+            "code": "link2",
+            "value": {
+                "destType": 2,
+                "pageDest": "pagina_11"
+            },
+            "values": {
+                "it": "My Page Link"
+            }
+        }
+    ]
+}]

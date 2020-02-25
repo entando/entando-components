@@ -366,6 +366,142 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
     }
 
     @Test
+    public void testAddUpdateContentWithLinkAttributeThenRemoveIt() throws Exception {
+        String newContentId = null;
+        try {
+            Assert.assertNull(this.contentManager.getEntityPrototype("CML"));
+            String accessToken = this.createAccessToken();
+
+            this.executeContentTypePost("1_POST_type_with_link.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype("CML"));
+
+            ResultActions result = this.executeContentPost("1_POST_valid_with_link.json", accessToken, status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("link1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value", Matchers.isEmptyOrNullString()));
+
+            String bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
+            Content newContent = this.contentManager.loadContent(newContentId, false);
+
+            Assert.assertNotNull(newContent);
+
+            this.executeContentPut("1_PUT_valid_with_link.json", newContentId, accessToken, status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("link1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.destType", is(SymbolicLink.PAGE_TYPE)))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.pageDest", is("pagina_11")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.symbolicDestination", is("#!P;pagina_11!#")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].values.it", is("pagina_11")));
+
+            this.executeContentPut("1_PUT_valid_without_link.json", newContentId, accessToken, status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("link1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value", Matchers.isEmptyOrNullString()));
+
+        } finally {
+            if (null != newContentId) {
+                Content newContent = this.contentManager.loadContent(newContentId, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != this.contentManager.getEntityPrototype("CML")) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("CML");
+            }
+        }
+    }
+
+    @Test
+    public void testAddUpdateContentWithLinksAttributeThenRemoveIt() throws Exception {
+        String newContentId = null;
+        try {
+            Assert.assertNull(this.contentManager.getEntityPrototype("LNK"));
+            String accessToken = this.createAccessToken();
+
+            this.executeContentTypePost("1_POST_type_with_links.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype("LNK"));
+
+            ResultActions result = this.executeContentPost("1_POST_valid_with_some_links.json", accessToken, status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("link1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.urlDest", is("https://myurl.com")))
+                    .andExpect(jsonPath("$.payload[0].attributes[1].code", is("link2")))
+                    .andExpect(jsonPath("$.payload[0].attributes[1].value.pageDest", is("pagina_11")))
+                    .andExpect(jsonPath("$.payload[0].attributes[2].code", is("link3")))
+                    .andExpect(jsonPath("$.payload[0].attributes[2].value", Matchers.isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.payload[0].attributes[3].code", is("link4")))
+                    .andExpect(jsonPath("$.payload[0].attributes[3].value", Matchers.isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.payload[0].attributes[4].code", is("link5")))
+                    .andExpect(jsonPath("$.payload[0].attributes[4].value", Matchers.isEmptyOrNullString()));
+
+            String bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
+            Content newContent = this.contentManager.loadContent(newContentId, false);
+
+            Assert.assertNotNull(newContent);
+
+            this.executeContentPut("1_PUT_valid_with_some_more_links.json", newContentId, accessToken, status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", is(newContentId)))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("link1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value", Matchers.isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.payload[0].attributes[1].code", is("link2")))
+                    .andExpect(jsonPath("$.payload[0].attributes[1].value", Matchers.isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.payload[0].attributes[2].code", is("link3")))
+                    .andExpect(jsonPath("$.payload[0].attributes[2].value.contentDest", is("ART1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[3].code", is("link4")))
+                    .andExpect(jsonPath("$.payload[0].attributes[3].value", Matchers.isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.payload[0].attributes[4].code", is("link5")))
+                    .andExpect(jsonPath("$.payload[0].attributes[4].value.resourceDest", is("44")));
+
+            this.executeContentPut("1_PUT_valid_without_links.json", newContentId, accessToken, status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+                    .andExpect(jsonPath("$.payload[0].id", is(newContentId)))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("link1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value", Matchers.isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.payload[0].attributes[1].code", is("link2")))
+                    .andExpect(jsonPath("$.payload[0].attributes[1].value", Matchers.isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.payload[0].attributes[2].code", is("link3")))
+                    .andExpect(jsonPath("$.payload[0].attributes[2].value", Matchers.isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.payload[0].attributes[3].code", is("link4")))
+                    .andExpect(jsonPath("$.payload[0].attributes[3].value", Matchers.isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.payload[0].attributes[4].code", is("link5")))
+                    .andExpect(jsonPath("$.payload[0].attributes[4].value", Matchers.isEmptyOrNullString()));
+
+        } finally {
+            if (null != newContentId) {
+                Content newContent = this.contentManager.loadContent(newContentId, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != this.contentManager.getEntityPrototype("LNK")) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("LNK");
+            }
+        }
+    }
+
+    @Test
     public void testAddContentWithImageAttributeWithAllFields() throws Exception {
         String newContentId = null;
         String resourceId = null;
