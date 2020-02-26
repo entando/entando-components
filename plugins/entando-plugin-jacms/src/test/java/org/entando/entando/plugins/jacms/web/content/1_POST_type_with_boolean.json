@@ -1,0 +1,11 @@
+{
+    "code": "BOL",
+    "name": "Content Type BOL",
+    "attributes": [
+        {
+            "code": "bool1",
+            "type": "Boolean",
+            "name": "Description of Boolean attribute"
+        }
+    ]
+}

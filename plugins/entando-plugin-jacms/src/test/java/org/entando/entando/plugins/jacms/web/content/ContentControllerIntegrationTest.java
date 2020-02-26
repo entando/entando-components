@@ -502,6 +502,75 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
     }
 
     @Test
+    public void testAddUpdateContentWithBooleanAttributeThenEditIt() throws Exception {
+        String newContentId = null;
+        try {
+            Assert.assertNull(this.contentManager.getEntityPrototype("BOL"));
+            String accessToken = this.createAccessToken();
+
+            this.executeContentTypePost("1_POST_type_with_boolean.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype("BOL"));
+
+            ResultActions result = this.executeContentPost("1_POST_valid_with_boolean_null.json", accessToken, status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("bool1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value", is(false)));
+
+            String bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
+            Content newContent = this.contentManager.loadContent(newContentId, false);
+
+            Assert.assertNotNull(newContent);
+
+            this.executeContentPut("1_PUT_valid_with_boolean_true.json", newContentId, accessToken, status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+                    .andExpect(jsonPath("$.payload[0].id", is(newContentId)))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("bool1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value", is(true)));
+
+            this.executeContentPut("1_PUT_valid_with_boolean_null.json", newContentId, accessToken, status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+                    .andExpect(jsonPath("$.payload[0].id", is(newContentId)))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("bool1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value", is(false)));
+
+            this.executeContentPut("1_PUT_valid_with_boolean_true.json", newContentId, accessToken, status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+                    .andExpect(jsonPath("$.payload[0].id", is(newContentId)))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("bool1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value", is(true)));
+
+            this.executeContentPut("1_PUT_valid_with_boolean_false.json", newContentId, accessToken, status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+                    .andExpect(jsonPath("$.payload[0].id", is(newContentId)))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("bool1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value", is(false)));
+
+        } finally {
+            if (null != newContentId) {
+                Content newContent = this.contentManager.loadContent(newContentId, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != this.contentManager.getEntityPrototype("BOL")) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("BOL");
+            }
+        }
+    }
+
+    @Test
     public void testAddContentWithImageAttributeWithAllFields() throws Exception {
         String newContentId = null;
         String resourceId = null;

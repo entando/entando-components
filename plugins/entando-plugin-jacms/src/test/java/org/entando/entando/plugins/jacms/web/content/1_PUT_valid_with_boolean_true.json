@@ -1,0 +1,14 @@
+[{
+    "groups":[],
+    "mainGroup":"free",
+    "description":"ContentWithBooleanFalse",
+    "categories":[],
+    "attributes":[
+        {
+            "code": "bool1",
+            "value": true
+        }
+    ],
+    "id":"**MARKER**",
+    "typeCode":"BOL"
+}]
