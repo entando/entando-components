@@ -1,0 +1,26 @@
+[{
+    "attributes": [
+        {
+            "code": "link3",
+            "value": {
+                "destType": 3,
+                "contentDest": "ART1"
+            },
+            "values": {
+                "it": "My Content Link"
+            }
+        }, {
+            "code": "link5",
+            "value": {
+                "destType": 5,
+                "resourceDest": "44"
+            },
+            "values": {
+                "it": "My Resource Link"
+            }
+        }
+
+    ],
+    "id":"**MARKER**",
+    "typeCode":"LNK"
+}]
