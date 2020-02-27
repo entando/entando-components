@@ -1,35 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-		xmlns:context="http://www.springframework.org/schema/context"
-		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
-	
-	<bean id="jpnewsletterNewsletterManager" class="com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.NewsletterManager" 
-			parent="abstractService" destroy-method="release" >
-		<property name="mailManager" ref="jpmailMailManager" />
-		<property name="profileManager" ref="UserProfileManager" />
-		<property name="userManager" ref="UserManager" />
-		<property name="contentManager" ref="jacmsContentManager" />
-		<property name="authorizationManager" ref="AuthorizationManager" />
-		<property name="urlManager" ref="URLManager" />
-		<property name="pageManager" ref="PageManager" />
-		<property name="linkResolver" ref="jacmsLinkResolverManager" />
-		<property name="langManager" ref="LangManager" />
-		<property name="contentRenderer" ref="jacmsBaseContentRenderer" />
-		<property name="configManager" ref="BaseConfigManager"/>
-		<property name="keyGeneratorManager" ref="KeyGeneratorManager" />
-		<property name="categoryManager" ref="CategoryManager" />
-		<property name="newsletterDAO" >
-			<bean class="com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.NewsletterDAO">
-				<property name="dataSource" ref="servDataSource" />
-			</bean>
-		</property>
-		<property name="newsletterSearcherDAO" >
-			<bean class="com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.NewsletterSearcherDAO">
-				<property name="dataSource" ref="portDataSource" />
-			</bean>
-		</property>
-	</bean>
+    
+    <bean name="jpnewsletterNewsletterManagerCache" class="java.util.concurrent.ConcurrentHashMap"/>
+    
+    <bean id="jpnewsletterExternalCachesContainer" class="org.entando.entando.aps.system.services.cache.ExternalCachesContainer">
+        <property name="caches">
+            <set>
+                <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean"
+                      p:name="Entando_INewsletterManager" p:store-ref="jpnewsletterNewsletterManagerCache" />
+            </set>
+        </property>
+    </bean>
+    
+    <bean id="jpnewsletterNewsletterManager" class="com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.NewsletterManager" 
+              parent="abstractService" destroy-method="release" >
+        <property name="mailManager" ref="jpmailMailManager" />
+        <property name="profileManager" ref="UserProfileManager" />
+        <property name="userManager" ref="UserManager" />
+        <property name="contentManager" ref="jacmsContentManager" />
+        <property name="authorizationManager" ref="AuthorizationManager" />
+        <property name="urlManager" ref="URLManager" />
+        <property name="pageManager" ref="PageManager" />
+        <property name="linkResolver" ref="jacmsLinkResolverManager" />
+        <property name="langManager" ref="LangManager" />
+        <property name="contentRenderer" ref="jacmsBaseContentRenderer" />
+        <property name="configManager" ref="BaseConfigManager"/>
+        <property name="keyGeneratorManager" ref="KeyGeneratorManager" />
+        <property name="categoryManager" ref="CategoryManager" />
+        <property name="newsletterDAO" >
+            <bean class="com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.NewsletterDAO">
+                <property name="dataSource" ref="servDataSource" />
+            </bean>
+        </property>
+        <property name="newsletterSearcherDAO" >
+            <bean class="com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.NewsletterSearcherDAO">
+                <property name="dataSource" ref="portDataSource" />
+            </bean>
+        </property>
+        <property name="cacheWrapper">
+            <bean class="com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.cache.NewsletterManagerCacheWrapper">
+                <property name="springCacheManager" ref="springCacheManager" />
+            </bean>
+        </property>
+    </bean>
 	
 </beans>
