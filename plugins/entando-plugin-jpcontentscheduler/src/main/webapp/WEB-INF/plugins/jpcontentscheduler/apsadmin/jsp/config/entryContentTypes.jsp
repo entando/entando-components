@@ -2,7 +2,6 @@
 <%@ taglib prefix="wp" uri="/aps-core"%>
 <%@ taglib prefix="wpsa" uri="/apsadmin-core"%>
 <%@ taglib prefix="wpsf" uri="/apsadmin-form"%>
-
 <ol class="breadcrumb page-tabs-header breadcrumb-position">
     <li>
         <s:text name="jpcontentscheduler.integrations" />
@@ -67,11 +66,9 @@
         <legend>
             <s:text name="jpcontentscheduler.label.addContentType" />
         </legend>
-        
-        <p class="sr-only">
-            <wpsf:hidden name="idsCategories"/>
-        </p>
-        
+
+       
+
         <!-- Content Type -->
         <div class="form-group">
             <label class="col-sm-2 control-label">
@@ -180,7 +177,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Categories -->
         <s:set var="categoryTreeStyleVar">
             <wp:info key="systemParam" paramName="treeStyle_category" />
@@ -218,42 +215,41 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <s:set var="selectedTreeNode" value="selectedNode" />
-                        <s:set var="inputFieldName" value="'categoryCode'" />
-                        <s:set var="selectedTreeNode" value="categoryCode" />
-                        <s:set var="liClassName" value="'category'" />
-                        <s:set var="treeItemIconName" value="'fa-folder'" />
-                        <s:if test="#categoryTreeStyleVar == 'classic'">
-                            <s:set var="currentRoot" value="categoryRoot" />
-                            <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/common/treeBuilderCategoriesJoin.jsp" />
-                        </s:if>
-                        <s:elseif test="#categoryTreeStyleVar == 'request'">
-                            <s:set var="currentRoot" value="showableTree" />
-                            <s:set var="openTreeActionName" value="'openCloseCategoryTreeNodeOnEntryResource'" />
-                            <s:set var="closeTreeActionName" value="'openCloseCategoryTreeNodeOnEntryResource'" />
-                            <s:include
-                                value="/WEB-INF/plugins/jacms/apsadmin/jsp/common/treeBuilder-request-categories.jsp" />
-                        </s:elseif>
+                    <s:set var="inputFieldName" value="'categoryCode'" />
+                    <s:set var="selectedTreeNode" value="categoryCode" />
+                    <s:set var="liClassName" value="'category'" />
+                    <s:set var="treeItemIconName" value="'fa-folder'" />
+                    <s:if test="#categoryTreeStyleVar == 'classic'">
+                        <s:set var="currentRoot" value="allowedTreeRootNode" />
+                        <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/common/treeBuilderCategoriesJoin.jsp" />
+                    </s:if>
+                    <s:elseif test="#categoryTreeStyleVar == 'request'">
+                        <s:set var="currentRoot" value="showableTree" />
+                        <s:set var="openTreeActionName" value="'openCloseTreeOnBulkActions'" />
+                        <s:set var="closeTreeActionName" value="'openCloseTreeOnBulkActions'" />
+                        <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/common/treeBuilder-request-categories.jsp" />
+                    </s:elseif>
                     </tbody>
                 </table>
-                <s:if test="categoryCodes != null && categoryCodes.size() > 0">
-                    <ul class="list-inline mt-20">
+                     
+               <s:if test="%{categoryCodes != null && !categoryCodes.empty}">
+                   <ul class="list-inline mt-20">
                         <s:iterator value="categoryCodes" var="categoryCode">
                             <s:set var="contentTypeCategory" value="%{getCategory(#categoryCode)}"></s:set>
+                            <wpsf:hidden name="categoryCodes" value="%{#categoryCode}" />
                             <li>
                                 <span class="label label-info">
                                     <span class="icon fa fa-tag"></span>
                                     &#32;
-                                    <abbr title="<s:property value="%{getFullTitle(#contentTypeCategory, currentLang.code)}"/>">
-                                        <s:property value="%{getShortFullTitle(#contentTypeCategory, currentLang.code)}" />
+                                    <abbr title="<s:property value="%{#contentTypeCategory.fullTitle}"/>">
+                                        <s:property value="%{#contentTypeCategory.shortFullTitle}" />
                                     </abbr>
                                     &#32;
-                                    <wpsf:hidden name="categoryCodes" value="%{#contentTypeCategory.code}"/>
                                     <wpsa:actionParam action="removeCategory" var="actionName">
                                         <wpsa:actionSubParam name="categoryCode" value="%{#contentTypeCategory.code}" />
                                     </wpsa:actionParam>
                                     <wpsf:submit type="button" action="%{#actionName}"
-                                        title="%{getText('label.remove') + ' ' + getDefaultFullTitle(#contentTypeCategory)}"
+                                        title="%{getText('label.remove') + ' ' + #contentTypeCategory.defaultFullTitle}"
                                         cssClass="btn btn-link">
                                         <span class="pficon pficon-close white"></span>
                                         <span class="sr-only">x</span>
@@ -262,11 +258,15 @@
                             </li>
                         </s:iterator>
                     </ul>
+                   
                 </s:if>
+               
+               
+               
             </div>
         </div>
     </fieldset>
-        
+
         <div class="form-group">
             <div class="col-xs-12">
                 <div class="pull-right">

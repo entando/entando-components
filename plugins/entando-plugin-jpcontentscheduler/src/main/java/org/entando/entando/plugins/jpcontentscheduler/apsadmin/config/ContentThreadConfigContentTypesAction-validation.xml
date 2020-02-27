@@ -5,7 +5,7 @@
 <validators>
 
 	<field name="contentTypeElem.contentType">
-		<field-validator type="required" short-circuit="true">
+		<field-validator type="requiredstring" short-circuit="true">
 			<message key="jpcontentscheduler.contentType.required"/>
 		</field-validator>
 	</field>

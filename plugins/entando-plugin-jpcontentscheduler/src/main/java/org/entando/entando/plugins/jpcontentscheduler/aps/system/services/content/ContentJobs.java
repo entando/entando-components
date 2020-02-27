@@ -266,7 +266,7 @@ public class ContentJobs extends QuartzJobBean implements ApplicationContextAwar
 							if (references.size() > 0) {
 								// se i vincoli sono la presenza del contenuto
 								// nelle pagine.
-								List<IPage> listaPagine = references.get("PageManagerUtilizers");
+								List<IPage> listaPagine = references.get("CmsPageManagerWrapperUtilizers");
 								if (listaPagine != null && listaPagine.size() > 0) {
 									String fieldname = c.getFieldNameContentReplace();
 									String contenutoSostitutivo = null;
@@ -350,7 +350,7 @@ public class ContentJobs extends QuartzJobBean implements ApplicationContextAwar
 													if (w.getConfig() != null) {
 														ApsProperties prop = w.getConfig();
 														String codeContentPage = prop.getProperty("contentId");
-														if (codeContentPage
+														if (codeContentPage != null && codeContentPage
 																.equalsIgnoreCase(contentToSuspend.getId())) {
 															// trova il widget
 															// ed il framepos,
