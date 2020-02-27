@@ -15,6 +15,7 @@ package com.agiletec.plugins.jacms.aps.system.services.content.model;
 
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
+import com.agiletec.aps.system.common.entity.model.attribute.BooleanAttribute;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.AbstractResourceAttribute;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.LinkAttribute;
@@ -217,6 +218,9 @@ public class ContentDto extends EntityDto implements Serializable {
                 LinkAttribute linkAttr = (LinkAttribute) contentAttr;
                 linkAttr.getTextMap().clear();
                 linkAttr.setSymbolicLink(null);
+            } else if (BooleanAttribute.class.isAssignableFrom(contentAttr.getClass())) {
+                BooleanAttribute booleanAttr = (BooleanAttribute) contentAttr;
+                booleanAttr.setBooleanValue(null);
             }
         }
     }

@@ -21,6 +21,7 @@ import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.attribute.AbstractListAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
+import com.agiletec.aps.system.common.entity.model.attribute.BooleanAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.CompositeAttribute;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -192,19 +193,18 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
             }
 
             //Convert Resources to DTOs
-            if (attr.getCode().equals(contentAttr.getName()) && attr.getValues() != null
-                    && AbstractResourceAttribute.class.isAssignableFrom(contentAttr.getClass())) {
-                convertResourceAttributeToDto((AbstractResourceAttribute) contentAttr, attr);
-            } else if (attr.getCode().equals(contentAttr.getName()) && attr.getCompositeElements() != null
-                    && CompositeAttribute.class.isAssignableFrom(contentAttr.getClass())) {
-                CompositeAttribute compAttr = (CompositeAttribute) contentAttr;
-
-                convertResourceAttributesToDto(compAttr.getAttributes(), attr.getCompositeElements());
-            } else if (attr.getCode().equals(contentAttr.getName()) && attr.getElements() != null
-                    && (AbstractListAttribute.class.isAssignableFrom(contentAttr.getClass()))) {
-                AbstractListAttribute listAttr = (AbstractListAttribute) contentAttr;
-
-                convertResourceAttributesToDto(listAttr.getAttributes(), attr.getElements());
+            if (attr.getCode().equals(contentAttr.getName())) {
+                if (attr.getValues() != null && AbstractResourceAttribute.class.isAssignableFrom(contentAttr.getClass())) {
+                    convertResourceAttributeToDto((AbstractResourceAttribute) contentAttr, attr);
+                } else if (attr.getCompositeElements() != null && CompositeAttribute.class.isAssignableFrom(contentAttr.getClass())) {
+                    CompositeAttribute compAttr = (CompositeAttribute) contentAttr;
+                    convertResourceAttributesToDto(compAttr.getAttributes(), attr.getCompositeElements());
+                } else if (attr.getElements() != null && (AbstractListAttribute.class.isAssignableFrom(contentAttr.getClass()))) {
+                    AbstractListAttribute listAttr = (AbstractListAttribute) contentAttr;
+                    convertResourceAttributesToDto(listAttr.getAttributes(), attr.getElements());
+                } else if (attr.getElements() != null && (BooleanAttribute.class.isAssignableFrom(contentAttr.getClass()))) {
+                    attr.setValue(((BooleanAttribute) contentAttr).getBooleanValue());
+                }
             }
         }
     }
