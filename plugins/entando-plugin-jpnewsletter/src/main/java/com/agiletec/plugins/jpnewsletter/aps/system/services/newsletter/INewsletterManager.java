@@ -36,6 +36,10 @@ import java.util.List;
  * @author E.Santoboni, A.Turrini
  */
 public interface INewsletterManager {
+    
+    public static final int STATUS_READY = 0;
+    
+    public static final int STATUS_SENDING_IN_PROGRESS = 1;
 	
 	public NewsletterConfig getNewsletterConfig();
 	

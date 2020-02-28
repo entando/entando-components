@@ -21,6 +21,7 @@
  */
 package com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.model;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -32,7 +33,7 @@ import java.util.Set;
 /**
  * @author E.Santoboni
  */
-public class NewsletterConfig {
+public class NewsletterConfig implements Serializable {
 
 	@Override
 	public NewsletterConfig clone() {
