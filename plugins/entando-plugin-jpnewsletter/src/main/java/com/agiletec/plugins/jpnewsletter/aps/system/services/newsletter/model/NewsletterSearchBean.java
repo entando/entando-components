@@ -21,10 +21,12 @@
  */
 package com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.model;
 
+import java.io.Serializable;
+
 /**
  * @author E.Santoboni
  */
-public class NewsletterSearchBean {
+public class NewsletterSearchBean implements Serializable {
 	
 	public Boolean getInQueue() {
 		return _inQueue;

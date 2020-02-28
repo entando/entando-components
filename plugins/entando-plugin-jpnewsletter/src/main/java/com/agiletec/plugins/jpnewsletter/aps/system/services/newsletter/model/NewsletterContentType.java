@@ -21,10 +21,12 @@
  */
 package com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.model;
 
+import java.io.Serializable;
+
 /**
  * @author E.Mezzano
  */
-public class NewsletterContentType {
+public class NewsletterContentType implements Serializable {
 	
 	public String getContentTypeCode() {
 		return _contentTypeCode;

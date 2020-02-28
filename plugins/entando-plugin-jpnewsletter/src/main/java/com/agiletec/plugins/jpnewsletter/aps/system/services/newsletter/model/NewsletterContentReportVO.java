@@ -21,12 +21,13 @@
  */
 package com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * @author E.Santoboni
  */
-public class NewsletterContentReportVO extends ContentReport {
+public class NewsletterContentReportVO extends ContentReport implements Serializable {
 	
 	public int getNewsletterId() {
 		return _newsletterId;

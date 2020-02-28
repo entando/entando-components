@@ -68,6 +68,7 @@ import com.agiletec.plugins.jacms.aps.system.services.renderer.IContentRenderer;
 import com.agiletec.plugins.jpmail.aps.services.mail.IMailManager;
 import com.agiletec.plugins.jpmail.aps.services.mail.MailSendersUtilizer;
 import com.agiletec.plugins.jpnewsletter.aps.system.JpnewsletterSystemConstants;
+import com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.cache.INewsletterManagerCacheWrapper;
 import com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.model.ContentReport;
 import com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.model.NewsletterConfig;
 import com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.model.NewsletterContentReportVO;
@@ -77,6 +78,7 @@ import com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.model.Ne
 import com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.model.Subscriber;
 import com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.parse.NewsletterConfigDOM;
 import com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.util.ShaEncoder;
+import java.util.Calendar;
 
 import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
@@ -90,6 +92,26 @@ public class NewsletterManager extends AbstractService
 		implements INewsletterManager, MailSendersUtilizer, INewsletterSchedulerManager {
 
 	private static final Logger _logger = LoggerFactory.getLogger(NewsletterManager.class);
+
+	private INewsletterManagerCacheWrapper cacheWrapper;
+
+	private IMailManager _mailManager;
+	private IUserProfileManager _profileManager;
+	private IUserManager _userManager;
+	private IContentManager _contentManager;
+	private IAuthorizationManager _authorizationManager;
+	private IURLManager _urlManager;
+	private IPageManager _pageManager;
+	private ILinkResolverManager _linkResolver;
+	private ILangManager _langManager;
+	private IContentRenderer _contentRenderer;
+	private ConfigInterface _configManager;
+    private ICategoryManager categoryManager;
+	private INewsletterDAO _newsletterDAO;
+	private INewsletterSearcherDAO _newsletterSearcherDAO;
+	private IKeyGeneratorManager _keyGeneratorManager;
+
+	private TimerTask _scheduler;
 
 	@Override
 	public void init() throws Exception {
@@ -129,7 +151,7 @@ public class NewsletterManager extends AbstractService
 				throw new ApsSystemException("Configuration item not present: " + JpnewsletterSystemConstants.NEWSLETTER_CONFIG_ITEM);
 			}
 			NewsletterConfigDOM configDOM = new NewsletterConfigDOM();
-			this.setConfig(configDOM.extractConfig(xml));
+            this.getCacheWrapper().updateConfig(configDOM.extractConfig(xml));
 		} catch (Throwable t) {
 			_logger.error("Error loading config", t);
 			throw new ApsSystemException("Error loading config", t);
@@ -138,9 +160,13 @@ public class NewsletterManager extends AbstractService
 
 	@Override
 	public void startScheduler() throws ApsSystemException {
-		NewsletterConfig config = this.getConfig();
-		Date start = config.getNextTaskTime();
-		this._scheduler = new Scheduler(this, start, config.getHoursDelay());
+		NewsletterConfig config = this.getNewsletterConfig();
+        Calendar startTime = Calendar.getInstance();
+        startTime.setTime(config.getNextTaskTime());
+        Random randomGenerator = new Random();
+        int randomSecondDelay = randomGenerator.nextInt(50) + 1;
+        startTime.add(Calendar.SECOND, randomSecondDelay);
+		this._scheduler = new Scheduler(this, startTime.getTime(), config.getHoursDelay());
 	}
 
 	@Override
@@ -150,7 +176,7 @@ public class NewsletterManager extends AbstractService
 
 	@Override
 	public NewsletterConfig getNewsletterConfig() {
-		return this._config.clone();
+		return this.getCacheWrapper().getConfig().clone();
 	}
 
 	@Override
@@ -158,7 +184,7 @@ public class NewsletterManager extends AbstractService
 		try {
 			String xml = new NewsletterConfigDOM().createConfigXml(config);
 			this.getConfigManager().updateConfigItem(JpnewsletterSystemConstants.NEWSLETTER_CONFIG_ITEM, xml);
-			this.setConfig(config);
+			this.getCacheWrapper().updateConfig(config);
 			this.refresh();
 		} catch (Throwable t) {
 			_logger.error("Error updating configuration", t);
@@ -228,7 +254,8 @@ public class NewsletterManager extends AbstractService
 
 	@Override
 	public void sendNewsletter() throws ApsSystemException {
-		if (!this.isSendingNewsletter() && this.getContentQueue().size() > 0) {
+        Integer status = this.getCacheWrapper().getStatus();
+		if (status == INewsletterManager.STATUS_READY && this.getContentQueue().size() > 0) {
 			NewsletterSenderThread sender = new NewsletterSenderThread(this);
 			sender.setName(JpnewsletterSystemConstants.NEWSLETTER_SENDER_THREAD_NAME);
 			sender.start();
@@ -236,21 +263,22 @@ public class NewsletterManager extends AbstractService
 	}
 
 	protected void sendNewsletterFromThread() throws ApsSystemException {
+        if (!this.getNewsletterConfig().isActive()) {
+				return;
+			}
 		synchronized (this) {
-			if (this.isSendingNewsletter()) {
+            Integer status = this.getCacheWrapper().getStatus();
+			if (status != INewsletterManager.STATUS_READY) {
 				return;
 			} else {
-				this.setSendingNewsletter(true);
+				this.getCacheWrapper().updateStatus(INewsletterManager.STATUS_SENDING_IN_PROGRESS);
 			}
 		}
 		try {
 			_logger.info("Newletter: delivery process initiated");
-			if (!this.getConfig().isActive()) {
-				return;
-			}
 			List<String> contentIds = this.getContentQueue();
 			if (contentIds.size() > 0) {
-				List<Content> contents = new ArrayList<Content>(contentIds.size());
+				List<Content> contents = new ArrayList<>(contentIds.size());
 				for (int i = 0; i < contentIds.size(); i++) {
 					String id = contentIds.get(i);
 					Content content = this.getContentManager().loadContent(id, true);
@@ -271,7 +299,7 @@ public class NewsletterManager extends AbstractService
 		} catch (Throwable t) {
 			_logger.error("Newletter: delivery process ended abnormally", t);
 		} finally {
-			this.setSendingNewsletter(false);
+			this.getCacheWrapper().updateStatus(INewsletterManager.STATUS_READY);
 		}
 	}
 
@@ -279,7 +307,7 @@ public class NewsletterManager extends AbstractService
 	public String buildMailBody(Content content, boolean html) throws ApsSystemException {
 		String mailBody = null;
 		try {
-			NewsletterConfig config = this.getConfig();
+			NewsletterConfig config = this.getNewsletterConfig();
 			NewsletterContentType contentType = config.getContentType(content.getTypeCode());
 			int modelId = html ? contentType.getHtmlModel() : contentType.getSimpleTextModel();
 			mailBody = this.buildMailBody(content, modelId, html);
@@ -332,8 +360,8 @@ public class NewsletterManager extends AbstractService
 	}
 
 	private Map<String, List<String>> prepareProfileAttributesForContents(List<Content> contents) {
-		Map<String, List<String>> profileAttributes = new HashMap<String, List<String>>();
-		Properties subscriptions = this.getConfig().getSubscriptions();
+		Map<String, List<String>> profileAttributes = new HashMap<>();
+		Properties subscriptions = this.getNewsletterConfig().getSubscriptions();
 		for (int i = 0; i < contents.size(); i++) {
 			Content content = contents.get(i);
 			List<String> contentProfileAttributes = this.extractProfileAttributesForContent(content, subscriptions);
@@ -345,7 +373,7 @@ public class NewsletterManager extends AbstractService
 	}
 
 	protected NewsletterReport prepareNewsletterReport(List<Content> contents) {
-		NewsletterConfig config = this.getConfig();
+		NewsletterConfig config = this.getNewsletterConfig();
 		NewsletterReport newsletterReport = new NewsletterReport();
 		newsletterReport.setSubject(config.getSubject());
 		newsletterReport.setSendDate(new Date());
@@ -375,7 +403,7 @@ public class NewsletterManager extends AbstractService
 
 	private void sendNewsletterToUser(String username, List<Content> contents,
 			Map<String, List<String>> profileAttributes, NewsletterReport newsletterReport) {
-		NewsletterConfig config = this.getConfig();
+		NewsletterConfig config = this.getNewsletterConfig();
 		try {
 			IUserProfile profile = this.getProfileManager().getProfile(username);
 			if (profile != null) {
@@ -401,13 +429,13 @@ public class NewsletterManager extends AbstractService
 
 	protected String prepareMailBody(List<Content> userContents, NewsletterReport newsletterReport, boolean isHtml) {
 		StringBuffer body = this.prepareMailCommonBody(userContents, newsletterReport, isHtml);
-		NewsletterConfig config = this.getConfig();
+		NewsletterConfig config = this.getNewsletterConfig();
 		body.append(isHtml ? config.getHtmlFooter() : config.getTextFooter());
 		return body.toString();
 	}
 
 	protected StringBuffer prepareMailCommonBody(List<Content> userContents, NewsletterReport newsletterReport, boolean isHtml) {
-		NewsletterConfig config = this.getConfig();
+		NewsletterConfig config = this.getNewsletterConfig();
 		StringBuffer body = new StringBuffer(isHtml ? config.getHtmlHeader() : config.getTextHeader());
 		String separator = isHtml ? config.getHtmlSeparator() : config.getTextSeparator();
 		boolean first = true;
@@ -427,7 +455,7 @@ public class NewsletterManager extends AbstractService
 	}
 
 	private String buildMailBody(Content content, long modelId, boolean html) throws ApsSystemException {
-		NewsletterConfig config = this.getConfig();
+		NewsletterConfig config = this.getNewsletterConfig();
 		String header = html ? config.getHtmlHeader() : config.getTextHeader();
 		String defaultLang = this.getLangManager().getDefaultLang().getCode();
 		String mailContentBody = this.getContentRenderer().render(content, modelId, defaultLang, null);
@@ -441,8 +469,8 @@ public class NewsletterManager extends AbstractService
 	}
 
 	private Set<String> extractUsernames() throws ApsSystemException {
-		NewsletterConfig config = this.getConfig();
-		Set<String> usernames = new HashSet<String>();
+		NewsletterConfig config = this.getNewsletterConfig();
+		Set<String> usernames = new HashSet<>();
 		String allContentsAttribute = config.getAllContentsAttributeName();
 		if (null != allContentsAttribute && allContentsAttribute.trim().length() > 0) {
 			EntitySearchFilter filter = new EntitySearchFilter(allContentsAttribute, true, Boolean.TRUE, false);
@@ -475,8 +503,8 @@ public class NewsletterManager extends AbstractService
 
 	private List<Content> extractContentsForUser(IUserProfile profile, String eMail, List<Content> contents,
 			Map<String, List<String>> profileAttributes, NewsletterReport newsletterReport) throws ApsSystemException {
-		NewsletterConfig config = this.getConfig();
-		List<Content> userContents = new ArrayList<Content>();
+		NewsletterConfig config = this.getNewsletterConfig();
+		List<Content> userContents = new ArrayList<>();
 		if (profile != null) {
 			String username = profile.getUsername();
 			String allContentsAttribute = config.getAllContentsAttributeName();
@@ -525,7 +553,7 @@ public class NewsletterManager extends AbstractService
 	}
 
 	private String prepareMailBodyContentPart(Content content, String defaultLang, boolean isHtml) {
-		NewsletterContentType contentType = this.getConfig().getContentTypes().get(content.getTypeCode());
+		NewsletterContentType contentType = this.getNewsletterConfig().getContentTypes().get(content.getTypeCode());
 		int modelId = isHtml ? contentType.getHtmlModel() : contentType.getSimpleTextModel();
 		String mailContentBody = this.getContentRenderer().render(content, modelId, defaultLang, null);
 		mailContentBody = this.getLinkResolver().resolveLinks(mailContentBody, null);
@@ -557,7 +585,7 @@ public class NewsletterManager extends AbstractService
 		boolean allowed = false;
 		if (Group.FREE_GROUP_NAME.equals(mainGroup) || userGroups.contains(mainGroup)) {
 			allowed = true;
-		} else if (!this.getConfig().isOnlyOwner()) {
+		} else if (!this.getNewsletterConfig().isOnlyOwner()) {
 			for (String current : content.getGroups()) {
 				if (Group.FREE_GROUP_NAME.equals(current) || userGroups.contains(current)) {
 					allowed = true;
@@ -591,7 +619,7 @@ public class NewsletterManager extends AbstractService
 			Collection<String> userGroupCodes, NewsletterSearchBean searchBean) throws ApsSystemException {
 		List<String> contentsId = null;
 		try {
-			NewsletterConfig config = this.getConfig();
+			NewsletterConfig config = this.getNewsletterConfig();
 			String[] contentTypes = config.getContentTypesArray();
 			if (contentTypes == null || contentTypes.length == 0) {
 				contentsId = new ArrayList<String>();
@@ -650,7 +678,7 @@ public class NewsletterManager extends AbstractService
 
 	@Override
 	public List<Subscriber> loadSubscribers() throws ApsSystemException {
-		List<Subscriber> subscribers = new ArrayList<Subscriber>();
+		List<Subscriber> subscribers = new ArrayList<>();
 		try {
 			subscribers = this.getNewsletterDAO().loadSubscribers();
 		} catch (Throwable t) {
@@ -662,7 +690,7 @@ public class NewsletterManager extends AbstractService
 
 	@Override
 	public List<Subscriber> searchSubscribers(String mailAddress, Boolean active) throws ApsSystemException {
-		List<Subscriber> subscribers = new ArrayList<Subscriber>();
+		List<Subscriber> subscribers = new ArrayList<>();
 		try {
 			subscribers = this.getNewsletterDAO().searchSubscribers(mailAddress, active);
 		} catch (Throwable t) {
@@ -750,7 +778,7 @@ public class NewsletterManager extends AbstractService
 
 	@Override
 	public void cleanOldSubscribers() throws ApsSystemException {
-		int days = this.getConfig().getSubscriptionTokenValidityDays();
+		int days = this.getNewsletterConfig().getSubscriptionTokenValidityDays();
 		long time = new Date().getTime() - (86400000l * days);
 		Date expiration = new Date(time);
 		this.getNewsletterDAO().cleanOldSubscribers(expiration);
@@ -808,7 +836,7 @@ public class NewsletterManager extends AbstractService
 	}
 
 	protected String createLink(String mailAddress, String token) {
-		NewsletterConfig config = this.getConfig();
+		NewsletterConfig config = this.getNewsletterConfig();
 		String pageCode = config.getSubscriptionPageCode();
 		IPage page = this.getPageManager().getOnlinePage(pageCode);
 		Lang lang = this.getLangManager().getDefaultLang();
@@ -840,11 +868,11 @@ public class NewsletterManager extends AbstractService
 
 	protected void sendSubscriptionFormThread(String mailAddress, String token) throws ApsSystemException {
 		try {
-			NewsletterConfig config = this.getConfig();
+			NewsletterConfig config = this.getNewsletterConfig();
 			String senderCode = config.getSenderCode();
 			String subject = config.getSubscriptionSubject();
 			if (subject != null) {
-				Map<String, String> bodyParams = new HashMap<String, String>();
+				Map<String, String> bodyParams = new HashMap<>();
 				String link = this.createLink(mailAddress, token);
 				bodyParams.put("subscribeLink", link);
 				String textBody = this.parseText(config.getSubscriptionTextBody(), bodyParams);
@@ -865,7 +893,7 @@ public class NewsletterManager extends AbstractService
 	}
 
 	private void sendNewsletterToSubscribers(List<Content> contents, NewsletterReport newsletterReport) throws ApsSystemException {
-		List<Content> contentsToSubscribers = new ArrayList<Content>();
+		List<Content> contentsToSubscribers = new ArrayList<>();
 		for (int i = 0; i < contents.size(); i++) {
 			Content content = contents.get(i);
 			if (this.isContentToSend(content)) {
@@ -892,7 +920,7 @@ public class NewsletterManager extends AbstractService
 
 	private void sendContentsToSubscribers(List<Content> contents, NewsletterReport newsletterReport) throws ApsSystemException {
 		List<Subscriber> subscribers = this.searchSubscribers(null, Boolean.TRUE);
-		NewsletterConfig config = this.getConfig();
+		NewsletterConfig config = this.getNewsletterConfig();
 		for (Subscriber subscriber : subscribers) {
 			String mailAddress = subscriber.getMailAddress();
 			String[] emailAddresses = {mailAddress};
@@ -907,12 +935,12 @@ public class NewsletterManager extends AbstractService
 	}
 
 	private String prepareSubscribersMailBody(List<Content> userContents, NewsletterReport newsletterReport, boolean isHtml, String mailAddress) {
-		NewsletterConfig config = this.getConfig();
+		NewsletterConfig config = this.getNewsletterConfig();
 		String unsubscriptionLink = isHtml ? config.getSubscribersHtmlFooter() : config.getSubscribersTextFooter();
 		if (unsubscriptionLink != null) {
 			StringBuffer body = this.prepareMailCommonBody(userContents, newsletterReport, isHtml);
 			String link = this.createUnsubscriptionLink(mailAddress);
-			Map<String, String> footerParams = new HashMap<String, String>();
+			Map<String, String> footerParams = new HashMap<>();
 			footerParams.put("unsubscribeLink", link);
 			String unlink = this.parseText(unsubscriptionLink, footerParams);
 			body.append(unlink);
@@ -924,7 +952,7 @@ public class NewsletterManager extends AbstractService
 	}
 
 	protected String createUnsubscriptionLink(String mailAddress) {
-		NewsletterConfig config = this.getConfig();
+		NewsletterConfig config = this.getNewsletterConfig();
 		String pageCode = config.getUnsubscriptionPageCode();
 		IPage page = this.getPageManager().getOnlinePage(pageCode);
 		Lang lang = this.getLangManager().getDefaultLang();
@@ -939,31 +967,14 @@ public class NewsletterManager extends AbstractService
 		return this.getUrlManager().createURL(page, lang, params, false);
 	}
 
-	protected boolean isSendingNewsletter() {
-		return _sendingNewsletter;
-	}
-
-	protected void setSendingNewsletter(boolean sendingNewsletter) {
-		this._sendingNewsletter = sendingNewsletter;
-	}
-
-	protected NewsletterConfig getConfig() {
-		return this._config;
-	}
-
-	protected void setConfig(NewsletterConfig config) {
-		this._config = config;
-	}
-
 	@Override
 	public String[] getSenderCodes() {
-		return new String[]{this.getConfig().getSenderCode()};
+		return new String[]{this.getNewsletterConfig().getSenderCode()};
 	}
 
 	protected IMailManager getMailManager() {
 		return _mailManager;
 	}
-
 	public void setMailManager(IMailManager mailManager) {
 		this._mailManager = mailManager;
 	}
@@ -971,7 +982,6 @@ public class NewsletterManager extends AbstractService
 	protected IUserManager getUserManager() {
 		return _userManager;
 	}
-
 	public void setUserManager(IUserManager userManager) {
 		this._userManager = userManager;
 	}
@@ -979,7 +989,6 @@ public class NewsletterManager extends AbstractService
 	protected IContentManager getContentManager() {
 		return _contentManager;
 	}
-
 	public void setContentManager(IContentManager contentManager) {
 		this._contentManager = contentManager;
 	}
@@ -987,7 +996,6 @@ public class NewsletterManager extends AbstractService
 	protected IAuthorizationManager getAuthorizationManager() {
 		return _authorizationManager;
 	}
-
 	public void setAuthorizationManager(IAuthorizationManager authorizationManager) {
 		this._authorizationManager = authorizationManager;
 	}
@@ -995,7 +1003,6 @@ public class NewsletterManager extends AbstractService
 	protected IURLManager getUrlManager() {
 		return _urlManager;
 	}
-
 	public void setUrlManager(IURLManager urlManager) {
 		this._urlManager = urlManager;
 	}
@@ -1003,7 +1010,6 @@ public class NewsletterManager extends AbstractService
 	protected IPageManager getPageManager() {
 		return _pageManager;
 	}
-
 	public void setPageManager(IPageManager pageManager) {
 		this._pageManager = pageManager;
 	}
@@ -1011,7 +1017,6 @@ public class NewsletterManager extends AbstractService
 	protected IUserProfileManager getProfileManager() {
 		return _profileManager;
 	}
-
 	public void setProfileManager(IUserProfileManager profileManager) {
 		this._profileManager = profileManager;
 	}
@@ -1019,7 +1024,6 @@ public class NewsletterManager extends AbstractService
 	protected ILinkResolverManager getLinkResolver() {
 		return _linkResolver;
 	}
-
 	public void setLinkResolver(ILinkResolverManager linkResolver) {
 		this._linkResolver = linkResolver;
 	}
@@ -1027,7 +1031,6 @@ public class NewsletterManager extends AbstractService
 	protected ILangManager getLangManager() {
 		return _langManager;
 	}
-
 	public void setLangManager(ILangManager langManager) {
 		this._langManager = langManager;
 	}
@@ -1035,7 +1038,6 @@ public class NewsletterManager extends AbstractService
 	protected IContentRenderer getContentRenderer() {
 		return _contentRenderer;
 	}
-
 	public void setContentRenderer(IContentRenderer renderer) {
 		this._contentRenderer = renderer;
 	}
@@ -1043,7 +1045,6 @@ public class NewsletterManager extends AbstractService
 	protected ConfigInterface getConfigManager() {
 		return _configManager;
 	}
-
 	public void setConfigManager(ConfigInterface configManager) {
 		this._configManager = configManager;
 	}
@@ -1051,7 +1052,6 @@ public class NewsletterManager extends AbstractService
 	protected IKeyGeneratorManager getKeyGeneratorManager() {
 		return _keyGeneratorManager;
 	}
-
 	public void setKeyGeneratorManager(IKeyGeneratorManager keyGeneratorManager) {
 		this._keyGeneratorManager = keyGeneratorManager;
 	}
@@ -1059,7 +1059,6 @@ public class NewsletterManager extends AbstractService
     public ICategoryManager getCategoryManager() {
         return categoryManager;
     }
-
     public void setCategoryManager(ICategoryManager categoryManager) {
         this.categoryManager = categoryManager;
     }
@@ -1067,38 +1066,22 @@ public class NewsletterManager extends AbstractService
 	protected INewsletterDAO getNewsletterDAO() {
 		return _newsletterDAO;
 	}
-
 	public void setNewsletterDAO(INewsletterDAO newsletterDAO) {
 		this._newsletterDAO = newsletterDAO;
 	}
 
+    protected INewsletterManagerCacheWrapper getCacheWrapper() {
+        return cacheWrapper;
+    }
+    public void setCacheWrapper(INewsletterManagerCacheWrapper cacheWrapper) {
+        this.cacheWrapper = cacheWrapper;
+    }
+
 	protected INewsletterSearcherDAO getNewsletterSearcherDAO() {
 		return _newsletterSearcherDAO;
 	}
-
 	public void setNewsletterSearcherDAO(INewsletterSearcherDAO newsletterSearcherDAO) {
 		this._newsletterSearcherDAO = newsletterSearcherDAO;
 	}
-
-	private NewsletterConfig _config;
-	private boolean _sendingNewsletter = false;
-
-	private IMailManager _mailManager;
-	private IUserProfileManager _profileManager;
-	private IUserManager _userManager;
-	private IContentManager _contentManager;
-	private IAuthorizationManager _authorizationManager;
-	private IURLManager _urlManager;
-	private IPageManager _pageManager;
-	private ILinkResolverManager _linkResolver;
-	private ILangManager _langManager;
-	private IContentRenderer _contentRenderer;
-	private ConfigInterface _configManager;
-    private ICategoryManager categoryManager;
-	private INewsletterDAO _newsletterDAO;
-	private INewsletterSearcherDAO _newsletterSearcherDAO;
-	private IKeyGeneratorManager _keyGeneratorManager;
-
-	private TimerTask _scheduler;
-
+    
 }
