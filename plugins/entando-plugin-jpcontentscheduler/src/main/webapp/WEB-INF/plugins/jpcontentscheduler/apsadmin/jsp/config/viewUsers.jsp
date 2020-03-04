@@ -53,8 +53,7 @@
 </div>
 <br>
 
-
-<div id="main" role="main">
+<div id="main">
 
     <div id="messages">
         <s:include value="/WEB-INF/apsadmin/jsp/common/inc/messages.jsp" />
@@ -64,76 +63,70 @@
             <a class="btn btn-primary margin-base-bottom pull-right" href="<s:url action="addUser" />"><s:text name="label.add" /></a>
         </div>
     </div>
+
+    <br/>
     <div class="row mt-5">
         <div class="col-xs-12">
+            <p>
+                <s:text name="legend.contentThreadconfigSettings.users.help" />
+            </p>
             <s:form id="configurationForm" name="configurationForm" method="post" action="saveUsersItem" cssClass="form-horizontal">
                 <s:set var="#users" value="%{getUsersContentType()}"/>
 
-                        <table class="table table-striped table-bordered table-hover mb-20">
-                            <thead>
-                                <tr>
-                                    <th><s:text name="jpcontentscheduler.label.username"/></th>
-                                    <th><s:text name="jpcontentscheduler.label.contentTypes"/></th>
-                                    <th class="text-center table-w-5"><s:text name="jpcontentscheduler.label.actions"/></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <s:iterator value="#users" var="user">
-                                    <tr>
-                                        <td><s:property value="#user.key"/></td>
-                                        <td>
-                                            <s:iterator value="#user.value" var="contentType" status="status">
-                                                <s:if test="%{!#status.first}">,</s:if>
-                                                <s:property value="#contentType"/>
-                                            </s:iterator>
-                                        </td>
-                                        <td class="text-center">
-                                            <div class="dropdown dropdown-kebab-pf">
-                                                <p class="sr-only"><s:text name="label.actions"/></p>
-                                                <span class="btn btn-menu-right dropdown-toggle" type="button"
-                                                      data-toggle="dropdown" aria-haspopup="true"
-                                                      aria-expanded="false">
-                                                    <span class="fa fa-ellipsis-v"></span>
-                                                </span>
-                                                <ul class="dropdown-menu dropdown-menu-right">
-                                                    <li>
-                                                        <a href="<s:url action="editUser"><s:param name="user" value="#user.key" /></s:url>">
-                                                            <s:text name="label.edit"/>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="<s:url action="trashUser"><s:param name="user" value="#user.key" /></s:url>">
-                                                            <s:text name="label.remove"/>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </s:iterator>
-                            </tbody>
-                        </table>
-                        <%-- TODO: attivare paginazione
-                        <div class="content-view-pf-pagination clearfix">
-                            <div class="form-group">
-                                <span>
-                                    <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp"/>
-                                </span>
-                                <div class="mt-5">
-                                    <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formTable.jsp"/>
-                                </div>
-                            </div>
+                <table class="table table-striped table-bordered table-hover mb-20">
+                    <thead>
+                        <tr>
+                            <th><s:text name="jpcontentscheduler.label.username"/></th>
+                            <th><s:text name="jpcontentscheduler.label.contentTypes"/></th>
+                            <th class="text-center table-w-5"><s:text name="jpcontentscheduler.label.actions"/></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <s:iterator value="#users" var="user">
+                            <tr>
+                                <td><s:property value="#user.key"/></td>
+                                <td>
+                                    <s:iterator value="#user.value" var="contentType" status="status">
+                                        <s:if test="%{!#status.first}">,</s:if>
+                                        <s:property value="#contentType"/>
+                                    </s:iterator>
+                                </td>
+                                <td class="text-center">
+                                    <div class="dropdown dropdown-kebab-pf">
+                                        <p class="sr-only"><s:text name="label.actions"/></p>
+                                        <span class="btn btn-menu-right dropdown-toggle" type="button"
+                                              data-toggle="dropdown" aria-haspopup="true"
+                                              aria-expanded="false">
+                                            <span class="fa fa-ellipsis-v"></span>
+                                        </span>
+                                        <ul class="dropdown-menu dropdown-menu-right">
+                                            <li>
+                                                <a href="<s:url action="editUser"><s:param name="user" value="#user.key" /></s:url>">
+                                                    <s:text name="label.edit"/>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="<s:url action="trashUser"><s:param name="user" value="#user.key" /></s:url>">
+                                                    <s:text name="label.remove"/>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        </s:iterator>
+                    </tbody>
+                </table>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <div class="pull-right">
+                            <wpsf:submit name="save" type="button" cssClass="btn btn-primary" >
+                                <s:text name="%{getText('label.save')}"/>
+                            </wpsf:submit>
                         </div>
-                         --%>
-				<div class="form-group">
-					<div class="col-xs-12">
-						<div class="pull-right">
-							<wpsf:submit name="save" type="button" cssClass="btn btn-primary" >
-							<s:text name="%{getText('label.save')}"/>
-							</wpsf:submit>
-						</div>
-					</div>
-				</div>
+                    </div>
+                </div>
             </s:form>
         </div>
     </div>

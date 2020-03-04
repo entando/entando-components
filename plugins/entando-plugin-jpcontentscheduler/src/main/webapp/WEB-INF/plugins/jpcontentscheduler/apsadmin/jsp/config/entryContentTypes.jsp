@@ -24,7 +24,7 @@
                 <span class="pull-right">
                     <s:text name="jpcontentscheduler.section.help" var="helpVar" />
                     <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
-                        data-content="${helpVar}" data-placement="left" data-original-title="">
+                       data-content="${helpVar}" data-placement="left" data-original-title="">
                         <i class="fa fa-question-circle-o" aria-hidden="true"></i>
                     </a>
                 </span>
@@ -61,13 +61,13 @@
     <div id="messages">
         <s:include value="/WEB-INF/apsadmin/jsp/common/inc/messages.jsp" />
     </div>
-    
+
     <s:form id="configurationForm" name="configurationForm" method="post" action="addContentType" cssClass="form-horizontal">
         <legend>
             <s:text name="jpcontentscheduler.label.addContentType" />
         </legend>
 
-       
+
 
         <!-- Content Type -->
         <div class="form-group">
@@ -79,8 +79,8 @@
                 <s:set var="hasFieldErrorVar" value="#fieldErrorsVar != null && !#fieldErrorsVar.isEmpty()" />
                 <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
                 <wpsf:select name="contentTypeElem.contentType" id="contentTypeElem_contentType"
-                    list="%{getContentTypes()}" listKey="code" listValue="description" headerKey=""
-                    headerValue="%{getText('note.choose')}" cssClass="form-control" />
+                             list="%{getContentTypes()}" listKey="code" listValue="description" headerKey=""
+                             headerValue="%{getText('note.choose')}" cssClass="form-control" />
             </div>
         </div>
         <!-- dateStart attribute -->
@@ -93,7 +93,7 @@
                 <s:set var="hasFieldErrorVar" value="#fieldErrorsVar != null && !#fieldErrorsVar.isEmpty()" />
                 <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
                 <wpsf:textfield name="contentTypeElem.startDateAttr" id="contentTypeElem_startAttr"
-                    placeholder="%{getText('jpcontentscheduler.label.startDateAttribute')}" cssClass="form-control" />
+                                placeholder="%{getText('jpcontentscheduler.label.startDateAttribute')}" cssClass="form-control" />
                 <s:if test="#hasFieldErrorVar">
                     <span class="help-block text-danger">
                         <s:iterator value="%{#fieldErrorsVar}">
@@ -114,7 +114,7 @@
                 <s:set var="hasFieldErrorVar" value="#fieldErrorsVar != null && !#fieldErrorsVar.isEmpty()" />
                 <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
                 <wpsf:textfield name="contentTypeElem.endDateAttro" id="contentTypeElem_endAttro"
-                    placeholder="%{getText('jpcontentscheduler.label.endDateAttribute')}" cssClass="form-control" />
+                                placeholder="%{getText('jpcontentscheduler.label.endDateAttribute')}" cssClass="form-control" />
                 <s:if test="#hasFieldErrorVar">
                     <span class="help-block text-danger">
                         <s:iterator value="%{#fieldErrorsVar}">
@@ -135,7 +135,7 @@
                 <s:set var="hasFieldErrorVar" value="#fieldErrorsVar != null && !#fieldErrorsVar.isEmpty()" />
                 <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
                 <wpsf:textfield name="contentTypeElem.idContentReplace" id="contentTypeElem_idContentReplace"
-                    placeholder="%{getText('jpcontentscheduler.label.contentReplaceId')}" cssClass="form-control" />
+                                placeholder="%{getText('jpcontentscheduler.label.contentReplaceId')}" cssClass="form-control" />
                 <s:if test="#hasFieldErrorVar">
                     <span class="help-block text-danger">
                         <s:iterator value="%{#fieldErrorsVar}">
@@ -146,7 +146,7 @@
                 </s:if>
             </div>
         </div>
-<!--         modelIdContentReplace -->
+        <!--         modelIdContentReplace -->
         <div class="form-group">
             <label class="col-sm-2 control-label">
                 <s:text name="jpcontentscheduler.label.contentReplaceModelId" />
@@ -156,7 +156,7 @@
                 <s:set var="hasFieldErrorVar" value="#fieldErrorsVar != null && !#fieldErrorsVar.isEmpty()" />
                 <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
                 <wpsf:textfield name="contentTypeElem.modelIdContentReplace" id="contentTypeElem_modelIdContentReplace"
-                    placeholder="%{getText('jpcontentscheduler.label.contentReplaceModelId')}" cssClass="form-control" />
+                                placeholder="%{getText('jpcontentscheduler.label.contentReplaceModelId')}" cssClass="form-control" />
                 <s:if test="#hasFieldErrorVar">
                     <span class="help-block text-danger">
                         <s:iterator value="%{#fieldErrorsVar}">
@@ -167,6 +167,11 @@
                 </s:if>
             </div>
         </div>
+
+        <legend>
+            <s:text name="label.threadConfig.unpublish" />
+        </legend>     
+
         <div class="form-group">
             <label class="col-sm-2 control-label">
                 <s:text name="jpcontentscheduler.label.suspend" />
@@ -183,89 +188,89 @@
             <wp:info key="systemParam" paramName="treeStyle_category" />
         </s:set>
         <fieldset class="margin-base-vertical" id="category-content-block">
-        <div class="form-group<s:property value="controlGroupErrorClassVar" />">
-            <div class="col-xs-2 control-label">
-                <label>
-                    <s:text name="title.categoriesManagement" />
-                </label>
-            </div>
-            <div class="col-xs-10">
-                <s:include value="/WEB-INF/apsadmin/jsp/common/layouts/assets-more/category/categoryTree-extra.jsp" />
-                <table id="categoryTree" class="table table-bordered table-hover table-treegrid ${categoryTreeStyleVar}">
-                    <thead>
-                        <tr>
-                            <th>
-                                <s:text name="label.category.tree" />
-                                <s:if test="#categoryTreeStyleVar == 'classic'">
-                                    <button type="button" class="btn-no-button expand-button" id="expandAll">
-                                        <i class="fa fa-plus-square-o treeInteractionButtons" aria-hidden="true"></i>
+            <div class="form-group<s:property value="controlGroupErrorClassVar" />">
+                <div class="col-xs-2 control-label">
+                    <label>
+                        <s:text name="title.categoriesManagement" />
+                    </label>
+                </div>
+                <div class="col-xs-10">
+                    <s:include value="/WEB-INF/apsadmin/jsp/common/layouts/assets-more/category/categoryTree-extra.jsp" />
+                    <table id="categoryTree" class="table table-bordered table-hover table-treegrid ${categoryTreeStyleVar}">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <s:text name="label.category.tree" />
+                                    <s:if test="#categoryTreeStyleVar == 'classic'">
+                                        <button type="button" class="btn-no-button expand-button" id="expandAll">
+                                            <i class="fa fa-plus-square-o treeInteractionButtons" aria-hidden="true"></i>
+                                            &#32;
+                                            <s:text name="label.category.expandAll" />
+                                        </button>
+                                        <button type="button" class="btn-no-button" id="collapseAll">
+                                            <i class="fa fa-minus-square-o treeInteractionButtons" aria-hidden="true"></i>
+                                            &#32;
+                                            <s:text name="label.category.collapseAll" />
+                                        </button>
+                                    </s:if>
+                                </th>
+                                <th class="text-center table-w-10">
+                                    <s:text name="label.category.join" />
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <s:set var="inputFieldName" value="'categoryCode'" />
+                            <s:set var="selectedTreeNode" value="categoryCode" />
+                            <s:set var="liClassName" value="'category'" />
+                            <s:set var="treeItemIconName" value="'fa-folder'" />
+                            <s:if test="#categoryTreeStyleVar == 'classic'">
+                                <s:set var="currentRoot" value="allowedTreeRootNode" />
+                                <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/common/treeBuilderCategoriesJoin.jsp" />
+                            </s:if>
+                            <s:elseif test="#categoryTreeStyleVar == 'request'">
+                                <s:set var="currentRoot" value="showableTree" />
+                                <s:set var="openTreeActionName" value="'openCloseTreeOnBulkActions'" />
+                                <s:set var="closeTreeActionName" value="'openCloseTreeOnBulkActions'" />
+                                <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/common/treeBuilder-request-categories.jsp" />
+                            </s:elseif>
+                        </tbody>
+                    </table>
+
+                    <s:if test="%{categoryCodes != null && !categoryCodes.empty}">
+                        <ul class="list-inline mt-20">
+                            <s:iterator value="categoryCodes" var="categoryCode">
+                                <s:set var="contentTypeCategory" value="%{getCategory(#categoryCode)}"></s:set>
+                                <wpsf:hidden name="categoryCodes" value="%{#categoryCode}" />
+                                <li>
+                                    <span class="label label-info">
+                                        <span class="icon fa fa-tag"></span>
                                         &#32;
-                                        <s:text name="label.category.expandAll" />
-                                    </button>
-                                    <button type="button" class="btn-no-button" id="collapseAll">
-                                        <i class="fa fa-minus-square-o treeInteractionButtons" aria-hidden="true"></i>
+                                        <abbr title="<s:property value="%{#contentTypeCategory.fullTitle}"/>">
+                                            <s:property value="%{#contentTypeCategory.shortFullTitle}" />
+                                        </abbr>
                                         &#32;
-                                        <s:text name="label.category.collapseAll" />
-                                    </button>
-                                </s:if>
-                            </th>
-                            <th class="text-center table-w-10">
-                                <s:text name="label.category.join" />
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <s:set var="inputFieldName" value="'categoryCode'" />
-                    <s:set var="selectedTreeNode" value="categoryCode" />
-                    <s:set var="liClassName" value="'category'" />
-                    <s:set var="treeItemIconName" value="'fa-folder'" />
-                    <s:if test="#categoryTreeStyleVar == 'classic'">
-                        <s:set var="currentRoot" value="allowedTreeRootNode" />
-                        <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/common/treeBuilderCategoriesJoin.jsp" />
+                                        <wpsa:actionParam action="removeCategory" var="actionName">
+                                            <wpsa:actionSubParam name="categoryCode" value="%{#contentTypeCategory.code}" />
+                                        </wpsa:actionParam>
+                                        <wpsf:submit type="button" action="%{#actionName}"
+                                                     title="%{getText('label.remove') + ' ' + #contentTypeCategory.defaultFullTitle}"
+                                                     cssClass="btn btn-link">
+                                            <span class="pficon pficon-close white"></span>
+                                            <span class="sr-only">x</span>
+                                        </wpsf:submit>
+                                    </span>
+                                </li>
+                            </s:iterator>
+                        </ul>
+
                     </s:if>
-                    <s:elseif test="#categoryTreeStyleVar == 'request'">
-                        <s:set var="currentRoot" value="showableTree" />
-                        <s:set var="openTreeActionName" value="'openCloseTreeOnBulkActions'" />
-                        <s:set var="closeTreeActionName" value="'openCloseTreeOnBulkActions'" />
-                        <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/common/treeBuilder-request-categories.jsp" />
-                    </s:elseif>
-                    </tbody>
-                </table>
-                     
-               <s:if test="%{categoryCodes != null && !categoryCodes.empty}">
-                   <ul class="list-inline mt-20">
-                        <s:iterator value="categoryCodes" var="categoryCode">
-                            <s:set var="contentTypeCategory" value="%{getCategory(#categoryCode)}"></s:set>
-                            <wpsf:hidden name="categoryCodes" value="%{#categoryCode}" />
-                            <li>
-                                <span class="label label-info">
-                                    <span class="icon fa fa-tag"></span>
-                                    &#32;
-                                    <abbr title="<s:property value="%{#contentTypeCategory.fullTitle}"/>">
-                                        <s:property value="%{#contentTypeCategory.shortFullTitle}" />
-                                    </abbr>
-                                    &#32;
-                                    <wpsa:actionParam action="removeCategory" var="actionName">
-                                        <wpsa:actionSubParam name="categoryCode" value="%{#contentTypeCategory.code}" />
-                                    </wpsa:actionParam>
-                                    <wpsf:submit type="button" action="%{#actionName}"
-                                        title="%{getText('label.remove') + ' ' + #contentTypeCategory.defaultFullTitle}"
-                                        cssClass="btn btn-link">
-                                        <span class="pficon pficon-close white"></span>
-                                        <span class="sr-only">x</span>
-                                    </wpsf:submit>
-                                </span>
-                            </li>
-                        </s:iterator>
-                    </ul>
-                   
-                </s:if>
-               
-               
-               
+
+
+
+                </div>
             </div>
-        </div>
-    </fieldset>
+        </fieldset>
 
         <div class="form-group">
             <div class="col-xs-12">

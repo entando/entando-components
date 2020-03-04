@@ -26,7 +26,7 @@
                 <span class="pull-right">
                     <s:text name="jpcontentscheduler.section.help" var="helpVar" />
                     <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title=""
-                        data-content="${helpVar}" data-placement="left" data-original-title="">
+                       data-content="${helpVar}" data-placement="left" data-original-title="">
                         <i class="fa fa-question-circle-o" aria-hidden="true"></i>
                     </a>
                 </span>
@@ -74,7 +74,7 @@
         <div class="col-xs-12">
             <s:form id="configurationForm" name="configurationForm" method="post" action="saveContentTypeItem" cssClass="form-horizontal">
                 <s:set var="#contentTypeElements" value="%{getTypes()}" />
-<!--                 <contentType type="NOL" startAttr="Data_inizio" endAttr="Data_fine" idContentReplace="Id_contenuto_sost" modelIdContentReplace="Model_id" suspend="true"> -->
+                <!--                 <contentType type="NOL" startAttr="Data_inizio" endAttr="Data_fine" idContentReplace="Id_contenuto_sost" modelIdContentReplace="Model_id" suspend="true"> -->
                 <table class="table table-striped table-bordered table-hover mb-20">
                     <thead>
                         <tr>
@@ -139,7 +139,7 @@
                                             <s:text name="label.actions" />
                                         </p>
                                         <span class="btn btn-menu-right dropdown-toggle" type="button"
-                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <span class="fa fa-ellipsis-v"></span>
                                         </span>
                                         <ul class="dropdown-menu dropdown-menu-right">
@@ -171,16 +171,16 @@
                                 </div>
                             </div>
                         </div>
-                         --%>
-        <div class="form-group">
-            <div class="col-xs-12">
-                <div class="pull-right">
-                    <wpsf:submit name="save" type="button" cssClass="btn btn-primary" >
-                        <s:text name="%{getText('label.save')}"/>
-                    </wpsf:submit>
+                --%>
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <div class="pull-right">
+                            <wpsf:submit name="save" type="button" cssClass="btn btn-primary" >
+                                <s:text name="%{getText('label.save')}"/>
+                            </wpsf:submit>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
             </s:form>
         </div>
     </div>
