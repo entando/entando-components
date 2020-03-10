@@ -1,0 +1,14 @@
+[{
+    "groups":[],
+    "mainGroup":"free",
+    "description":"ContentWithCheckboxTrue",
+    "categories":[],
+    "attributes":[
+        {
+            "code": "check1",
+            "value": true
+        }
+    ],
+    "id":"**MARKER**",
+    "typeCode":"CHE"
+}]
