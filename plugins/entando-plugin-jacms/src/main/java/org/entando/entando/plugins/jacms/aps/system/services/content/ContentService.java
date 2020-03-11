@@ -22,6 +22,7 @@ import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.attribute.AbstractListAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.BooleanAttribute;
+import com.agiletec.aps.system.common.entity.model.attribute.CheckBoxAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.CompositeAttribute;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -202,6 +203,8 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
                 } else if (attr.getElements() != null && (AbstractListAttribute.class.isAssignableFrom(contentAttr.getClass()))) {
                     AbstractListAttribute listAttr = (AbstractListAttribute) contentAttr;
                     convertResourceAttributesToDto(listAttr.getAttributes(), attr.getElements());
+                } else if (attr.getElements() != null && (CheckBoxAttribute.class.isAssignableFrom(contentAttr.getClass()))) {
+                    attr.setValue(((CheckBoxAttribute) contentAttr).getValue());
                 } else if (attr.getElements() != null && (BooleanAttribute.class.isAssignableFrom(contentAttr.getClass()))) {
                     attr.setValue(((BooleanAttribute) contentAttr).getBooleanValue());
                 }

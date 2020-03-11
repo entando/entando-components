@@ -1,0 +1,11 @@
+{
+    "code": "CHE",
+    "name": "Content Type CHE",
+    "attributes": [
+        {
+            "code": "check1",
+            "type": "CheckBox",
+            "name": "Description of CheckBox attribute"
+        }
+    ]
+}

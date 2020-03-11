@@ -14,6 +14,7 @@
 package org.entando.entando.plugins.jacms.web.content;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
@@ -566,6 +567,75 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             }
             if (null != this.contentManager.getEntityPrototype("BOL")) {
                 ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("BOL");
+            }
+        }
+    }
+
+    @Test
+    public void testAddUpdateContentWithCheckboxAttributeThenEditIt() throws Exception {
+        String newContentId = null;
+        try {
+            Assert.assertNull(this.contentManager.getEntityPrototype("CHE"));
+            String accessToken = this.createAccessToken();
+
+            this.executeContentTypePost("1_POST_type_with_checkbox.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype("CHE"));
+
+            ResultActions result = this.executeContentPost("1_POST_valid_with_checkbox_null.json", accessToken, status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("check1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value", is(false)));
+
+            String bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
+            Content newContent = this.contentManager.loadContent(newContentId, false);
+
+            Assert.assertNotNull(newContent);
+
+            this.executeContentPut("1_PUT_valid_with_checkbox_true.json", newContentId, accessToken, status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+                    .andExpect(jsonPath("$.payload[0].id", is(newContentId)))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("check1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value", is(true)));
+
+            this.executeContentPut("1_PUT_valid_with_checkbox_null.json", newContentId, accessToken, status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+                    .andExpect(jsonPath("$.payload[0].id", is(newContentId)))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("check1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value", is(false)));
+
+            this.executeContentPut("1_PUT_valid_with_checkbox_true.json", newContentId, accessToken, status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+                    .andExpect(jsonPath("$.payload[0].id", is(newContentId)))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("check1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value", is(true)));
+
+            this.executeContentPut("1_PUT_valid_with_checkbox_false.json", newContentId, accessToken, status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+                    .andExpect(jsonPath("$.payload[0].id", is(newContentId)))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("check1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value", is(false)));
+
+        } finally {
+            if (null != newContentId) {
+                Content newContent = this.contentManager.loadContent(newContentId, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != this.contentManager.getEntityPrototype("CHE")) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("CHE");
             }
         }
     }
