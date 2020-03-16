@@ -40,6 +40,7 @@ import java.util.regex.Pattern;
 import java.security.NoSuchAlgorithmException;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.entity.IEntityManager;
@@ -853,17 +854,22 @@ public class NewsletterManager extends AbstractService
 	}
 
 	protected String parseText(String defaultText, Map<String, String> params) {
-		String body = defaultText;
-		for (Entry<String, String> pairs : params.entrySet()) {
-			String regExp = "\\{" + pairs.getKey() + "\\}";
-			Pattern pattern = Pattern.compile(regExp);
-			Matcher codeMatcher = pattern.matcher("");
-			codeMatcher.reset(body);
-			if (codeMatcher.find()) {
-				body = codeMatcher.replaceAll((String) pairs.getValue());
+		if (StringUtils.isNotBlank(defaultText)) {
+			String body = defaultText;
+			for (Entry<String, String> pairs : params.entrySet()) {
+				String regExp = "\\{" + pairs.getKey() + "\\}";
+				Pattern pattern = Pattern.compile(regExp);
+				Matcher codeMatcher = pattern.matcher("");
+				codeMatcher.reset(body);
+				if (codeMatcher.find()) {
+					body = codeMatcher.replaceAll((String) pairs.getValue());
+				}
 			}
+			return body;
+		} else {
+			_logger.warn("No text to parse!");
 		}
-		return body;
+		return null;
 	}
 
 	protected void sendSubscriptionFormThread(String mailAddress, String token) throws ApsSystemException {
@@ -871,11 +877,15 @@ public class NewsletterManager extends AbstractService
 			NewsletterConfig config = this.getNewsletterConfig();
 			String senderCode = config.getSenderCode();
 			String subject = config.getSubscriptionSubject();
+			// escape object
+			subject = StringEscapeUtils.escapeHtml(subject);
 			if (subject != null) {
 				Map<String, String> bodyParams = new HashMap<>();
 				String link = this.createLink(mailAddress, token);
 				bodyParams.put("subscribeLink", link);
-				String textBody = this.parseText(config.getSubscriptionTextBody(), bodyParams);
+				// escape text 
+				String escapedSubscriptionTextBody = StringEscapeUtils.escapeHtml(config.getSubscriptionTextBody());
+				String textBody = this.parseText(escapedSubscriptionTextBody, bodyParams);
 				String[] recipientsTo = new String[]{mailAddress};
 				if (config.isAlsoHtml()) {
 					String htmlBody = this.parseText(config.getSubscriptionHtmlBody(), bodyParams);

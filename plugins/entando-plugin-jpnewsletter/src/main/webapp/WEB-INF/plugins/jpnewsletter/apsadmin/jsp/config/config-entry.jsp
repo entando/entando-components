@@ -532,7 +532,7 @@
                                 <select name="newsletterConfig.unsubscriptionPageCode" id="pageLink" class="form-control">
                                     <option value=""><s:text name="label.none" /></option>
                                     <s:iterator value="confirmUnsubscriptionPages" var="pageVar">
-                                        <option <s:if test="%{newsletterConfig.subscriptionPageCode == #pageVar.code}">selected="selected"</s:if> 
+                                        <option <s:if test="%{newsletterConfig.unsubscriptionPageCode == #pageVar.code}">selected="selected"</s:if> 
                                             value="<s:property value="#pageVar.code"/>"><s:property value="%{getShortFullTitle(#pageVar, currentLang.code)}"/></option>
                                     </s:iterator>
                                 </select>
