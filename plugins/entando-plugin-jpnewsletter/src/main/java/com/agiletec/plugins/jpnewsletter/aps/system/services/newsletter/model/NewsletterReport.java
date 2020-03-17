@@ -21,6 +21,7 @@
  */
 package com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.model;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +29,7 @@ import java.util.Map;
 /**
  * @author E.Santoboni
  */
-public class NewsletterReport {
+public class NewsletterReport implements Serializable {
 	
 	public int getId() {
 		return _id;

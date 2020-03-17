@@ -116,7 +116,7 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 	private final String REMOVE_ONLINE_CONTENT = "UPDATE contents SET onlinexml = ? , published = ? , sync = ? , "
             + "status = ? , workxml = ? , lastmodified = ? , currentversion = ? , lasteditor = ? , restriction = ? WHERE contentid = ? ";
 
-	private final String REMOVE_ONLINE_CONTENT_WITHOUT_DATE = "UPDATE contents SET onlinexml = ? , sync = ? , "
+	private final String REMOVE_ONLINE_CONTENT_WITHOUT_DATE = "UPDATE contents SET onlinexml = ? , published = ? , sync = ? , "
             + "status = ? , workxml = ? , currentversion = ? , lasteditor = ? , restriction = ? WHERE contentid = ? ";
 
 	private final String UPDATE_CONTENT = "UPDATE contents SET contenttype = ? , descr = ? , status = ? , "

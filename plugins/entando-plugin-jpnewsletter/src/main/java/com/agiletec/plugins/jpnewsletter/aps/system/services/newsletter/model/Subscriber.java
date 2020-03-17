@@ -21,9 +21,10 @@
  */
 package com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Subscriber {
+public class Subscriber implements Serializable {
 	
 	public String getMailAddress() {
 		return _mailAddress;

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xmlns:context="http://www.springframework.org/schema/context"
-		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
-			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
     
     <bean id="PageManager" class="com.agiletec.aps.system.services.page.PageManager" parent="abstractService" >
         <property name="pageDAO" >
@@ -13,15 +13,15 @@
                 <property name="pageModelManager" ref="PageModelManager" />
             </bean>
         </property>
-		<property name="cacheWrapper">
-			<bean class="com.agiletec.aps.system.services.page.cache.PageManagerCacheWrapper">
-				<property name="springCacheManager" ref="springCacheManager" />
-			</bean>
-		</property>
+        <property name="cacheWrapper">
+            <bean class="com.agiletec.aps.system.services.page.cache.PageManagerCacheWrapper">
+                <property name="springCacheManager" ref="springCacheManager" />
+            </bean>
+        </property>
     </bean>
     
     <bean id="URLManager" class="org.entando.entando.plugins.jpseo.aps.system.services.url.URLManager"
-              parent="abstractService" >
+          parent="abstractService" >
         <property name="configManager" ref="BaseConfigManager" />
         <property name="pageManager" ref="PageManager" />
         <property name="langManager" ref="LangManager" />
@@ -30,7 +30,7 @@
     </bean>
     
     <bean id="jpseoSeoMappingManager" class="org.entando.entando.plugins.jpseo.aps.system.services.mapping.SeoMappingManager"
-              parent="abstractService" >
+          parent="abstractService" >
         <property name="seoMappingDAO" >
             <bean class="org.entando.entando.plugins.jpseo.aps.system.services.mapping.SeoMappingDAO">
                 <property name="dataSource" ref="portDataSource" />
@@ -38,18 +38,18 @@
         </property>
         <property name="langManager" ref="LangManager" />
         <property name="pageManager" ref="PageManager" />
-		<property name="cacheWrapper">
-			<bean class="org.entando.entando.plugins.jpseo.aps.system.services.mapping.cache.SeoMappingCacheWrapper">
-				<property name="springCacheManager" ref="springCacheManager" />
-			</bean>
-		</property>
+        <property name="cacheWrapper">
+            <bean class="org.entando.entando.plugins.jpseo.aps.system.services.mapping.cache.SeoMappingCacheWrapper">
+                <property name="springCacheManager" ref="springCacheManager" />
+            </bean>
+        </property>
     </bean>
     
     <bean id="jpseoSeoMetatagCatalog" class="org.entando.entando.plugins.jpseo.aps.system.services.metatag.MetatagCatalog" />
     
     <bean id="jpseoAttributeRolesLoader" class="com.agiletec.aps.system.common.entity.loader.ExtraAttributeRolesWrapper">
-		<property name="entityManagerNameDest"><value>jacmsContentManager</value></property>
-		<property name="defsFilePath"><value>/WEB-INF/plugins/jpseo/seoAttributeRoles.xml</value></property>
-	</bean>
+        <property name="entityManagerNameDest"><value>jacmsContentManager</value></property>
+        <property name="defsFilePath"><value>/WEB-INF/plugins/jpseo/seoAttributeRoles.xml</value></property>
+    </bean>
     
 </beans>

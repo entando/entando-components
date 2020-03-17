@@ -21,13 +21,14 @@
  */
 package com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.model;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author E.Santoboni
  */
-public class ContentReport {
+public class ContentReport implements Serializable {
 	
 	public int getId() {
 		return _id;
