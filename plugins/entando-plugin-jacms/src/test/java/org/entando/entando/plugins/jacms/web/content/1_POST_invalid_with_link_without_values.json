@@ -1,0 +1,18 @@
+[{
+    "groups":[
+    ],
+    "mainGroup":"free",
+    "description":"ContentWithLinkToAPage",
+    "categories":[],
+    "attributes":[
+        {
+            "code": "link1",
+            "value":{},
+            "values":{
+                "en":""
+            },
+            "name":"Link"
+        }
+    ],
+    "typeCode":"CML"
+}]

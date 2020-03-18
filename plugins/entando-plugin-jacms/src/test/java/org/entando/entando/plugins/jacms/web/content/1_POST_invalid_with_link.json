@@ -1,0 +1,23 @@
+[{
+    "groups":[
+    ],
+    "mainGroup":"free",
+    "description":"ContentWithLinkToAPage",
+    "categories":[
+        "cat1"
+    ],
+    "attributes":[
+        {
+            "code": "link1",
+            "value":{
+                "symbolicDestination":"#!P;page_error_test!#",
+                "destType":2,
+                "pageDest":"page_error_test"
+            },
+            "values":{
+                "it":"page_error_test"
+            }
+        }
+    ],
+    "typeCode":"CML"
+}]

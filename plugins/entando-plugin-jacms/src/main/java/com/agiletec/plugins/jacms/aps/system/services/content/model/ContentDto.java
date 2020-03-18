@@ -254,25 +254,28 @@ public class ContentDto extends EntityDto implements Serializable {
                     }
                 } else if (LinkAttribute.class.isAssignableFrom(contentAttr.getClass())) {
                     SymbolicLink link = new SymbolicLink();
-
-                    int destType = (Integer) ((Map)attr.getValue()).get("destType");
-                    switch (destType) {
-                        case SymbolicLink.URL_TYPE:
-                            link.setDestinationToUrl((String) ((Map)attr.getValue()).get("urlDest"));
-                            break;
-                        case SymbolicLink.PAGE_TYPE:
-                            link.setDestinationToPage((String) ((Map)attr.getValue()).get("pageDest"));
-                            break;
-                        case SymbolicLink.RESOURCE_TYPE:
-                            link.setDestinationToResource((String) ((Map)attr.getValue()).get("resourceDest"));
-                            break;
-                        case SymbolicLink.CONTENT_TYPE:
-                            link.setDestinationToContent((String) ((Map)attr.getValue()).get("contentDest"));
-                            break;
-                        case SymbolicLink.CONTENT_ON_PAGE_TYPE:
-                            link.setDestinationToContentOnPage((String) ((Map)attr.getValue()).get("contentDest"),
-                                    (String) ((Map)attr.getValue()).get("pageDest"));
-                            break;
+                    if (attr.getValue() != null) {
+                        Object destType = ((Map)attr.getValue()).get("destType");
+                        if (destType != null) {
+                            switch ((Integer)destType) {
+                                case SymbolicLink.URL_TYPE:
+                                    link.setDestinationToUrl((String) ((Map)attr.getValue()).get("urlDest"));
+                                    break;
+                                case SymbolicLink.PAGE_TYPE:
+                                    link.setDestinationToPage((String) ((Map)attr.getValue()).get("pageDest"));
+                                    break;
+                                case SymbolicLink.RESOURCE_TYPE:
+                                    link.setDestinationToResource((String) ((Map)attr.getValue()).get("resourceDest"));
+                                    break;
+                                case SymbolicLink.CONTENT_TYPE:
+                                    link.setDestinationToContent((String) ((Map)attr.getValue()).get("contentDest"));
+                                    break;
+                                case SymbolicLink.CONTENT_ON_PAGE_TYPE:
+                                    link.setDestinationToContentOnPage((String) ((Map)attr.getValue()).get("contentDest"),
+                                            (String) ((Map)attr.getValue()).get("pageDest"));
+                                    break;
+                            }
+                        }
                     }
                     LinkAttribute linkAttr = (LinkAttribute) contentAttr;
 

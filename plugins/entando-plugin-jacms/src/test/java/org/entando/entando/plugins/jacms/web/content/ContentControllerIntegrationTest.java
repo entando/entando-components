@@ -13,8 +13,10 @@
  */
 package org.entando.entando.plugins.jacms.web.content;
 
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.isEmptyOrNullString;
+import static org.junit.Assert.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
@@ -32,8 +34,16 @@ import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.attribute.DateAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.ListAttribute;
 import com.agiletec.aps.system.services.group.Group;
+import com.agiletec.aps.system.services.page.IPage;
+import com.agiletec.aps.system.services.page.IPageManager;
+import com.agiletec.aps.system.services.page.Page;
+import com.agiletec.aps.system.services.page.PageMetadata;
+import com.agiletec.aps.system.services.page.PageTestUtil;
+import com.agiletec.aps.system.services.page.Widget;
+import com.agiletec.aps.system.services.pagemodel.PageModel;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
+import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.aps.util.DateConverter;
 import com.agiletec.aps.util.FileTextReader;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
@@ -50,8 +60,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
+import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.plugins.jacms.aps.system.services.content.IContentService;
 import org.entando.entando.plugins.jacms.web.content.validator.BatchContentStatusRequest;
 import org.entando.entando.plugins.jacms.web.content.validator.ContentStatusRequest;
@@ -76,6 +86,12 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
 
     @Autowired
     private ICmsSearchEngineManager searchEngineManager;
+
+    @Autowired
+    private IPageManager pageManager;
+
+    @Autowired
+    private IWidgetTypeManager widgetTypeManager;
 
     private ObjectMapper mapper = new ObjectMapper();
     
@@ -351,7 +367,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                     .andExpect(jsonPath("$.metaData.size()", is(0)))
 
                     .andExpect(jsonPath("$.errors[0].code", is("4")))
-                    .andExpect(jsonPath("$.errors[0].message", is("Attribute 'link1' Invalid: Invalid link - page pagina_11invalid - content null - Error code INVALID_PAGE")));
+                    .andExpect(jsonPath("$.errors[0].message", is("Attribute 'link1' Invalid: The destination page must be published")));
 
         } finally {
             if (null != newContentId) {
@@ -498,6 +514,94 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             }
             if (null != this.contentManager.getEntityPrototype("LNK")) {
                 ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("LNK");
+            }
+        }
+    }
+
+    @Test
+    public void testAddContentWithLinksAndRemoveMandatoryLink() throws Exception {
+        String newContentId = null;
+        try {
+            Assert.assertNull(this.contentManager.getEntityPrototype("LNK"));
+            String accessToken = this.createAccessToken();
+
+            this.executeContentTypePost("1_POST_type_with_mandatory_link.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype("LNK"));
+
+            ResultActions result = this.executeContentPost("1_POST_valid_with_some_links.json", accessToken, status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("link1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.urlDest", is("https://myurl.com")))
+                    .andExpect(jsonPath("$.payload[0].attributes[1].code", is("link2")))
+                    .andExpect(jsonPath("$.payload[0].attributes[1].value.pageDest", is("pagina_11")));
+
+            String bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
+            Content newContent = this.contentManager.loadContent(newContentId, false);
+
+            Assert.assertNotNull(newContent);
+
+            this.executeContentPut("1_PUT_valid_with_mandatory_link.json", newContentId, accessToken, status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", is(newContentId)))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("link1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value", Matchers.isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.payload[0].attributes[1].code", is("link2")))
+                    .andExpect(jsonPath("$.payload[0].attributes[1].value.pageDest", is("pagina_11")));
+
+            this.executeContentPut("1_PUT_invalid_with_mandatory_link.json", newContentId, accessToken, status().isBadRequest())
+                    .andExpect(jsonPath("$.payload.size()", is(0)))
+                    .andExpect(jsonPath("$.errors.size()", is(1)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+                    .andExpect(jsonPath("$.errors[0].code", is("4")))
+                    .andExpect(jsonPath("$.errors[0].message", is("Attribute 'link2' Mandatory: null")));
+
+        } finally {
+            if (null != newContentId) {
+                Content newContent = this.contentManager.loadContent(newContentId, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != this.contentManager.getEntityPrototype("LNK")) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("LNK");
+            }
+        }
+    }
+
+    @Test
+    public void testAddContentWithLinkWithoutValues() throws Exception {
+        String newContentId = null;
+        try {
+            Assert.assertNull(this.contentManager.getEntityPrototype("CML"));
+            String accessToken = this.createAccessToken();
+
+            this.executeContentTypePost("1_POST_type_with_link.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype("CML"));
+
+            this.executeContentPost("1_POST_invalid_with_link_without_values.json", accessToken, status().isBadRequest())
+                    .andExpect(jsonPath("$.payload.size()", is(0)))
+                    .andExpect(jsonPath("$.errors.size()", is(1)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+                    .andExpect(jsonPath("$.errors[0].code", is("4")))
+                    .andExpect(jsonPath("$.errors[0].message", is("Attribute 'link1' Invalid: The Link attribute is invalid or incomplete")));
+
+        } finally {
+            if (null != newContentId) {
+                Content newContent = this.contentManager.loadContent(newContentId, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != this.contentManager.getEntityPrototype("CML")) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("CML");
             }
         }
     }
@@ -2447,6 +2551,176 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             String extractedId = JsonPath.read(bodyResult, "$.payload[" + i + "].id");
             Assert.assertEquals(expectedContentsId[i], extractedId);
         }
+    }
+
+    @Test
+    public void testGetPageOfflineNoWidgetErrorMessage() throws Exception {
+        String pageCode = "page_error_test";
+        try {
+            Assert.assertNull(this.contentManager.getEntityPrototype("CML"));
+            String accessToken = this.createAccessToken();
+
+            this.executeContentTypePost("1_POST_type_with_link.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype("CML"));
+
+            Page mockPage = createPage(pageCode, false);
+            this.pageManager.addPage(mockPage);
+
+            IPage onlinePage = this.pageManager.getOnlinePage(pageCode);
+            assertThat(onlinePage, CoreMatchers.is(nullValue()));
+            IPage draftPage = this.pageManager.getDraftPage(pageCode);
+            assertThat(draftPage, CoreMatchers.is(not(nullValue())));
+
+            this.executeContentPost("1_POST_invalid_with_link.json", accessToken, status().isBadRequest())
+                    .andExpect(jsonPath("$.payload.size()", is(0)))
+                    .andExpect(jsonPath("$.errors.size()", is(1)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+                    .andExpect(jsonPath("$.errors[0].code", is("4")))
+                    .andExpect(jsonPath("$.errors[0].message", is("Attribute 'link1' Invalid: The destination page must be published")));
+        } finally {
+            if (null != this.contentManager.getEntityPrototype("CML")) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("CML");
+            }
+            this.pageManager.deletePage(pageCode);
+        }
+    }
+
+    @Test
+    public void testGetPageOfflineWithWidgetErrorMessage() throws Exception {
+        String pageCode = "page_error_test";
+        try {
+            Assert.assertNull(this.contentManager.getEntityPrototype("CML"));
+            String accessToken = this.createAccessToken();
+
+            this.executeContentTypePost("1_POST_type_with_link.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype("CML"));
+
+            Page mockPage = createPage(pageCode, true);
+            this.pageManager.addPage(mockPage);
+
+            IPage onlinePage = this.pageManager.getOnlinePage(pageCode);
+            assertThat(onlinePage, CoreMatchers.is(nullValue()));
+            IPage draftPage = this.pageManager.getDraftPage(pageCode);
+            assertThat(draftPage, CoreMatchers.is(not(nullValue())));
+
+            this.executeContentPost("1_POST_invalid_with_link.json", accessToken, status().isBadRequest())
+                    .andExpect(jsonPath("$.payload.size()", is(0)))
+                    .andExpect(jsonPath("$.errors.size()", is(1)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+                    .andExpect(jsonPath("$.errors[0].code", is("4")))
+                    .andExpect(jsonPath("$.errors[0].message", is("Attribute 'link1' Invalid: The destination page must be published")));
+        } finally {
+            if (null != this.contentManager.getEntityPrototype("CML")) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("CML");
+            }
+            this.pageManager.deletePage(pageCode);
+        }
+    }
+
+    @Test
+    public void testGetPageOnlineNoWidgetErrorMessage() throws Exception {
+        String pageCode = "page_error_test";
+        try {
+            Assert.assertNull(this.contentManager.getEntityPrototype("CML"));
+            String accessToken = this.createAccessToken();
+
+            this.executeContentTypePost("1_POST_type_with_link.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype("CML"));
+
+            Page mockPage = createPage(pageCode, false);
+            this.pageManager.addPage(mockPage);
+
+            IPage onlinePage = this.pageManager.getOnlinePage(pageCode);
+            assertThat(onlinePage, CoreMatchers.is(nullValue()));
+            IPage draftPage = this.pageManager.getDraftPage(pageCode);
+            assertThat(draftPage, CoreMatchers.is(not(nullValue())));
+
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+
+            String putPageOnlinePayload = "{\"status\": \"published\"}";
+            ResultActions result = mockMvc.perform(
+                    put("/pages/{pageCode}/status", pageCode)
+                            .sessionAttr("user", user)
+                            .content(putPageOnlinePayload)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isOk());
+
+            this.executeContentPost("1_POST_invalid_with_link.json", accessToken, status().isBadRequest())
+                    .andExpect(jsonPath("$.payload.size()", is(0)))
+                    .andExpect(jsonPath("$.errors.size()", is(1)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+                    .andExpect(jsonPath("$.errors[0].code", is("4")))
+                    .andExpect(jsonPath("$.errors[0].message", is("Attribute 'link1' Invalid: The destination page must have a widget set")));
+        } finally {
+            if (null != this.contentManager.getEntityPrototype("CML")) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("CML");
+            }
+            this.pageManager.deletePage(pageCode);
+        }
+    }
+
+    @Test
+    public void testGetPageOnlineWrongGroupErrorMessage() throws Exception {
+        String pageCode = "page_error_test";
+        try {
+            Assert.assertNull(this.contentManager.getEntityPrototype("CML"));
+            String accessToken = this.createAccessToken();
+
+            this.executeContentTypePost("1_POST_type_with_link.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype("CML"));
+
+            Page mockPage = createPage(pageCode, true, "wrongGroup");
+            this.pageManager.addPage(mockPage);
+
+            IPage onlinePage = this.pageManager.getOnlinePage(pageCode);
+            assertThat(onlinePage, CoreMatchers.is(nullValue()));
+            IPage draftPage = this.pageManager.getDraftPage(pageCode);
+            assertThat(draftPage, CoreMatchers.is(not(nullValue())));
+
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+
+            String putPageOnlinePayload = "{\"status\": \"published\"}";
+            ResultActions result = mockMvc.perform(
+                    put("/pages/{pageCode}/status", pageCode)
+                            .sessionAttr("user", user)
+                            .content(putPageOnlinePayload)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isOk());
+
+            this.executeContentPost("1_POST_invalid_with_link.json", accessToken, status().isBadRequest())
+                    .andExpect(jsonPath("$.payload.size()", is(0)))
+                    .andExpect(jsonPath("$.errors.size()", is(1)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+                    .andExpect(jsonPath("$.errors[0].code", is("4")))
+                    .andExpect(jsonPath("$.errors[0].message", is("Attribute 'link1' Invalid: The destination page must belong to the group(s): free")));
+        } finally {
+            if (null != this.contentManager.getEntityPrototype("CML")) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("CML");
+            }
+            this.pageManager.deletePage(pageCode);
+        }
+    }
+
+    protected Page createPage(String pageCode, boolean addWidget) {
+        return createPage(pageCode, addWidget, "free");
+    }
+
+    protected Page createPage(String pageCode, boolean addWidget, String groupName) {
+        IPage parentPage = pageManager.getDraftPage("service");
+        PageModel pageModel = parentPage.getMetadata().getModel();
+        PageMetadata metadata = PageTestUtil
+                .createPageMetadata(pageModel, true, pageCode + "_title", null, null, false, null, null);
+        ApsProperties config = PageTestUtil.createProperties("temp", "tempValue", "contentId", "ART11");
+        Widget[] widgets = null;
+        if (addWidget) {
+            widgets = new Widget[pageModel.getFrames().length];
+            Widget widgetToAdd = PageTestUtil.createWidget("content_viewer", config, this.widgetTypeManager);
+            widgets[0] = widgetToAdd;
+        }
+        Page pageToAdd = PageTestUtil.createPage(pageCode, parentPage.getCode(), groupName, metadata, widgets);
+        return pageToAdd;
     }
     
 }
