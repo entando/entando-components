@@ -1,0 +1,16 @@
+[{
+    "attributes": [
+        {
+            "code": "link2",
+            "value": {
+                "destType": 2,
+                "pageDest": "pagina_11"
+            },
+            "values": {
+                "it": "My Page Link"
+            }
+        }
+    ],
+    "id":"**MARKER**",
+    "typeCode":"LNK"
+}]

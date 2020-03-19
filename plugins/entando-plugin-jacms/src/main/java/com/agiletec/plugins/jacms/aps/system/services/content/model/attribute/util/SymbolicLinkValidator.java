@@ -13,6 +13,7 @@
  */
 package com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.util;
 
+import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 import java.util.Set;
@@ -49,38 +50,37 @@ public class SymbolicLinkValidator {
      *
      * @param symbLink Il link simbolico da verificare.
      * @param content Il contenuto corrente in fase di verifica.
-     * @return Il codice di errore.
+     * @return Il {@link AttributeFieldError}.
      */
-    public String scan(SymbolicLink symbLink, Content content) {
-        String errorCode = null;
+    public AttributeFieldError scan(SymbolicLink symbLink, Content content) {
         if (symbLink != null) {
             switch (symbLink.getDestType()) {
                 case SymbolicLink.URL_TYPE:
-                    break;
+                    return null;
                 case SymbolicLink.PAGE_TYPE:
-                    errorCode = this.checkPageDest(symbLink, content);
-                    break;
+                    return this.checkPageDest(symbLink, content);
                 case SymbolicLink.CONTENT_TYPE:
-                    errorCode = this.checkContentDest(symbLink, content);
-                    break;
+                    return this.checkContentDest(symbLink, content);
                 case SymbolicLink.CONTENT_ON_PAGE_TYPE:
-                    errorCode = this.checkContentOnPageDest(symbLink, content);
-                    break;
+                    return this.checkContentOnPageDest(symbLink, content);
                 case SymbolicLink.RESOURCE_TYPE:
-                    errorCode = this.checkResourceDest(symbLink, content);
-                    break;
+                    return this.checkResourceDest(symbLink, content);
             }
         }
-        return errorCode;
+        return null;
     }
 
-    protected String checkPageDest(SymbolicLink symbLink, Content content) {
+    protected AttributeFieldError checkPageDest(SymbolicLink symbLink, Content content) {
         String pageCode = symbLink.getPageDest();
         IPage page = this.getPageManager().getOnlinePage(pageCode);
         if (null == page) {
-            return ICmsAttributeErrorCodes.INVALID_PAGE;
+            AttributeFieldError result = new AttributeFieldError(null, ICmsAttributeErrorCodes.INVALID_PAGE, null);
+            result.setMessage("The destination page must be published");
+            return result;
         } else if (this.isVoidPage(page)) {
-            return ICmsAttributeErrorCodes.VOID_PAGE;
+            AttributeFieldError result = new AttributeFieldError(null, ICmsAttributeErrorCodes.VOID_PAGE, null);
+            result.setMessage("The destination page must have a widget set");
+            return result;
         } else {
             Set<String> pageGroups = new HashSet<>();
             pageGroups.add(page.getGroup());
@@ -94,13 +94,25 @@ public class SymbolicLinkValidator {
             Set<String> linkingContentGroups = this.extractContentGroups(content);
             boolean check = CollectionUtils.containsAll(pageGroups, linkingContentGroups);
             if (!check) {
-                return ICmsAttributeErrorCodes.INVALID_PAGE_GROUPS;
+                boolean first = true;
+                StringBuilder sb = new StringBuilder("The destination page must belong to the group(s): ");
+                for (String group : linkingContentGroups) {
+                    if (first) {
+                        first = false;
+                    } else {
+                        sb.append(", ");
+                    }
+                    sb.append(group);
+                }
+                AttributeFieldError result = new AttributeFieldError(null, ICmsAttributeErrorCodes.INVALID_PAGE_GROUPS, null);
+                result.setMessage(sb.toString());
+                return result;
             }
         }
         return null;
     }
 
-    protected String checkContentDest(SymbolicLink symbLink, Content content) {
+    protected AttributeFieldError checkContentDest(SymbolicLink symbLink, Content content) {
         Content linkedContent = null;
         try {
             linkedContent = this.getContentManager().loadContent(symbLink.getContentDest(), true);
@@ -108,7 +120,7 @@ public class SymbolicLinkValidator {
             throw new RuntimeException("Errore in caricamento contenuto " + symbLink.getContentDest(), e);
         }
         if (null == linkedContent) {
-            return ICmsAttributeErrorCodes.INVALID_CONTENT;
+            return new AttributeFieldError(null, ICmsAttributeErrorCodes.INVALID_CONTENT, null);
         }
         Set<String> linkedContentGroups = this.extractContentGroups(linkedContent);
         if (linkedContentGroups.contains(Group.FREE_GROUP_NAME)) {
@@ -117,12 +129,12 @@ public class SymbolicLinkValidator {
         Set<String> linkingContentGroups = this.extractContentGroups(content);
         boolean check = CollectionUtils.containsAll(linkedContentGroups, linkingContentGroups);
         if (!check) {
-            return ICmsAttributeErrorCodes.INVALID_CONTENT_GROUPS;
+            return new AttributeFieldError(null, ICmsAttributeErrorCodes.INVALID_CONTENT_GROUPS, null);
         }
         return null;
     }
 
-    protected String checkResourceDest(SymbolicLink symbLink, Content content) {
+    protected AttributeFieldError checkResourceDest(SymbolicLink symbLink, Content content) {
         ResourceInterface linkedResource = null;
         try {
             linkedResource = _resourceManager.loadResource(symbLink.getResourceDest());
@@ -130,7 +142,7 @@ public class SymbolicLinkValidator {
             throw new RuntimeException("Error loading resource " + symbLink.getResourceDest(), e);
         }
         if (null == linkedResource) {
-            return ICmsAttributeErrorCodes.INVALID_RESOURCE;
+            return new AttributeFieldError(null, ICmsAttributeErrorCodes.INVALID_RESOURCE, null);
         }
 
         return null;
@@ -144,12 +156,12 @@ public class SymbolicLinkValidator {
         return groups;
     }
 
-    protected String checkContentOnPageDest(SymbolicLink symbLink, Content content) {
-        String errorCode = this.checkContentDest(symbLink, content);
-        if (errorCode == null) {
-            errorCode = this.checkPageDest(symbLink, content);
+    protected AttributeFieldError checkContentOnPageDest(SymbolicLink symbLink, Content content) {
+        AttributeFieldError error = this.checkContentDest(symbLink, content);
+        if (error == null) {
+            error = this.checkPageDest(symbLink, content);
         }
-        return errorCode;
+        return error;
     }
 
     /**

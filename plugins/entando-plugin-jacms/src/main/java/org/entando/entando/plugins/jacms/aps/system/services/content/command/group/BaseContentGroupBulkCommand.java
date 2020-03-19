@@ -13,6 +13,7 @@
  */
 package org.entando.entando.plugins.jacms.aps.system.services.content.command.group;
 
+import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
 import java.util.List;
 
@@ -43,9 +44,13 @@ public abstract class BaseContentGroupBulkCommand extends BaseContentPropertyBul
 					for (CmsAttributeReference reference : references) {
 						SymbolicLink symbolicLink = this.convertToSymbolicLink(reference);
 						if (symbolicLink != null) {
-							String result = validator.scan(symbolicLink, content);
-							if (ICmsAttributeErrorCodes.INVALID_CONTENT_GROUPS.equals(result) || ICmsAttributeErrorCodes.INVALID_RESOURCE_GROUPS.equals(result) || 
-									ICmsAttributeErrorCodes.INVALID_PAGE_GROUPS.equals(result)) {
+							String errorCode = null;
+							AttributeFieldError attributeError = validator.scan(symbolicLink, content);
+							if (attributeError != null) {
+								errorCode = attributeError.getErrorCode();
+							}
+							if (ICmsAttributeErrorCodes.INVALID_CONTENT_GROUPS.equals(errorCode) || ICmsAttributeErrorCodes.INVALID_RESOURCE_GROUPS.equals(errorCode) ||
+									ICmsAttributeErrorCodes.INVALID_PAGE_GROUPS.equals(errorCode)) {
 								return false;
 							}
 						}
