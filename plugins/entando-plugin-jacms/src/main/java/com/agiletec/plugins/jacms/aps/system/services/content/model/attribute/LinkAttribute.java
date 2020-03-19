@@ -13,6 +13,8 @@
  */
 package com.agiletec.plugins.jacms.aps.system.services.content.model.attribute;
 
+import com.agiletec.aps.system.common.entity.model.FieldError;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.util.ICmsAttributeErrorCodes;
 import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
 import java.util.ArrayList;
 import java.util.List;
@@ -221,16 +223,24 @@ public class LinkAttribute extends TextAttribute implements IReferenceableAttrib
                 return errors;
             }
             SymbolicLinkValidator sler = new SymbolicLinkValidator(this.getContentManager(), this.getPageManager(), this.getResourceManager());
-            String linkErrorCode = sler.scan(symbolicLink, (Content) this.getParentEntity());
-            if (null != linkErrorCode) {
-                AttributeFieldError error = new AttributeFieldError(this, linkErrorCode, tracer);
-                error.setMessage("Invalid link - page " + symbolicLink.getPageDest()
-                        + " - content " + symbolicLink.getContentDest() + " - Error code " + linkErrorCode);
+            AttributeFieldError attributeError = sler.scan(symbolicLink, (Content) this.getParentEntity());
+            if (null != attributeError) {
+                AttributeFieldError error = new AttributeFieldError(this, attributeError.getErrorCode(), tracer);
+                if (attributeError.getMessage() == null) {
+                    attributeError.setMessage("Invalid link - page " + symbolicLink.getPageDest()
+                            + " - content " + symbolicLink.getContentDest() + " - Error code " + attributeError.getErrorCode());
+                }
+                error.setMessage(attributeError.getMessage());
                 errors.add(error);
             }
         } catch (Throwable t) {
             logger.error("Error validating link attribute", t);
             throw new RuntimeException("Error validating link attribute", t);
+        }
+        for (AttributeFieldError error : errors) {
+            if (FieldError.INVALID.equals(error.getErrorCode()) && Status.INCOMPLETE.equals(this.getStatus())) {
+                error.setMessage("The Link attribute is invalid or incomplete");
+            }
         }
         return errors;
     }

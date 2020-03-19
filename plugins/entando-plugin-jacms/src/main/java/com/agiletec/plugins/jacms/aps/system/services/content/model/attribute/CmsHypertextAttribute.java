@@ -163,11 +163,14 @@ public class CmsHypertextAttribute extends HypertextAttribute implements IRefere
                 if (null != links && !links.isEmpty()) {
                     SymbolicLinkValidator sler = new SymbolicLinkValidator(this.getContentManager(), this.getPageManager(), this.getResourceManager());
                     for (SymbolicLink symbLink : links) {
-                        String linkErrorCode = sler.scan(symbLink, (Content) this.getParentEntity());
-                        if (null != linkErrorCode) {
-                            AttributeFieldError error = new AttributeFieldError(this, linkErrorCode, textTracer);
-                            error.setMessage("Invalid link - page " + symbLink.getPageDest()
-                                    + " - content " + symbLink.getContentDest() + " - Error code " + linkErrorCode);
+                        AttributeFieldError attributeError = sler.scan(symbLink, (Content) this.getParentEntity());
+                        if (null != attributeError) {
+                            AttributeFieldError error = new AttributeFieldError(this, attributeError.getErrorCode(), textTracer);
+                            if (attributeError.getMessage() == null) {
+                                attributeError.setMessage("Invalid link - page " + symbLink.getPageDest()
+                                        + " - content " + symbLink.getContentDest() + " - Error code " + attributeError.getErrorCode());
+                            }
+                            error.setMessage(attributeError.getMessage());
                             errors.add(error);
                         }
                     }
