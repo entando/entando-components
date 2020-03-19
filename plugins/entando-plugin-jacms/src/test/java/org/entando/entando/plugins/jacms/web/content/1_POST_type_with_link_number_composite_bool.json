@@ -1,0 +1,31 @@
+{
+    "code": "AL1",
+    "name": "Content Type AL1",
+    "attributes": [
+        {
+            "code": "composite",
+            "type": "Composite",
+            "name": "Composite Description",
+            "mandatory": false,
+            "compositeAttributes":[
+                {
+                    "code": "bool-compo",
+                    "type": "Boolean",
+                    "name": "Description of boolean attribute"
+                }
+            ]
+        },
+        {
+            "code": "link",
+            "type": "Link",
+            "name": "Link Description",
+            "mandatory": false
+        },
+        {
+            "code": "number",
+            "type": "Number",
+            "name": "Description of number attribute",
+            "mandatory": false
+        }
+    ]
+}

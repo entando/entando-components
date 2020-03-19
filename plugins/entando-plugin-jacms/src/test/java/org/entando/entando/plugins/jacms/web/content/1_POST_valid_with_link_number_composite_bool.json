@@ -1,0 +1,35 @@
+[
+    {
+        "groups":[
+        ],
+        "mainGroup":"free",
+        "description":"content-all",
+        "categories":[
+        ],
+        "attributes":[
+            {
+                "code":"composite",
+                "compositeelements":[
+                    {
+                        "code":"bool-compo",
+                        "value":true
+                    }
+                ]
+            },
+            {
+                "code":"link",
+                "value":{
+
+                },
+                "values":{
+                    "it":"a"
+                }
+            },
+            {
+                "code":"number",
+                "value":"1"
+            }
+        ],
+        "typeCode":"AL1"
+    }
+]
