@@ -587,6 +587,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             Assert.assertNotNull(this.contentManager.getEntityPrototype("CML"));
 
             this.executeContentPost("1_POST_invalid_with_link_without_values.json", accessToken, status().isBadRequest())
+                    .andDo(print())
                     .andExpect(jsonPath("$.payload.size()", is(0)))
                     .andExpect(jsonPath("$.errors.size()", is(1)))
                     .andExpect(jsonPath("$.metaData.size()", is(0)))
@@ -2709,6 +2710,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         }
     }
 
+    @Test
     public void testGetPageOfflineWithWidgetErrorMessage() throws Exception {
         String pageCode = "page_error_test";
         try {
