@@ -1,0 +1,126 @@
+{
+    "code": "AL2",
+    "name": "Content Type AL2",
+    "attributes": [
+        {
+            "code": "attach",
+            "type": "Attach",
+            "name": "Attach Description",
+            "mandatory": false
+        },
+        {
+            "code": "bool",
+            "type": "Boolean",
+            "name": "Description of Boolean attribute"
+        },
+        {
+            "code": "checkbox",
+            "type": "CheckBox",
+            "name": "Description of CheckBox attribute"
+        },
+        {
+            "code": "composite",
+            "type": "Composite",
+            "name": "Composite Description",
+            "mandatory": false,
+            "compositeAttributes":[
+                {
+                    "code": "bool-compo",
+                    "type": "Boolean",
+                    "name": "Description of boolean attribute"
+                }
+            ]
+        },
+        {
+            "code": "date",
+            "type": "Date",
+            "name": "Description of date attribute",
+            "mandatory": false
+        },
+        {
+            "code": "enumerator",
+            "type": "Enumerator",
+            "name": "Description of Enumerator",
+            "mandatory": false,
+            "enumeratorStaticItems": "lable1,lable2,lable3,lable4",
+            "enumeratorStaticItemsSeparator": ","
+        },
+        {
+            "code": "enumap",
+            "type": "EnumeratorMap",
+            "name": "Description of enumerator map attribute",
+            "mandatory": false,
+            "enumeratorStaticItems": "key1,key2,key3,key4",
+            "enumeratorStaticItemsSeparator": ","
+        },
+        {
+            "code": "hypertext",
+            "type": "Hypertext",
+            "name": "Description of hypertext attribute",
+            "mandatory": false
+        },
+        {
+            "code": "image",
+            "type": "Image",
+            "name": "Image Description",
+            "mandatory": false
+        },
+        {
+            "code": "link",
+            "type": "Link",
+            "name": "Link Description",
+            "mandatory": false
+        },
+        {
+            "code": "longtext",
+            "type": "Longtext",
+            "name": "Link Description",
+            "mandatory": false
+        },
+        {
+            "code": "monolist",
+            "type": "Monolist",
+            "name": "MonoLIST Description",
+            "mandatory": false,
+            "nestedAttribute": {
+                "code": "monolist",
+                "type": "Text"
+            },
+            "compositeAttributes": null
+        },
+        {
+            "code": "monotext",
+            "type": "Monotext",
+            "name": "Description of monotext attribute",
+            "mandatory": false
+        },{
+            "code": "number",
+            "type": "Number",
+            "name": "Description of number attribute",
+            "mandatory": false
+        },
+        {
+            "code": "text",
+            "type": "Text",
+            "name": "Description of text attribute",
+            "mandatory": true
+        },
+        {
+            "code": "threestate",
+            "type": "ThreeState",
+            "name": "Description of threestate attribute",
+            "mandatory": false
+        },
+        {
+            "code": "list",
+            "type": "List",
+            "name": "LIST Description",
+            "mandatory": false,
+            "nestedAttribute": {
+                "code": "list",
+                "type": "Monotext"
+            },
+            "compositeAttributes": null
+        }
+    ]
+}

@@ -587,6 +587,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             Assert.assertNotNull(this.contentManager.getEntityPrototype("CML"));
 
             this.executeContentPost("1_POST_invalid_with_link_without_values.json", accessToken, status().isBadRequest())
+                    .andDo(print())
                     .andExpect(jsonPath("$.payload.size()", is(0)))
                     .andExpect(jsonPath("$.errors.size()", is(1)))
                     .andExpect(jsonPath("$.metaData.size()", is(0)))
@@ -2554,6 +2555,130 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
     }
 
     @Test
+    public void testAddContentWithLinkNumberAndCompositeBool() throws Exception {
+        String newContentId = null;
+        try {
+
+            String accessToken = this.createAccessToken();
+            Assert.assertNull(this.contentManager.getEntityPrototype("AL1"));
+
+            this.executeContentTypePost("1_POST_type_with_link_number_composite_bool.json", accessToken,
+                    status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype("AL1"));
+
+            ResultActions result = this
+                    .executeContentPost("1_POST_valid_with_link_number_composite_bool.json", accessToken,
+                            status().isOk());
+            result.andDo(print())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].firstEditor", is("jack_bauer")))
+                    .andExpect(jsonPath("$.payload[0].lastEditor", is("jack_bauer")))
+                    .andExpect(jsonPath("$.payload[0].mainGroup", is("free")))
+                    .andExpect(jsonPath("$.payload[0].restriction", is("OPEN")))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+                    .andExpect(jsonPath("$.payload[0].restriction", is("OPEN")))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("composite")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].compositeelements[0].code", is("bool-compo")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].compositeelements[0].value", is(true)))
+                    .andExpect(jsonPath("$.payload[0].attributes[1].code", is("link")))
+                    .andExpect(jsonPath("$.payload[0].attributes[1].values.it", is("a")))
+                    .andExpect(jsonPath("$.payload[0].attributes[2].code", is("number")))
+                    .andExpect(jsonPath("$.payload[0].attributes[2].value", is("1")));
+
+            String bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
+
+        } finally {
+            if (null != newContentId) {
+                Content newContent = this.contentManager.loadContent(newContentId, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != this.contentManager.getEntityPrototype("AL1")) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("AL1");
+            }
+        }
+    }
+
+    @Test
+    public void testAddContentWithAllAttributes() throws Exception {
+        String newContentId = null;
+        try {
+
+            String accessToken = this.createAccessToken();
+            Assert.assertNull(this.contentManager.getEntityPrototype("AL2"));
+
+            this.executeContentTypePost("1_POST_type_with_all_attributes.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype("AL2"));
+
+            ResultActions result = this.executeContentPost("1_POST_valid_with_all_attributes.json", accessToken, status().isOk());
+            result.andDo(print())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].firstEditor", is("jack_bauer")))
+                    .andExpect(jsonPath("$.payload[0].lastEditor", is("jack_bauer")))
+                    .andExpect(jsonPath("$.payload[0].mainGroup", is("free")))
+                    .andExpect(jsonPath("$.payload[0].restriction", is("OPEN")))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+                    .andExpect(jsonPath("$.payload[0].restriction", is("OPEN")))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("attach")))
+                    .andExpect(jsonPath("$.payload[0].attributes[1].code", is("bool")))
+                    .andExpect(jsonPath("$.payload[0].attributes[1].value", is(true)))
+                    .andExpect(jsonPath("$.payload[0].attributes[2].code", is("checkbox")))
+                    .andExpect(jsonPath("$.payload[0].attributes[2].value", is(true)))
+                    .andExpect(jsonPath("$.payload[0].attributes[3].code", is("composite")))
+                    .andExpect(jsonPath("$.payload[0].attributes[3].compositeelements[0].code", is("bool-compo")))
+                    .andExpect(jsonPath("$.payload[0].attributes[3].compositeelements[0].value", is(true)))
+                    .andExpect(jsonPath("$.payload[0].attributes[4].code", is("date")))
+                    .andExpect(jsonPath("$.payload[0].attributes[4].value", is("2020-01-29 00:00:00")))
+                    .andExpect(jsonPath("$.payload[0].attributes[5].code", is("enumerator")))
+                    .andExpect(jsonPath("$.payload[0].attributes[5].value", is("lable1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[6].code", is("enumap")))
+                    .andExpect(jsonPath("$.payload[0].attributes[6].value", is("key1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[7].code", is("hypertext")))
+                    .andExpect(jsonPath("$.payload[0].attributes[7].values.en", is("<p>adasdf</p>")))
+                    .andExpect(jsonPath("$.payload[0].attributes[8].code", is("image")))
+                    .andExpect(jsonPath("$.payload[0].attributes[9].code", is("link")))
+                    .andExpect(jsonPath("$.payload[0].attributes[9].values.it", is("a")))
+                    .andExpect(jsonPath("$.payload[0].attributes[10].code", is("longtext")))
+                    .andExpect(jsonPath("$.payload[0].attributes[10].values.en", is("sdfadsfasf")))
+                    .andExpect(jsonPath("$.payload[0].attributes[11].code", is("monolist")))
+                    .andExpect(jsonPath("$.payload[0].attributes[11].elements[0].code", is("monolist")))
+                    .andExpect(jsonPath("$.payload[0].attributes[11].elements[0].values.it", is("a")))
+                    .andExpect(jsonPath("$.payload[0].attributes[12].code", is("monotext")))
+                    .andExpect(jsonPath("$.payload[0].attributes[12].value", is("dfadfa")))
+                    .andExpect(jsonPath("$.payload[0].attributes[13].code", is("number")))
+                    .andExpect(jsonPath("$.payload[0].attributes[13].value", is("1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[14].code", is("text")))
+                    .andExpect(jsonPath("$.payload[0].attributes[14].values.it", is("dfsdfasd")))
+                    .andExpect(jsonPath("$.payload[0].attributes[15].code", is("threestate")))
+                    .andExpect(jsonPath("$.payload[0].attributes[15].value", is(false)))
+                    .andExpect(jsonPath("$.payload[0].attributes[16].code", is("list")))
+                    .andExpect(jsonPath("$.payload[0].attributes[16].listelements.en[0].code", is("list")))
+                    .andExpect(jsonPath("$.payload[0].attributes[16].listelements.en[0].value", is("1")));
+
+            String bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
+
+        } finally {
+            if (null != newContentId) {
+                Content newContent = this.contentManager.loadContent(newContentId, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != this.contentManager.getEntityPrototype("AL2")) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("AL2");
+            }
+        }
+    }
+
     public void testGetPageOfflineNoWidgetErrorMessage() throws Exception {
         String pageCode = "page_error_test";
         try {
@@ -2722,5 +2847,4 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         Page pageToAdd = PageTestUtil.createPage(pageCode, parentPage.getCode(), groupName, metadata, widgets);
         return pageToAdd;
     }
-    
 }
