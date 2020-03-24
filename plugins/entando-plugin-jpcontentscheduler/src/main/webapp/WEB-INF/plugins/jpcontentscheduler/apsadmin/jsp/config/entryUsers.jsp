@@ -59,19 +59,19 @@
         <s:include value="/WEB-INF/apsadmin/jsp/common/inc/messages.jsp" />
     </div>
 
-<s:set var="isAllTypeSelected" value="false"/>
-<s:if test="%{null != username}">
-    <s:set var="username" value="username"/>
-    <s:if test="%{getUsersContentType()[#username].get(0).equalsIgnoreCase('*')}">
-        <s:set var="isAllTypeSelected" value="true"/>
+    <s:set var="isAllTypeSelected" value="false"/>
+    <s:if test="%{null != username}">
+        <s:set var="username" value="username"/>
+        <s:if test="%{getUsersContentType()[#username].get(0).equalsIgnoreCase('*')}">
+            <s:set var="isAllTypeSelected" value="true"/>
+        </s:if>
     </s:if>
-</s:if>
-<s:else>
-    <s:set var="username" value="%{''}"/>
-</s:else>
+    <s:else>
+        <s:set var="username" value="%{''}"/>
+    </s:else>
 
 
-<s:form id="configurationForm" name="configurationForm" method="post" action="#" cssClass="form-horizontal" accept-charset="utf-8">
+    <s:form id="configurationForm" name="configurationForm" method="post" action="#" cssClass="form-horizontal" accept-charset="utf-8">
         <legend><s:text name="legend.User" /></legend>
         <div class="form-group">
             <label class="col-sm-2 control-label"><s:text name="jpcontentscheduler.label.username"/></label>
@@ -81,8 +81,8 @@
                 <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
                 <wpsf:textfield name="username" id="username" placeholder="%{getText('jpcontentscheduler.label.username')}" cssClass="form-control" value="%{#username}"/>
                 <s:if test="#hasFieldErrorVar">
-                        <span class="help-block text-danger">
-                            <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
+                    <span class="help-block text-danger">
+                        <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
                         </span>
                 </s:if>
             </div>
@@ -95,7 +95,7 @@
                 <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
                 <div class="input-group">
                     <wpsf:select name="contentType" id="threadConfig_contentTypes" list="%{getContentTypes()}" 
-                        listKey="code" listValue="description" headerKey="*" headerValue="%{getText('label.all')}" cssClass="form-control" disabled="%{#isAllTypeSelected}"/>
+                                 listKey="code" listValue="description" headerKey="*" headerValue="%{getText('label.all')}" cssClass="form-control" disabled="%{#isAllTypeSelected}"/>
                     <span class="input-group-btn">
                         <wpsf:submit type="button" action="addUserContentType" cssClass="btn btn-primary" disabled="%{#isAllTypeSelected}">
                             <s:text name="label.add"/>
@@ -103,11 +103,11 @@
                     </span>
                 </div>
                 <s:if test="#hasFieldErrorVar">
-                        <span class="help-block text-danger">
-                            <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
+                    <span class="help-block text-danger">
+                        <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
                         </span>
                 </s:if>
-                
+
                 <s:if test="%{getUsersContentType()[#username].size()>0}">
                     <h3 class="sr-only">
                         <s:text name="title.contentType.list" />
@@ -123,8 +123,8 @@
                                             <wpsa:actionSubParam name="username" value="%{username}" />
                                         </wpsa:actionParam>
                                         <wpsf:submit type="button" action="%{#actionName}"
-                                            title="%{getText('label.remove')"
-                                            cssClass="btn btn-link">
+                                                     title="%{getText('label.remove')"
+                                                     cssClass="btn btn-link">
                                             <span class="pficon pficon-close white"></span>
                                             <span class="sr-only">x</span>
                                         </wpsf:submit>
@@ -143,14 +143,14 @@
                                             <wpsa:actionSubParam name="contentType" value="%{#currentContentTypeCode}" />
                                             <wpsa:actionSubParam name="username" value="%{username}" />
                                         </wpsa:actionParam>
-                                        
+
                                         <wpsf:submit type="button" action="%{#actionName}"
-                                            title="%{getText('label.remove') + ' ' + getDefaultFullTitle(#currentContentTypeCode)}"
-                                            cssClass="btn btn-link">
+                                                     title="%{getText('label.remove') + ' ' + getDefaultFullTitle(#currentContentTypeCode)}"
+                                                     cssClass="btn btn-link">
                                             <span class="pficon pficon-close white"></span>
                                             <span class="sr-only">x</span>
                                         </wpsf:submit>
-                                        
+
                                     </span>
                                 </li>
                             </s:else>
@@ -163,10 +163,10 @@
                         <s:text name="jpcontentscheduler.contentTypes.empty"/>
                     </div>
                 </s:else>
-                
+
             </div>
         </div>
-        
+
         <div class="form-group">
             <div class="col-xs-12">
                 <div class="pull-right">
@@ -176,5 +176,5 @@
                 </div>
             </div>
         </div>
-</s:form>
+    </s:form>
 </div>
