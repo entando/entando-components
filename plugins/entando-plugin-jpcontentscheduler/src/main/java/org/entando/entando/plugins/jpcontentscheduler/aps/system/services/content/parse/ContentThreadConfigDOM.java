@@ -363,7 +363,7 @@ public class ContentThreadConfigDOM {
 				for (Iterator<String> i2 = catList.iterator(); i2.hasNext();) {
 					String cat = i2.next();
 					Element catElem = new Element(CATEGORY_ELEM);
-					this.safeSetAttr(ctElem, CODE_ATTR, cat);
+					this.safeSetAttr(catElem, CODE_ATTR, cat);
 					ctElem.addContent(catElem);
 				}
 			}

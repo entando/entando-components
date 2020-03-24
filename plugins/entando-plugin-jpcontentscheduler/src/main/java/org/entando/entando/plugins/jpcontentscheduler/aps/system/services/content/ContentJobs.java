@@ -266,23 +266,17 @@ public class ContentJobs extends QuartzJobBean implements ApplicationContextAwar
 							if (references.size() > 0) {
 								// se i vincoli sono la presenza del contenuto
 								// nelle pagine.
-								List<IPage> listaPagine = references.get("PageManagerUtilizers");
+								List<IPage> listaPagine = references.get("CmsPageManagerWrapperUtilizers");
 								if (listaPagine != null && listaPagine.size() > 0) {
-									String fieldname = c.getFieldNameContentReplace();
+									String contentIdOfContentToPublish = c.getFieldNameContentReplace();
 									String contenutoSostitutivo = null;
-									if (fieldname != null && !fieldname.isEmpty()) {
-										if (contentToSuspend.getAttributeMap().get(fieldname) != null) {
-											contenutoSostitutivo = contentToSuspend.getAttributeMap().get(fieldname)
-													.getValue().toString();
-										}
+									if (contentIdOfContentToPublish != null && !contentIdOfContentToPublish.isEmpty()) {
+                                                                                contenutoSostitutivo = contentIdOfContentToPublish;
 									}
-									String fieldnameModel = c.getFieldNameModelContentReplace();
+									String contentModelIdOfContentToPublish = c.getFieldNameModelContentReplace();
 									String modelContenutoSostitutivo = null;
-									if (fieldnameModel != null && !fieldnameModel.isEmpty()) {
-										if (contentToSuspend.getAttributeMap().get(fieldnameModel) != null) {
-											modelContenutoSostitutivo = contentToSuspend.getAttributeMap()
-													.get(fieldnameModel).getValue().toString();
-										}
+									if (contentModelIdOfContentToPublish != null && !contentModelIdOfContentToPublish.isEmpty()) {
+                                                                            modelContenutoSostitutivo = contentModelIdOfContentToPublish;
 									}
 									// Contenuto sostitutivo impostato nel caso
 									// in cui non sia presente il campo per il
@@ -350,7 +344,7 @@ public class ContentJobs extends QuartzJobBean implements ApplicationContextAwar
 													if (w.getConfig() != null) {
 														ApsProperties prop = w.getConfig();
 														String codeContentPage = prop.getProperty("contentId");
-														if (codeContentPage
+														if (codeContentPage != null && codeContentPage
 																.equalsIgnoreCase(contentToSuspend.getId())) {
 															// trova il widget
 															// ed il framepos,
@@ -373,6 +367,7 @@ public class ContentJobs extends QuartzJobBean implements ApplicationContextAwar
 											} // fine ciclo dei widget
 											if (framePos != -1 && widget != null) {
 												this.getPageManager().joinWidget(page.getCode(), widget, framePos);
+                                                                                                this.getPageManager().setPageOnline(page.getCode());
 												operation = "replaceContent";
 											}
 										}
@@ -525,21 +520,15 @@ public class ContentJobs extends QuartzJobBean implements ApplicationContextAwar
 								// contenuto è settato
 								List<IPage> listaPagine = references.get("PageManagerUtilizers");
 								if (listaPagine != null && listaPagine.size() > 0) {
-									String fieldname = c.getFieldNameContentReplace();
+									String contentIdOfContentToPublish = c.getFieldNameContentReplace();
 									String contenutoSostitutivo = null;
-									if (fieldname != null && !fieldname.isEmpty()) {
-										if (contentToMove.getAttributeMap().get(fieldname) != null) {
-											contenutoSostitutivo = contentToMove.getAttributeMap().get(fieldname)
-													.getValue().toString();
-										}
+									if (contentIdOfContentToPublish != null && !contentIdOfContentToPublish.isEmpty()) {
+                                                                                contenutoSostitutivo = contentIdOfContentToPublish;
 									}
-									String fieldnameModel = c.getFieldNameModelContentReplace();
+									String contentModelIdOfContentToPublish = c.getFieldNameModelContentReplace();
 									String modelContenutoSostitutivo = null;
-									if (fieldnameModel != null && !fieldnameModel.isEmpty()) {
-										if (contentToMove.getAttributeMap().get(fieldnameModel) != null) {
-											modelContenutoSostitutivo = contentToMove.getAttributeMap()
-													.get(fieldnameModel).getValue().toString();
-										}
+									if (contentModelIdOfContentToPublish != null && !contentModelIdOfContentToPublish.isEmpty()) {
+                                                                            modelContenutoSostitutivo = contentModelIdOfContentToPublish;
 									}
 									// Contenuto sostitutivo impostato nel caso
 									// in cui non sia presente il campo per il
@@ -626,6 +615,7 @@ public class ContentJobs extends QuartzJobBean implements ApplicationContextAwar
 											} // fine ciclo dei widget
 											if (framePos != -1 && widget != null) {
 												this.getPageManager().joinWidget(page.getCode(), widget, framePos);
+                                                                                                this.getPageManager().setPageOnline(page.getCode());
 												operation = "replaceContent";
 											}
 										}

@@ -59,7 +59,7 @@
     <div id="messages">
         <s:include value="/WEB-INF/apsadmin/jsp/common/inc/messages.jsp" />
     </div>
-    
+
     <s:form id="configurationForm" name="configurationForm" method="post" action="saveEmail" cssClass="form-horizontal">
         <legend><s:text name="legend.mail" /></legend>
         <div class="form-group">
@@ -84,8 +84,8 @@
             <div class="col-sm-10">
                 <wpsf:textfield name="senderCode" id="senderCode" cssClass="form-control" />
                 <s:if test="#hasFieldErrorVar">
-                        <span class="help-block text-danger">
-                            <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
+                    <span class="help-block text-danger">
+                        <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
                         </span>
                 </s:if>
             </div>
@@ -102,13 +102,13 @@
             <div class="col-sm-10">
                 <wpsf:textfield name="mailAttrName" id="mailAttrName" cssClass="form-control" />
                 <s:if test="#hasFieldErrorVar">
-                        <span class="help-block text-danger">
-                            <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
+                    <span class="help-block text-danger">
+                        <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
                         </span>
                 </s:if>
             </div>
         </div>
-        
+
         <%-- subject --%>
         <s:set var="fieldErrorsVar" value="%{fieldErrors['subject']}" />
         <s:set var="hasFieldErrorVar" value="#fieldErrorsVar != null && !#fieldErrorsVar.isEmpty()" />
@@ -121,8 +121,8 @@
             <div class="col-sm-10">
                 <wpsf:textfield name="subject" id="subject" cssClass="form-control" />
                 <s:if test="#hasFieldErrorVar">
-                        <span class="help-block text-danger">
-                            <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
+                    <span class="help-block text-danger">
+                        <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
                         </span>
                 </s:if>
             </div>
@@ -140,8 +140,8 @@
             <div class="col-sm-10">
                 <wpsf:textarea name="htmlHeader" id="htmlHeader" cssClass="form-control" cols="50" rows="4"/>
                 <s:if test="#hasFieldErrorVar">
-                        <span class="help-block text-danger">
-                            <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
+                    <span class="help-block text-danger">
+                        <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
                         </span>
                 </s:if>
             </div>
@@ -158,8 +158,8 @@
             <div class="col-sm-10">
                 <wpsf:textarea name="htmlFooter" id="htmlFooter" cssClass="form-control" cols="50" rows="4"/>
                 <s:if test="#hasFieldErrorVar">
-                        <span class="help-block text-danger">
-                            <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
+                    <span class="help-block text-danger">
+                        <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
                         </span>
                 </s:if>
             </div>
@@ -176,13 +176,13 @@
             <div class="col-sm-10">
                 <wpsf:textfield name="htmlSeparator" id="htmlSeparator" cssClass="form-control" />
                 <s:if test="#hasFieldErrorVar">
-                        <span class="help-block text-danger">
-                            <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
+                    <span class="help-block text-danger">
+                        <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
                         </span>
                 </s:if>
             </div>
         </div>
-         <%-- htmlHeaderMove --%>
+        <%-- htmlHeaderMove --%>
         <s:set var="fieldErrorsVar" value="%{fieldErrors['htmlHeaderMove']}" />
         <s:set var="hasFieldErrorVar" value="#fieldErrorsVar != null && !#fieldErrorsVar.isEmpty()" />
         <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
@@ -194,8 +194,8 @@
             <div class="col-sm-10">
                 <wpsf:textfield name="htmlHeaderMove" id="htmlHeaderMove" cssClass="form-control" />
                 <s:if test="#hasFieldErrorVar">
-                        <span class="help-block text-danger">
-                            <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
+                    <span class="help-block text-danger">
+                        <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
                         </span>
                 </s:if>
             </div>
@@ -212,8 +212,8 @@
             <div class="col-sm-10">
                 <wpsf:textfield name="htmlFooterMove" id="htmlFooterMove" cssClass="form-control" />
                 <s:if test="#hasFieldErrorVar">
-                        <span class="help-block text-danger">
-                            <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
+                    <span class="help-block text-danger">
+                        <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
                         </span>
                 </s:if>
             </div>
@@ -230,8 +230,8 @@
             <div class="col-sm-10">
                 <wpsf:textfield name="htmlSeparatorMove" id="htmlSeparatorMove" cssClass="form-control" />
                 <s:if test="#hasFieldErrorVar">
-                        <span class="help-block text-danger">
-                            <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
+                    <span class="help-block text-danger">
+                        <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
                         </span>
                 </s:if>
             </div>
@@ -249,8 +249,8 @@
             <div class="col-sm-10">
                 <wpsf:textarea name="textHeader" id="textHeader" cssClass="form-control" cols="50" rows="3"/>
                 <s:if test="#hasFieldErrorVar">
-                        <span class="help-block text-danger">
-                            <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
+                    <span class="help-block text-danger">
+                        <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
                         </span>
                 </s:if>
             </div>
@@ -267,8 +267,8 @@
             <div class="col-sm-10">
                 <wpsf:textarea name="textFooter" id="textFooter" cssClass="form-control" cols="50" rows="3"/>
                 <s:if test="#hasFieldErrorVar">
-                        <span class="help-block text-danger">
-                            <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
+                    <span class="help-block text-danger">
+                        <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
                         </span>
                 </s:if>
             </div>
@@ -285,8 +285,8 @@
             <div class="col-sm-10">
                 <wpsf:textfield name="textSeparator" id="textSeparator" cssClass="form-control" />
                 <s:if test="#hasFieldErrorVar">
-                        <span class="help-block text-danger">
-                            <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
+                    <span class="help-block text-danger">
+                        <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
                         </span>
                 </s:if>
             </div>
@@ -303,8 +303,8 @@
             <div class="col-sm-10">
                 <wpsf:textfield name="textHeaderMove" id="textHeaderMove" cssClass="form-control" />
                 <s:if test="#hasFieldErrorVar">
-                        <span class="help-block text-danger">
-                            <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
+                    <span class="help-block text-danger">
+                        <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
                         </span>
                 </s:if>
             </div>
@@ -321,8 +321,8 @@
             <div class="col-sm-10">
                 <wpsf:textfield name="textFooterMove" id="textFooterMove" cssClass="form-control" />
                 <s:if test="#hasFieldErrorVar">
-                        <span class="help-block text-danger">
-                            <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
+                    <span class="help-block text-danger">
+                        <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
                         </span>
                 </s:if>
             </div>
@@ -339,13 +339,13 @@
             <div class="col-sm-10">
                 <wpsf:textfield name="textSeparatorMove" id="textSeparatorMove" cssClass="form-control" />
                 <s:if test="#hasFieldErrorVar">
-                        <span class="help-block text-danger">
-                            <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
+                    <span class="help-block text-danger">
+                        <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
                         </span>
                 </s:if>
             </div>
         </div>
-        
+
         <div class="form-group">
             <div class="col-xs-12">
                 <div class="pull-right">
@@ -355,6 +355,6 @@
                 </div>
             </div>
         </div>
-        
+
     </s:form>
 </div>

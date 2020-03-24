@@ -53,91 +53,74 @@
 </div>
 <br>
 
+<div id="main" >
 
-<div id="main" role="main">
+    <s:form action="saveItem" class="form-horizontal">
 
-<%-- <h2>[<s:property value="item" />]</h2> --%>
-
-<s:form action="saveItem" class="form-horizontal">
-	
-	<s:if test="hasActionErrors()">
-        <div class="alert alert-danger alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
-                <span class="pficon pficon-close"></span>
-            </button>
-            <span class="pficon pficon-error-circle-o"></span>
-            <h2 class="h4 margin-none"><s:text name="message.title.ActionErrors" /></h2>
-            <ul>
-                <s:iterator value="actionErrors">
-                    <li><s:property escapeHtml="false" /></li>
-                </s:iterator>
-            </ul>
-        </div>
-	</s:if>
-	
-	<s:if test="hasFieldErrors()">
-        <div class="alert alert-danger alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
-                <span class="pficon pficon-close"></span>
-            </button>
-            <span class="pficon pficon-error-circle-o"></span>
-            <h2 class="h4 margin-none"><s:text name="message.title.FieldErrors" /></h2>
-            <ul class="margin-base-top">
-                <s:iterator value="fieldErrors">
-                    <s:iterator value="value">
+        <s:if test="hasActionErrors()">
+            <div class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+                    <span class="pficon pficon-close"></span>
+                </button>
+                <span class="pficon pficon-error-circle-o"></span>
+                <h2 class="h4 margin-none"><s:text name="message.title.ActionErrors" /></h2>
+                <ul>
+                    <s:iterator value="actionErrors">
                         <li><s:property escapeHtml="false" /></li>
+                        </s:iterator>
+                </ul>
+            </div>
+        </s:if>
+
+        <s:if test="hasFieldErrors()">
+            <div class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+                    <span class="pficon pficon-close"></span>
+                </button>
+                <span class="pficon pficon-error-circle-o"></span>
+                <h2 class="h4 margin-none"><s:text name="message.title.FieldErrors" /></h2>
+                <ul class="margin-base-top">
+                    <s:iterator value="fieldErrors">
+                        <s:iterator value="value">
+                            <li><s:property escapeHtml="false" /></li>
+                            </s:iterator>
+                        </s:iterator>
+                </ul>
+            </div>
+        </s:if>
+
+        <s:if test="hasActionMessages()">
+            <div class="alert alert-success">
+                <span class="pficon pficon-ok"></span>
+                <h2 class="h4 margin-none">
+                    <s:text name="messages.confirm" />
+                </h2>
+                <ul class="margin-base-top">
+                    <s:iterator value="actionMessages">
+                        <li>
+                            <s:property escapeHtml="false" />
+                        </li>
                     </s:iterator>
-                </s:iterator>
-            </ul>
-		</div>
-	</s:if>
-	
-	<s:if test="hasActionMessages()">
-        <div class="alert alert-success">
-            <span class="pficon pficon-ok"></span>
-            <h2 class="h4 margin-none">
-                <s:text name="messages.confirm" />
-            </h2>
-            <ul class="margin-base-top">
-                <s:iterator value="actionMessages">
-                    <li>
-                        <s:property escapeHtml="false" />
-                    </li>
-                </s:iterator>
-            </ul>
-        </div>
-    </s:if>
+                </ul>
+            </div>
+        </s:if>
 
-    <p>
-    	<s:hidden name="item" />
-    </p>
-    
-    <%--
-	<p>
-		<s:text name="jpcontentscheduler.label.config" />:<br />
-		<s:textarea name="config" cols="75" rows="25" />
-	</p>
-	<p>
-		<s:submit value="%{getText('jpcontentscheduler.label.save')}" />
-	</p>
-     --%>
-</s:form>
+        <p>
+            <s:hidden name="item" />
+        </p>
 
-<%-- <h2><s:text name="jpcontentscheduler.saveItem.instructions" /></h2> --%>
-<%--
-<div class="panel panel-default">
-	<div class="panel-body">
-		<s:text name="label.jpcontentscheduler.intro" />
-	</div>
-</div>
- --%>
+    </s:form>
+
+
     <div id="messages">
         <s:include value="/WEB-INF/apsadmin/jsp/common/inc/messages.jsp" />
     </div>
 
     <s:form id="configurationForm" name="configurationForm" method="post" action="saveItem" cssClass="form-horizontal">
-        <legend><s:text name="legend.contentThreadconfigSettings" /></legend>
-        
+        <legend>
+            <s:text name="legend.contentThreadconfigSettings" />
+        </legend>
+
         <div class="form-group">
             <label class="col-sm-2 control-label">
                 <s:text name="label.active" />
@@ -158,11 +141,13 @@
                 <s:text name="label.threadConfig.siteCode" />
                 <i class="fa fa-asterisk required-icon"></i>
             </label>
+
             <div class="col-sm-10">
                 <wpsf:textfield name="siteCode" id="siteCode" cssClass="form-control" />
+                <s:text name="label.threadConfig.siteCode.help" />
                 <s:if test="#hasFieldErrorVar">
-                        <span class="help-block text-danger">
-                            <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
+                    <span class="help-block text-danger">
+                        <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
                         </span>
                 </s:if>
             </div>
@@ -179,20 +164,29 @@
             </label>
             <div class="col-sm-10">
                 <wpsf:textfield name="globalCat" id="globalCat" cssClass="form-control" />
+                <s:text name="label.threadConfig.globalCat.help" />
                 <s:if test="#hasFieldErrorVar">
-                        <span class="help-block text-danger">
-                            <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
+                    <span class="help-block text-danger">
+                        <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
                         </span>
                 </s:if>
             </div>
         </div>
 
 
-		<legend><s:text name="legend.content.replace" /></legend>
+        <legend>
+            <s:text name="legend.content.replace" />
+        </legend>
         <%-- contentIdRepl --%>
         <s:set var="fieldErrorsVar" value="%{fieldErrors['contentIdRepl']}" />
         <s:set var="hasFieldErrorVar" value="#fieldErrorsVar != null && !#fieldErrorsVar.isEmpty()" />
         <s:set var="controlGroupErrorClass" value="%{#hasFieldErrorVar ? ' has-error' : ''}" />
+
+        <div class="alert alert-info">
+            <span class="pficon pficon-info"></span>
+            <s:text name="legend.content.replace.help" />
+        </div>
+
         <div class="form-group<s:property value="#controlGroupErrorClass" />">
             <label class="col-sm-2 control-label" for="contentIdRepl">
                 <s:text name="label.threadConfig.contentIdRepl" />
@@ -200,9 +194,10 @@
             </label>
             <div class="col-sm-10">
                 <wpsf:textfield name="contentIdRepl" id="contentIdRepl" cssClass="form-control" />
+
                 <s:if test="#hasFieldErrorVar">
-                        <span class="help-block text-danger">
-                            <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
+                    <span class="help-block text-danger">
+                        <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
                         </span>
                 </s:if>
             </div>
@@ -219,8 +214,8 @@
             <div class="col-sm-10">
                 <wpsf:textfield name="contentModelRepl" id="contentModelRepl" cssClass="form-control" />
                 <s:if test="#hasFieldErrorVar">
-                        <span class="help-block text-danger">
-                            <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
+                    <span class="help-block text-danger">
+                        <s:iterator value="%{#fieldErrorsVar}"><s:property />&#32;</s:iterator>
                         </span>
                 </s:if>
             </div>
@@ -237,5 +232,5 @@
             </div>
         </div>
 
-</s:form>
+    </s:form>
 
