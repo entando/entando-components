@@ -1,0 +1,15 @@
+{
+    "code": "MON",
+    "name": "Content Type MON",
+    "attributes": [
+        {
+            "code": "MonolistOfImag",
+            "type": "Monolist",
+            "name": "MonoList Description",
+            "nestedAttribute": {
+                "code": "MonolistOfImag",
+                "type": "Image"
+            }
+        }
+    ]
+}

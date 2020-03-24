@@ -1,0 +1,17 @@
+{
+    "code": "LST",
+    "name": "Content Type LST",
+    "attributes": [
+        {
+            "code": "ListOfImag",
+            "type": "List",
+            "name": "LIST Description",
+            "mandatory": false,
+            "nestedAttribute": {
+                "code": "ListOfImag",
+                "type": "Image"
+            },
+            "compositeAttributes": null
+        }
+    ]
+}

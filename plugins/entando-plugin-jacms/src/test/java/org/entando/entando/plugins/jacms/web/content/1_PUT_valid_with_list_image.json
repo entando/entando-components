@@ -1,0 +1,24 @@
+[{
+    "mainGroup":"free",
+    "description":"ContentWithListToAPage",
+    "attributes":[
+        {
+            "code": "ListOfImag",
+            "listelements":{
+                "en":[
+                    {
+                        "code":"ListOfImag",
+                        "value":"",
+                        "values":{
+                            "it":{
+                                "id":"resourceIdPlaceHolder"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ],
+    "id":"**MARKER**",
+    "typeCode":"LST"
+}]

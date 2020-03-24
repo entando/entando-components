@@ -1,0 +1,15 @@
+{
+    "code": "MOF",
+    "name": "Content Type MOF",
+    "attributes": [
+        {
+            "code": "MonolistOfFile",
+            "type": "Monolist",
+            "name": "MonoList Description",
+            "nestedAttribute": {
+                "code": "MonolistOfFile",
+                "type": "Attach"
+            }
+        }
+    ]
+}

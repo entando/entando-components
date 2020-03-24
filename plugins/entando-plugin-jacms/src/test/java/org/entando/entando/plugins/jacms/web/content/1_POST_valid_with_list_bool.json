@@ -1,0 +1,33 @@
+[
+    {
+        "mainGroup":"free",
+        "description":"listofbools",
+        "attributes":[
+            {
+                "code":"ListOfBools",
+                "listelements":{
+                    "en":[
+                        {
+                            "code":"ListOfBools",
+                            "value":false
+                        },
+                        {
+                            "code":"ListOfBools",
+                            "value":true
+                        },
+                        {
+                            "code":"ListOfBools",
+                            "value":true
+                        },
+                        {
+                            "code":"ListOfBools",
+                            "value":false
+                        }
+                    ]
+                },
+                "name":"ListOfBools"
+            }
+        ],
+        "typeCode":"LSB"
+    }
+]

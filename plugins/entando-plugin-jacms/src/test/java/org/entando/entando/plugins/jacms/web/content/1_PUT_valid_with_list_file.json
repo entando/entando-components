@@ -1,0 +1,24 @@
+[{
+    "mainGroup":"free",
+    "description":"ContentWithListFile",
+    "attributes":[
+        {
+            "code": "ListOfFile",
+            "listelements":{
+                "en":[
+                    {
+                        "code":"ListOfFile",
+                        "value":"",
+                        "values":{
+                            "it":{
+                                "id":"resourceIdPlaceHolder"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ],
+    "id":"**MARKER**",
+    "typeCode":"LTF"
+}]

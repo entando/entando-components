@@ -1,0 +1,22 @@
+[{
+    "mainGroup":"free",
+    "description":"ContentWithMonolistOfFile2",
+    "attributes":[
+        {
+            "code": "MonolistOfFile",
+            "name":"MonolistOfFiles",
+            "elements":[
+                {
+                    "code":"MonolistOfFile",
+                    "values":{
+                        "it":{
+                            "id":"resourceIdPlaceHolder"
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "id":"**MARKER**",
+    "typeCode":"MOF"
+}]

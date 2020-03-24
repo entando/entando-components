@@ -1,0 +1,17 @@
+{
+    "code": "LTF",
+    "name": "Content Type LTF",
+    "attributes": [
+        {
+            "code": "ListOfFile",
+            "type": "List",
+            "name": "LIST Description",
+            "mandatory": false,
+            "nestedAttribute": {
+                "code": "ListOfFile",
+                "type": "Attach"
+            },
+            "compositeAttributes": null
+        }
+    ]
+}

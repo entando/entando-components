@@ -1,0 +1,22 @@
+[{
+    "mainGroup":"free",
+    "description":"compositeofimages2",
+    "attributes":[
+        {
+            "code": "composite",
+            "name":"CompositeOfImages",
+            "compositeelements":[
+                {
+                    "code":"image-compo",
+                    "values":{
+                        "it":{
+                            "id":"resourceIdPlaceHolder"
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "id":"**MARKER**",
+    "typeCode":"COI"
+}]

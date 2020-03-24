@@ -1,0 +1,35 @@
+[{
+    "mainGroup":"free",
+    "description":"ContentWithListBools",
+    "attributes":[
+        {
+            "code": "ListOfBools",
+            "listelements":{
+                "en":[
+                    {
+                        "code":"ListOfBools",
+                        "value":false
+                    },
+                    {
+                        "code":"ListOfBools",
+                        "value":true
+                    },
+                    {
+                        "code":"ListOfBools",
+                        "value":false
+                    },
+                    {
+                        "code":"ListOfBools",
+                        "value":true
+                    },
+                    {
+                        "code":"ListOfBools",
+                        "value":false
+                    }
+                ]
+            }
+        }
+    ],
+    "id":"**MARKER**",
+    "typeCode":"LSB"
+}]

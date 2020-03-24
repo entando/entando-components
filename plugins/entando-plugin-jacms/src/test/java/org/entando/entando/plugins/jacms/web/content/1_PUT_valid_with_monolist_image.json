@@ -1,0 +1,22 @@
+[{
+    "mainGroup":"free",
+    "description":"ContentWithMonolistOfImage2",
+    "attributes":[
+        {
+            "code": "MonolistOfImag",
+            "name":"MonolistOfImages",
+            "elements":[
+                {
+                    "code":"MonolistOfImag",
+                    "values":{
+                        "it":{
+                            "id":"resourceIdPlaceHolder"
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "id":"**MARKER**",
+    "typeCode":"MON"
+}]
