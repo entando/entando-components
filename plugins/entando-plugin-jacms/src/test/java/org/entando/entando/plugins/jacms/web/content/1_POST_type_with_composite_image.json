@@ -1,0 +1,18 @@
+{
+    "code": "COI",
+    "name": "Content Type COI",
+    "attributes": [
+        {
+            "code": "composite",
+            "type": "Composite",
+            "name": "Composite Description Image",
+            "compositeAttributes":[
+                {
+                    "code": "image-compo",
+                    "type": "Image",
+                    "name": "Description of image attribute"
+                }
+            ]
+        }
+    ]
+}

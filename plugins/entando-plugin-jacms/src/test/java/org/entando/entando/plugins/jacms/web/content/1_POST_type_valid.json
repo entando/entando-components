@@ -35,7 +35,7 @@
             "code": "monolist",
             "type": "Monolist",
             "name": "MonoLIST Description",
-            "mandatory": true,
+            "mandatory": false,
             "nestedAttribute": {
                 "code": "monolist",
                 "type": "Text"

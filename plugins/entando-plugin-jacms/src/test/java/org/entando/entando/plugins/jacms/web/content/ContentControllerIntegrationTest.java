@@ -792,7 +792,6 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         } finally {
             if (null != resourceId) {
                 performDeleteResource(accessToken, "image", resourceId)
-                        .andDo(print())
                         .andExpect(status().isOk());
             }
             if (null != newContentId) {
@@ -846,7 +845,6 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         } finally {
             if (null != resourceId) {
                 performDeleteResource(accessToken, "image", resourceId)
-                        .andDo(print())
                         .andExpect(status().isOk());
             }
             if (null != newContentId) {
@@ -904,7 +902,6 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         } finally {
             if (null != resourceId) {
                 performDeleteResource(accessToken, "image", resourceId)
-                        .andDo(print())
                         .andExpect(status().isOk());
             }
             if (null != newContentId) {
@@ -958,7 +955,6 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         } finally {
             if (null != resourceId) {
                 performDeleteResource(accessToken, "file", resourceId)
-                        .andDo(print())
                         .andExpect(status().isOk());
             }
             if (null != newContentId) {
@@ -1034,7 +1030,6 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         } finally {
             if (null != imageResourceId) {
                 performDeleteResource(accessToken, "image", imageResourceId)
-                        .andDo(print())
                         .andExpect(status().isOk());
             }
             if (null != newContentId1) {
@@ -1051,6 +1046,493 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             }
             if (null != this.contentManager.getEntityPrototype("IAT")) {
                 ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("IAT");
+            }
+        }
+    }
+
+    @Test
+    public void testAddAndUpdateContentWithListAttributeImage() throws Exception {
+        String newContentId = null;
+        String resourceId = null;
+        String accessToken = this.createAccessToken();
+        try {
+            Assert.assertNull(this.contentManager.getEntityPrototype("LST"));
+
+            this.executeContentTypePost("1_POST_type_with_list_image.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype("LST"));
+
+            ResultActions resourceResult = this.performCreateResource(accessToken, "image", "free", "application/jpeg");
+
+            resourceId = JsonPath.read(resourceResult.andReturn().getResponse().getContentAsString(), "$.payload.id");
+
+            ResultActions result = this.executeContentPost("1_POST_valid_with_list_image.json", accessToken, status().isOk(), resourceId);
+            result.andDo(print())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("ListOfImag")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en.size()", is(2)))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[0].code", is("ListOfImag")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[0].values.it.type", is("image")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[0].values.it.description", is("image_test.jpeg")))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[1].code", is("ListOfImag")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[1].values.it.type", is("image")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[1].values.it.description", is("image_test.jpeg")));
+
+            String bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
+            Content newContent = this.contentManager.loadContent(newContentId, false);
+
+            Assert.assertNotNull(newContent);
+
+            this.executeContentPut("1_PUT_valid_with_list_image.json", newContentId, accessToken, status().isOk(), resourceId)
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("ListOfImag")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en.size()", is(1)))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[0].code", is("ListOfImag")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[0].values.it.type", is("image")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[0].values.it.description", is("image_test.jpeg")));
+
+        } finally {
+            if (null != resourceId) {
+                performDeleteResource(accessToken, "image", resourceId)
+                        .andExpect(status().isOk());
+            }
+            if (null != newContentId) {
+                Content newContent = this.contentManager.loadContent(newContentId, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != this.contentManager.getEntityPrototype("LST")) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("LST");
+            }
+        }
+    }
+
+    @Test
+    public void testAddAndUpdateContentWithListAttributeFile() throws Exception {
+        String newContentId = null;
+        String resourceId = null;
+        String accessToken = this.createAccessToken();
+        try {
+            Assert.assertNull(this.contentManager.getEntityPrototype("LTF"));
+
+            this.executeContentTypePost("1_POST_type_with_list_file.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype("LTF"));
+
+            ResultActions resourceResult = this.performCreateResource(accessToken, "file", "free", "application/pdf");
+
+            resourceId = JsonPath.read(resourceResult.andReturn().getResponse().getContentAsString(), "$.payload.id");
+
+            ResultActions result = this.executeContentPost("1_POST_valid_with_list_file.json", accessToken, status().isOk(), resourceId);
+            result.andDo(print())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("ListOfFile")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en.size()", is(2)))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[0].code", is("ListOfFile")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[0].values.it.type", is("file")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[0].values.it.description", is("file_test.jpeg")))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[1].code", is("ListOfFile")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[1].values.it.type", is("file")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[1].values.it.description", is("file_test.jpeg")));
+
+            String bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
+            Content newContent = this.contentManager.loadContent(newContentId, false);
+
+            Assert.assertNotNull(newContent);
+
+            this.executeContentPut("1_PUT_valid_with_list_file.json", newContentId, accessToken, status().isOk(), resourceId)
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("ListOfFile")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en.size()", is(1)))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[0].code", is("ListOfFile")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[0].values.it.type", is("file")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[0].values.it.description", is("file_test.jpeg")));
+
+        } finally {
+            if (null != resourceId) {
+                performDeleteResource(accessToken, "file", resourceId)
+                        .andExpect(status().isOk());
+            }
+            if (null != newContentId) {
+                Content newContent = this.contentManager.loadContent(newContentId, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != this.contentManager.getEntityPrototype("LTF")) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("LTF");
+            }
+        }
+    }
+
+    @Test
+    public void testAddAndUpdateContentWithListAttributeBoolean() throws Exception {
+        String newContentId = null;
+        String accessToken = this.createAccessToken();
+        try {
+            Assert.assertNull(this.contentManager.getEntityPrototype("LSB"));
+
+            this.executeContentTypePost("1_POST_type_with_list_bool.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype("LSB"));
+
+            ResultActions result = this.executeContentPost("1_POST_valid_with_list_bool.json", accessToken, status().isOk());
+            result.andDo(print())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("ListOfBools")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en.size()", is(4)))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[0].code", is("ListOfBools")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[0].value", is(false)))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[1].code", is("ListOfBools")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[1].value", is(true)))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[2].code", is("ListOfBools")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[2].value", is(true)))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[3].code", is("ListOfBools")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[3].value", is(false)));
+
+            String bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
+            Content newContent = this.contentManager.loadContent(newContentId, false);
+
+            Assert.assertNotNull(newContent);
+
+            this.executeContentPut("1_PUT_valid_with_list_bool.json", newContentId, accessToken, status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("ListOfBools")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en.size()", is(5)))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[0].code", is("ListOfBools")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[0].value", is(false)))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[1].code", is("ListOfBools")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[1].value", is(true)))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[2].code", is("ListOfBools")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[2].value", is(false)))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[3].code", is("ListOfBools")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[3].value", is(true)))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[4].code", is("ListOfBools")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[4].value", is(false)));
+
+        } finally {
+            if (null != newContentId) {
+                Content newContent = this.contentManager.loadContent(newContentId, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != this.contentManager.getEntityPrototype("LSB")) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("LSB");
+            }
+        }
+    }
+
+    @Test
+    public void testAddAndUpdateContentWithMonolistAttributeImage() throws Exception {
+        String newContentId = null;
+        String resourceId = null;
+        String accessToken = this.createAccessToken();
+        try {
+            Assert.assertNull(this.contentManager.getEntityPrototype("MON"));
+
+            this.executeContentTypePost("1_POST_type_with_monolist_image.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype("MON"));
+
+            ResultActions resourceResult = this.performCreateResource(accessToken, "image", "free", "application/jpeg");
+
+            resourceId = JsonPath.read(resourceResult.andReturn().getResponse().getContentAsString(), "$.payload.id");
+
+            ResultActions result = this.executeContentPost("1_POST_valid_with_monolist_image.json", accessToken, status().isOk(), resourceId);
+            result.andDo(print())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].typeCode", is("MON")))
+                    .andExpect(jsonPath("$.payload[0].typeDescription", is("Content Type MON")))
+                    .andExpect(jsonPath("$.payload[0].description", is("monolistofimages")))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("MonolistOfImag")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].elements.size()", is(1)))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].elements[0].code", is("MonolistOfImag")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].elements[0].values.it.type", is("image")));
+
+            String bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
+            Content newContent = this.contentManager.loadContent(newContentId, false);
+
+            Assert.assertNotNull(newContent);
+
+            this.executeContentPut("1_PUT_valid_with_monolist_image.json", newContentId, accessToken, status().isOk(), resourceId)
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].typeCode", is("MON")))
+                    .andExpect(jsonPath("$.payload[0].typeDescription", is("Content Type MON")))
+                    .andExpect(jsonPath("$.payload[0].description", is("ContentWithMonolistOfImage2")))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("MonolistOfImag")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].elements.size()", is(1)));
+
+        } finally {
+            if (null != resourceId) {
+                performDeleteResource(accessToken, "image", resourceId)
+                        .andExpect(status().isOk());
+            }
+            if (null != newContentId) {
+                Content newContent = this.contentManager.loadContent(newContentId, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != this.contentManager.getEntityPrototype("MON")) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("MON");
+            }
+        }
+    }
+
+    @Test
+    public void testAddAndUpdateContentWithMonolistAttributeFile() throws Exception {
+        String newContentId = null;
+        String resourceId = null;
+        String accessToken = this.createAccessToken();
+        try {
+            Assert.assertNull(this.contentManager.getEntityPrototype("MOF"));
+
+            this.executeContentTypePost("1_POST_type_with_monolist_file.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype("MOF"));
+
+            ResultActions resourceResult = this.performCreateResource(accessToken, "file", "free", "application/pdf");
+
+            resourceId = JsonPath.read(resourceResult.andReturn().getResponse().getContentAsString(), "$.payload.id");
+
+            ResultActions result = this.executeContentPost("1_POST_valid_with_monolist_file.json", accessToken, status().isOk(), resourceId);
+            result.andDo(print())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].typeCode", is("MOF")))
+                    .andExpect(jsonPath("$.payload[0].typeDescription", is("Content Type MOF")))
+                    .andExpect(jsonPath("$.payload[0].description", is("monolistoffile")))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("MonolistOfFile")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].elements.size()", is(1)))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].elements[0].code", is("MonolistOfFile")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].elements[0].values.it.type", is("file")));
+
+            String bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
+            Content newContent = this.contentManager.loadContent(newContentId, false);
+
+            Assert.assertNotNull(newContent);
+
+            this.executeContentPut("1_PUT_valid_with_monolist_file.json", newContentId, accessToken, status().isOk(), resourceId)
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].typeCode", is("MOF")))
+                    .andExpect(jsonPath("$.payload[0].typeDescription", is("Content Type MOF")))
+                    .andExpect(jsonPath("$.payload[0].description", is("ContentWithMonolistOfFile2")))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("MonolistOfFile")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].elements.size()", is(1)));
+
+        } finally {
+            if (null != resourceId) {
+                performDeleteResource(accessToken, "file", resourceId)
+                        .andExpect(status().isOk());
+            }
+            if (null != newContentId) {
+                Content newContent = this.contentManager.loadContent(newContentId, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != this.contentManager.getEntityPrototype("MOF")) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("MOF");
+            }
+        }
+    }
+
+    @Test
+    public void testAddAndUpdateContentWithCompositeAttributeImage() throws Exception {
+        String newContentId = null;
+        String resourceId = null;
+        String accessToken = this.createAccessToken();
+        String contentType = "COI";
+        try {
+            Assert.assertNull(this.contentManager.getEntityPrototype(contentType));
+
+            this.executeContentTypePost("1_POST_type_with_composite_image.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype(contentType));
+
+            ResultActions resourceResult = this.performCreateResource(accessToken, "image", "free", "application/jpeg");
+
+            resourceId = JsonPath.read(resourceResult.andReturn().getResponse().getContentAsString(), "$.payload.id");
+
+            ResultActions result = this.executeContentPost("1_POST_valid_with_composite_image.json", accessToken, status().isOk(), resourceId);
+            result.andDo(print())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].typeCode", is(contentType)))
+                    .andExpect(jsonPath("$.payload[0].typeDescription", is("Content Type COI")))
+                    .andExpect(jsonPath("$.payload[0].description", is("compositeofimages")))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("composite")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].compositeelements.size()", is(1)))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].compositeelements[0].code", is("image-compo")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].compositeelements[0].values.it.type", is("image")));
+
+            String bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
+            Content newContent = this.contentManager.loadContent(newContentId, false);
+
+            Assert.assertNotNull(newContent);
+
+            this.executeContentPut("1_PUT_valid_with_composite_image.json", newContentId, accessToken, status().isOk(), resourceId)
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].typeCode", is(contentType)))
+                    .andExpect(jsonPath("$.payload[0].typeDescription", is("Content Type COI")))
+                    .andExpect(jsonPath("$.payload[0].description", is("compositeofimages2")))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].compositeelements[0].code", is("image-compo")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].compositeelements[0].values.it.type", is("image")));
+
+        } finally {
+            if (null != resourceId) {
+                performDeleteResource(accessToken, "image", resourceId)
+                        .andExpect(status().isOk());
+            }
+            if (null != newContentId) {
+                Content newContent = this.contentManager.loadContent(newContentId, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != this.contentManager.getEntityPrototype(contentType)) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype(contentType);
+            }
+        }
+    }
+
+    @Test
+    public void testAddAndUpdateContentWithCompositeAttributeFile() throws Exception {
+        String newContentId = null;
+        String resourceId = null;
+        String accessToken = this.createAccessToken();
+        String contentType = "COF";
+        try {
+            Assert.assertNull(this.contentManager.getEntityPrototype(contentType));
+
+            this.executeContentTypePost("1_POST_type_with_composite_file.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype(contentType));
+
+            ResultActions resourceResult = this.performCreateResource(accessToken, "file", "free", "application/pdf");
+
+            resourceId = JsonPath.read(resourceResult.andReturn().getResponse().getContentAsString(), "$.payload.id");
+
+            ResultActions result = this.executeContentPost("1_POST_valid_with_composite_file.json", accessToken, status().isOk(), resourceId);
+            result.andDo(print())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].typeCode", is(contentType)))
+                    .andExpect(jsonPath("$.payload[0].typeDescription", is("Content Type COF")))
+                    .andExpect(jsonPath("$.payload[0].description", is("compositeoffiles")))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("composite")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].compositeelements.size()", is(1)))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].compositeelements[0].code", is("file-compo")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].compositeelements[0].values.it.type", is("file")));
+
+            String bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
+            Content newContent = this.contentManager.loadContent(newContentId, false);
+
+            Assert.assertNotNull(newContent);
+
+            this.executeContentPut("1_PUT_valid_with_composite_file.json", newContentId, accessToken, status().isOk(), resourceId)
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].typeCode", is(contentType)))
+                    .andExpect(jsonPath("$.payload[0].typeDescription", is("Content Type COF")))
+                    .andExpect(jsonPath("$.payload[0].description", is("compositeoffiles2")))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].compositeelements[0].code", is("file-compo")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].compositeelements[0].values.it.type", is("file")));
+
+        } finally {
+            if (null != resourceId) {
+                performDeleteResource(accessToken, "file", resourceId)
+                        .andExpect(status().isOk());
+            }
+            if (null != newContentId) {
+                Content newContent = this.contentManager.loadContent(newContentId, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != this.contentManager.getEntityPrototype(contentType)) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype(contentType);
             }
         }
     }
@@ -1426,9 +1908,16 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
     }
 
     private ResultActions executeContentPut(String fileName, String valueToReplace, String accessToken, ResultMatcher expected) throws Exception {
+        return executeContentPut(fileName, valueToReplace, accessToken, expected, null);
+    }
+
+    private ResultActions executeContentPut(String fileName, String valueToReplace, String accessToken, ResultMatcher expected, String resourceId) throws Exception {
         InputStream isJsonPostValid = this.getClass().getResourceAsStream(fileName);
         String jsonPutValid = FileTextReader.getText(isJsonPostValid);
         jsonPutValid = jsonPutValid.replace("**MARKER**", valueToReplace);
+        if (resourceId != null) {
+            jsonPutValid = jsonPutValid.replace("resourceIdPlaceHolder", resourceId);
+        }
         ResultActions result = mockMvc
                 .perform(put("/plugins/cms/contents")
                         .content(jsonPutValid)

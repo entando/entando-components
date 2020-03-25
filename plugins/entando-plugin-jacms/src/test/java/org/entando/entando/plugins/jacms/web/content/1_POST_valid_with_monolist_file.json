@@ -1,0 +1,23 @@
+[
+    {
+        "mainGroup":"free",
+        "description":"monolistoffile",
+        "attributes":[
+            {
+                "code":"MonolistOfFile",
+                "elements":[
+                    {
+                        "code":"MonolistOfFile",
+                        "values":{
+                            "it":{
+                                "id":"resourceIdPlaceHolder"
+                            }
+                        }
+                    }
+                ],
+                "name":"MonolistOfFiles"
+            }
+        ],
+        "typeCode":"MOF"
+    }
+]

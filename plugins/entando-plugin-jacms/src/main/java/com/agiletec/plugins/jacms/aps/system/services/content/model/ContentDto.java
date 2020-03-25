@@ -16,8 +16,12 @@ package com.agiletec.plugins.jacms.aps.system.services.content.model;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.BooleanAttribute;
+import com.agiletec.aps.system.common.entity.model.attribute.CompositeAttribute;
+import com.agiletec.aps.system.common.entity.model.attribute.ListAttribute;
+import com.agiletec.aps.system.common.entity.model.attribute.MonoListAttribute;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.AbstractResourceAttribute;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.ImageAttribute;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.LinkAttribute;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentRestriction;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.AttachResource;
@@ -27,6 +31,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
@@ -208,83 +213,186 @@ public class ContentDto extends EntityDto implements Serializable {
     }
 
     private void clearAttributeData(Content content) {
-        for (AttributeInterface contentAttr : content.getAttributeList()) {
-            if (AbstractResourceAttribute.class.isAssignableFrom(contentAttr.getClass())) {
-                AbstractResourceAttribute resAttr = (AbstractResourceAttribute) contentAttr;
-                resAttr.getTextMap().clear();
-                resAttr.getResources().clear();
-                resAttr.getMetadatas().clear();
-            } else if (LinkAttribute.class.isAssignableFrom(contentAttr.getClass())) {
-                LinkAttribute linkAttr = (LinkAttribute) contentAttr;
-                linkAttr.getTextMap().clear();
-                linkAttr.setSymbolicLink(null);
-            } else if (BooleanAttribute.class.isAssignableFrom(contentAttr.getClass())) {
-                BooleanAttribute booleanAttr = (BooleanAttribute) contentAttr;
-                booleanAttr.setBooleanValue(null);
+        for (AttributeInterface attribute : content.getAttributeList()) {
+            clearAttribute(attribute);
+        }
+    }
+
+    private void clearAttribute(AttributeInterface attribute) {
+        clearAbstractResourceAttribute(attribute);
+        clearLinkAttribute(attribute);
+        clearBooleanAttribute(attribute);
+        clearListAttribute(attribute);
+        clearMonolistAttribute(attribute);
+        clearCompositeAttribute(attribute);
+    }
+
+    private void clearAbstractResourceAttribute(AttributeInterface attribute) {
+        if (AbstractResourceAttribute.class.isAssignableFrom(attribute.getClass())) {
+            AbstractResourceAttribute resourceAttribute = (AbstractResourceAttribute) attribute;
+            resourceAttribute.getTextMap().clear();
+            resourceAttribute.getResources().clear();
+            resourceAttribute.getMetadatas().clear();
+        }
+    }
+
+    private void clearLinkAttribute(AttributeInterface attribute) {
+        if (LinkAttribute.class.isAssignableFrom(attribute.getClass())) {
+            LinkAttribute linkAttribute = (LinkAttribute) attribute;
+            linkAttribute.getTextMap().clear();
+            linkAttribute.setSymbolicLink(null);
+        }
+    }
+
+    private void clearBooleanAttribute(AttributeInterface attribute) {
+        if (BooleanAttribute.class.isAssignableFrom(attribute.getClass())) {
+            BooleanAttribute booleanAttribute = (BooleanAttribute) attribute;
+            booleanAttribute.setBooleanValue(null);
+        }
+    }
+
+    private void clearListAttribute(AttributeInterface attribute) {
+        if (ListAttribute.class.isAssignableFrom(attribute.getClass())) {
+            ListAttribute listAttribute = (ListAttribute) attribute;
+            for (Entry<String, List<AttributeInterface>> entry : listAttribute.getAttributeListMap().entrySet()) {
+                for (AttributeInterface element : entry.getValue()) {
+                    clearAttribute(element);
+                }
+            }
+        }
+    }
+
+    private void clearMonolistAttribute(AttributeInterface attribute) {
+        if (MonoListAttribute.class.isAssignableFrom(attribute.getClass())) {
+            MonoListAttribute monolistAttribute = (MonoListAttribute) attribute;
+            monolistAttribute.getAttributes().clear();
+        }
+    }
+
+    private void clearCompositeAttribute(AttributeInterface attribute) {
+        if (CompositeAttribute.class.isAssignableFrom(attribute.getClass())) {
+            CompositeAttribute compositeAttribute = (CompositeAttribute) attribute;
+            for (AttributeInterface element : compositeAttribute.getAttributes()) {
+                clearAttribute(element);
             }
         }
     }
 
     private void fillAttributeData(BindingResult bindingResult, Content content) {
-        for (EntityAttributeDto attr : this.getAttributes()) {
-            AttributeInterface contentAttr = content.getAttributeMap().get(attr.getCode());
-            if (contentAttr != null) {
-                if (AbstractResourceAttribute.class.isAssignableFrom(contentAttr.getClass())) {
-                    for (Entry<String, Object> resEntry : attr.getValues().entrySet()) {
-                        String langCode = resEntry.getKey();
-                        String resourceId = (String) ((Map<String, Object>) resEntry.getValue()).get("id");
-                        String name = (String) ((Map<String, Object>) resEntry.getValue()).get("name");
-
-                        AbstractResourceAttribute resAttr = (AbstractResourceAttribute) contentAttr;
-                        if (name != null) {
-                            resAttr.setText(name, langCode);
-                        }
-
-                        ResourceInterface resource = new AttachResource();
-                        resource.setId(resourceId);
-                        resAttr.setResource(resource, langCode);
-
-                        Map<String, Object> values = (Map<String, Object>) ((Map<String, Object>) resEntry.getValue()).get("metadata");
-
-                        if (values != null) {
-                            Map<String, String> metadata = values.entrySet().stream()
-                                    .collect(Collectors.toMap(Map.Entry::getKey, e -> (String) e.getValue()));
-                            resAttr.setMetadataMap(langCode, metadata);
-                        }
-                    }
-                } else if (LinkAttribute.class.isAssignableFrom(contentAttr.getClass())) {
-                    SymbolicLink link = new SymbolicLink();
-                    if (attr.getValue() != null) {
-                        Object destType = ((Map)attr.getValue()).get("destType");
-                        if (destType != null) {
-                            switch ((Integer)destType) {
-                                case SymbolicLink.URL_TYPE:
-                                    link.setDestinationToUrl((String) ((Map)attr.getValue()).get("urlDest"));
-                                    break;
-                                case SymbolicLink.PAGE_TYPE:
-                                    link.setDestinationToPage((String) ((Map)attr.getValue()).get("pageDest"));
-                                    break;
-                                case SymbolicLink.RESOURCE_TYPE:
-                                    link.setDestinationToResource((String) ((Map)attr.getValue()).get("resourceDest"));
-                                    break;
-                                case SymbolicLink.CONTENT_TYPE:
-                                    link.setDestinationToContent((String) ((Map)attr.getValue()).get("contentDest"));
-                                    break;
-                                case SymbolicLink.CONTENT_ON_PAGE_TYPE:
-                                    link.setDestinationToContentOnPage((String) ((Map)attr.getValue()).get("contentDest"),
-                                            (String) ((Map)attr.getValue()).get("pageDest"));
-                                    break;
-                            }
-                        }
-                    }
-                    LinkAttribute linkAttr = (LinkAttribute) contentAttr;
-
-                    linkAttr.setSymbolicLink(link);
-                }
+        for (EntityAttributeDto attributeDto : this.getAttributes()) {
+            AttributeInterface attribute = content.getAttributeMap().get(attributeDto.getCode());
+            if (attribute != null) {
+                fillAttribute(attribute, attributeDto);
             } else {
-                bindingResult.reject(ContentValidator.ERRCODE_ATTRIBUTE_INVALID, new String[]{attr.getCode()}, "content.attribute.code.invalid");
+                bindingResult.reject(ContentValidator.ERRCODE_ATTRIBUTE_INVALID, new String[]{attributeDto.getCode()}, "content.attribute.code.invalid");
             }
         }
     }
 
+    private void fillAttribute(AttributeInterface attribute, EntityAttributeDto attributeDto) {
+        fillAbstractResourceAttribute(attribute, attributeDto);
+        fillLinkAttribute(attribute, attributeDto);
+        fillListAttribute(attribute, attributeDto);
+        fillMonolistAttribute(attribute, attributeDto);
+        fillCompositeAttribute(attribute, attributeDto);
+    }
+
+    private void fillAbstractResourceAttribute(AttributeInterface attribute, EntityAttributeDto attributeDto) {
+        if (AbstractResourceAttribute.class.isAssignableFrom(attribute.getClass())) {
+            AbstractResourceAttribute resourceAttribute = (AbstractResourceAttribute) attribute;
+            for (Entry<String, Object> resourceEntry : attributeDto.getValues().entrySet()) {
+
+                String langCode = resourceEntry.getKey();
+                String resourceId = (String) ((Map<String, Object>) resourceEntry.getValue()).get("id");
+                String name = (String) ((Map<String, Object>) resourceEntry.getValue()).get("name");
+
+                if (name != null) {
+                    resourceAttribute.setText(name, langCode);
+                }
+
+                ResourceInterface resource = new AttachResource();
+                resource.setId(resourceId);
+                resourceAttribute.setResource(resource, langCode);
+
+                Map<String, Object> values = (Map<String, Object>) ((Map<String, Object>) resourceEntry.getValue())
+                        .get("metadata");
+
+                if (values != null) {
+                    Map<String, String> metadata = values.entrySet().stream()
+                            .collect(Collectors.toMap(Entry::getKey, e -> (String) e.getValue()));
+                    resourceAttribute.setMetadataMap(langCode, metadata);
+                }
+            }
+        }
+    }
+
+    private void fillLinkAttribute(AttributeInterface attribute, EntityAttributeDto attributeDto) {
+        if (LinkAttribute.class.isAssignableFrom(attribute.getClass())) {
+            LinkAttribute linkAttribute = (LinkAttribute)attribute;
+            SymbolicLink link = new SymbolicLink();
+            if (attributeDto.getValue() != null) {
+                Object destType = ((Map) attributeDto.getValue()).get("destType");
+                if (destType != null) {
+                    switch ((Integer) destType) {
+                        case SymbolicLink.URL_TYPE:
+                            link.setDestinationToUrl((String) ((Map) attributeDto.getValue()).get("urlDest"));
+                            break;
+                        case SymbolicLink.PAGE_TYPE:
+                            link.setDestinationToPage(
+                                    (String) ((Map) attributeDto.getValue()).get("pageDest"));
+                            break;
+                        case SymbolicLink.RESOURCE_TYPE:
+                            link.setDestinationToResource(
+                                    (String) ((Map) attributeDto.getValue()).get("resourceDest"));
+                            break;
+                        case SymbolicLink.CONTENT_TYPE:
+                            link.setDestinationToContent(
+                                    (String) ((Map) attributeDto.getValue()).get("contentDest"));
+                            break;
+                        case SymbolicLink.CONTENT_ON_PAGE_TYPE:
+                            link.setDestinationToContentOnPage(
+                                    (String) ((Map) attributeDto.getValue()).get("contentDest"),
+                                    (String) ((Map) attributeDto.getValue()).get("pageDest"));
+                            break;
+                    }
+                }
+            }
+            linkAttribute.setSymbolicLink(link);
+        }
+    }
+
+    private void fillListAttribute(AttributeInterface attribute, EntityAttributeDto attributeDto) {
+        if (ListAttribute.class.isAssignableFrom(attribute.getClass())) {
+            ListAttribute listAttribute = (ListAttribute) attribute;
+            int index = 0;
+            for (Entry<String, List<EntityAttributeDto>> entry : attributeDto.getListElements().entrySet()) {
+                for (EntityAttributeDto element : entry.getValue()) {
+                    fillAttribute(listAttribute.getAttributes().get(index), element);
+                    index++;
+                }
+            }
+        }
+    }
+
+    private void fillMonolistAttribute(AttributeInterface attribute, EntityAttributeDto attributeDto) {
+        if (MonoListAttribute.class.isAssignableFrom(attribute.getClass())) {
+            MonoListAttribute monolistAttribute = (MonoListAttribute) attribute;
+            int index = 0;
+            for (EntityAttributeDto element : attributeDto.getElements()) {
+                fillAttribute(monolistAttribute.getAttribute(index), element);
+                index++;
+            }
+        }
+    }
+
+    private void fillCompositeAttribute(AttributeInterface attribute, EntityAttributeDto attributeDto) {
+        if (CompositeAttribute.class.isAssignableFrom(attribute.getClass())) {
+            CompositeAttribute compositeAttribute = (CompositeAttribute) attribute;
+            int index = 0;
+            for (EntityAttributeDto element : attributeDto.getCompositeElements()) {
+                fillAttribute(compositeAttribute.getAttributes().get(index), element);
+                index++;
+            }
+        }
+    }
 }

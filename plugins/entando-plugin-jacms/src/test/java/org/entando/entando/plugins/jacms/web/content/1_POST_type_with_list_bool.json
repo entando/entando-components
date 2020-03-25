@@ -1,0 +1,17 @@
+{
+    "code": "LSB",
+    "name": "Content Type LSB",
+    "attributes": [
+        {
+            "code": "ListOfBools",
+            "type": "List",
+            "name": "LIST Description",
+            "mandatory": false,
+            "nestedAttribute": {
+                "code": "ListOfBools",
+                "type": "Boolean"
+            },
+            "compositeAttributes": null
+        }
+    ]
+}

@@ -19,11 +19,12 @@ import static org.entando.entando.plugins.jacms.web.content.ContentController.ER
 import com.agiletec.aps.system.common.IManager;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
-import com.agiletec.aps.system.common.entity.model.attribute.AbstractListAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.BooleanAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.CheckBoxAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.CompositeAttribute;
+import com.agiletec.aps.system.common.entity.model.attribute.ListAttribute;
+import com.agiletec.aps.system.common.entity.model.attribute.MonoListAttribute;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
@@ -48,13 +49,8 @@ import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentRestri
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModelManager;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentRenderizationInfo;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.IContentDispenser;
-import com.agiletec.plugins.jacms.aps.system.services.resource.model.AttachResource;
-import com.agiletec.plugins.jacms.aps.system.services.resource.model.ImageResource;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 import com.agiletec.plugins.jacms.aps.system.services.searchengine.ICmsSearchEngineManager;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.StringReader;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,7 +58,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Properties;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
@@ -174,41 +169,69 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
             @Override
             protected ContentDto toDto(Content src) {
                 ContentDto content = new ContentDto(src);
-                convertResourceAttributesToDto(src.getAttributeList(), content.getAttributes());
+                fillAttributes(src.getAttributeList(), content.getAttributes());
                 return content;
             }
         };
     }
 
-    private void convertResourceAttributesToDto(List<AttributeInterface> srcAttrs, List<EntityAttributeDto> attrs) {
+    private void fillAttributes(List<AttributeInterface> srcAttrs, List<EntityAttributeDto> attrs) {
         for (EntityAttributeDto attr : attrs) {
-            AttributeInterface contentAttr = null;
             for (AttributeInterface srcAttr : srcAttrs) {
                 if (srcAttr.getName().equals(attr.getCode())) {
-                    contentAttr = srcAttr;
+                    fillAttribute(srcAttr, attr);
+                    break;
                 }
             }
+        }
+    }
 
-            if (contentAttr == null) {
-                continue;
-            }
+    private void fillAttribute(AttributeInterface attribute, EntityAttributeDto attributeDto) {
+        fillResourceAttribute(attribute, attributeDto);
+        fillCompositeAttribute(attribute, attributeDto);
+        fillListAttribute(attribute, attributeDto);
+        fillMonolistAttribute(attribute, attributeDto);
+        fillBooleanAttribute(attribute, attributeDto);
+    }
 
-            //Convert Resources to DTOs
-            if (attr.getCode().equals(contentAttr.getName())) {
-                if (attr.getValues() != null && AbstractResourceAttribute.class.isAssignableFrom(contentAttr.getClass())) {
-                    convertResourceAttributeToDto((AbstractResourceAttribute) contentAttr, attr);
-                } else if (attr.getCompositeElements() != null && CompositeAttribute.class.isAssignableFrom(contentAttr.getClass())) {
-                    CompositeAttribute compAttr = (CompositeAttribute) contentAttr;
-                    convertResourceAttributesToDto(compAttr.getAttributes(), attr.getCompositeElements());
-                } else if (attr.getElements() != null && (AbstractListAttribute.class.isAssignableFrom(contentAttr.getClass()))) {
-                    AbstractListAttribute listAttr = (AbstractListAttribute) contentAttr;
-                    convertResourceAttributesToDto(listAttr.getAttributes(), attr.getElements());
-                } else if (attr.getElements() != null && (CheckBoxAttribute.class.isAssignableFrom(contentAttr.getClass()))) {
-                    attr.setValue(((CheckBoxAttribute) contentAttr).getValue());
-                } else if (attr.getElements() != null && (BooleanAttribute.class.isAssignableFrom(contentAttr.getClass()))) {
-                    attr.setValue(((BooleanAttribute) contentAttr).getBooleanValue());
+    private void fillBooleanAttribute(AttributeInterface attribute, EntityAttributeDto attributeDto) {
+        if (attributeDto.getElements() != null && (CheckBoxAttribute.class.isAssignableFrom(attribute.getClass()))) {
+            attributeDto.setValue(((CheckBoxAttribute) attribute).getValue());
+        } else if (attributeDto.getElements() != null && (BooleanAttribute.class.isAssignableFrom(attribute.getClass()))) {
+            attributeDto.setValue(((BooleanAttribute) attribute).getBooleanValue());
+        }
+    }
+
+    private void fillResourceAttribute(AttributeInterface attribute, EntityAttributeDto attributeDto) {
+        if (attributeDto.getValues() != null && AbstractResourceAttribute.class.isAssignableFrom(attribute.getClass())) {
+            convertResourceAttributeToDto((AbstractResourceAttribute) attribute, attributeDto);
+        }
+    }
+
+    private void fillCompositeAttribute(AttributeInterface attribute, EntityAttributeDto attr) {
+        if (attr.getCompositeElements() != null && CompositeAttribute.class.isAssignableFrom(attribute.getClass())) {
+            CompositeAttribute compAttr = (CompositeAttribute) attribute;
+            fillAttributes(compAttr.getAttributes(), attr.getCompositeElements());
+        }
+    }
+
+    private void fillListAttribute(AttributeInterface attribute, EntityAttributeDto attributeDto) {
+        if (attributeDto.getElements() != null && (ListAttribute.class.isAssignableFrom(attribute.getClass()))) {
+            ListAttribute listAttribute = (ListAttribute) attribute;
+            for (Entry<String, List<EntityAttributeDto>> entry : attributeDto.getListElements().entrySet()) {
+                int index = 0;
+                for (AttributeInterface element : listAttribute.getAttributeList(entry.getKey())) {
+                    fillAttribute(element, entry.getValue().get(index));
+                    index++;
                 }
             }
+        }
+    }
+
+    private void fillMonolistAttribute(AttributeInterface attribute, EntityAttributeDto attributeDto) {
+        if (attributeDto.getElements() != null && (MonoListAttribute.class.isAssignableFrom(attribute.getClass()))) {
+            MonoListAttribute monolistAttribute = (MonoListAttribute) attribute;
+            fillAttributes(monolistAttribute.getAttributes(), attributeDto.getElements());
         }
     }
 

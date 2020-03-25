@@ -1,0 +1,23 @@
+[
+    {
+        "mainGroup":"free",
+        "description":"compositeoffiles",
+        "attributes":[
+            {
+                "code":"composite",
+                "compositeelements":[
+                    {
+                        "code":"file-compo",
+                        "values":{
+                            "it":{
+                                "id":"resourceIdPlaceHolder"
+                            }
+                        }
+                    }
+                ],
+                "name":"CompositeOfFiles"
+            }
+        ],
+        "typeCode":"COF"
+    }
+]

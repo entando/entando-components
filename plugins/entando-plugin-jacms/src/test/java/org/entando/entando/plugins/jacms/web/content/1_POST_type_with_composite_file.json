@@ -1,0 +1,18 @@
+{
+    "code": "COF",
+    "name": "Content Type COF",
+    "attributes": [
+        {
+            "code": "composite",
+            "type": "Composite",
+            "name": "Composite Description File",
+            "compositeAttributes":[
+                {
+                    "code": "file-compo",
+                    "type": "Attach",
+                    "name": "Description of file attribute"
+                }
+            ]
+        }
+    ]
+}

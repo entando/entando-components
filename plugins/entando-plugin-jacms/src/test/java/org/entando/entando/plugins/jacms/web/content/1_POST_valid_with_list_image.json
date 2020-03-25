@@ -1,0 +1,41 @@
+[
+    {
+        "groups":[
+
+        ],
+        "mainGroup":"free",
+        "description":"listofimages",
+        "categories":[
+
+        ],
+        "attributes":[
+            {
+                "code":"ListOfImag",
+                "listelements":{
+                    "en":[
+                        {
+                            "code":"ListOfImag",
+                            "value":"",
+                            "values":{
+                                "it":{
+                                    "id":"resourceIdPlaceHolder"
+                                }
+                            }
+                        },
+                        {
+                            "code":"ListOfImag",
+                            "value":"",
+                            "values":{
+                                "it":{
+                                    "id":"resourceIdPlaceHolder"
+                                }
+                            }
+                        }
+                    ]
+                },
+                "name":"ListOfImages"
+            }
+        ],
+        "typeCode":"LST"
+    }
+]

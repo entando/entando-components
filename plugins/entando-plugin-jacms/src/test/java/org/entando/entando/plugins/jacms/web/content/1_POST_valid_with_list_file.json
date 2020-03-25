@@ -1,0 +1,41 @@
+[
+    {
+        "groups":[
+
+        ],
+        "mainGroup":"free",
+        "description":"listoffiles",
+        "categories":[
+
+        ],
+        "attributes":[
+            {
+                "code":"ListOfFile",
+                "listelements":{
+                    "en":[
+                        {
+                            "code":"ListOfFile",
+                            "value":"",
+                            "values":{
+                                "it":{
+                                    "id":"resourceIdPlaceHolder"
+                                }
+                            }
+                        },
+                        {
+                            "code":"ListOfFile",
+                            "value":"",
+                            "values":{
+                                "it":{
+                                    "id":"resourceIdPlaceHolder"
+                                }
+                            }
+                        }
+                    ]
+                },
+                "name":"ListOfFiles"
+            }
+        ],
+        "typeCode":"LTF"
+    }
+]

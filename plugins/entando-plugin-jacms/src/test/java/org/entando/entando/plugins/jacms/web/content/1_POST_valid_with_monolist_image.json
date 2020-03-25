@@ -1,0 +1,23 @@
+[
+    {
+        "mainGroup":"free",
+        "description":"monolistofimages",
+        "attributes":[
+            {
+                "code":"MonolistOfImag",
+                "elements":[
+                    {
+                        "code":"MonolistOfImag",
+                        "values":{
+                            "it":{
+                                "id":"resourceIdPlaceHolder"
+                            }
+                        }
+                    }
+                ],
+                "name":"MonolistOfImages"
+            }
+        ],
+        "typeCode":"MON"
+    }
+]
