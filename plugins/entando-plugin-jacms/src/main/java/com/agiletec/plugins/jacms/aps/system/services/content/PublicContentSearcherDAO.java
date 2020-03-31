@@ -70,7 +70,7 @@ public class PublicContentSearcherDAO extends AbstractContentSearcherDAO impleme
 	@Override
 	protected PreparedStatement buildStatement(EntitySearchFilter[] filters,
 			String[] categories, boolean orClauseCategoryFilter, 
-			Collection<String> userGroupCodes, boolean selectAll, boolean isCount, Connection conn) {
+			Collection<String> userGroupCodes, boolean isCount, boolean selectAll, Connection conn) {
 		ArrayList<String> groups = new ArrayList<>();
 		ArrayList<EntitySearchFilter> remainingFilters = new ArrayList<>();
 		for (EntitySearchFilter filter : filters) {
