@@ -64,7 +64,7 @@ public class TestContentManager extends BaseTestCase {
         super.setUp();
         this.init();
     }
-
+    
     public void testSearchContents_1_1() throws Throwable {
         List<String> contentIds = this._contentManager.searchId(null);
         assertNotNull(contentIds);
@@ -613,7 +613,7 @@ public class TestContentManager extends BaseTestCase {
         List<String> contents = _contentManager.loadPublicContentsId(null, null, null);
         assertEquals(15, contents.size());
     }
-
+    
     public void testLoadPublicEvents_1() throws ApsSystemException {
         List<String> contents = _contentManager.loadPublicContentsId("EVN", null, null, null);
         String[] expectedFreeContentsId = {"EVN194", "EVN193",
@@ -634,7 +634,26 @@ public class TestContentManager extends BaseTestCase {
         assertTrue(contents.contains("EVN103"));
         assertTrue(contents.contains("EVN41"));
     }
-
+    
+    public void testLoadPaginatedPublicEvents_1() throws ApsSystemException {
+        List<String> groupCodes = new ArrayList<>();
+        groupCodes.add(Group.FREE_GROUP_NAME);
+        EntitySearchFilter filterId = new EntitySearchFilter(IContentManager.ENTITY_ID_FILTER_KEY, false);
+        filterId.setOrder(FieldSearchFilter.Order.ASC);
+        EntitySearchFilter filterType = new EntitySearchFilter(IContentManager.ENTITY_TYPE_CODE_FILTER_KEY, false, "EVN", true);
+        EntitySearchFilter filterLimit = new EntitySearchFilter(5, 3);
+        EntitySearchFilter[] filters = {filterId, filterType, filterLimit};
+        
+        SearcherDaoPaginatedResult<String> result = _contentManager.getPaginatedPublicContentsId(null, true, filters, groupCodes);
+        String[] expectedFreeContentsId = {/*"EVN191", "EVN192", "EVN193", */"EVN194",
+            "EVN20", "EVN21", "EVN23", "EVN24"/*, "EVN25"*/};
+        assertEquals(9, result.getCount().intValue());
+        assertEquals(expectedFreeContentsId.length, result.getList().size());
+        for (int i = 0; i < expectedFreeContentsId.length; i++) {
+            assertEquals(result.getList().get(i), expectedFreeContentsId[i]);
+        }
+    }
+    
     public void testLoadPublicEvents_2() throws ApsSystemException {
         List<String> groups = new ArrayList<>();
         groups.add("coach");
