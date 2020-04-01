@@ -577,37 +577,6 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
     }
 
     @Test
-    public void testAddContentWithLinkWithoutValues() throws Exception {
-        String newContentId = null;
-        try {
-            Assert.assertNull(this.contentManager.getEntityPrototype("CML"));
-            String accessToken = this.createAccessToken();
-
-            this.executeContentTypePost("1_POST_type_with_link.json", accessToken, status().isCreated());
-            Assert.assertNotNull(this.contentManager.getEntityPrototype("CML"));
-
-            this.executeContentPost("1_POST_invalid_with_link_without_values.json", accessToken, status().isBadRequest())
-                    .andDo(print())
-                    .andExpect(jsonPath("$.payload.size()", is(0)))
-                    .andExpect(jsonPath("$.errors.size()", is(1)))
-                    .andExpect(jsonPath("$.metaData.size()", is(0)))
-                    .andExpect(jsonPath("$.errors[0].code", is("4")))
-                    .andExpect(jsonPath("$.errors[0].message", is("Attribute 'link1' Invalid: The Link attribute is invalid or incomplete")));
-
-        } finally {
-            if (null != newContentId) {
-                Content newContent = this.contentManager.loadContent(newContentId, false);
-                if (null != newContent) {
-                    this.contentManager.deleteContent(newContent);
-                }
-            }
-            if (null != this.contentManager.getEntityPrototype("CML")) {
-                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("CML");
-            }
-        }
-    }
-
-    @Test
     public void testAddUpdateContentWithBooleanAttributeThenEditIt() throws Exception {
         String newContentId = null;
         try {
@@ -3314,6 +3283,135 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                 ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("CML");
             }
             this.pageManager.deletePage(pageCode);
+        }
+    }
+
+    @Test
+    public void testAddContentWithEmptyLinkAttribute() throws Exception {
+        String newContentId = null;
+        try {
+            Assert.assertNull(this.contentManager.getEntityPrototype("CML"));
+            String accessToken = this.createAccessToken();
+
+            this.executeContentTypePost("1_POST_type_with_link.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype("CML"));
+
+            ResultActions result = this.executeContentPost("1_POST_valid_with_empty_link.json", accessToken, status().isOk())
+                    .andDo(print())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("link1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.urlDest", Matchers.isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.resourceDest", Matchers.isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.destType", is(0)))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.pageDest", Matchers.isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.contentDest", Matchers.isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.symbolicDestination", is("#!!#")));
+
+            String bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
+            Content newContent = this.contentManager.loadContent(newContentId, false);
+            Assert.assertNotNull(newContent);
+            this.contentManager.deleteContent(newContent);
+
+            result = this.executeContentPost("1_POST_valid_with_empty_link2.json", accessToken, status().isOk())
+                    .andDo(print())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("link1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.urlDest", Matchers.isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.resourceDest", Matchers.isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.destType", is(0)))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.pageDest", Matchers.isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.contentDest", Matchers.isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.symbolicDestination", is("#!!#")));
+
+            bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
+            newContent = this.contentManager.loadContent(newContentId, false);
+            Assert.assertNotNull(newContent);
+            this.contentManager.deleteContent(newContent);
+
+            result = this.executeContentPost("1_POST_valid_with_empty_link3.json", accessToken, status().isOk())
+                    .andDo(print())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("link1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.urlDest", Matchers.isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.resourceDest", Matchers.isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.destType", is(0)))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.pageDest", Matchers.isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.contentDest", Matchers.isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.symbolicDestination", is("#!!#")));
+
+            bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
+            newContent = this.contentManager.loadContent(newContentId, false);
+            Assert.assertNotNull(newContent);
+            this.contentManager.deleteContent(newContent);
+
+            result = this.executeContentPost("1_POST_valid_with_empty_link4.json", accessToken, status().isOk())
+                    .andDo(print())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("link1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.urlDest", Matchers.isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.resourceDest", Matchers.isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.destType", is(0)))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.pageDest", Matchers.isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.contentDest", Matchers.isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.symbolicDestination", is("#!!#")));
+
+            bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
+            newContent = this.contentManager.loadContent(newContentId, false);
+            Assert.assertNotNull(newContent);
+            this.contentManager.deleteContent(newContent);
+
+            result = this.executeContentPost("1_POST_valid_with_empty_link5.json", accessToken, status().isOk())
+                    .andDo(print())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("link1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.urlDest", Matchers.isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.resourceDest", Matchers.isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.destType", is(0)))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.pageDest", Matchers.isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.contentDest", Matchers.isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.symbolicDestination", is("#!!#")));
+
+            bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
+            newContent = this.contentManager.loadContent(newContentId, false);
+            Assert.assertNotNull(newContent);
+            this.contentManager.deleteContent(newContent);
+
+
+        } finally {
+            if (null != newContentId) {
+                Content newContent = this.contentManager.loadContent(newContentId, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != this.contentManager.getEntityPrototype("CML")) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("CML");
+            }
         }
     }
 
