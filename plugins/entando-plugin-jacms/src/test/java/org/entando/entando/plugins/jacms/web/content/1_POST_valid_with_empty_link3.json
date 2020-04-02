@@ -1,0 +1,19 @@
+[{
+    "typeCode":"CML",
+    "mainGroup":"free",
+    "description":"ContentWithEmptyLink",
+    "attributes":[
+        {
+            "code":"link1",
+            "value":{
+                "resourceDest":null,
+                "pageDest":null,
+                "contentDest":null,
+                "destType":0,
+                "urlDest":null,
+                "symbolicDestination":"#!!#"
+            },
+            "values":null
+        }
+    ]
+}]

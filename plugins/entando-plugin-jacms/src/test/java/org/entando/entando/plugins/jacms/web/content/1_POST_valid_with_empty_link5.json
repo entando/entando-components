@@ -1,0 +1,12 @@
+[{
+    "typeCode":"CML",
+    "mainGroup":"free",
+    "description":"ContentWithEmptyLink",
+    "attributes":[
+        {
+            "code":"link1",
+            "value":{},
+            "values":{}
+        }
+    ]
+}]
