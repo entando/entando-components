@@ -141,6 +141,8 @@ public interface ResourceInterface {
 
     public String getDefaultUrlPath();
 
+    public String getUnprotectedUrlPath();
+
     /**
      * Restituisce la cartella (a partire dalla cartella delle risorse) dove è
      * posizionata la risorsa.
