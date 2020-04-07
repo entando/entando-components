@@ -94,6 +94,8 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
     private IWidgetTypeManager widgetTypeManager;
 
     private ObjectMapper mapper = new ObjectMapper();
+
+    public static final String PLACEHOLDER_STRING = "resourceIdPlaceHolder";
     
     @Test
     public void testGetContentWithModel() throws Exception {
@@ -1861,17 +1863,25 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         return executeContentPost(fileName, accessToken, expected, null);
     }
 
-    private ResultActions executeContentPost(String fileName, String accessToken, ResultMatcher expected, String resourceId) throws Exception {
+    private ResultActions executeContentPost(String fileName, String accessToken, ResultMatcher expected, String... replacements) throws Exception {
         InputStream isJsonPostValid = this.getClass().getResourceAsStream(fileName);
         String jsonPostValid = FileTextReader.getText(isJsonPostValid);
-        if (resourceId != null) {
-            jsonPostValid = jsonPostValid.replace("resourceIdPlaceHolder", resourceId);
+        if (replacements != null) {
+            String placeholderString = PLACEHOLDER_STRING;
+            for (int i = replacements.length-1; i >= 0; i--) {
+                StringBuilder sb = new StringBuilder(PLACEHOLDER_STRING);
+                if (i > 0) {
+                    sb.append(i+1);
+                }
+                jsonPostValid = jsonPostValid.replace(sb.toString(), replacements[i]);
+            }
         }
         ResultActions result = mockMvc
                 .perform(post("/plugins/cms/contents")
                         .content(jsonPostValid)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));
+        result.andDo(print());
         result.andExpect(expected);
         return result;
     }
@@ -3411,6 +3421,245 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             }
             if (null != this.contentManager.getEntityPrototype("CML")) {
                 ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("CML");
+            }
+        }
+    }
+
+    @Test
+    public void testContentWithReference() throws Exception {
+        String newContentId1 = null;
+        String newContentId2 = null;
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.CONTENT_EDITOR)
+                .build();
+        try {
+            Assert.assertNull(this.contentManager.getEntityPrototype("CML"));
+            String accessToken = this.createAccessToken();
+
+            this.executeContentTypePost("1_POST_type_with_link.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype("CML"));
+
+            ResultActions result = this.executeContentPost("1_POST_valid_with_link.json", accessToken, status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("link1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value", Matchers.isEmptyOrNullString()));
+
+            String bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId1 = JsonPath.read(bodyResult, "$.payload[0].id");
+            Content newContent = this.contentManager.loadContent(newContentId1, false);
+
+            Assert.assertNotNull(newContent);
+
+            ContentStatusRequest contentStatusRequest = new ContentStatusRequest();
+            contentStatusRequest.setStatus("published");
+            result = mockMvc
+                    .perform(put("/plugins/cms/contents/{code}/status", newContentId1)
+                            .content(mapper.writeValueAsString(contentStatusRequest))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isOk());
+
+            result = this.executeContentPost("1_POST_valid_with_link_to_content.json", accessToken, status().isOk(), newContentId1)
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("link1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.contentDest", is(newContentId1)));
+
+            bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId2 = JsonPath.read(bodyResult, "$.payload[0].id");
+
+            result = mockMvc
+                    .perform(put("/plugins/cms/contents/{code}/status", newContentId2)
+                            .content(mapper.writeValueAsString(contentStatusRequest))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isOk());
+
+            result = mockMvc
+                    .perform(get("/plugins/cms/contents/{code}", newContentId1)
+                            .sessionAttr("user", user)
+                            .header("Authorization", "Bearer " + accessToken));
+            result
+                    .andDo(print())
+                    .andExpect(jsonPath("$.payload.id", is(newContentId1)))
+                    .andExpect(jsonPath("$.payload.references.CmsPageManagerWrapper", is(false)))
+                    .andExpect(jsonPath("$.payload.references.jacmsContentManager", is(true)));
+
+            contentStatusRequest.setStatus("draft");
+            result = mockMvc
+                    .perform(put("/plugins/cms/contents/{code}/status", newContentId1)
+                            .content(mapper.writeValueAsString(contentStatusRequest))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.errors.size()", is(1)))
+                    .andExpect(jsonPath("$.errors[0].code", is("2")))
+                    .andExpect(jsonPath("$.errors[0].message", is("Content '" + newContentId1 + "' cannot be unpublished because it is referenced")));
+
+        } finally {
+            if (null != newContentId2) {
+                Content newContent = this.contentManager.loadContent(newContentId2, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != newContentId1) {
+                Content newContent = this.contentManager.loadContent(newContentId1, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != this.contentManager.getEntityPrototype("CML")) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("CML");
+            }
+        }
+    }
+
+    @Test
+    public void testContentWithReferenceBatch() throws Exception {
+        String newContentId1 = null;
+        String newContentId2 = null;
+        String newContentId3 = null;
+
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.CONTENT_EDITOR)
+                .build();
+        try {
+            Assert.assertNull(this.contentManager.getEntityPrototype("LNK"));
+            String accessToken = this.createAccessToken();
+
+            this.executeContentTypePost("1_POST_type_with_links.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype("LNK"));
+
+            ResultActions result = this.executeContentPost("1_POST_valid_with_empty_links.json", accessToken, status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("link1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value", Matchers.isEmptyOrNullString()));
+
+            String bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId1 = JsonPath.read(bodyResult, "$.payload[0].id");
+            Content newContent = this.contentManager.loadContent(newContentId1, false);
+
+            Assert.assertNotNull(newContent);
+
+            ContentStatusRequest contentStatusRequest = new ContentStatusRequest();
+            contentStatusRequest.setStatus("published");
+            result = mockMvc
+                    .perform(put("/plugins/cms/contents/{code}/status", newContentId1)
+                            .content(mapper.writeValueAsString(contentStatusRequest))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isOk());
+
+            result = this.executeContentPost("1_POST_valid_with_empty_links.json", accessToken, status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("link1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value", Matchers.isEmptyOrNullString()));
+
+            bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId2 = JsonPath.read(bodyResult, "$.payload[0].id");
+            newContent = this.contentManager.loadContent(newContentId2, false);
+
+            Assert.assertNotNull(newContent);
+
+            result = mockMvc
+                    .perform(put("/plugins/cms/contents/{code}/status", newContentId2)
+                            .content(mapper.writeValueAsString(contentStatusRequest))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isOk());
+
+            result = this.executeContentPost("1_POST_valid_with_link_to_contents.json", accessToken, status().isOk(), newContentId1, newContentId2)
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("link1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.contentDest", is(newContentId1)))
+                    .andExpect(jsonPath("$.payload[0].attributes[1].code", is("link2")))
+                    .andExpect(jsonPath("$.payload[0].attributes[1].value.contentDest", is(newContentId2)));
+
+            bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId3 = JsonPath.read(bodyResult, "$.payload[0].id");
+
+            result = mockMvc
+                    .perform(put("/plugins/cms/contents/{code}/status", newContentId3)
+                            .content(mapper.writeValueAsString(contentStatusRequest))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isOk());
+
+            result = mockMvc
+                    .perform(get("/plugins/cms/contents/{code}", newContentId1)
+                            .sessionAttr("user", user)
+                            .header("Authorization", "Bearer " + accessToken));
+            result
+                    .andDo(print())
+                    .andExpect(jsonPath("$.payload.id", is(newContentId1)))
+                    .andExpect(jsonPath("$.payload.references.CmsPageManagerWrapper", is(false)))
+                    .andExpect(jsonPath("$.payload.references.jacmsContentManager", is(true)));
+
+            result = mockMvc
+                    .perform(get("/plugins/cms/contents/{code}", newContentId2)
+                            .sessionAttr("user", user)
+                            .header("Authorization", "Bearer " + accessToken));
+            result
+                    .andDo(print())
+                    .andExpect(jsonPath("$.payload.id", is(newContentId2)))
+                    .andExpect(jsonPath("$.payload.references.CmsPageManagerWrapper", is(false)))
+                    .andExpect(jsonPath("$.payload.references.jacmsContentManager", is(true)));
+
+            BatchContentStatusRequest batchContentStatusRequest = new BatchContentStatusRequest();
+            batchContentStatusRequest.setStatus("draft");
+            batchContentStatusRequest.getCodes().add(newContentId1);
+            batchContentStatusRequest.getCodes().add(newContentId2);
+
+            result = mockMvc
+                    .perform(put("/plugins/cms/contents/status")
+                            .content(mapper.writeValueAsString(batchContentStatusRequest))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.errors.size()", is(2)))
+                    .andExpect(jsonPath("$.errors[0].code", is("2")))
+                    .andExpect(jsonPath("$.errors[0].message", is("Content '" + newContentId1 + "' cannot be unpublished because it is referenced")))
+                    .andExpect(jsonPath("$.errors[1].code", is("2")))
+                    .andExpect(jsonPath("$.errors[1].message", is("Content '" + newContentId2 + "' cannot be unpublished because it is referenced")));
+
+        } finally {
+            if (null != newContentId3) {
+                Content newContent = this.contentManager.loadContent(newContentId3, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != newContentId2) {
+                Content newContent = this.contentManager.loadContent(newContentId2, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != newContentId1) {
+                Content newContent = this.contentManager.loadContent(newContentId1, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != this.contentManager.getEntityPrototype("LNK")) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("LNK");
             }
         }
     }
