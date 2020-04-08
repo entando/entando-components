@@ -511,9 +511,15 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
 
     @Override
     public ContentDto updateContentStatus(String code, String status, UserDetails user) {
+        return updateContentStatus(code, status, user, null);
+    }
+
+    private ContentDto updateContentStatus(String code, String status, UserDetails user, BeanPropertyBindingResult bindingResult) {
         try {
             Content content = this.getContentManager().loadContent(code, false);
-            BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(code, "content");
+            if (bindingResult == null) {
+                bindingResult = new BeanPropertyBindingResult(code, "content");
+            }
             if (null == content) {
                 throw new ResourceNotFoundException(ERRCODE_CONTENT_NOT_FOUND, "content", code);
             }
@@ -552,10 +558,11 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
     
     @Override
     public List<ContentDto> updateContentsStatus(List<String> codes, String status, UserDetails user) {
-        return codes.stream()
+        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(codes, "content");
+        List<ContentDto> result = codes.stream()
                 .map(code -> {
                     try {
-                        return updateContentStatus(code, status, user);
+                        return updateContentStatus(code, status, user, bindingResult);
                     } catch (Exception e) {
                         logger.error("Error in updating content(code: {}) status {}", code, e);
                         return null;
@@ -563,6 +570,11 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
                 })
                 .filter(content -> content != null)
                 .collect(Collectors.toList());
+        if (bindingResult.hasErrors()) {
+            throw new ValidationGenericException(bindingResult);
+        }
+
+        return result;
     }
 
     @Override
