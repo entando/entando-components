@@ -43,7 +43,7 @@ public class TestBaseMessageRenderer extends ApsPluginBaseTestCase {
 		String model = "#if($message.Company.text != \"\") $message.Address.text $i18n.getLabel(\"PAGE_MODEL\") #end";
 		
 		String rendereEntity = this._entityRenderer.render(message, model, "en", false);
-		assertEquals(" Address page model ", rendereEntity);
+		assertEquals(" Address page template ", rendereEntity);
 	}
     
 	private void init() throws Exception {

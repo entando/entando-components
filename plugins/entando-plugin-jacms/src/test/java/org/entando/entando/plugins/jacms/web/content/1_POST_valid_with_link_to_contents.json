@@ -1,0 +1,32 @@
+[{
+    "groups":[
+    ],
+    "mainGroup":"free",
+    "description":"ContentWithLinkToAContent",
+    "categories":[
+        "cat1"
+    ],
+    "attributes":[
+        {
+            "code": "link1",
+            "value":{
+                "destType": 3,
+                "contentDest": "resourceIdPlaceHolder"
+            },
+            "values":{
+                "it":"My Content Link"
+            }
+        },
+        {
+            "code": "link2",
+            "value":{
+                "destType": 3,
+                "contentDest": "resourceIdPlaceHolder2"
+            },
+            "values":{
+                "it":"My Content Link"
+            }
+        }
+    ],
+    "typeCode":"LNK"
+}]

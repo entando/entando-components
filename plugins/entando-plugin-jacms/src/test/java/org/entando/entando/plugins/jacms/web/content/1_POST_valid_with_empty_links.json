@@ -1,0 +1,13 @@
+[{
+    "id":"anything",
+    "typeCode":"LNK",
+    "typeDescription":"Type for test",
+    "description":"New Content for test",
+    "mainGroup":"free",
+    "groups":[
+        "group1",
+        "group2"
+    ],
+    "attributes": [
+    ]
+}]
