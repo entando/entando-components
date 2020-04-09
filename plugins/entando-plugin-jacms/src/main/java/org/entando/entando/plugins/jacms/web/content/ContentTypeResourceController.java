@@ -22,7 +22,6 @@ import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.Content
 import com.google.common.collect.ImmutableMap;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -42,6 +41,7 @@ import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.common.model.RestResponse;
 import org.entando.entando.web.common.model.SimpleRestResponse;
+import org.entando.entando.web.component.ComponentUsage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +54,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class ContentTypeResourceController implements ContentTypeResource {
+    public static final String COMPONENT_ID = "contentTypes";
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -120,6 +121,18 @@ public class ContentTypeResourceController implements ContentTypeResource {
         return maybeContentType.map(contentTypeDto
                 -> ResponseEntity.ok(new SimpleRestResponse<>(contentTypeDto)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @Override
+    public ResponseEntity<SimpleRestResponse<ComponentUsage>> usage(@PathVariable("code") String code) {
+        logger.trace("get {} usage by code {}", COMPONENT_ID, code);
+        ComponentUsage usage = ComponentUsage.builder()
+                .type(COMPONENT_ID)
+                .code(code)
+                .usage(service.usage(code))
+                .build();
+
+        return new ResponseEntity<>(new SimpleRestResponse<>(usage), HttpStatus.OK);
     }
 
     @Override

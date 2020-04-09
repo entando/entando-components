@@ -205,6 +205,8 @@ public interface IContentManager extends IEntityManager {
     public List<String> loadWorkContentsId(String[] categories, EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException;
 
     public List<String> loadWorkContentsId(String[] categories, boolean orClauseCategoryFilter, EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException;
+
+    public Integer countWorkContents(String[] categories, boolean orClauseCategoryFilter, EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException;
     
     public SearcherDaoPaginatedResult<String> getPaginatedWorkContentsId(String[] categories, 
             boolean orClauseCategoryFilter, EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException;

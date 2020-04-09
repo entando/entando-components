@@ -16,6 +16,7 @@ package org.entando.entando.plugins.jacms.aps.system.services.content;
 import static org.entando.entando.plugins.jacms.web.content.ContentController.ERRCODE_CONTENT_NOT_FOUND;
 import static org.entando.entando.plugins.jacms.web.content.ContentController.ERRCODE_CONTENT_REFERENCES;
 
+import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.IManager;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
@@ -53,12 +54,14 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInt
 import com.agiletec.plugins.jacms.aps.system.services.searchengine.ICmsSearchEngineManager;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
@@ -349,6 +352,22 @@ public class ContentService extends AbstractEntityService<Content, ContentDto>
         } catch (Exception t) {
             logger.error("error in search contents", t);
             throw new RestServerError("error in search contents", t);
+        }
+    }
+
+    @Override
+    public Integer countContentsByType(String contentType) {
+        try {
+            EntitySearchFilter[] filters = new EntitySearchFilter[] {
+                new EntitySearchFilter("typeCode", false, contentType, false)
+            };
+
+            List<String> userGroupCodes = Collections.singletonList("administrators");
+
+            return getContentManager().countWorkContents(null, false, filters, userGroupCodes);
+        } catch (Exception t) {
+            logger.error("error in contents count by type", t);
+            throw new RestServerError("error in contents count by type", t);
         }
     }
 
