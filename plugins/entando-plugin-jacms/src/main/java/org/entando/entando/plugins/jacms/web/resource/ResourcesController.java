@@ -67,7 +67,7 @@ public class ResourcesController {
         logger.debug("REST request - list image resources");
 
         resourceValidator.validateRestListRequest(requestList, AssetDto.class);
-        PagedMetadata<AssetDto> result = service.listAssets(type, requestList);
+        PagedMetadata<AssetDto> result = service.listAssets(type, requestList, extractCurrentUser());
         resourceValidator.validateRestListResult(requestList, result);
         return ResponseEntity.ok(new PagedRestResponse<>(result));
     }
