@@ -1,0 +1,20 @@
+[{
+    "groups":[
+    ],
+    "mainGroup":"free",
+    "description":"ContentWithLinkToAPage",
+    "categories":[
+        "cat1"
+    ],
+    "attributes":[
+        {
+            "code": "link1",
+            "value": {
+                "destType": 1,
+                "urlDest": "https://myurl.com"
+            },
+            "values": null
+        }
+    ],
+    "typeCode":"CML"
+}]
