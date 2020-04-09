@@ -12,12 +12,10 @@ import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.exception.ApsException;
 import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.authorization.Authorization;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.group.Group;
-import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.AttachResource;
@@ -27,7 +25,6 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ImageResour
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInstance;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.util.IImageDimensionReader;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,7 +42,6 @@ import org.entando.entando.plugins.jacms.web.resource.model.AssetDto;
 import org.entando.entando.plugins.jacms.web.resource.model.FileAssetDto;
 import org.entando.entando.plugins.jacms.web.resource.model.ImageAssetDto;
 import org.entando.entando.plugins.jacms.web.resource.model.ImageMetadataDto;
-import org.entando.entando.plugins.jacms.web.resource.model.ImageMetadataDto.ImageMetadataDtoBuilder;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.Filter;
 import org.entando.entando.web.common.model.FilterOperator;
@@ -82,15 +78,14 @@ public class ResourcesService {
     @Value("#{'${jacms.attachResource.allowedExtensions}'.split(',')}")
     private List<String> fileAllowedExtensions;
 
-    public PagedMetadata<AssetDto> listAssets(String type, RestListRequest requestList, UserDetails user) {
+    public PagedMetadata<AssetDto> listAssets(String type, RestListRequest requestList) {
         List<AssetDto> assets = new ArrayList<>();
         try {
             List<String> resourceIds = resourceManager.searchResourcesId(createSearchFilters(type, requestList),
                     extractCategoriesFromFilters(requestList));
 
             for(String id : resourceIds) {
-                ResourceInterface resourceInterface = resourceManager.loadResource(id);
-                assets.add(convertResourceToDto(resourceInterface, checkUserPermission(user, resourceInterface)));
+                assets.add(convertResourceToDto(resourceManager.loadResource(id)));
             }
 
         } catch (ApsException e) {
@@ -102,24 +97,6 @@ public class ResourcesService {
         pagedResults.setBody(requestList.getSublist(assets));
 
         return pagedResults;
-    }
-
-    private boolean checkUserPermission(UserDetails user, ResourceInterface resourceInterface) {
-        if (user.getAuthorizations() != null) {
-            for (Authorization authorization : user.getAuthorizations()) {
-                if (authorization.getRole() != null && authorization.getRole().getPermissions() != null && authorization
-                        .getRole().getPermissions().contains(
-                                Permission.SUPERUSER)) {
-                    return true;
-                }
-                if (authorization.getGroup() != null && authorization.getGroup().getName() != null && authorization
-                        .getGroup().getName()
-                        .equals(resourceInterface.getMainGroup())) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     public AssetDto createAsset(String type, MultipartFile file, String group, List<String> categories, UserDetails user) {
@@ -139,10 +116,6 @@ public class ResourcesService {
             resourceFile.setCategories(convertCategories(categories));
             resourceFile.setOwner(user.getUsername());
 
-            File convFile = new File(System.getProperty("java.io.tmpdir")+"/"+file.getOriginalFilename());
-            file.transferTo(convFile);
-            resourceFile.setFile(convFile);
-            
             ResourceInterface resource = resourceManager.addResource(resourceFile);
             return convertResourceToDto(resourceManager.loadResource(resource.getId()));
         } catch (ApsSystemException e) {
@@ -431,16 +404,12 @@ public class ResourcesService {
     }
 
     public AssetDto convertResourceToDto(ResourceInterface resource) {
-        return convertResourceToDto(resource, false);
-    }
-
-    private AssetDto convertResourceToDto(ResourceInterface resource, boolean showUnprotectedUrl) {
         String type = unconvertResourceType(resource.getType());
 
         if (ImageAssetDto.RESOURCE_TYPE.equals(type)) {
-            return convertImageResourceToDto((ImageResource) resource, showUnprotectedUrl);
+            return convertImageResourceToDto((ImageResource) resource);
         } else if (FileAssetDto.RESOURCE_TYPE.equals(type)) {
-            return convertFileResourceToDto((AttachResource) resource, showUnprotectedUrl);
+            return convertFileResourceToDto((AttachResource) resource);
         } else {
             log.error("Resource type not allowed");
             BeanPropertyBindingResult errors = new BeanPropertyBindingResult(type, "resources.file.type");
@@ -449,7 +418,7 @@ public class ResourcesService {
         }
     }
 
-    private ImageAssetDto convertImageResourceToDto(ImageResource resource, boolean showUnprotectedUrl) {
+    private ImageAssetDto convertImageResourceToDto(ImageResource resource) {
         ImageAssetDto.ImageAssetDtoBuilder builder = ImageAssetDto.builder()
                 .id(resource.getId())
                 .name(resource.getMasterFileName())
@@ -460,7 +429,10 @@ public class ResourcesService {
                 .categories(resource.getCategories().stream()
                         .map(Category::getCode).collect(Collectors.toList()))
                 .metadata(resource.getMetadata())
-                .version(getImageMetadataDto(resource, showUnprotectedUrl))
+                .version(ImageMetadataDto.builder()
+                        .path(resource.getImagePath("0"))
+                        .size(resource.getDefaultInstance().getFileLength())
+                        .build())
                 .owner(resource.getOwner());
 
         for (ImageResourceDimension dimensions : getImageDimensions()) {
@@ -471,38 +443,17 @@ public class ResourcesService {
                 continue;
             }
 
-            builder.version(getImageMetadataDto(resource, dimensions, instance, showUnprotectedUrl));
+            builder.version(ImageMetadataDto.builder()
+                    .path(resource.getImagePath(String.valueOf(dimensions.getIdDim())))
+                    .size(instance.getFileLength())
+                    .dimensions(String.format("%dx%d px", dimensions.getDimx(), dimensions.getDimy()))
+                    .build());
         }
 
         return builder.build();
     }
 
-    private ImageMetadataDto getImageMetadataDto(ImageResource resource, ImageResourceDimension dimensions,
-            ResourceInstance instance, boolean showUnprotectedUrl) {
-        ImageMetadataDtoBuilder imageMetadataDtoBuilder = ImageMetadataDto.builder();
-        if (showUnprotectedUrl) {
-            imageMetadataDtoBuilder.path(resource.getUnprotectedImagePath(String.valueOf(dimensions.getIdDim())));
-        } else {
-            imageMetadataDtoBuilder.path(resource.getImagePath(String.valueOf(dimensions.getIdDim())));
-        }
-        imageMetadataDtoBuilder.size(instance.getFileLength())
-                .dimensions(String.format("%dx%d px", dimensions.getDimx(), dimensions.getDimy()))
-                .build();
-        return imageMetadataDtoBuilder.build();
-    }
-
-    private ImageMetadataDto getImageMetadataDto(ImageResource resource, boolean showUnprotectedUrl) {
-        ImageMetadataDtoBuilder imageMetadataDtoBuilder = ImageMetadataDto.builder();
-        if (showUnprotectedUrl) {
-            imageMetadataDtoBuilder.path(resource.getUnprotectedImagePath("0"));
-        } else {
-            imageMetadataDtoBuilder.path(resource.getImagePath("0"));
-        }
-        imageMetadataDtoBuilder.size(resource.getDefaultInstance().getFileLength());
-        return imageMetadataDtoBuilder.build();
-    }
-
-    private FileAssetDto convertFileResourceToDto(AttachResource resource, boolean showUnprotectedUrl){
+    private FileAssetDto convertFileResourceToDto(AttachResource resource){
         return FileAssetDto.builder()
                 .id(resource.getId())
                 .name(resource.getMasterFileName())
