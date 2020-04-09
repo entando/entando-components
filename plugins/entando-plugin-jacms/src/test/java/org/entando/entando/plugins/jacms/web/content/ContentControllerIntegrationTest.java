@@ -3447,6 +3447,13 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                     .andExpect(jsonPath("$.metaData.size()", is(0)))
                     .andExpect(jsonPath("$.errors[0].code", is("4")))
                     .andExpect(jsonPath("$.errors[0].message", is("Attribute 'link1' Invalid: The Link attribute is invalid or incomplete")));
+
+            this.executeContentPost("1_POST_invalid_with_link4.json", accessToken, status().isBadRequest())
+                    .andExpect(jsonPath("$.payload.size()", is(0)))
+                    .andExpect(jsonPath("$.errors.size()", is(1)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+                    .andExpect(jsonPath("$.errors[0].code", is("4")))
+                    .andExpect(jsonPath("$.errors[0].message", is("Attribute 'link1' Invalid: The Link attribute is invalid or incomplete")));
         } finally {
             if (null != this.contentManager.getEntityPrototype("CML")) {
                 ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("CML");
