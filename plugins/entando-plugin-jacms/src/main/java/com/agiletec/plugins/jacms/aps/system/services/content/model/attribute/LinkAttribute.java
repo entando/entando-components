@@ -203,7 +203,19 @@ public class LinkAttribute extends TextAttribute implements IReferenceableAttrib
 
     @Override
     public Status getStatus() {
-        return (null != this.getSymbolicLink()) ? Status.VALUED : Status.EMPTY;
+        Status linkStatus =
+                (null != this.getSymbolicLink() && this.getSymbolicLink().getDestType() != 0) ? Status.VALUED : Status.EMPTY;
+        if (linkStatus.equals(Status.EMPTY)) {
+            return Status.EMPTY;
+        }
+        Status textStatus = super.getStatus();
+        if (!textStatus.equals(linkStatus)) {
+            return Status.INCOMPLETE;
+        }
+        if (textStatus.equals(linkStatus) && textStatus.equals(Status.VALUED)) {
+            return Status.VALUED;
+        }
+        return Status.EMPTY;
     }
 
     @Override

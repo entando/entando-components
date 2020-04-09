@@ -3426,6 +3426,42 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
     }
 
     @Test
+    public void testInvalidLinkMessage() throws Exception {
+        try {
+            Assert.assertNull(this.contentManager.getEntityPrototype("CML"));
+            String accessToken = this.createAccessToken();
+
+            this.executeContentTypePost("1_POST_type_with_link.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype("CML"));
+
+            this.executeContentPost("1_POST_invalid_with_link2.json", accessToken, status().isBadRequest())
+                    .andExpect(jsonPath("$.payload.size()", is(0)))
+                    .andExpect(jsonPath("$.errors.size()", is(1)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+                    .andExpect(jsonPath("$.errors[0].code", is("4")))
+                    .andExpect(jsonPath("$.errors[0].message", is("Attribute 'link1' Invalid: The Link attribute is invalid or incomplete")));
+
+            this.executeContentPost("1_POST_invalid_with_link3.json", accessToken, status().isBadRequest())
+                    .andExpect(jsonPath("$.payload.size()", is(0)))
+                    .andExpect(jsonPath("$.errors.size()", is(1)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+                    .andExpect(jsonPath("$.errors[0].code", is("4")))
+                    .andExpect(jsonPath("$.errors[0].message", is("Attribute 'link1' Invalid: The Link attribute is invalid or incomplete")));
+
+            this.executeContentPost("1_POST_invalid_with_link4.json", accessToken, status().isBadRequest())
+                    .andExpect(jsonPath("$.payload.size()", is(0)))
+                    .andExpect(jsonPath("$.errors.size()", is(1)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+                    .andExpect(jsonPath("$.errors[0].code", is("4")))
+                    .andExpect(jsonPath("$.errors[0].message", is("Attribute 'link1' Invalid: The Link attribute is invalid or incomplete")));
+        } finally {
+            if (null != this.contentManager.getEntityPrototype("CML")) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("CML");
+            }
+        }
+    }
+
+    @Test
     public void testContentWithReference() throws Exception {
         String newContentId1 = null;
         String newContentId2 = null;
