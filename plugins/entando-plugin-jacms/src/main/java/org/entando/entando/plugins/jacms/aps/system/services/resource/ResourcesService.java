@@ -28,10 +28,7 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceIns
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.util.IImageDimensionReader;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -142,6 +139,10 @@ public class ResourcesService {
             resourceFile.setCategories(convertCategories(categories));
             resourceFile.setOwner(user.getUsername());
 
+            File convFile = new File(System.getProperty("java.io.tmpdir")+"/"+file.getOriginalFilename());
+            file.transferTo(convFile);
+            resourceFile.setFile(convFile);
+            
             ResourceInterface resource = resourceManager.addResource(resourceFile);
             return convertResourceToDto(resourceManager.loadResource(resource.getId()));
         } catch (ApsSystemException e) {

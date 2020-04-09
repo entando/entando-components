@@ -246,6 +246,13 @@ public class ImageResource extends AbstractMultiInstanceResource {
             imOper.addImage();
             imOper.resize(dimension.getDimx(), dimension.getDimy());
             imOper.addImage();
+
+
+
+            logger.info("Bean {} ",bean);
+            logger.info("Bean.getFile {} ",bean.getFile());
+            logger.info("Bean path {} ", bean.getFile().getAbsoluteFile());
+            logger.info("Temp {}  {}", tempFile, tempFile.getAbsolutePath());
             convertCmd.run(imOper, bean.getFile().getAbsolutePath(), tempFile.getAbsolutePath());
             this.getStorageManager().saveFile(subPath, this.isProtectedResource(), new FileInputStream(tempFile));
             boolean deleted = tempFile.delete();
