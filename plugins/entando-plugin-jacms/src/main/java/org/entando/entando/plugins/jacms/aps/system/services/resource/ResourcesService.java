@@ -120,7 +120,7 @@ public class ResourcesService {
             File convFile = new File(System.getProperty("java.io.tmpdir")+"/"+file.getOriginalFilename());
             file.transferTo(convFile);
             resourceFile.setFile(convFile);
-            
+
             ResourceInterface resource = resourceManager.addResource(resourceFile);
             return convertResourceToDto(resourceManager.loadResource(resource.getId()));
         } catch (ApsSystemException e) {
