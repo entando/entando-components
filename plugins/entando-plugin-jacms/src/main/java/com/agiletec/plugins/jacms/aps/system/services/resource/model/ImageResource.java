@@ -132,7 +132,7 @@ public class ImageResource extends AbstractMultiInstanceResource {
             if(bean instanceof BaseResourceDataBean) {
                 ((BaseResourceDataBean)bean).setFile(tempMasterFile);
             }
-            
+
             setMetadata(getImgMetadata(tempMasterFile, ignoreMetadataKeys));
             ResourceInstance instance = new ResourceInstance();
             instance.setSize(0);
