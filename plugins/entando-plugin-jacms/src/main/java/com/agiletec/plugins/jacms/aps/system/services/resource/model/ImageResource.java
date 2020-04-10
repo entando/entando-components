@@ -21,13 +21,20 @@ import com.drew.imaging.ImageProcessingException;
 import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.Tag;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.swing.ImageIcon;
 import org.apache.commons.io.FilenameUtils;
-import org.im4java.core.*;
-import org.slf4j.*;
-
-import javax.swing.*;
-import java.io.*;
-import java.util.*;
+import org.im4java.core.ConvertCmd;
+import org.im4java.core.IMOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ImageResource extends AbstractMultiInstanceResource {
 
@@ -121,10 +128,16 @@ public class ImageResource extends AbstractMultiInstanceResource {
             String subPath = this.getDiskSubFolder() + masterImageFileName;
             this.getStorageManager().deleteFile(subPath, this.isProtectedResource());
             File tempMasterFile = this.saveTempFile("temp_" + masterImageFileName, bean.getInputStream());
+
+            if(bean instanceof BaseResourceDataBean) {
+                ((BaseResourceDataBean)bean).setFile(tempMasterFile);
+            }
+
             setMetadata(getImgMetadata(tempMasterFile, ignoreMetadataKeys));
             ResourceInstance instance = new ResourceInstance();
             instance.setSize(0);
             instance.setFileName(masterImageFileName);
+
             String mimeType = bean.getMimeType();
             instance.setMimeType(mimeType);
             instance.setFileLength(bean.getFileSize() + " Kb");
@@ -246,13 +259,6 @@ public class ImageResource extends AbstractMultiInstanceResource {
             imOper.addImage();
             imOper.resize(dimension.getDimx(), dimension.getDimy());
             imOper.addImage();
-
-
-
-            logger.info("Bean {} ",bean);
-            logger.info("Bean.getFile {} ",bean.getFile());
-            logger.info("Bean path {} ", bean.getFile().getAbsoluteFile());
-            logger.info("Temp {}  {}", tempFile, tempFile.getAbsolutePath());
             convertCmd.run(imOper, bean.getFile().getAbsolutePath(), tempFile.getAbsolutePath());
             this.getStorageManager().saveFile(subPath, this.isProtectedResource(), new FileInputStream(tempFile));
             boolean deleted = tempFile.delete();

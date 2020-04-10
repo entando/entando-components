@@ -27,7 +27,6 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ImageResour
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInstance;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.util.IImageDimensionReader;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -139,10 +138,6 @@ public class ResourcesService {
             resourceFile.setCategories(convertCategories(categories));
             resourceFile.setOwner(user.getUsername());
 
-            File convFile = new File(System.getProperty("java.io.tmpdir")+"/"+file.getOriginalFilename());
-            file.transferTo(convFile);
-            resourceFile.setFile(convFile);
-            
             ResourceInterface resource = resourceManager.addResource(resourceFile);
             return convertResourceToDto(resourceManager.loadResource(resource.getId()));
         } catch (ApsSystemException e) {
@@ -356,14 +351,14 @@ public class ResourcesService {
             }
 
             filters.add(
-                new FieldSearchFilter(attr, filter.getValue(), useLikeOption)
+                    new FieldSearchFilter(attr, filter.getValue(), useLikeOption)
             );
 
         }
 
         if (groups.size() > 0) {
             filters.add(
-                new FieldSearchFilter(IResourceManager.RESOURCE_MAIN_GROUP_FILTER_KEY, groups, false)
+                    new FieldSearchFilter(IResourceManager.RESOURCE_MAIN_GROUP_FILTER_KEY, groups, false)
             );
         }
 
