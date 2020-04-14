@@ -13,7 +13,7 @@ The Entando components are:
 
 The Entando components project, based on Apache Maven, is organized in two modules including all Entando extensions ready to use just now:
 
-1. ```plugins``` module, including all Plugins. The following is a list of plugins released with ```entando-core``` version 6.0.0-SNAPSHOT:
+1. ```plugins``` module, including all Plugins. The following is a list of plugins released with ```entando-core``` version 6.1.0:
 
     * Action Logger
     * Avatar
@@ -39,7 +39,7 @@ The Entando components project, based on Apache Maven, is organized in two modul
     * Web Dynamic Form
     * Widget Utils
 
-2. ```ui-bundles``` module, including all Bundles. The following is a list of main bundles released with ```entando-core``` version 6.0.0-SNAPSHOT:
+2. ```ui-bundles``` module, including all Bundles. The following is a list of main bundles released with ```entando-core``` version 6.1.0:
 
     * Content type - Generic Content
     * Content type - News

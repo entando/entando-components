@@ -4,7 +4,7 @@
     <parent>
         <artifactId>entando-bundles-parent</artifactId>
         <groupId>org.entando.entando.bundles</groupId>
-        <version>6.0.0-SNAPSHOT</version>
+        <version>6.1.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>entando-page-inspinia</artifactId>
@@ -65,25 +65,25 @@
         <dependency>
             <groupId>org.entando.entando.bundles.misc</groupId>
             <artifactId>entando-misc-inspinia</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
+            <version>6.1.0</version>
             <type>war</type>
         </dependency>
         <dependency>
             <groupId>org.entando.entando.bundles.widgets</groupId>
             <artifactId>entando-widget-language_choose_inspinia</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
+            <version>6.1.0</version>
             <type>war</type>
         </dependency>
         <dependency>
             <groupId>org.entando.entando.bundles.widgets</groupId>
             <artifactId>entando-widget-navigation_bar_inspinia</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
+            <version>6.1.0</version>
             <type>war</type>
         </dependency>
         <dependency>
             <groupId>org.entando.entando.bundles.widgets</groupId>
             <artifactId>entando-widget-login_form_inspinia</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
+            <version>6.1.0</version>
             <type>war</type>
         </dependency>
     </dependencies>
