@@ -376,6 +376,9 @@ public class ContentDto extends EntityDto implements Serializable {
     private void fillDateAttribute(AttributeInterface attribute, EntityAttributeDto attributeDto) {
         if (DateAttribute.class.isAssignableFrom(attribute.getClass())) {
             DateAttribute dateAttribute = (DateAttribute)attribute;
+            if (dateAttribute.getDate() != null) {
+                return;
+            }
             String value = (String) attributeDto.getValue();
             Date data = null;
             if (value != null) {
