@@ -1509,6 +1509,258 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
     }
 
     @Test
+    public void testAddAndUpdateContentWithListAttributeDate() throws Exception {
+        String newContentId = null;
+        String accessToken = this.createAccessToken();
+        try {
+            Assert.assertNull(this.contentManager.getEntityPrototype("TLL"));
+
+            this.executeContentTypePost("1_POST_type_with_list_date.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype("TLL"));
+
+            ResultActions result = this.executeContentPost("1_POST_valid_with_list_date.json", accessToken, status().isOk());
+            result.andDo(print())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("LS1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en.size()", is(3)))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[0].code", is("LS1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[0].value", is("2020-04-09 00:00:00")))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[1].code", is("LS1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[1].value", is("2020-04-10 00:00:00")))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[2].code", is("LS1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[2].value", is("2020-04-11 00:00:00")));
+
+            String bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
+            Content newContent = this.contentManager.loadContent(newContentId, false);
+
+            Assert.assertNotNull(newContent);
+
+            this.executeContentPut("1_PUT_valid_with_list_date.json", newContentId, accessToken, status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("LS1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en.size()", is(1)))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[0].code", is("LS1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[0].value", is("2020-04-12 00:00:00")));
+
+            this.executeContentPut("1_PUT_valid_with_list_date2.json", newContentId, accessToken, status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("LS1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en.size()", is(5)))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[0].code", is("LS1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[0].value", is("2020-04-13 00:00:00")))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[1].code", is("LS1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[1].value", is("2020-04-14 00:00:00")))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[2].code", is("LS1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[2].value", is("2020-04-15 00:00:00")))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[3].code", is("LS1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[3].value", is("2020-04-16 00:00:00")))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[4].code", is("LS1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[4].value", is("2020-04-17 00:00:00")));
+
+        } finally {
+            if (null != newContentId) {
+                Content newContent = this.contentManager.loadContent(newContentId, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != this.contentManager.getEntityPrototype("TLL")) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("TLL");
+            }
+        }
+    }
+
+    @Test
+    public void testAddAndUpdateContentWithListAttributeEnumerator() throws Exception {
+        String newContentId = null;
+        String accessToken = this.createAccessToken();
+        try {
+            Assert.assertNull(this.contentManager.getEntityPrototype("ENU"));
+
+            this.executeContentTypePost("1_POST_type_with_list_enum.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype("ENU"));
+
+            ResultActions result = this.executeContentPost("1_POST_valid_with_list_enum.json", accessToken, status().isOk());
+            result.andDo(print())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("LS1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en.size()", is(3)))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[0].code", is("LS1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[0].value", is("lable1")))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[1].code", is("LS1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[1].value", is("lable5")))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[2].code", is("LS1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[2].value", is("lable2")));
+
+            String bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
+            Content newContent = this.contentManager.loadContent(newContentId, false);
+
+            Assert.assertNotNull(newContent);
+
+            this.executeContentPut("1_PUT_valid_with_list_enum.json", newContentId, accessToken, status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("LS1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en.size()", is(1)))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[0].code", is("LS1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[0].value", is("lable5")));
+
+            this.executeContentPut("1_PUT_valid_with_list_enum2.json", newContentId, accessToken, status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("LS1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en.size()", is(5)))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[0].code", is("LS1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[0].value", is("lable1")))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[1].code", is("LS1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[1].value", is("lable2")))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[2].code", is("LS1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[2].value", is("lable3")))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[3].code", is("LS1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[3].value", is("lable4")))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[4].code", is("LS1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[4].value", is("lable5")));
+
+        } finally {
+            if (null != newContentId) {
+                Content newContent = this.contentManager.loadContent(newContentId, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != this.contentManager.getEntityPrototype("ENU")) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("ENU");
+            }
+        }
+    }
+
+    @Test
+    public void testAddAndUpdateContentWithListAttributeEnumeratorMap() throws Exception {
+        String newContentId = null;
+        String accessToken = this.createAccessToken();
+        try {
+            Assert.assertNull(this.contentManager.getEntityPrototype("ENM"));
+
+            this.executeContentTypePost("1_POST_type_with_list_enum_map.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype("ENM"));
+
+            ResultActions result = this.executeContentPost("1_POST_valid_with_list_enum_map.json", accessToken, status().isOk());
+            result.andDo(print())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("LS1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en.size()", is(3)))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[0].code", is("LS1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[0].value", is("key1")))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[1].code", is("LS1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[1].value", is("key5")))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[2].code", is("LS1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[2].value", is("key2")));
+
+            String bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
+            Content newContent = this.contentManager.loadContent(newContentId, false);
+
+            Assert.assertNotNull(newContent);
+
+            this.executeContentPut("1_PUT_valid_with_list_enum_map.json", newContentId, accessToken, status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("LS1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en.size()", is(1)))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[0].code", is("LS1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[0].value", is("key5")));
+
+            this.executeContentPut("1_PUT_valid_with_list_enum_map2.json", newContentId, accessToken, status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("LS1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en.size()", is(5)))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[0].code", is("LS1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[0].value", is("key1")))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[1].code", is("LS1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[1].value", is("key2")))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[2].code", is("LS1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[2].value", is("key3")))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[3].code", is("LS1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[3].value", is("key4")))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[4].code", is("LS1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[4].value", is("key5")));
+
+        } finally {
+            if (null != newContentId) {
+                Content newContent = this.contentManager.loadContent(newContentId, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != this.contentManager.getEntityPrototype("ENM")) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("ENM");
+            }
+        }
+    }
+
+    @Test
     public void testAddContentInvalidResourceGroup() throws Exception {
         try {
             Assert.assertNull(contentManager.getEntityPrototype("TST"));

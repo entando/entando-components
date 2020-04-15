@@ -1,0 +1,21 @@
+{
+    "code": "ENU",
+    "name": "Content Type ENU",
+    "attributes": [
+        {
+            "code": "LS1",
+            "type": "List",
+            "name": "LIST Description",
+            "mandatory": false,
+            "nestedAttribute": {
+                "code": "enumerator",
+                "type": "Enumerator",
+                "name": "Description of Enumerator",
+                "mandatory": false,
+                "enumeratorStaticItems": "lable1,lable2,lable3,lable4,lable5",
+                "enumeratorStaticItemsSeparator": ","
+            },
+            "compositeAttributes": null
+        }
+    ]
+}
