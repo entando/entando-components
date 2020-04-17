@@ -32,8 +32,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.beanutils.BeanComparator;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -103,17 +103,22 @@ public class ResourceFinderAction extends AbstractResourceAction {
     }
 
     protected FieldSearchFilter[] createSearchFilters() {
-        FieldSearchFilter typeCodeFilter = new FieldSearchFilter(IResourceManager.RESOURCE_TYPE_FILTER_KEY, this.getResourceTypeCode(), false);
-        FieldSearchFilter[] filters = {typeCodeFilter};
-        if (!StringUtils.isBlank(this.getOwnerGroupName())) {
+        FieldSearchFilter typeCodeFilter;
+        FieldSearchFilter[] filters = new FieldSearchFilter[] {};
+        
+        if (StringUtils.isNotBlank(this.getResourceTypeCode())) {
+            typeCodeFilter = new FieldSearchFilter(IResourceManager.RESOURCE_TYPE_FILTER_KEY, this.getResourceTypeCode(), false);
+            filters = new FieldSearchFilter[] {typeCodeFilter};
+        } 
+        if (StringUtils.isNotBlank(this.getOwnerGroupName())) {
             FieldSearchFilter groupFilter = new FieldSearchFilter(IResourceManager.RESOURCE_MAIN_GROUP_FILTER_KEY, this.getOwnerGroupName(), false);
             filters = ArrayUtils.add(filters, groupFilter);
         }
-        if (!StringUtils.isBlank(this.getText())) {
+        if (StringUtils.isNotBlank(this.getText())) {
             FieldSearchFilter textFilter = new FieldSearchFilter(IResourceManager.RESOURCE_DESCR_FILTER_KEY, this.getText(), true);
             filters = ArrayUtils.add(filters, textFilter);
         }
-        if (!StringUtils.isBlank(this.getFileName())) {
+        if (StringUtils.isNotBlank(this.getFileName())) {
             FieldSearchFilter filenameFilter = new FieldSearchFilter(IResourceManager.RESOURCE_FILENAME_FILTER_KEY, this.getFileName(), true);
             filters = ArrayUtils.add(filters, filenameFilter);
         }
