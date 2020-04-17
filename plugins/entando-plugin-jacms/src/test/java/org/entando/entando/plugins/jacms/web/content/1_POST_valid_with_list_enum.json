@@ -1,0 +1,29 @@
+[
+    {
+        "mainGroup":"free",
+        "description":"Enumerator",
+        "attributes":[
+            {
+                "code":"LS1",
+                "listelements":{
+                    "en":[
+                        {
+                            "code":"LS1",
+                            "value":"lable1"
+                        },
+                        {
+                            "code":"LS1",
+                            "value":"lable5"
+                        },
+                        {
+                            "code":"LS1",
+                            "value":"lable2"
+                        }
+                    ]
+                },
+                "name":"ListEnum"
+            }
+        ],
+        "typeCode":"ENU"
+    }
+]

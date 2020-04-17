@@ -1,0 +1,17 @@
+{
+    "code": "TLL",
+    "name": "Content Type TLL",
+    "attributes": [
+        {
+            "code": "LS1",
+            "type": "List",
+            "name": "LIST Description",
+            "mandatory": false,
+            "nestedAttribute": {
+                "code": "LS1",
+                "type": "Date"
+            },
+            "compositeAttributes": null
+        }
+    ]
+}

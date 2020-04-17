@@ -1,0 +1,37 @@
+[
+    {
+        "mainGroup":"free",
+        "description":"EnumeratorMap",
+        "attributes":[
+            {
+                "code":"LS1",
+                "listelements":{
+                    "en":[
+                        {
+                            "code":"LS1",
+                            "value":"key1"
+                        },
+                        {
+                            "code":"LS1",
+                            "value":"key2"
+                        },
+                        {
+                            "code":"LS1",
+                            "value":"key3"
+                        },
+                        {
+                            "code":"LS1",
+                            "value":"key4"
+                        },{
+                            "code":"LS1",
+                            "value":"key5"
+                        }
+                    ]
+                },
+                "name":"ListEnumMap"
+            }
+        ],
+        "typeCode":"ENM",
+        "id":"**MARKER**"
+    }
+]

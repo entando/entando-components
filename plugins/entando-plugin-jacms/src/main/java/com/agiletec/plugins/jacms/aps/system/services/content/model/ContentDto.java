@@ -17,11 +17,12 @@ import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.BooleanAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.CompositeAttribute;
+import com.agiletec.aps.system.common.entity.model.attribute.DateAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.ListAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.MonoListAttribute;
 import com.agiletec.aps.system.services.category.ICategoryManager;
+import com.agiletec.aps.util.CheckFormatUtil;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.AbstractResourceAttribute;
-import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.ImageAttribute;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.LinkAttribute;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentRestriction;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.AttachResource;
@@ -30,17 +31,19 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.entity.model.EntityAttributeDto;
 import org.entando.entando.aps.system.services.entity.model.EntityDto;
 import org.entando.entando.plugins.jacms.web.content.validator.ContentValidator;
 import org.entando.entando.web.common.json.JsonDateDeserializer;
 import org.entando.entando.web.common.json.JsonDateSerializer;
-import org.entando.entando.web.user.validator.UserValidator;
 import org.springframework.validation.BindingResult;
 
 public class ContentDto extends EntityDto implements Serializable {
@@ -222,6 +225,7 @@ public class ContentDto extends EntityDto implements Serializable {
         clearAbstractResourceAttribute(attribute);
         clearLinkAttribute(attribute);
         clearBooleanAttribute(attribute);
+        clearDateAttribute(attribute);
         clearListAttribute(attribute);
         clearMonolistAttribute(attribute);
         clearCompositeAttribute(attribute);
@@ -248,6 +252,13 @@ public class ContentDto extends EntityDto implements Serializable {
         if (BooleanAttribute.class.isAssignableFrom(attribute.getClass())) {
             BooleanAttribute booleanAttribute = (BooleanAttribute) attribute;
             booleanAttribute.setBooleanValue(null);
+        }
+    }
+
+    private void clearDateAttribute(AttributeInterface attribute) {
+        if (DateAttribute.class.isAssignableFrom(attribute.getClass())) {
+            DateAttribute dateAttribute = (DateAttribute) attribute;
+            dateAttribute.setDate(null);
         }
     }
 
@@ -292,6 +303,7 @@ public class ContentDto extends EntityDto implements Serializable {
     private void fillAttribute(AttributeInterface attribute, EntityAttributeDto attributeDto) {
         fillAbstractResourceAttribute(attribute, attributeDto);
         fillLinkAttribute(attribute, attributeDto);
+        fillDateAttribute(attribute, attributeDto);
         fillListAttribute(attribute, attributeDto);
         fillMonolistAttribute(attribute, attributeDto);
         fillCompositeAttribute(attribute, attributeDto);
@@ -358,6 +370,33 @@ public class ContentDto extends EntityDto implements Serializable {
                 }
             }
             linkAttribute.setSymbolicLink(link);
+        }
+    }
+
+    private void fillDateAttribute(AttributeInterface attribute, EntityAttributeDto attributeDto) {
+        if (DateAttribute.class.isAssignableFrom(attribute.getClass())) {
+            DateAttribute dateAttribute = (DateAttribute)attribute;
+            if (dateAttribute.getDate() != null) {
+                return;
+            }
+            String value = (String) attributeDto.getValue();
+            Date data = null;
+            if (value != null) {
+                value = value.trim();
+            }
+            if (CheckFormatUtil.isValidDate(value)) {
+                try {
+                    SimpleDateFormat dataF = new SimpleDateFormat("dd/MM/yyyy");
+                    data = dataF.parse(value);
+                    dateAttribute.setFailedDateString(null);
+                } catch (ParseException ex) {
+                    throw new RuntimeException(
+                            StringUtils.join("Error while parsing the date submitted - ", value, " -"), ex);
+                }
+            } else {
+                dateAttribute.setFailedDateString(value);
+            }
+            dateAttribute.setDate(data);
         }
     }
 

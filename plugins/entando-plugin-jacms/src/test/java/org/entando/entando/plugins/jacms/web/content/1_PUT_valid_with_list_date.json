@@ -1,0 +1,20 @@
+[{
+    "mainGroup":"free",
+    "description":"ContentWithListDate",
+    "attributes":[
+        {
+            "code":"LS1",
+            "listelements":{
+                "en":[
+                    {
+                        "code":"LS1",
+                        "value":"12/04/2020"
+                    }
+                ]
+            },
+            "name":"ListDate"
+        }
+    ],
+    "id":"**MARKER**",
+    "typeCode":"TLL"
+}]

@@ -1,0 +1,29 @@
+[
+    {
+        "mainGroup":"free",
+        "description":"Date",
+        "attributes":[
+            {
+                "code":"LS1",
+                "listelements":{
+                    "en":[
+                        {
+                            "code":"LS1",
+                            "value":"09/04/2020"
+                        },
+                        {
+                            "code":"LS1",
+                            "value":"10/04/2020"
+                        },
+                        {
+                            "code":"LS1",
+                            "value":"11/04/2020"
+                        }
+                    ]
+                },
+                "name":"ListDate"
+            }
+        ],
+        "typeCode":"TLL"
+    }
+]
