@@ -54,7 +54,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class ContentTypeResourceController implements ContentTypeResource {
-    public static final String COMPONENT_ID = "contentTypes";
+    public static final String COMPONENT_ID = "contentType";
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
