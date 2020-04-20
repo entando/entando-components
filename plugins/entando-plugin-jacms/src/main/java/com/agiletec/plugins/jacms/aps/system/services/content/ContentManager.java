@@ -482,6 +482,17 @@ public class ContentManager extends ApsEntityManager
     }
 
     @Override
+    public Integer countWorkContents(String[] categories, boolean orClauseCategoryFilter,
+            EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException {
+        try {
+            return this.getWorkContentSearcherDAO().countContents(categories, orClauseCategoryFilter, filters, userGroupCodes);
+        } catch (Throwable t) {
+            logger.error("Error while counting work contents", t);
+            throw new ApsSystemException("Error while counting work contents", t);
+        }
+    }
+
+    @Override
     public SearcherDaoPaginatedResult<String> getPaginatedWorkContentsId(String[] categories, boolean orClauseCategoryFilter, EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException {
         return this.getPaginatedContentsId(categories, orClauseCategoryFilter, filters, userGroupCodes, this.getWorkContentSearcherDAO());
     }

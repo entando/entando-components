@@ -23,6 +23,7 @@ import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.Content
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.aps.system.services.entity.AbstractEntityTypeService;
@@ -30,6 +31,7 @@ import org.entando.entando.aps.system.services.entity.model.AttributeTypeDto;
 import org.entando.entando.aps.system.services.entity.model.EntityTypeAttributeFullDto;
 import org.entando.entando.aps.system.services.entity.model.EntityTypeShortDto;
 import org.entando.entando.aps.system.services.entity.model.EntityTypesStatusDto;
+import org.entando.entando.plugins.jacms.aps.system.services.content.ContentService;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.entity.model.EntityTypeDtoRequest;
@@ -37,9 +39,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
 @Service
+@RequiredArgsConstructor
 public class ContentTypeService extends AbstractEntityTypeService<Content, ContentTypeDto> {
 
     private static final String CONTENT_MODEL_MANAGER = "jacmsContentManager";
+
+    private final ContentService contentService;
 
     @Override
     protected IDtoBuilder<Content, ContentTypeDto> getEntityTypeFullDtoBuilder(
@@ -70,6 +75,10 @@ public class ContentTypeService extends AbstractEntityTypeService<Content, Conte
         } else {
             throw new ResourceNotFoundException(ERRCODE_RESOURCE_NOT_FOUND, "contentType", code);
         }
+    }
+
+    public Integer usage(String code) {
+        return contentService.countContentsByType(code);
     }
 
     public PagedMetadata<String> findManyAttributes(RestListRequest requestList) {

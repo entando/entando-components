@@ -14,19 +14,35 @@
 package org.entando.entando.plugins.jacms.web.content;
 
 import com.agiletec.aps.system.services.role.Permission;
-import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.*;
-import io.swagger.annotations.*;
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentTypeDto;
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentTypeDtoRequest;
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentTypeRefreshRequest;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import java.net.URISyntaxException;
 import java.util.List;
-import org.entando.entando.aps.system.services.entity.model.*;
+import java.util.Map;
+import javax.validation.Valid;
+import org.entando.entando.aps.system.services.entity.model.AttributeTypeDto;
+import org.entando.entando.aps.system.services.entity.model.EntityTypeAttributeFullDto;
+import org.entando.entando.aps.system.services.entity.model.EntityTypeShortDto;
+import org.entando.entando.aps.system.services.entity.model.EntityTypesStatusDto;
 import org.entando.entando.web.common.annotation.RestAccessControl;
-import org.entando.entando.web.common.model.*;
+import org.entando.entando.web.common.model.PagedRestResponse;
+import org.entando.entando.web.common.model.RestListRequest;
+import org.entando.entando.web.common.model.RestResponse;
+import org.entando.entando.web.common.model.SimpleRestResponse;
+import org.entando.entando.web.component.ComponentUsage;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.net.URISyntaxException;
-import java.util.Map;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 public interface ContentTypeResource {
 
@@ -83,6 +99,20 @@ public interface ContentTypeResource {
         @ApiResponse(code = 404, message = "Not Found")})
     @GetMapping("/plugins/cms/contentTypes/{code}")
     ResponseEntity<SimpleRestResponse<ContentTypeDto>> get(
+            @ApiParam(value = "code", required = true) @PathVariable("code") String id);
+
+    @ApiOperation(
+            value = "getContentTypeUsage",
+            nickname = "getContentTypeUsage",
+            response = ComponentUsage.class,
+            tags = {"content-type-resource-controller",})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK", response = ComponentUsage.class),
+            @ApiResponse(code = 401, message = "Unauthorized"),
+            @ApiResponse(code = 403, message = "Forbidden"),
+            @ApiResponse(code = 404, message = "Not Found")})
+    @GetMapping("/plugins/cms/contentTypes/{code}/usage")
+    ResponseEntity<SimpleRestResponse<ComponentUsage>> usage(
             @ApiParam(value = "code", required = true) @PathVariable("code") String id);
 
     @ApiOperation(
