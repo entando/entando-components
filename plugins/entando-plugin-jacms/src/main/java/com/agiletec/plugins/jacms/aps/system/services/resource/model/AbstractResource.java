@@ -367,12 +367,6 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
         return this.getUrlPath(defaultInstance);
     }
 
-    @Override
-    public String getUnprotectedUrlPath() {
-        ResourceInstance defaultInstance = this.getDefaultInstance();
-        return this.getUnprotectedUrlPath(defaultInstance);
-    }
-
     /**
      * Repurn the url path of the given istance.
      *
@@ -383,48 +377,38 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
         if (instance == null) {
             return null;
         }
+        StringBuilder urlPath = new StringBuilder();
         if (this.isProtectedResource()) {
-            return getUrlPathProtected(instance);
+            //PATH di richiamo della servlet di autorizzazione
+            //Sintassi /<RES_ID>/<SIZE>/<LANG_CODE>/
+            final String def = "def";
+            urlPath.append(this.getProtectedBaseURL());
+            if (!urlPath.toString().endsWith("/")) {
+                urlPath.append("/");
+            }
+            urlPath.append(this.getId()).append("/");
+            if (instance.getSize() < 0) {
+                urlPath.append(def);
+            } else {
+                urlPath.append(instance.getSize());
+            }
+            urlPath.append("/");
+            if (instance.getLangCode() == null) {
+                urlPath.append(def);
+            } else {
+                urlPath.append(instance.getLangCode());
+            }
+            urlPath.append("/");
         } else {
-            return getUnprotectedUrlPath(instance);
+            StringBuilder subFolder = new StringBuilder(this.getFolder());
+            if (!subFolder.toString().endsWith("/")) {
+                subFolder.append("/");
+            }
+            subFolder.append(instance.getFileName());
+            String path = this.getStorageManager().getResourceUrl(subFolder.toString(), false);
+            urlPath.append(path);
         }
-    }
-
-    protected String getUrlPathProtected(ResourceInstance instance) {
-        StringBuilder result = new StringBuilder();
-        //PATH di richiamo della servlet di autorizzazione
-        //Sintassi /<RES_ID>/<SIZE>/<LANG_CODE>/
-        final String def = "def";
-        result.append(this.getProtectedBaseURL());
-        if (!result.toString().endsWith("/")) {
-            result.append("/");
-        }
-        result.append(this.getId()).append("/");
-        if (instance.getSize() < 0) {
-            result.append(def);
-        } else {
-            result.append(instance.getSize());
-        }
-        result.append("/");
-        if (instance.getLangCode() == null) {
-            result.append(def);
-        } else {
-            result.append(instance.getLangCode());
-        }
-        result.append("/");
-        return result.toString();
-    }
-
-    protected String getUnprotectedUrlPath(ResourceInstance instance) {
-        StringBuilder result = new StringBuilder();
-        StringBuilder subFolder = new StringBuilder(this.getFolder());
-        if (!subFolder.toString().endsWith("/")) {
-            subFolder.append("/");
-        }
-        subFolder.append(instance.getFileName());
-        String path = this.getStorageManager().getResourceUrl(subFolder.toString(), false);
-        result.append(path);
-        return result.toString();
+        return urlPath.toString();
     }
 
     protected boolean isProtectedResource() {

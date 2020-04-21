@@ -21,7 +21,6 @@ import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.hamcrest.Matchers;
 import org.junit.Test;
-import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -32,7 +31,6 @@ import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.startsWith;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -809,86 +807,10 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
                 .andExpect(status().isNotFound());
     }
 
-    @Test
-    public void testCreateAndGetProtectedImageResource() throws Exception {
-        UserDetails user = createAccessToken();
-        UserDetails user2 = createAccessTokenEditor("user2", "coach");
-        UserDetails user3 = createAccessTokenEditor("user3", "customers");
-        String createdId = null;
-
-        try {
-            ResultActions result = performCreateResource(user, "image", "customers", new ArrayList<>(), "application/jpeg")
-                    .andDo(print())
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.payload.id", Matchers.anything()))
-                    .andExpect(jsonPath("$.payload.categories.size()", is(0)))
-                    .andExpect(jsonPath("$.payload.group", is("customers")))
-                    .andExpect(jsonPath("$.payload.description", is("image_test.jpeg")))
-                    .andExpect(jsonPath("$.payload.versions.size()", is(4)))
-                    .andExpect(jsonPath("$.payload.versions[0].path", startsWith("/Entando/protected/")))
-                    .andExpect(jsonPath("$.payload.versions[0].size", is("2 Kb")));
-
-            createdId = JsonPath.read(result.andReturn().getResponse().getContentAsString(), "$.payload.id");
-
-            result = mockMvc.perform(
-                    get("/plugins/cms/assets")
-                            .param("type", "image")
-                            .param("filters[0].attribute", "group")
-                            .param("filters[0].value", "customers")
-                            .sessionAttr("user", user)
-                            .header("Authorization", "Bearer " + mockOAuthInterceptor(user)));
-            result.andDo(print())
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.payload.size()", greaterThanOrEqualTo(1)))
-                    .andExpect(jsonPath("$.payload[0].versions.size()", is(4)))
-                    .andExpect(jsonPath("$.payload[0].versions[0].path", not(startsWith("/Entando/protected/"))));
-
-            result = mockMvc.perform(
-                    get("/plugins/cms/assets")
-                            .param("type", "image")
-                            .param("filters[0].attribute", "group")
-                            .param("filters[0].value", "coach")
-                            .sessionAttr("user", user2)
-                            .header("Authorization", "Bearer " + mockOAuthInterceptor(user2)));
-            result.andDo(print())
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.payload.size()", greaterThanOrEqualTo(0)));
-
-            result = mockMvc.perform(
-                    get("/plugins/cms/assets")
-                            .param("type", "image")
-                            .param("filters[0].attribute", "group")
-                            .param("filters[0].value", "customers")
-                            .sessionAttr("user", user3)
-                            .header("Authorization", "Bearer " + mockOAuthInterceptor(user3)));
-            result.andDo(print())
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.payload.size()", greaterThanOrEqualTo(1)))
-                    .andExpect(jsonPath("$.payload[0].versions.size()", is(4)))
-                    .andExpect(jsonPath("$.payload[0].versions[0].path", not(startsWith("/Entando/protected/"))));
-
-        } finally {
-            if (createdId != null) {
-                performDeleteResource(user, "image", createdId)
-                        .andDo(print())
-                        .andExpect(status().isOk());
-
-                performGetResources(user, "image", null)
-                        .andDo(print())
-                        .andExpect(status().isOk())
-                        .andExpect(jsonPath("$.payload.size()", is(3)));
-            }
-        }
-    }
-
     /* Auxiliary methods */
 
     private UserDetails createAccessToken() throws Exception {
         return new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
-    }
-
-    private UserDetails createAccessTokenEditor(String username, String groupName) throws Exception {
-        return new OAuth2TestUtils.UserBuilder(username, "0x24").withAuthorization(groupName, "editor", "editContents").build();
     }
 
     private ResultActions performGetResources(UserDetails user, String type, Map<String,String> params) throws Exception {

@@ -60,11 +60,6 @@ public class ImageResource extends AbstractMultiInstanceResource {
         return this.getUrlPath(instance);
     }
 
-    public String getUnprotectedImagePath(String size) {
-        ResourceInstance instance = getInstances().get(size);
-        return this.getUnprotectedUrlPath(instance);
-    }
-
     @Override
     public InputStream getResourceStream() {
         return this.getResourceStream(0, null);
