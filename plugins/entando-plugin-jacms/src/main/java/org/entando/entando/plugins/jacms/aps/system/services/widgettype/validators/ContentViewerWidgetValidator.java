@@ -63,8 +63,13 @@ public class ContentViewerWidgetValidator implements WidgetConfigurationValidato
         try {
             logger.debug("validating widget {} for page {}", widget.getCode(), page.getCode());
             String contentId = WidgetValidatorCmsHelper.extractConfigParam(widget, WIDGET_CONFIG_KEY_CONTENT_ID);
-            WidgetValidatorCmsHelper.validateSingleContentOnPage(widget.getCode(), page, contentId, this.getContentManager(), bindingResult);
-            this.validateContentModel(widget, bindingResult);
+            if (null != contentId) {
+                WidgetValidatorCmsHelper
+                        .validateSingleContentOnPage(widget.getCode(), page, contentId, this.getContentManager(),
+                                bindingResult);
+
+                this.validateContentModel(widget, bindingResult);
+            }
         } catch (ApsSystemException e) {
             logger.error("error in validate wiget {} in page {}", widget.getCode(), page.getCode());
             throw new RestServerError("error in widget config validation", e);
