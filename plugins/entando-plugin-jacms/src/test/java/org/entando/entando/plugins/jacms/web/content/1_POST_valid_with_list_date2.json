@@ -1,0 +1,30 @@
+[
+    {
+        "groups":[],
+        "mainGroup":"free",
+        "description":"ListDate1",
+        "categories":[],
+        "attributes":[
+            {
+                "code":"ListDate",
+                "listelements":{
+                    "en":[
+                        {
+                            "code":"ListDate",
+                            "value":"21/04/2020"
+                        },
+                        {
+                            "code":"ListDate",
+                            "value":"24/04/2020"
+                        }
+                    ],
+                    "it":[
+
+                    ]
+                },
+                "name":"ListDate"
+            }
+        ],
+        "typeCode":"CLD"
+    }
+]

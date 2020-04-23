@@ -1,0 +1,17 @@
+{
+    "code": "CLD",
+    "name": "Content Type CLD",
+    "attributes": [
+        {
+            "code": "ListDate",
+            "type": "List",
+            "name": "LIST Description",
+            "mandatory": false,
+            "nestedAttribute": {
+                "code": "ListDate",
+                "type": "Date"
+            },
+            "compositeAttributes": null
+        }
+    ]
+}

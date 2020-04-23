@@ -1593,6 +1593,51 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
     }
 
     @Test
+    public void testAddAndUpdateContentWithListAttributeDate2() throws Exception {
+        String newContentId = null;
+        String accessToken = this.createAccessToken();
+        try {
+            Assert.assertNull(this.contentManager.getEntityPrototype("CLD"));
+
+            this.executeContentTypePost("1_POST_type_with_list_date2.json", accessToken, status().isCreated());
+            Assert.assertNotNull(this.contentManager.getEntityPrototype("CLD"));
+
+            ResultActions result = this.executeContentPost("1_POST_valid_with_list_date2.json", accessToken, status().isOk());
+            result.andDo(print())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("ListDate")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en.size()", is(2)))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[0].code", is("ListDate")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[0].value", is("2020-04-21 00:00:00")))
+
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[1].code", is("ListDate")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].listelements.en[1].value", is("2020-04-24 00:00:00")));
+
+            String bodyResult = result.andReturn().getResponse().getContentAsString();
+            newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
+            Content newContent = this.contentManager.loadContent(newContentId, false);
+
+            Assert.assertNotNull(newContent);
+
+        } finally {
+            if (null != newContentId) {
+                Content newContent = this.contentManager.loadContent(newContentId, false);
+                if (null != newContent) {
+                    this.contentManager.deleteContent(newContent);
+                }
+            }
+            if (null != this.contentManager.getEntityPrototype("CLD")) {
+                ((IEntityTypesConfigurer) this.contentManager).removeEntityPrototype("CLD");
+            }
+        }
+    }
+
+    @Test
     public void testAddAndUpdateContentWithListAttributeEnumerator() throws Exception {
         String newContentId = null;
         String accessToken = this.createAccessToken();
