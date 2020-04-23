@@ -4,7 +4,7 @@
     <parent>
         <artifactId>entando-bundles-parent</artifactId>
         <groupId>org.entando.entando.bundles</groupId>
-        <version>6.2.0-SNAPSHOT</version>
+        <version>6.1.1</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>entando-content-download</artifactId>
@@ -60,7 +60,7 @@
         <dependency>
             <groupId>org.entando.entando.bundles.app-view</groupId>
             <artifactId>entando-app-view-cms-default</artifactId>
-            <version>6.2.0-SNAPSHOT</version>
+            <version>6.1.1</version>
             <type>war</type>
         </dependency>
     </dependencies>

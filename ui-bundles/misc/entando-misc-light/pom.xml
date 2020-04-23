@@ -4,7 +4,7 @@
     <parent>
         <artifactId>entando-bundles-parent</artifactId>
         <groupId>org.entando.entando.bundles</groupId>
-        <version>6.2.0-SNAPSHOT</version>
+        <version>6.1.1</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>entando-misc-light</artifactId>
@@ -60,13 +60,13 @@
         <!--        <dependency>
             <groupId>org.entando.entando.bundles.misc</groupId>
             <artifactId>entando-misc-html5-essentials</artifactId>
-            <version>6.2.0-SNAPSHOT</version>
+            <version>6.1.1</version>
             <type>war</type>
         </dependency>
         <dependency>
             <groupId>org.entando.entando.bundles.misc</groupId>
             <artifactId>entando-misc-jquery</artifactId>
-            <version>6.2.0-SNAPSHOT</version>
+            <version>6.1.1</version>
             <type>war</type>
         </dependency>-->
     </dependencies>
