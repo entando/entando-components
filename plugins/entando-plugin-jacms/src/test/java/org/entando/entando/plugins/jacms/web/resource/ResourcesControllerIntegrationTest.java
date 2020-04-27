@@ -13,31 +13,42 @@
  */
 package org.entando.entando.plugins.jacms.web.resource;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.Matchers.startsWith;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.agiletec.aps.system.common.FieldSearchFilter;
+import com.agiletec.aps.system.services.category.Category;
+import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.user.UserDetails;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.Matchers.startsWith;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 public class ResourcesControllerIntegrationTest extends AbstractControllerIntegrationTest {
+
+    @Autowired
+    private ICategoryManager categoryManager;
 
     @Test
     public void testListImagesUnauthorized() throws Exception {
@@ -805,6 +816,212 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
         performCloneResource(user, "999999")
                 .andDo(print())
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void testFilterResourcesByCategory() throws Exception {
+        String createdId1 = null;
+        String createdId2 = null;
+        String createdId3 = null;
+        String createdId4 = null;
+        String createdId5 = null;
+        String createdId6 = null;
+        String resourceCatCode1 = "resourceCatCode1";
+        String resourceCatCode2 = "resourceCatCode2";
+        String resourceCatCode3 = "resourceCatCode3";
+
+        UserDetails user = createAccessToken();
+        try {
+
+            List<Category> categories = categoryManager.getCategoriesList();
+
+            Category resourceCat1 = new Category();
+            resourceCat1.setCode(resourceCatCode1);
+            resourceCat1.setParentCode("cat1");
+            resourceCat1.setTitle("en", resourceCatCode1);
+            categoryManager.addCategory(resourceCat1);
+
+            Category resourceCat2 = new Category();
+            resourceCat2.setCode(resourceCatCode2);
+            resourceCat2.setParentCode("cat1");
+            resourceCat2.setTitle("en", resourceCatCode2);
+            categoryManager.addCategory(resourceCat2);
+
+            Category resourceCat3 = new Category();
+            resourceCat3.setCode(resourceCatCode3);
+            resourceCat3.setParentCode("cat1");
+            resourceCat3.setTitle("en", resourceCatCode3);
+            categoryManager.addCategory(resourceCat3);
+
+            ResultActions result = performCreateResource(user, "image", "free",
+                    Arrays.stream(new String[]{resourceCatCode1}).collect(Collectors.toList()), "application/jpeg")
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload.categories.size()", is(1)))
+                    .andExpect(jsonPath("$.payload.categories[0]", is(resourceCatCode1)));
+
+            createdId1 = JsonPath.read(result.andReturn().getResponse().getContentAsString(), "$.payload.id");
+
+            result = performCreateResource(user, "image", "free",
+                    Arrays.stream(new String[]{resourceCatCode2}).collect(Collectors.toList()), "application/jpeg")
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload.categories.size()", is(1)))
+                    .andExpect(jsonPath("$.payload.categories[0]", is(resourceCatCode2)));
+
+            createdId2 = JsonPath.read(result.andReturn().getResponse().getContentAsString(), "$.payload.id");
+
+            result = performCreateResource(user, "image", "free",
+                    Arrays.stream(new String[]{resourceCatCode3}).collect(Collectors.toList()), "application/jpeg")
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload.categories.size()", is(1)))
+                    .andExpect(jsonPath("$.payload.categories[0]", is(resourceCatCode3)));
+
+            createdId3 = JsonPath.read(result.andReturn().getResponse().getContentAsString(), "$.payload.id");
+
+            result = performCreateResource(user, "image", "free",
+                    Arrays.stream(new String[]{resourceCatCode1, resourceCatCode2}).collect(Collectors.toList()), "application/jpeg")
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload.categories.size()", is(2)))
+                    .andExpect(jsonPath("$.payload.categories[0]", is(resourceCatCode1)))
+                    .andExpect(jsonPath("$.payload.categories[1]", is(resourceCatCode2)));
+
+            createdId4 = JsonPath.read(result.andReturn().getResponse().getContentAsString(), "$.payload.id");
+
+            result = performCreateResource(user, "image", "free",
+                    Arrays.stream(new String[]{resourceCatCode2, resourceCatCode3}).collect(Collectors.toList()), "application/jpeg")
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload.categories.size()", is(2)))
+                    .andExpect(jsonPath("$.payload.categories[0]", is(resourceCatCode2)))
+                    .andExpect(jsonPath("$.payload.categories[1]", is(resourceCatCode3)));
+
+            createdId5 = JsonPath.read(result.andReturn().getResponse().getContentAsString(), "$.payload.id");
+
+            result = performCreateResource(user, "image", "free",
+                    Arrays.stream(new String[]{resourceCatCode1, resourceCatCode2, resourceCatCode3}).collect(Collectors.toList()), "application/jpeg")
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload.categories.size()", is(3)))
+                    .andExpect(jsonPath("$.payload.categories[0]", is(resourceCatCode1)))
+                    .andExpect(jsonPath("$.payload.categories[1]", is(resourceCatCode2)))
+                    .andExpect(jsonPath("$.payload.categories[2]", is(resourceCatCode3)));
+
+            createdId6 = JsonPath.read(result.andReturn().getResponse().getContentAsString(), "$.payload.id");
+
+            Map<String,String> params = new HashMap<>();
+            params.put("filters[0].attribute", "categories");
+            params.put("filters[0].value", resourceCatCode1);
+            params.put("page", "1");
+            params.put("pageSize", "10");
+
+            performGetResources(user, "image", params)
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(3)));
+
+            params = new HashMap<>();
+            params.put("filters[0].attribute", "categories");
+            params.put("filters[0].value", resourceCatCode2);
+            params.put("page", "1");
+            params.put("pageSize", "10");
+
+            performGetResources(user, "image", params)
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(4)));
+
+            params = new HashMap<>();
+            params.put("filters[0].attribute", "categories");
+            params.put("filters[0].value", resourceCatCode3);
+            params.put("page", "1");
+            params.put("pageSize", "10");
+
+            performGetResources(user, "image", params)
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(3)));
+
+        } finally {
+
+            if (createdId1 != null) {
+                performDeleteResource(user, "image", createdId1)
+                        .andDo(print())
+                        .andExpect(status().isOk());
+
+                performGetResources(user, "image", null)
+                        .andDo(print())
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.payload.size()", is(8)));
+            }
+
+            if (createdId2 != null) {
+                performDeleteResource(user, "image", createdId2)
+                        .andDo(print())
+                        .andExpect(status().isOk());
+
+                performGetResources(user, "image", null)
+                        .andDo(print())
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.payload.size()", is(7)));
+            }
+
+            if (createdId3 != null) {
+                performDeleteResource(user, "image", createdId3)
+                        .andDo(print())
+                        .andExpect(status().isOk());
+
+                performGetResources(user, "image", null)
+                        .andDo(print())
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.payload.size()", is(6)));
+            }
+
+            if (createdId4 != null) {
+                performDeleteResource(user, "image", createdId4)
+                        .andDo(print())
+                        .andExpect(status().isOk());
+
+                performGetResources(user, "image", null)
+                        .andDo(print())
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.payload.size()", is(5)));
+            }
+
+            if (createdId5 != null) {
+                performDeleteResource(user, "image", createdId5)
+                        .andDo(print())
+                        .andExpect(status().isOk());
+
+                performGetResources(user, "image", null)
+                        .andDo(print())
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.payload.size()", is(4)));
+            }
+
+            if (createdId6 != null) {
+                performDeleteResource(user, "image", createdId6)
+                        .andDo(print())
+                        .andExpect(status().isOk());
+
+                performGetResources(user, "image", null)
+                        .andDo(print())
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.payload.size()", is(3)));
+            }
+
+            categoryManager.deleteCategory(resourceCatCode1);
+            categoryManager.deleteCategory(resourceCatCode2);
+            categoryManager.deleteCategory(resourceCatCode3);
+        }
     }
 
     /* Auxiliary methods */
