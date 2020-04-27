@@ -66,7 +66,7 @@ public class URLManager extends com.agiletec.aps.system.services.url.URLManager 
 		} else {
 			url = this.createFriendlyUrl(friendlyCode, lang, pageUrl.getParams(), pageUrl.isEscapeAmp(), request);
 		}
-		if (null != reqCtx && this.useJsessionId()) {
+		if (null != reqCtx && null != reqCtx.getResponse() && this.useJsessionId()) {
 			HttpServletResponse resp = reqCtx.getResponse();
 			return resp.encodeURL(url.toString());  
 		} else {
