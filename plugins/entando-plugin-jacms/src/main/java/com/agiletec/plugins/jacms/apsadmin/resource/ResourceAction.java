@@ -515,40 +515,62 @@ public class ResourceAction extends AbstractResourceAction implements ResourceDa
         return false;
     }
 
+    protected Map getImgMetadata(InputStream input) {
+        Map<String, String> map = new HashMap<>();
+        
+        try {
+            Metadata meta = ImageMetadataReader.readMetadata(input);
+            map = processMetaData(meta);
+        } catch (ImageProcessingException ex) {
+            logger.error("Error reading metadata from file " + this.getFileName() + " - message " + ex.getMessage());
+        } catch (IOException ioex) {
+            logger.error("Error reading inputStream", ioex);
+        }
+        return map;
+    }
+    
     protected Map getImgMetadata(File file) {
         logger.debug("Get image Metadata in Resource Action");
-        Map<String, String> meta = new HashMap<>();
-        ResourceInterface resourcePrototype = this.getResourceManager().createResourceType(this.getResourceType());
-        try {
-            Metadata metadata = ImageMetadataReader.readMetadata(file);
-            String ignoreKeysConf = resourcePrototype.getMetadataIgnoreKeys();
-            String[] ignoreKeys = null;
-            if (null != ignoreKeysConf) {
-                ignoreKeys = ignoreKeysConf.split(",");
-                logger.debug("Metadata ignoreKeys: {}", ignoreKeys);
-            } else {
-                logger.debug("Metadata ignoreKeys not configured");
-            }
-            List<String> ignoreKeysList = new ArrayList<String>();
-            if (null != ignoreKeys) {
-                ignoreKeysList = Arrays.asList(ignoreKeys);
-            }
-            for (Directory directory : metadata.getDirectories()) {
-                for (Tag tag : directory.getTags()) {
-                    if (!ignoreKeysList.contains(tag.getTagName())) {
-                        logger.debug("Add Metadata with key: {}", tag.getTagName());
-                        meta.put(tag.getTagName(), tag.getDescription());
-                    } else {
-                        logger.debug("Skip Metadata key {}", tag.getTagName());
-                    }
-                }
-            }
+        Map<String, String> map = new HashMap<>();
+        
+        try {            
+            Metadata meta = ImageMetadataReader.readMetadata(file);
+            map = processMetaData(meta);
         } catch (ImageProcessingException ex) {
             logger.error("Error reading metadata from file " + this.getFileName() + " - message " + ex.getMessage());
         } catch (IOException ioex) {
             logger.error("Error reading file", ioex);
         }
-        return meta;
+        return map;
+    }
+
+    protected Map<String, String> processMetaData(Metadata meta) {
+        Map<String, String> map = new HashMap<>();
+        String[] ignoreKeys = null;
+        
+        ResourceInterface resourcePrototype = this.getResourceManager().createResourceType(this.getResourceType());
+        String ignoreKeysConf = resourcePrototype.getMetadataIgnoreKeys();
+        if (null != ignoreKeysConf) {
+            ignoreKeys = ignoreKeysConf.split(",");
+            logger.debug("Metadata ignoreKeys: {}", ignoreKeys);
+        } else {
+            logger.debug("Metadata ignoreKeys not configured");
+        }
+        List<String> ignoreKeysList = new ArrayList<String>();
+        if (null != ignoreKeys) {
+            ignoreKeysList = Arrays.asList(ignoreKeys);
+        }
+        for (Directory directory : meta.getDirectories()) {
+            for (Tag tag : directory.getTags()) {
+                if (!ignoreKeysList.contains(tag.getTagName())) {
+                    logger.debug("Add Metadata with key: {}", tag.getTagName());
+                    map.put(tag.getTagName(), tag.getDescription());
+                } else {
+                    logger.debug("Skip Metadata key {}", tag.getTagName());
+                }
+            }
+        }
+        return map;
     }
 
     protected void fetchMetadataEdit() {
