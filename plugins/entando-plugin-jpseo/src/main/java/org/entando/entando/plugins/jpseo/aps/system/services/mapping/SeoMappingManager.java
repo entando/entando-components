@@ -41,6 +41,7 @@ import java.util.ArrayList;
 
 import java.util.Iterator;
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 
 import org.entando.entando.plugins.jpseo.aps.system.JpseoSystemConstants;
 import org.entando.entando.plugins.jpseo.aps.system.services.mapping.cache.ISeoMappingCacheWrapper;
@@ -71,19 +72,21 @@ public class SeoMappingManager extends AbstractService implements ISeoMappingMan
 	@Override
 	public void updateFromPageChanged(PageChangedEvent event) {
 		IPage page = event.getPage();
+        if (!PageChangedEvent.EVENT_TYPE_SET_PAGE_OFFLINE.equals(event.getEventType()) && 
+                !PageChangedEvent.EVENT_TYPE_SET_PAGE_ONLINE.equals(event.getEventType())) {
+            return;
+        }
 		try {
 			if (event.getSource().equals(ApsEvent.LOCAL_EVENT)) {
-				if (null == this.getPageManager().getOnlinePage(page.getCode())) {
-					this.deleteMapping(page.getCode(), null);
-				} else {
+                this.deleteMapping(page.getCode(), null);
+				if (null != this.getPageManager().getOnlinePage(page.getCode())) {
 					this.updatePageMapping(page);
 				}
-			} else {
-				System.out.println("jpseo: ignoring EXTERNAL event");
 			}
 			SeoChangedEvent seoEvent = new SeoChangedEvent();
 			seoEvent.setOperationCode(SeoChangedEvent.PAGE_CHANGED_EVENT);
 			this.notifyEvent(seoEvent);
+            this.getCacheWrapper().initCache(this.getSeoMappingDAO());
 		} catch (Throwable t) {
 			_logger.error("Error updating mapping from page changed", t);
 		}
@@ -95,7 +98,10 @@ public class SeoMappingManager extends AbstractService implements ISeoMappingMan
         }
 		SeoPageMetadata seoMetadata = (SeoPageMetadata) page.getMetadata();
 		String friendlyCode = seoMetadata.getFriendlyCode();
-		if (null == friendlyCode || friendlyCode.trim().length() == 0) return;
+		if (StringUtils.isEmpty(friendlyCode)) {
+            this.deleteMapping(page.getCode(), null);
+            return;
+        }
 		FriendlyCodeVO vo = new FriendlyCodeVO(seoMetadata.getFriendlyCode(), page.getCode());
 		this.updateMapping(vo);
 	}
@@ -111,12 +117,11 @@ public class SeoMappingManager extends AbstractService implements ISeoMappingMan
 				} else {
 					this.deleteMapping(null, content.getId());
 				}
-			} else {
-				System.out.println("jpseo: ignoring EXTERNAL event");
 			}
 			SeoChangedEvent seoEvent = new SeoChangedEvent();
 			seoEvent.setOperationCode(SeoChangedEvent.CONTENT_CHANGED_EVENT);
 			this.notifyEvent(seoEvent);
+            this.getCacheWrapper().initCache(this.getSeoMappingDAO());
 		} catch (Throwable t) {
 			_logger.error("Error updating mapping from public content changed", t);
 		}
