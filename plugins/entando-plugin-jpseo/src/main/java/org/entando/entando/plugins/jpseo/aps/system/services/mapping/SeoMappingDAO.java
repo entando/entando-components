@@ -47,7 +47,7 @@ public class SeoMappingDAO extends AbstractSearcherDAO implements ISeoMappingDAO
 
 	@Override
 	public Map<String, FriendlyCodeVO> loadMapping() {
-		Map<String, FriendlyCodeVO> mapping = new HashMap<String, FriendlyCodeVO>();
+		Map<String, FriendlyCodeVO> mapping = new HashMap<>();
 		Connection conn = null;
 		Statement stat = null;
 		ResultSet res = null;
@@ -79,7 +79,7 @@ public class SeoMappingDAO extends AbstractSearcherDAO implements ISeoMappingDAO
 		try {
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
-			this.deleteRecord(vo.getFriendlyCode(), vo.getPageCode(), vo.getContentId(), conn);
+			this.deleteRecord(vo.getFriendlyCode(), null, null, conn);
 			this.addRecord(vo, conn);
 			conn.commit();
 		} catch (Throwable t) {
