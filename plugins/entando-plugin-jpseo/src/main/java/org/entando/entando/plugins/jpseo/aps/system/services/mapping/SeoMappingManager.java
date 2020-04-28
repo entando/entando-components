@@ -41,6 +41,7 @@ import java.util.ArrayList;
 
 import java.util.Iterator;
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 
 import org.entando.entando.plugins.jpseo.aps.system.JpseoSystemConstants;
 import org.entando.entando.plugins.jpseo.aps.system.services.mapping.cache.ISeoMappingCacheWrapper;
@@ -78,8 +79,6 @@ public class SeoMappingManager extends AbstractService implements ISeoMappingMan
 				} else {
 					this.updatePageMapping(page);
 				}
-			} else {
-				System.out.println("jpseo: ignoring EXTERNAL event");
 			}
 			SeoChangedEvent seoEvent = new SeoChangedEvent();
 			seoEvent.setOperationCode(SeoChangedEvent.PAGE_CHANGED_EVENT);
@@ -95,7 +94,10 @@ public class SeoMappingManager extends AbstractService implements ISeoMappingMan
         }
 		SeoPageMetadata seoMetadata = (SeoPageMetadata) page.getMetadata();
 		String friendlyCode = seoMetadata.getFriendlyCode();
-		if (null == friendlyCode || friendlyCode.trim().length() == 0) return;
+		if (StringUtils.isEmpty(friendlyCode)) {
+            this.deleteMapping(page.getCode(), null);
+            return;
+        }
 		FriendlyCodeVO vo = new FriendlyCodeVO(seoMetadata.getFriendlyCode(), page.getCode());
 		this.updateMapping(vo);
 	}
@@ -111,8 +113,6 @@ public class SeoMappingManager extends AbstractService implements ISeoMappingMan
 				} else {
 					this.deleteMapping(null, content.getId());
 				}
-			} else {
-				System.out.println("jpseo: ignoring EXTERNAL event");
 			}
 			SeoChangedEvent seoEvent = new SeoChangedEvent();
 			seoEvent.setOperationCode(SeoChangedEvent.CONTENT_CHANGED_EVENT);
