@@ -25,12 +25,10 @@ import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
-import com.agiletec.aps.system.common.notify.ApsEvent;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.IPage;
-import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.events.PageChangedEvent;
 import com.agiletec.aps.system.services.page.events.PageChangedObserver;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
@@ -56,17 +54,16 @@ import org.slf4j.LoggerFactory;
  */
 public class SeoMappingManager extends AbstractService implements ISeoMappingManager, PageChangedObserver, PublicContentChangedObserver {
 
-	private static final Logger _logger =  LoggerFactory.getLogger(SeoMappingManager.class);
+	private static final Logger logger =  LoggerFactory.getLogger(SeoMappingManager.class);
 	
 	private ISeoMappingDAO seoMappingDAO;
 	private ILangManager langManager;
-	private IPageManager pageManager;
     private ISeoMappingCacheWrapper cacheWrapper;
 
 	@Override
 	public void init() throws Exception {
 		this.getCacheWrapper().initCache(this.getSeoMappingDAO());
-		_logger.debug("{} ready. initialized",this.getClass().getName());
+		logger.debug("{} ready. initialized",this.getClass().getName());
 	}
 	
 	@Override
@@ -76,94 +73,73 @@ public class SeoMappingManager extends AbstractService implements ISeoMappingMan
                 !PageChangedEvent.EVENT_TYPE_SET_PAGE_ONLINE.equals(event.getEventType())) {
             return;
         }
+		if (!(page.getMetadata() instanceof SeoPageMetadata)) {
+            return;
+        }
 		try {
-			if (event.getSource().equals(ApsEvent.LOCAL_EVENT)) {
-                this.deleteMapping(page.getCode(), null);
-				if (null != this.getPageManager().getOnlinePage(page.getCode())) {
-					this.updatePageMapping(page);
-				}
-			}
+            this.getSeoMappingDAO().deleteMappingForPage(page.getCode());
+            SeoPageMetadata seoMetadata = (SeoPageMetadata) page.getMetadata();
+            String friendlyCode = seoMetadata.getFriendlyCode();
+            if (!StringUtils.isEmpty(friendlyCode)) {
+                FriendlyCodeVO vo = new FriendlyCodeVO(seoMetadata.getFriendlyCode(), page.getCode());
+                this.getSeoMappingDAO().updateMapping(vo);
+            }
 			SeoChangedEvent seoEvent = new SeoChangedEvent();
 			seoEvent.setOperationCode(SeoChangedEvent.PAGE_CHANGED_EVENT);
 			this.notifyEvent(seoEvent);
             this.getCacheWrapper().initCache(this.getSeoMappingDAO());
 		} catch (Throwable t) {
-			_logger.error("Error updating mapping from page changed", t);
+			logger.error("Error updating mapping from page changed", t);
 		}
-	}
-	
-	private void updatePageMapping(IPage page) {
-		if (!(page.getMetadata() instanceof SeoPageMetadata)) {
-            return;
-        }
-		SeoPageMetadata seoMetadata = (SeoPageMetadata) page.getMetadata();
-		String friendlyCode = seoMetadata.getFriendlyCode();
-		if (StringUtils.isEmpty(friendlyCode)) {
-            this.deleteMapping(page.getCode(), null);
-            return;
-        }
-		FriendlyCodeVO vo = new FriendlyCodeVO(seoMetadata.getFriendlyCode(), page.getCode());
-		this.updateMapping(vo);
 	}
 	
 	@Override
-	public void updateFromPublicContentChanged(PublicContentChangedEvent event) {
-		if (null == event.getContent()) return;
-		Content content = event.getContent();
-		try {
-			if (event.getSource().equals(ApsEvent.LOCAL_EVENT)) {
-				if (event.getOperationCode() != PublicContentChangedEvent.REMOVE_OPERATION_CODE) {
-					this.updateContentMapping(content);
-				} else {
-					this.deleteMapping(null, content.getId());
-				}
-			}
-			SeoChangedEvent seoEvent = new SeoChangedEvent();
-			seoEvent.setOperationCode(SeoChangedEvent.CONTENT_CHANGED_EVENT);
-			this.notifyEvent(seoEvent);
+    public void updateFromPublicContentChanged(PublicContentChangedEvent event) {
+        if (null == event.getContent()) {
+            return;
+        }
+        Content content = event.getContent();
+        try {
+            this.getSeoMappingDAO().deleteMappingForContent(content.getId());
+            if (event.getOperationCode() != PublicContentChangedEvent.REMOVE_OPERATION_CODE) {
+                AttributeInterface attribute = content.getAttributeByRole(JpseoSystemConstants.ATTRIBUTE_ROLE_FRIENDLY_CODE);
+                if (null == attribute || !(attribute instanceof ITextAttribute)) {
+                    attribute = content.getAttributeByRole(JacmsSystemConstants.ATTRIBUTE_ROLE_TITLE);
+                }
+                if (null != attribute && attribute instanceof ITextAttribute) {
+                    ContentFriendlyCode contentFriendlyCode = this.prepareContentFriendlyCode(content.getId(), (ITextAttribute) attribute);
+                    this.getSeoMappingDAO().updateMapping(contentFriendlyCode);
+                }
+            }
+            SeoChangedEvent seoEvent = new SeoChangedEvent();
+            seoEvent.setOperationCode(SeoChangedEvent.CONTENT_CHANGED_EVENT);
+            this.notifyEvent(seoEvent);
             this.getCacheWrapper().initCache(this.getSeoMappingDAO());
-		} catch (Throwable t) {
-			_logger.error("Error updating mapping from public content changed", t);
-		}
-	}
-	
-	private void updateContentMapping(Content content) throws ApsSystemException {
-		try {
-			AttributeInterface attribute = content.getAttributeByRole(JpseoSystemConstants.ATTRIBUTE_ROLE_FRIENDLY_CODE);
-			if (null == attribute || !(attribute instanceof ITextAttribute)) {
-				attribute = content.getAttributeByRole(JacmsSystemConstants.ATTRIBUTE_ROLE_TITLE);
-			}
-			if (null != attribute && attribute instanceof ITextAttribute) {
-				ContentFriendlyCode contentFriendlyCode = this.prepareContentFriendlyCode(content.getId(), (ITextAttribute) attribute);
-				this.getSeoMappingDAO().updateMapping(contentFriendlyCode);
-				this.getCacheWrapper().initCache(this.getSeoMappingDAO());
-			}
-		} catch (Throwable t) {
-			_logger.error("Error updating content mapping", t);
-			throw new ApsSystemException("Error updating content mapping", t);
-		}
-	}
+        } catch (Throwable t) {
+            logger.error("Error updating mapping from public content changed", t);
+        }
+    }
 	
 	private ContentFriendlyCode prepareContentFriendlyCode(String contentId, ITextAttribute attribute) throws ApsSystemException {
 		ContentFriendlyCode contentFriendlyCode = new ContentFriendlyCode();
 		contentFriendlyCode.setContentId(contentId);
 		String defaultLang = this.getLangManager().getDefaultLang().getCode();
 		if (((AttributeInterface) attribute).isMultilingual()) {
-			String defaultFriendlyCode = FriendlyCodeGenerator.generateFriendlyCode(attribute.getTextForLang(defaultLang));
+			String defaultFriendlyCode = this.generateUniqueFriendlyCode(attribute.getTextForLang(defaultLang), defaultLang);
 			contentFriendlyCode.addFriendlyCode(defaultLang, defaultFriendlyCode);
 			Iterator<Lang> langs = this.getLangManager().getLangs().iterator();
 			while (langs.hasNext()) {
 				Lang currentLang = langs.next();
 				if (!currentLang.isDefault()) {
 					String langCode = currentLang.getCode();
-					String friendlyCode = FriendlyCodeGenerator.generateFriendlyCode(attribute.getTextForLang(langCode));
+					String friendlyCode = this.generateUniqueFriendlyCode(attribute.getTextForLang(langCode), langCode);
 					if (friendlyCode != null && !friendlyCode.equals(defaultFriendlyCode)) {
 						contentFriendlyCode.addFriendlyCode(langCode, friendlyCode);
 					}
 				}
 			}
 		} else {
-			String friendlyCode = FriendlyCodeGenerator.generateFriendlyCode(attribute.getText());
+			String friendlyCode = this.generateUniqueFriendlyCode(attribute.getText(), null);
             contentFriendlyCode.addFriendlyCode(defaultLang, friendlyCode);
 		}
         List<String> langs = new ArrayList<>(contentFriendlyCode.getFriendlyCodes().keySet());
@@ -178,7 +154,7 @@ public class SeoMappingManager extends AbstractService implements ISeoMappingMan
                 for (int j = 0; j < codes.size(); j++) {
                     FriendlyCodeVO codeVo = this.getCacheWrapper().getMappingByFriendlyCode(codes.get(j));
                     if (null != codeVo && (null == codeVo.getContentId() || !contentId.equals(codeVo.getContentId()))) {
-                        _logger.warn("Already existing mapping : code '{}' - contentId '{}' - pageCode '{}' - langCode '{}'", 
+                        logger.warn("Already existing mapping : code '{}' - contentId '{}' - pageCode '{}' - langCode '{}'", 
                                 codeVo.getFriendlyCode(), codeVo.getContentId(), codeVo.getPageCode(), codeVo.getLangCode());
                         contentFriendlyCode.getFriendlyCodes().remove(langCode);
                     }
@@ -187,23 +163,22 @@ public class SeoMappingManager extends AbstractService implements ISeoMappingMan
         }
 		return contentFriendlyCode;
 	}
-	
-	private void updateMapping(FriendlyCodeVO vo) {
-		try {
-			this.getSeoMappingDAO().updateMapping(vo);
-			this.getCacheWrapper().initCache(this.getSeoMappingDAO());
-		} catch (Throwable t) {
-			_logger.error("Error updating mapping", t);
-		}
-	}
-	
-	private void deleteMapping(String pageCode, String contentId) {
-		try {
-			this.getSeoMappingDAO().deleteMapping(pageCode, contentId);
-		} catch (Throwable t) {
-			_logger.error("Error deleting mapping", t);
-		}
-	}
+    
+    private String generateUniqueFriendlyCode(String originalText, String langCode) {
+        String friendlyCode = FriendlyCodeGenerator.generateFriendlyCode(originalText);
+        if (StringUtils.isBlank(originalText)) {
+            return null;
+        }
+        FriendlyCodeVO existing = this.getReference(friendlyCode);
+        if (null != existing) {
+            int index = 1;
+            String original = friendlyCode;
+            do {
+                friendlyCode = original + (null != langCode ? "_"+langCode : "") + "_" + index++;
+            } while (null != this.getReference(friendlyCode));
+        }
+        return friendlyCode;
+    }
 	
 	@Override
 	public List<String> searchFriendlyCode(FieldSearchFilter[] filters) throws ApsSystemException {
@@ -211,7 +186,7 @@ public class SeoMappingManager extends AbstractService implements ISeoMappingMan
 		try {
 			codes = this.getSeoMappingDAO().searchFriendlyCode(filters);
 		} catch (Throwable t) {
-			_logger.error("Error searching Friendly Codes", t);
+			logger.error("Error searching Friendly Codes", t);
 			throw new ApsSystemException("Error searching Friendly Codes", t);
 		}
 		return codes;
@@ -219,12 +194,12 @@ public class SeoMappingManager extends AbstractService implements ISeoMappingMan
 	
 	@Override
 	public FriendlyCodeVO getReference(String friendlyCode) {
-		return this.getCacheWrapper().getMappingByFriendlyCode(friendlyCode);//this.getMapping().get(friendlyCode);
+		return this.getCacheWrapper().getMappingByFriendlyCode(friendlyCode);
 	}
 	
 	@Override
 	public String getPageReference(String pageCode) {
-		FriendlyCodeVO friendlyCode = this.getCacheWrapper().getMappingByPageCode(pageCode);//this.getPageFriendlyCodes().get(pageCode);
+		FriendlyCodeVO friendlyCode = this.getCacheWrapper().getMappingByPageCode(pageCode);
 		if (friendlyCode!=null) {
 			return friendlyCode.getPageCode();
 		}
@@ -234,7 +209,7 @@ public class SeoMappingManager extends AbstractService implements ISeoMappingMan
 	@Override
 	public String getContentReference(String contentId, String langCode) {
 		String friendlyCode = null;
-		ContentFriendlyCode content = this.getCacheWrapper().getMappingByContentId(contentId);//this.getContentFriendlyCodes().get(contentId);
+		ContentFriendlyCode content = this.getCacheWrapper().getMappingByContentId(contentId);
 		if (content != null) {
 			friendlyCode = content.getFriendlyCode(langCode);
 			if (friendlyCode == null) {
@@ -257,14 +232,7 @@ public class SeoMappingManager extends AbstractService implements ISeoMappingMan
 	public void setLangManager(ILangManager langManager) {
 		this.langManager = langManager;
 	}
-	
-	protected IPageManager getPageManager() {
-		return pageManager;
-	}
-	public void setPageManager(IPageManager pageManager) {
-		this.pageManager = pageManager;
-	}
-
+    
     protected ISeoMappingCacheWrapper getCacheWrapper() {
         return cacheWrapper;
     }
