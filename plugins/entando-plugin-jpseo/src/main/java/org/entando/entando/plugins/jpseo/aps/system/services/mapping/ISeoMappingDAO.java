@@ -37,7 +37,9 @@ public interface ISeoMappingDAO {
 	
 	public void updateMapping(ContentFriendlyCode contentFriendlyCode);
 	
-	public void deleteMapping(String pageCode, String contentId);
+	public void deleteMappingForContent(String contentId);
+	
+	public void deleteMappingForPage(String pageCode);
 	
 	public List<String> searchFriendlyCode(FieldSearchFilter[] filters);
 	

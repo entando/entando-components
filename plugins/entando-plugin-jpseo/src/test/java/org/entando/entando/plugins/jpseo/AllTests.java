@@ -24,6 +24,7 @@ package org.entando.entando.plugins.jpseo;
 import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
 import junit.framework.TestSuite;
+import org.entando.entando.plugins.jpseo.aps.system.services.content.ContentMappingIntegrationTest;
 import org.entando.entando.plugins.jpseo.aps.system.services.metatag.MetatagCatalogueIntegrationTest;
 import org.entando.entando.plugins.jpseo.apsadmin.content.ContentActionIntegrationTest;
 import org.entando.entando.plugins.jpseo.apsadmin.portal.PageActionIntegrationTest;
@@ -37,6 +38,7 @@ public class AllTests {
 
         suite.addTestSuite(MetatagCatalogueIntegrationTest.class);
 
+        suite.addTestSuite(ContentMappingIntegrationTest.class);
         suite.addTestSuite(ContentActionIntegrationTest.class);
         suite.addTestSuite(PageActionIntegrationTest.class);
         suite.addTestSuite(PageSettingsActionIntegrationTest.class);

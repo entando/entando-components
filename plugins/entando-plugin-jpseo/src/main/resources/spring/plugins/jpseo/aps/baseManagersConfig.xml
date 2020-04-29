@@ -34,10 +34,10 @@
         <property name="seoMappingDAO" >
             <bean class="org.entando.entando.plugins.jpseo.aps.system.services.mapping.SeoMappingDAO">
                 <property name="dataSource" ref="portDataSource" />
+                <property name="dataSourceClassName"><value>${portDataSourceClassName}</value></property>
             </bean>
         </property>
         <property name="langManager" ref="LangManager" />
-        <property name="pageManager" ref="PageManager" />
         <property name="cacheWrapper">
             <bean class="org.entando.entando.plugins.jpseo.aps.system.services.mapping.cache.SeoMappingCacheWrapper">
                 <property name="springCacheManager" ref="springCacheManager" />
