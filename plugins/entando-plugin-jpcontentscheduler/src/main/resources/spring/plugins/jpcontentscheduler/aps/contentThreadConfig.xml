@@ -1,64 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	   xmlns:p="http://www.springframework.org/schema/p"
-	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 	
-	<bean id="jpcontentschedulerContentSchedulerManager"
-		  class="org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.ContentSchedulerManager" parent="abstractService">
-		<property name="contentSchedulerDAO" >
-			<bean class="org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.ContentSchedulerDAO">
-				<property name="dataSource" ref="portDataSource" />
-			</bean>
-		</property>
-		<property name="workContentSearcherDAO" ref="jacmsWorkContentSearcherDAO" />
-		<property name="configManager" ref="BaseConfigManager" />
-		<property name="authorizationManager" ref="AuthorizationManager"/>
-		<property name="userManager" ref="UserManager" />
-		<property name="mailManager" ref="jpmailMailManager"/>
-	</bean>
+    <bean id="jpcontentschedulerContentSchedulerManager"
+              class="org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.ContentSchedulerManager" parent="abstractService">
+        <property name="contentSchedulerDAO" >
+            <bean class="org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.ContentSchedulerDAO">
+                <property name="dataSource" ref="portDataSource" />
+            </bean>
+        </property>
+        <property name="workContentSearcherDAO" ref="jacmsWorkContentSearcherDAO" />
+        <property name="configManager" ref="BaseConfigManager" />
+        <property name="authorizationManager" ref="AuthorizationManager"/>
+        <property name="userManager" ref="UserManager" />
+        <property name="mailManager" ref="jpmailMailManager"/>
+    </bean>
 	
-	<!-- Scheduler Bean -->
-	<bean name="publishJob" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
-		<property name="jobClass" value="org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.ContentJobs" />
-		<property name="jobDataAsMap">
-			<map>
-				<entry key="contentManager" value-ref="jacmsContentManager" />                                
-				<entry key="jpcontentschedulerContentSchedulerManager" value-ref="jpcontentschedulerContentSchedulerManager" />
-				<entry key="categoryManager" value-ref="CategoryManager" />
-				<entry key="pageManager" value-ref="PageManager" />
-				<entry key="contentModelManager" value-ref="jacmsContentModelManager" />
-			</map>
-		</property>
-		<property name="durability" value="true" />
-	</bean>
+    <!-- Scheduler Bean -->
+    <bean name="publishJob" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="jobClass" value="org.entando.entando.plugins.jpcontentscheduler.aps.system.services.content.ContentJobs" />
+        <property name="jobDataAsMap">
+            <map>
+                <entry key="contentManager" value-ref="jacmsContentManager" />                                
+                <entry key="jpcontentschedulerContentSchedulerManager" value-ref="jpcontentschedulerContentSchedulerManager" />
+                <entry key="categoryManager" value-ref="CategoryManager" />
+                <entry key="pageManager" value-ref="PageManager" />
+                <entry key="contentModelManager" value-ref="jacmsContentModelManager" />
+            </map>
+        </property>
+        <property name="durability" value="true" />
+    </bean>
     
-	<!-- Trigger normale -->
-	<bean id="publishCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-		<property name="jobDetail" ref="publishJob" />
-		<property name="cronExpression" value="0 30 2 * * ?" />
-	</bean>
+    <!-- Trigger normale -->
+    <bean id="publishCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="publishJob" />
+        <property name="cronExpression" value="0 30 2 * * ?" />
+    </bean>
 	
-	<!-- Trigger per i test 
-	<bean id="publishCronTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
-		<property name="jobDetail" ref="publishJob" />
-		<property name="startDelay" value="10000" />
-		<property name="repeatInterval" value="240000" />
-	</bean>-->
-	<!-- Fine scheduler bean -->
+    <!-- Trigger per i test 
+    <bean id="publishCronTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+            <property name="jobDetail" ref="publishJob" />
+            <property name="startDelay" value="10000" />
+            <property name="repeatInterval" value="240000" />
+    </bean>-->
+<!--    <bean id="publishCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="publishJob"/>
+        <property name="cronExpression" value="0 * * ? * * *"/>
+    </bean>-->
+    <!-- Fine scheduler bean -->
     
-	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-		<property name="applicationContextSchedulerContextKey" value="applicationContext"/>
-		<property name="jobDetails">
-			<list>
-				<ref bean="publishJob" />
-			</list>
-		</property>
-		<property name="triggers">
-			<list>
-				<ref bean="publishCronTrigger" />
-			</list>
-		</property>
-	</bean>
+    <bean id="publishScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="applicationContextSchedulerContextKey" value="applicationContext"/>
+        <property name="jobDetails">
+            <list>
+                <ref bean="publishJob" />
+            </list>
+        </property>
+        <property name="triggers">
+            <list>
+                <ref bean="publishCronTrigger" />
+            </list>
+        </property>
+    </bean>
 	
 </beans>

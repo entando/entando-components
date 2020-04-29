@@ -1,25 +1,20 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="s" uri="/struts-tags" %>
 
-<s:set var="prevCode">
-    <%= request.getParameter("prevCode") %>
-</s:set>
+<s:set var="prevCode"><%= request.getParameter("prevCode") %></s:set>
 
-<c:set var="prevLinkTypeVar">
-    <%= request.getParameter("prevLinkTypeVar") %>
-</c:set>
+<c:set var="prevLinkTypeVar"><%= (null != request.getParameter("prevLinkTypeVar")) ? request.getParameter("prevLinkTypeVar") : -1%></c:set>
 
-<c:set var="linkTypeVar">
-    <%= request.getParameter("linkTypeVar") %>
-</c:set>
+<c:set var="linkTypeVar"><%= request.getParameter("linkTypeVar") %></c:set>
 
-  <c:if test="${prevLinkTypeVar!=null && prevLinkTypeVar!=''}">
+
+  <c:if test="${not empty prevLinkTypeVar && prevLinkTypeVar!=''}">
          <div class="form-group mt-20">
              <div class="col-xs-12">
                  <div class="alert alert-info mt-20 no-mb">
                      <span class="pficon pficon-info"></span>
                          <p>
-                             <c:if test="${prevLinkTypeVar == 1}">
+                             <c:if test="${null != prevLinkTypeVar && prevLinkTypeVar == 1}">
                                 <s:text name="note.previousLinkSettings" /> <s:text name="note.URLLinkTo" />
                              </c:if>
 
