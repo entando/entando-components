@@ -165,7 +165,6 @@ public class ResourcesService {
     }
 
     private ResourceInterface loadResource(String resourceId) {
-
         try {
             ResourceInterface resource = resourceManager.loadResource(resourceId);
 
@@ -211,12 +210,7 @@ public class ResourcesService {
             }
 
             resourceFile.setMainGroup(resource.getMainGroup());
-
-            if (categories != null && categories.size() > 0) {
-                resourceFile.setCategories(convertCategories(categories));
-            } else {
-                resourceFile.setCategories(resource.getCategories());
-            }
+            resourceFile.setCategories(convertCategories(categories));
 
             resourceManager.updateResource(resourceFile);
             return convertResourceToDto(resourceManager.loadResource(resourceId));
