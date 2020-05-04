@@ -65,6 +65,7 @@ import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.plugins.jacms.aps.system.services.content.IContentService;
 import org.entando.entando.plugins.jacms.web.content.validator.BatchContentStatusRequest;
 import org.entando.entando.plugins.jacms.web.content.validator.ContentStatusRequest;
+import org.entando.entando.plugins.jacms.web.resource.request.CreateResourceRequest;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.hamcrest.CoreMatchers;
@@ -2219,6 +2220,11 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         String path = String.format("/plugins/cms/assets", type);
         String contents = "content";
 
+        CreateResourceRequest resourceRequest = new CreateResourceRequest();
+        resourceRequest.setType(type);
+        resourceRequest.setCategories(new ArrayList<>());
+        resourceRequest.setGroup(group);
+
         MockMultipartFile file;
         if ("image".equals(type)) {
             file = new MockMultipartFile("file", "image_test.jpeg", mimeType, contents.getBytes());
@@ -2228,7 +2234,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
 
         MockHttpServletRequestBuilder request = multipart(path)
                 .file(file)
-                .param("group", group)
+                .param("metadata", mapper.writeValueAsString(resourceRequest))
                 .header("Authorization", "Bearer " + accessToken);
 
         if (type != null) {
