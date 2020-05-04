@@ -30,8 +30,6 @@ import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentRenderiza
 import com.agiletec.plugins.jacms.apsadmin.content.ContentActionConstants;
 
 /**
- * Classe helper per la showlet di erogazione contenuti per la funzione preview da redazione contenuti.
- * La classe deriva direttamente dalla classe helper {@link ContentViewerHelper} utilizzata nel front-end di portale per le funzioni di renderizzazione contenuti.
  * @author E.Santoboni
  */
 public class ContentPreviewViewerHelper extends ContentViewerHelper {
@@ -58,7 +56,7 @@ public class ContentPreviewViewerHelper extends ContentViewerHelper {
 			if (null != contentId && null != modelId) {
 				long longModelId = new Long(modelId).longValue();
 				this.setStylesheet(longModelId, reqCtx);
-				ContentRenderizationInfo renderizationInfo = this.getContentDispenser().getRenderizationInfo(contentId, longModelId, langCode, reqCtx);
+				ContentRenderizationInfo renderizationInfo = ((ContentPreviewDispenser) this.getContentDispenser()).getRenderizationInfoForPreview(contentId, longModelId, langCode, reqCtx);
 	            if (null == renderizationInfo) {
 	            	_logger.warn("Null Renderization informations: content={}", contentId);
 	            } else {
@@ -70,7 +68,6 @@ public class ContentPreviewViewerHelper extends ContentViewerHelper {
 			}
 		} catch (Throwable t) {
 			_logger.error("error loading rendered content for preview", t);
-			//ApsSystemUtils.logThrowable(t, this, "getRenderedContent");
 			throw new ApsSystemException("error loading rendered content for preview", t);
 		}
 		return renderedContent;

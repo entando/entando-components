@@ -34,64 +34,61 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Fornisce i contenuti formattati per la funzione preview da redazione contenuti.
- * La classe deriva direttamente dalla classe utilizzata nel front-end {@link BaseContentDispenser} di portale per le funzioni di renderizzazione contenuti.
  * @author E.Santoboni
  */
 public class ContentPreviewDispenser extends BaseContentDispenser {
-	
-	private static final Logger _logger = LoggerFactory.getLogger(ContentPreviewDispenser.class);
-	
-	@Override
-	public ContentRenderizationInfo getRenderizationInfo(String contentId, long modelId, String langCode, RequestContext reqCtx) {
-		PublicContentAuthorizationInfo authInfo = null;
-		try {
-			Content content = this.extractContentOnSession(reqCtx);
-			authInfo = new PublicContentAuthorizationInfo(content, this.getLangManager().getLangs());
-		} catch (Throwable t) {
-			_logger.error("error in getAuthorizationInfo for content {}", contentId, t);
-		}
-		return this.getRenderizationInfo(authInfo, contentId, modelId, langCode, reqCtx);
-	}
-	
-	@Override
-	public ContentRenderizationInfo getBaseRenderizationInfo(PublicContentAuthorizationInfo authInfo, 
-			String contentId, long modelId, String langCode, UserDetails currentUser, RequestContext reqCtx) {
-		ContentRenderizationInfo renderInfo = null;
-		try {
-			List<Group> userGroups = (null != currentUser) ? this.getAuthorizationManager().getUserGroups(currentUser) : new ArrayList<>();
-			if (authInfo.isUserAllowed(userGroups)) {
-				Content contentOnSession = this.extractContentOnSession(reqCtx);
-				String renderedContent = this.buildRenderedContent(contentOnSession, modelId, langCode, reqCtx);
-				if (null != renderedContent && renderedContent.trim().length() > 0) {
-					List<AttributeRole> roles = this.getContentManager().getAttributeRoles();
-					renderInfo = new ContentRenderizationInfo(contentOnSession, renderedContent, modelId, langCode, roles);
-				}
-			}
-		} catch (Throwable t) {
-			_logger.error("Error while rendering content {}", contentId, t);
-			return null;
-		}
-		return renderInfo;
-	}
-	
-	private Content extractContentOnSession(RequestContext reqCtx) {
-		HttpServletRequest request = reqCtx.getRequest();
-		String contentOnSessionMarker = (String) request.getAttribute("contentOnSessionMarker");
-		if (null == contentOnSessionMarker || contentOnSessionMarker.trim().length() == 0) {
-			contentOnSessionMarker = request.getParameter("contentOnSessionMarker");
-		}
-		return (Content) request.getSession()
-				.getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + contentOnSessionMarker);
-	}
-	
-	protected ILangManager getLangManager() {
-		return _langManager;
-	}
-	public void setLangManager(ILangManager langManager) {
-		this._langManager = langManager;
-	}
-	
-	private ILangManager _langManager;
-	
+
+    private static final Logger _logger = LoggerFactory.getLogger(ContentPreviewDispenser.class);
+
+    private ILangManager langManager;
+
+    public ContentRenderizationInfo getRenderizationInfoForPreview(String contentId, long modelId, String langCode, RequestContext reqCtx) {
+        PublicContentAuthorizationInfo authInfo = null;
+        try {
+            Content content = this.extractContentOnSession(reqCtx);
+            authInfo = new PublicContentAuthorizationInfo(content, this.getLangManager().getLangs());
+        } catch (Throwable t) {
+            _logger.error("error in getAuthorizationInfo for content {}", contentId, t);
+        }
+        return this.getRenderizationInfo(authInfo, contentId, modelId, langCode, reqCtx);
+    }
+
+    @Override
+    public ContentRenderizationInfo getBaseRenderizationInfo(PublicContentAuthorizationInfo authInfo,
+            String contentId, long modelId, String langCode, UserDetails currentUser, RequestContext reqCtx) {
+        ContentRenderizationInfo renderInfo = null;
+        try {
+            List<Group> userGroups = (null != currentUser) ? this.getAuthorizationManager().getUserGroups(currentUser) : new ArrayList<>();
+            if (authInfo.isUserAllowed(userGroups)) {
+                Content contentOnSession = this.extractContentOnSession(reqCtx);
+                String renderedContent = this.buildRenderedContent(contentOnSession, modelId, langCode, reqCtx);
+                if (null != renderedContent && renderedContent.trim().length() > 0) {
+                    List<AttributeRole> roles = this.getContentManager().getAttributeRoles();
+                    renderInfo = new ContentRenderizationInfo(contentOnSession, renderedContent, modelId, langCode, roles);
+                }
+            }
+        } catch (Throwable t) {
+            _logger.error("Error while rendering content {}", contentId, t);
+            return null;
+        }
+        return renderInfo;
+    }
+
+    private Content extractContentOnSession(RequestContext reqCtx) {
+        HttpServletRequest request = reqCtx.getRequest();
+        String contentOnSessionMarker = (String) request.getAttribute("contentOnSessionMarker");
+        if (null == contentOnSessionMarker || contentOnSessionMarker.trim().length() == 0) {
+            contentOnSessionMarker = request.getParameter("contentOnSessionMarker");
+        }
+        return (Content) request.getSession()
+                .getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + contentOnSessionMarker);
+    }
+
+    protected ILangManager getLangManager() {
+        return langManager;
+    }
+    public void setLangManager(ILangManager langManager) {
+        this.langManager = langManager;
+    }
+
 }
