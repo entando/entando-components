@@ -79,7 +79,7 @@ public class ResourcesController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 401, message = "Unauthorized")})
-    @PostMapping(value = "/plugins/cms/assets"/*, consumes = MediaType.MULTIPART_FORM_DATA_VALUE*/)
+    @PostMapping(value = "/plugins/cms/assets")
     @RestAccessControl(permission = Permission.CONTENT_EDITOR)
     public ResponseEntity<SimpleRestResponse<AssetDto>> createAsset(
             @RequestParam(value = "metadata") String request,
