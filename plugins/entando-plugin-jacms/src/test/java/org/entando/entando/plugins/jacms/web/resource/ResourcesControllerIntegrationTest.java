@@ -28,6 +28,7 @@ import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.user.UserDetails;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -35,11 +36,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.entando.entando.plugins.jacms.web.resource.request.CreateResourceRequest;
+import org.entando.entando.plugins.jacms.web.resource.request.UpdateResourceRequest;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -49,6 +53,8 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
 
     @Autowired
     private ICategoryManager categoryManager;
+
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     @Test
     public void testListImagesUnauthorized() throws Exception {
@@ -380,7 +386,7 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
         String createdId = null;
 
         try {
-            ResultActions result = performCreateResource(user, "image", "free", Arrays.stream(new String[]{"resCat1, resCat2"}).collect(Collectors.toList()), "application/jpeg")
+            ResultActions result = performCreateResource(user, "image", "free", Arrays.stream(new String[]{"resCat1", "resCat2"}).collect(Collectors.toList()), "application/jpeg")
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.payload.id", Matchers.anything()))
@@ -478,7 +484,7 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
         String createdId = null;
 
         try {
-            ResultActions result = performCreateResource(user, "file", "free", Arrays.stream(new String[]{"resCat1, resCat2"}).collect(Collectors.toList()), "application/pdf")
+            ResultActions result = performCreateResource(user, "file", "free", Arrays.stream(new String[]{"resCat1", "resCat2"}).collect(Collectors.toList()), "application/pdf")
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.payload.id", Matchers.anything()))
@@ -529,7 +535,7 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
         String createdId = null;
 
         try {
-            ResultActions result = performCreateResource(user, "image", "free", Arrays.stream(new String[]{"resCat1, resCat2"}).collect(Collectors.toList()), "application/jpeg")
+            ResultActions result = performCreateResource(user, "image", "free", Arrays.stream(new String[]{"resCat1", "resCat2"}).collect(Collectors.toList()), "application/jpeg")
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.payload.id", Matchers.anything()))
@@ -582,7 +588,7 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
         String createdId = null;
 
         try {
-            ResultActions result = performCreateResource(user, "file", "free", Arrays.stream(new String[]{"resCat1, resCat2"}).collect(Collectors.toList()), "application/pdf")
+            ResultActions result = performCreateResource(user, "file", "free", Arrays.stream(new String[]{"resCat1", "resCat2"}).collect(Collectors.toList()), "application/pdf")
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.payload.id", Matchers.anything()))
@@ -665,7 +671,7 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
         String clonedId = null;
 
         try {
-            ResultActions result = performCreateResource(user, "file", "free", Arrays.stream(new String[]{"resCat1, resCat2"}).collect(Collectors.toList()), "application/pdf")
+            ResultActions result = performCreateResource(user, "file", "free", Arrays.stream(new String[]{"resCat1", "resCat2"}).collect(Collectors.toList()), "application/pdf")
                     .andDo(print())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.id", Matchers.anything()))
@@ -726,7 +732,7 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
         String clonedId = null;
 
         try {
-            ResultActions result = performCreateResource(user, "image", "free", Arrays.stream(new String[]{"resCat1, resCat2"}).collect(Collectors.toList()), "application/jpeg")
+            ResultActions result = performCreateResource(user, "image", "free", Arrays.stream(new String[]{"resCat1", "resCat2"}).collect(Collectors.toList()), "application/jpeg")
                     .andDo(print())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.id", Matchers.anything()))
@@ -1067,6 +1073,11 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
     private ResultActions performCreateResource(UserDetails user, String type, String group, List<String> categories, String mimeType) throws Exception {
         String path = String.format("/plugins/cms/assets", type);
 
+        CreateResourceRequest resourceRequest = new CreateResourceRequest();
+        resourceRequest.setType(type);
+        resourceRequest.setCategories(categories);
+        resourceRequest.setGroup(group);
+
         if (null == user) {
             return mockMvc.perform(get(path));
         }
@@ -1096,16 +1107,8 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
 
         MockHttpServletRequestBuilder request = multipart(path)
                 .file(file)
-                .param("group", group)
+                .param("metadata", MAPPER.writeValueAsString(resourceRequest))
                 .header("Authorization", "Bearer " + accessToken);
-
-        if (type != null) {
-            request.param("type", type);
-        }
-
-        if (categories != null) {
-            request.param("categories", String.join(",", categories));
-        }
 
         return mockMvc.perform(request);
     }
@@ -1113,6 +1116,10 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
     private ResultActions performEditResource(UserDetails user, String type, String resourceId, String description,
                               List<String> categories, boolean useFile) throws Exception {
         String path = String.format("/plugins/cms/assets/%s", resourceId, type);
+
+        UpdateResourceRequest resourceRequest = new UpdateResourceRequest();
+        resourceRequest.setDescription(description);
+        resourceRequest.setCategories(categories);
 
         MockMultipartFile file;
         String contents = "some text very big so it has more than 1Kb size asdklasdhadsjakhdsjadjasdhjhjasd some garbage to make it bigger!!!" +
@@ -1136,6 +1143,7 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
         }
 
         MockMultipartHttpServletRequestBuilder request = multipart(path);
+        request.param("metadata", MAPPER.writeValueAsString(resourceRequest));
 
         if (user != null) {
             request.header("Authorization", "Bearer " + mockOAuthInterceptor(user));
@@ -1143,14 +1151,6 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
 
         if (useFile) {
             request.file(file);
-        }
-
-        if (categories != null) {
-            request.param("categories", String.join(",", categories));
-        }
-
-        if (description != null) {
-            request.param("description", description);
         }
 
         return mockMvc.perform(request);

@@ -15,15 +15,18 @@ package org.entando.entando.plugins.jacms.web.resource;
 
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.plugins.jacms.aps.system.services.resource.ResourcesService;
 import org.entando.entando.plugins.jacms.web.resource.model.AssetDto;
-import org.entando.entando.plugins.jacms.web.resource.model.ImageAssetDto;
+import org.entando.entando.plugins.jacms.web.resource.request.CreateResourceRequest;
+import org.entando.entando.plugins.jacms.web.resource.request.UpdateResourceRequest;
 import org.entando.entando.plugins.jacms.web.resource.validator.ResourcesValidator;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.model.PagedMetadata;
@@ -32,7 +35,7 @@ import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -76,20 +79,22 @@ public class ResourcesController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 401, message = "Unauthorized")})
-    @PostMapping("/plugins/cms/assets")
+    @PostMapping(value = "/plugins/cms/assets")
     @RestAccessControl(permission = Permission.CONTENT_EDITOR)
-    public ResponseEntity<SimpleRestResponse<AssetDto>> createAsset(@RequestParam("type") String type,
-            @RequestPart("file") MultipartFile file,@RequestParam String group,
-            @RequestParam(required = false) String categories) {
+    public ResponseEntity<SimpleRestResponse<AssetDto>> createAsset(
+            @RequestParam(value = "metadata") String request,
+            @RequestParam(value = "file") MultipartFile file) throws JsonProcessingException {
         logger.debug("REST request - create new resource");
 
-        List<String> categoriesList = Arrays.stream(
-                    Optional.ofNullable(categories).orElse("").split(","))
+        CreateResourceRequest resourceRequest = new ObjectMapper().readValue(request, CreateResourceRequest.class);
+
+        List<String> categoriesList = Optional.ofNullable(resourceRequest.getCategories()).orElse(Collections.emptyList())
+                .stream()
                 .map(String::trim)
                 .filter(c -> c.length() > 0)
                 .collect(Collectors.toList());
 
-        AssetDto result = service.createAsset(type, file, group, categoriesList, extractCurrentUser());
+        AssetDto result = service.createAsset(resourceRequest.getType(), file, resourceRequest.getGroup(), categoriesList, extractCurrentUser());
         return ResponseEntity.ok(new SimpleRestResponse<>(result));
     }
 
@@ -109,20 +114,22 @@ public class ResourcesController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 401, message = "Unauthorized")})
-    @PostMapping("/plugins/cms/assets/{resourceId}")
+    @PostMapping(value = "/plugins/cms/assets/{resourceId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @RestAccessControl(permission = Permission.CONTENT_EDITOR)
     public ResponseEntity<SimpleRestResponse<AssetDto>> editAsset(@PathVariable("resourceId") String resourceId,
-            @RequestPart(value = "file", required = false) MultipartFile file, @RequestParam(required = false) String categories,
-            @RequestParam(required = false) String description) {
+            @RequestParam(value = "metadata") String request,
+            @RequestParam(value = "file", required = false) MultipartFile file) throws JsonProcessingException {
         logger.debug("REST request - edit image resource with id {}", resourceId);
 
-        List<String> categoriesList = Arrays.stream(
-                    Optional.ofNullable(categories).orElse("").split(","))
+        UpdateResourceRequest resourceRequest = new ObjectMapper().readValue(request, UpdateResourceRequest.class);
+
+        List<String> categoriesList = Optional.ofNullable(resourceRequest.getCategories()).orElse(Collections.emptyList())
+                .stream()
                 .map(String::trim)
                 .filter(c -> c.length() > 0)
                 .collect(Collectors.toList());
 
-        AssetDto result = service.editAsset(resourceId, file, description, categoriesList);
+        AssetDto result = service.editAsset(resourceId, file, resourceRequest.getDescription(), categoriesList);
         return ResponseEntity.ok(new SimpleRestResponse<>(result));
     }
 
