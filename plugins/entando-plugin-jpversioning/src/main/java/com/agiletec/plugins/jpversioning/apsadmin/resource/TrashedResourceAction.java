@@ -30,6 +30,7 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceIns
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 import com.agiletec.plugins.jacms.apsadmin.resource.ResourceFinderAction;
 import com.agiletec.plugins.jpversioning.aps.system.services.resource.ITrashedResourceManager;
+import java.io.ByteArrayInputStream;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -47,21 +48,21 @@ public class TrashedResourceAction extends ResourceFinderAction {
 	private String _resourceId;
 	private String _size;
 	private String _langCode;
-    
+
 	private ITrashedResourceManager _trashedResourceManager;
-	
-	public InputStream getInputStream() {
+    
+    public InputStream getInputStream() {
 		InputStream documentInputStream = null;
 		try {
 			String resourceId = this.getResourceId();
 			if (null ==  resourceId || resourceId.length() == 0) {
-				return null;
+				return new ByteArrayInputStream(new byte[0]);
 			}
 			ResourceInterface resource = this.getTrashedResourceManager().loadTrashedResource(resourceId);
 			String mainGroup = resource.getMainGroup();
 			UserDetails currentUser = this.getCurrentUser();
 			if (!this.getAuthorizationManager().isAuthOnGroup(currentUser, mainGroup)) {
-				return null;
+				return new ByteArrayInputStream(new byte[0]);
 			}
 			int size = Integer.parseInt(this.getSize());
 			ResourceInstance instance = null;
@@ -73,8 +74,11 @@ public class TrashedResourceAction extends ResourceFinderAction {
 			documentInputStream = this.getTrashedResourceManager().getTrashFileStream(resource, instance);
 			this.setContentType(instance.getMimeType());
 			this.setNameFile(instance.getFileName());
+            if (null == documentInputStream) {
+                documentInputStream = new ByteArrayInputStream(new byte[0]);
+            }
 		} catch (Throwable t) {
-			logger.error("Error extracting input stream", t);
+            logger.error("Error extracting input stream", t);
 		}
 		return documentInputStream;
 	}
@@ -118,7 +122,7 @@ public class TrashedResourceAction extends ResourceFinderAction {
 	}
 
 	public List<String> getTrashedResources() throws Throwable {
-		List<String> resources = new ArrayList<String>();
+		List<String> resources = new ArrayList<>();
 		try {
 			resources = this.searchTrashedResources(this.getResourceTypeCode(), this.getText(), this.getCurrentUser());
 		} catch (Throwable t) {
@@ -140,8 +144,7 @@ public class TrashedResourceAction extends ResourceFinderAction {
 				allowedGroups.add(group.getName());
 			}
 		}
-		List<String> resourcesId = this.getTrashedResourceManager().searchTrashedResourceIds(resourceTypeCode, text, allowedGroups);
-		return resourcesId;
+		return this.getTrashedResourceManager().searchTrashedResourceIds(resourceTypeCode, text, allowedGroups);
 	}
 
 	public String getResourceId() {
@@ -149,13 +152,6 @@ public class TrashedResourceAction extends ResourceFinderAction {
 	}
 	public void setResourceId(String resourceId) {
 		this._resourceId = resourceId;
-	}
-
-	public ITrashedResourceManager getTrashedResourceManager() {
-		return _trashedResourceManager;
-	}
-	public void setTrashedResourceManager(ITrashedResourceManager trashedResourceManager) {
-		this._trashedResourceManager = trashedResourceManager;
 	}
 
 	public void setContentType(String contentType) {
@@ -184,6 +180,13 @@ public class TrashedResourceAction extends ResourceFinderAction {
 	}
 	public String getLangCode() {
 		return _langCode;
+	}
+
+	protected ITrashedResourceManager getTrashedResourceManager() {
+		return _trashedResourceManager;
+	}
+	public void setTrashedResourceManager(ITrashedResourceManager trashedResourceManager) {
+		this._trashedResourceManager = trashedResourceManager;
 	}
 
 }
