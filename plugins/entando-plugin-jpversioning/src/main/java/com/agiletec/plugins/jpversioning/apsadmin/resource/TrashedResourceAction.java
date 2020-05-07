@@ -21,9 +21,7 @@
  */
 package com.agiletec.plugins.jpversioning.apsadmin.resource;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.AbstractMonoInstanceResource;
@@ -36,12 +34,21 @@ import com.agiletec.plugins.jpversioning.aps.system.services.resource.ITrashedRe
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-/**
- * @version 1.0
- * @author G.Cocco
- */
-public class TrashedResourceAction extends ResourceFinderAction implements ITrashedResourceAction {
+public class TrashedResourceAction extends ResourceFinderAction {
+    
+    private static final Logger logger = LoggerFactory.getLogger(TrashedResourceAction.class);
+	
+	private String _contentType;
+	private String _nameFile;
+
+	private String _resourceId;
+	private String _size;
+	private String _langCode;
+    
+	private ITrashedResourceManager _trashedResourceManager;
 	
 	public InputStream getInputStream() {
 		InputStream documentInputStream = null;
@@ -53,31 +60,21 @@ public class TrashedResourceAction extends ResourceFinderAction implements ITras
 			ResourceInterface resource = this.getTrashedResourceManager().loadTrashedResource(resourceId);
 			String mainGroup = resource.getMainGroup();
 			UserDetails currentUser = this.getCurrentUser();
-			if (!this.getAuthManager().isAuthOnGroup(currentUser, mainGroup)) {
+			if (!this.getAuthorizationManager().isAuthOnGroup(currentUser, mainGroup)) {
 				return null;
 			}
 			int size = Integer.parseInt(this.getSize());
 			ResourceInstance instance = null;
-			//String path = null;
 			if (resource.isMultiInstance()) {
 				instance = ((AbstractMultiInstanceResource) resource).getInstance(size, getLangCode());
-				//Map<String,String> trashPathsForInstances = getTrashedResourceManager().resourceInstancesTrashFilePaths(resource);
-				//path = trashPathsForInstances.get(this.getSize());
 			} else {
 				instance = ((AbstractMonoInstanceResource) resource).getInstance();
-				//Map<String,String> trashPathsForInstances = getTrashedResourceManager().resourceInstancesTrashFilePaths(resource);
-				//path = trashPathsForInstances.get("0");
 			}
 			documentInputStream = this.getTrashedResourceManager().getTrashFileStream(resource, instance);
 			this.setContentType(instance.getMimeType());
 			this.setNameFile(instance.getFileName());
-			//File fileTemp = new File(path);
-			//ApsSystemUtils.getLogger().info(" path " + fileTemp);
-			//if (fileTemp.exists()) {
-			//documentInputStream = new FileInputStream(fileTemp);
-			//}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getInputStream");
+			logger.error("Error extracting input stream", t);
 		}
 		return documentInputStream;
 	}
@@ -86,59 +83,54 @@ public class TrashedResourceAction extends ResourceFinderAction implements ITras
 		return SUCCESS;
 	}	
 
-	@Override
 	public String restore(){
 		try {
 			String id = this.getResourceId();
 			this.getTrashedResourceManager().restoreResource(id);
 		} catch(Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "restore");
+			logger.error("Error on restore", t);
 			return FAILURE;
 		}
 		return SUCCESS;
 	}
 
 	public String trash() {
-		String resourceId = this.getResourceId();
 		return SUCCESS;
 	}
 
-	@Override
 	public String remove(){
 		try {
 			this.getTrashedResourceManager().removeFromTrash(this.getResourceId());
 		} catch(Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "remove");
+			logger.error("Error removing trashed resource", t);
 			return FAILURE;
 		}
 		return SUCCESS;
 	}
 
-	@Override
 	public ResourceInterface getTrashedResource(String id) throws Throwable{
 		try {
 			return this.getTrashedResourceManager().loadTrashedResource(id);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getTrashedResource");
+			logger.error("Error extracting trashed resource", t);
 			throw t;
 		}
 	}
 
-	@Override
 	public List<String> getTrashedResources() throws Throwable {
 		List<String> resources = new ArrayList<String>();
 		try {
 			resources = this.searchTrashedResources(this.getResourceTypeCode(), this.getText(), this.getCurrentUser());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getTrashedResources");
+			logger.error("Error extracting trashed resources", t);
 			throw t;
 		}
 		return resources;
 	}
 
 	private List<String> searchTrashedResources(String resourceTypeCode, String text, UserDetails currentUser) throws ApsSystemException {
-		List<String> allowedGroups = new ArrayList<String>();
-		List<Group> userGroups = this.getAuthorizationManager().getGroupsOfUser(currentUser);
+		List<String> allowedGroups = new ArrayList<>();
+		List<Group> userGroups = this.getAuthorizationManager().getUserGroups(currentUser);
 		for (int i=0; i<userGroups.size(); i++) {
 			Group group = userGroups.get(i);
 			if (group.getName().equals(Group.ADMINS_GROUP_NAME)) {
@@ -150,13 +142,6 @@ public class TrashedResourceAction extends ResourceFinderAction implements ITras
 		}
 		List<String> resourcesId = this.getTrashedResourceManager().searchTrashedResourceIds(resourceTypeCode, text, allowedGroups);
 		return resourcesId;
-	}
-
-	public String getText() {
-		return _text;
-	}
-	public void setText(String text) {
-		this._text = text;
 	}
 
 	public String getResourceId() {
@@ -186,13 +171,6 @@ public class TrashedResourceAction extends ResourceFinderAction implements ITras
 	public String getNameFile() {
 		return _nameFile;
 	}
-	
-	public void setAuthManager(IAuthorizationManager authManager) {
-		this._authManager = authManager;
-	}
-	public IAuthorizationManager getAuthManager() {
-		return _authManager;
-	}
 
 	public void setSize(String size) {
 		this._size = size;
@@ -207,17 +185,5 @@ public class TrashedResourceAction extends ResourceFinderAction implements ITras
 	public String getLangCode() {
 		return _langCode;
 	}
-
-	private IAuthorizationManager _authManager;
-	private ITrashedResourceManager _trashedResourceManager;
-	
-	private String _contentType;
-	private String _nameFile;
-
-	private String _resourceId;
-	private String _size;
-	private String _langCode;
-
-	private String _text;
 
 }
