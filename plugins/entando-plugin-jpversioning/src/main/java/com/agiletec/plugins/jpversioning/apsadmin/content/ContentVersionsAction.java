@@ -34,9 +34,8 @@ import com.agiletec.plugins.jpversioning.aps.system.services.versioning.IVersion
  * @author E.Santoboni 
  * @author G.Cocco
  */
-public class ContentVersionsAction extends BaseAction implements IContentVersionsAction {
+public class ContentVersionsAction extends BaseAction {
 	
-	@Override
 	public List<Long> getContentVersions() {
 		Content currentContent = (Content) this.getRequest().getSession()
 				.getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + this.getContentOnSessionMarker());
@@ -53,7 +52,6 @@ public class ContentVersionsAction extends BaseAction implements IContentVersion
 		return versions;
 	}
 	
-	@Override
 	public ContentVersion getContentVersion(long id) {
 		ContentVersion version = null;	
 		try {

@@ -53,19 +53,16 @@ import com.agiletec.plugins.jpversioning.aps.system.services.versioning.IVersion
 /**
  * @author G.Cocco
  */
-public class VersionAction extends AbstractContentAction implements IVersionAction {
+public class VersionAction extends AbstractContentAction {
 	
-	@Override
 	public String history() {
 		return SUCCESS;
 	}
 	
-	@Override
 	public String trash() {
 		return SUCCESS;
 	}
 	
-	@Override
 	public String delete() {
 		try {
 			this.getVersioningManager().deleteVersion(getVersionId());
@@ -76,7 +73,6 @@ public class VersionAction extends AbstractContentAction implements IVersionActi
 		return SUCCESS;
 	}
 	
-	@Override
 	public String preview() {
 		try {
 			ContentVersion contentVersion = this.getContentVersion();
@@ -89,12 +85,10 @@ public class VersionAction extends AbstractContentAction implements IVersionActi
 		return SUCCESS;
 	}
 	
-	@Override
 	public String entryRecover() {
 		return SUCCESS;
 	}
 	
-	@Override
 	public String recover() {
 		Content content = null;
 		try {
