@@ -27,6 +27,7 @@ import org.entando.entando.plugins.jacms.aps.system.services.resource.ResourcesS
 import org.entando.entando.plugins.jacms.web.resource.model.AssetDto;
 import org.entando.entando.plugins.jacms.web.resource.request.CreateResourceRequest;
 import org.entando.entando.plugins.jacms.web.resource.request.UpdateResourceRequest;
+import org.entando.entando.plugins.jacms.web.resource.util.HttpSessionHelper;
 import org.entando.entando.plugins.jacms.web.resource.validator.ResourcesValidator;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.model.PagedMetadata;
@@ -94,7 +95,7 @@ public class ResourcesController {
                 .filter(c -> c.length() > 0)
                 .collect(Collectors.toList());
 
-        AssetDto result = service.createAsset(resourceRequest.getType(), file, resourceRequest.getGroup(), categoriesList, extractCurrentUser());
+        AssetDto result = service.createAsset(resourceRequest.getType(), file, resourceRequest.getGroup(), categoriesList, HttpSessionHelper.extractCurrentUser(httpSession));
         return ResponseEntity.ok(new SimpleRestResponse<>(result));
     }
 
@@ -145,7 +146,4 @@ public class ResourcesController {
         return ResponseEntity.ok(new SimpleRestResponse<>(new HashMap()));
     }
 
-    protected UserDetails extractCurrentUser() {
-        return (UserDetails) this.httpSession.getAttribute("user");
-    }
 }
