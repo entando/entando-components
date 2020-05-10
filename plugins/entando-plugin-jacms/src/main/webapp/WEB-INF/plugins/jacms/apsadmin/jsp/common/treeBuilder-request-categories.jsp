@@ -111,7 +111,7 @@
                     </button>
                 </s:if>
                 <s:else>
-                    <wpsa:actionParam action="joinCategory" var="joinCategoryActionName" >
+                    <wpsa:actionParam action="%{#actionName}" var="joinCategoryActionName" >
                         <wpsa:actionSubParam name="categoryCode" value="%{#currentRoot.code}" />
                     </wpsa:actionParam>
                     <wpsf:submit action="%{#joinCategoryActionName}" type="button"
