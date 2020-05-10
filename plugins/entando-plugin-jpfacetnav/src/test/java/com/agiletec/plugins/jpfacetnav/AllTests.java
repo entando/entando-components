@@ -26,6 +26,7 @@ import junit.framework.TestSuite;
 
 import com.agiletec.plugins.jpfacetnav.aps.system.services.content.TestContentFacetManager;
 import com.agiletec.plugins.jpfacetnav.apsadmin.page.specialwidget.TestFacetNavResultWidgetAction;
+import com.agiletec.plugins.jpfacetnav.apsadmin.page.specialwidget.TestFacetNavTreeWidgetAction;
 
 public class AllTests {
 	
@@ -34,6 +35,7 @@ public class AllTests {
 		
 		suite.addTestSuite(TestContentFacetManager.class);
 		suite.addTestSuite(TestFacetNavResultWidgetAction.class);
+		suite.addTestSuite(TestFacetNavTreeWidgetAction.class);
 		
 		return suite;
 	}
