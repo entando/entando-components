@@ -71,6 +71,11 @@ public class PageActionAspect {
     private ISeoMappingManager seoMappingManager;
     private IPageManager pageManager;
     
+    @Before("execution(* com.agiletec.apsadmin.portal.PageAction.validate())")
+    public void executeExtraValidationParent(JoinPoint joinPoint) {
+        this.executeExtraValidation(joinPoint);
+    }
+
     @Before("execution(* com.agiletec.plugins.jacms.apsadmin.portal.PageAction.validate())")
     public void executeExtraValidation(JoinPoint joinPoint) {
         PageAction action = (PageAction) joinPoint.getTarget();
