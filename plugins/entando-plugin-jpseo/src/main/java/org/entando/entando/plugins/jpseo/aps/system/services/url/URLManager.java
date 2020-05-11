@@ -34,6 +34,7 @@ import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.plugins.jpseo.aps.system.services.page.SeoPageMetadata;
 
 import org.slf4j.Logger;
@@ -46,33 +47,44 @@ public class URLManager extends com.agiletec.aps.system.services.url.URLManager 
 	
 	private static final Logger _logger = LoggerFactory.getLogger(URLManager.class);
 	
+	private ISeoMappingManager seoMappingManager;
+	private IContentManager contentManager;
+	
 	@Override
 	public PageURL createURL(RequestContext reqCtx) {
 		return new PageURL(this, reqCtx);
 	}
 	
-	@Override
-	public String getURLString(com.agiletec.aps.system.services.url.PageURL pageUrl, RequestContext reqCtx) {
-		if (!(pageUrl instanceof PageURL)) {
-			return super.getURLString(pageUrl, reqCtx);
-		}
-		Lang lang = this.extractLang(pageUrl, reqCtx);
-		IPage destPage = this.extractDestPage(pageUrl, reqCtx);
-		String friendlyCode = this.extractFriendlyCode(destPage, lang, pageUrl);
-		HttpServletRequest request = (null != reqCtx) ? reqCtx.getRequest() : null;
-		String url = null;
-		if (null == friendlyCode || friendlyCode.trim().length() == 0) {
-			url = this.createURL(destPage, lang, pageUrl.getParams(), pageUrl.isEscapeAmp(), request);
-		} else {
-			url = this.createFriendlyUrl(friendlyCode, lang, pageUrl.getParams(), pageUrl.isEscapeAmp(), request);
-		}
-		if (null != reqCtx && null != reqCtx.getResponse() && this.useJsessionId()) {
-			HttpServletResponse resp = reqCtx.getResponse();
-			return resp.encodeURL(url.toString());  
-		} else {
-			return url;
-		}
-	}
+    @Override
+    public String getURLString(com.agiletec.aps.system.services.url.PageURL pageUrl, RequestContext reqCtx) {
+        try {
+            if (!(pageUrl instanceof PageURL)) {
+                return super.getURLString(pageUrl, reqCtx);
+            }
+            Lang lang = this.extractLang(pageUrl, reqCtx);
+            IPage destPage = this.extractDestPage(pageUrl, reqCtx);
+            String friendlyCode = ((PageURL) pageUrl).getFriendlyCode();
+            if (StringUtils.isBlank(friendlyCode)) {
+                friendlyCode = this.extractFriendlyCode(destPage, lang, pageUrl);
+            }
+            HttpServletRequest request = (null != reqCtx) ? reqCtx.getRequest() : null;
+            String url = null;
+            if (StringUtils.isBlank(friendlyCode)) {
+                url = super.createURL(destPage, lang, pageUrl.getParams(), pageUrl.isEscapeAmp(), request);
+            } else {
+                url = this.createFriendlyUrl(friendlyCode, lang, pageUrl.getParams(), pageUrl.isEscapeAmp(), request);
+            }
+            if (null != reqCtx && null != reqCtx.getResponse() && this.useJsessionId()) {
+                HttpServletResponse resp = reqCtx.getResponse();
+                return resp.encodeURL(url.toString());
+            } else {
+                return url;
+            }
+        } catch (Exception e) {
+            _logger.error("Error creating url", e);
+            throw new RuntimeException("Error creating url", e);
+        }
+    }
 	
 	private Lang extractLang(com.agiletec.aps.system.services.url.PageURL pageUrl, RequestContext reqCtx) {
 		String langCode = pageUrl.getLangCode();
@@ -129,7 +141,7 @@ public class URLManager extends com.agiletec.aps.system.services.url.URLManager 
 	public String createURL(IPage requiredPage, Lang requiredLang, Map<String, String> params, boolean escapeAmp, HttpServletRequest request) {
 		try {
 			String friendlyCode = this.extractFriendlyCode(requiredPage, requiredLang, params);
-			if (null == friendlyCode || friendlyCode.trim().length() == 0) {
+			if (StringUtils.isBlank(friendlyCode)) {
 				return super.createURL(requiredPage, requiredLang, params, escapeAmp, request);
 			}
 			return this.createFriendlyUrl(friendlyCode, requiredLang, params, escapeAmp, request);
@@ -159,20 +171,17 @@ public class URLManager extends com.agiletec.aps.system.services.url.URLManager 
 	}
 	
 	protected ISeoMappingManager getSeoMappingManager() {
-		return _seoMappingManager;
+		return seoMappingManager;
 	}
 	public void setSeoMappingManager(ISeoMappingManager seoMappingManager) {
-		this._seoMappingManager = seoMappingManager;
+		this.seoMappingManager = seoMappingManager;
 	}
 	
 	protected IContentManager getContentManager() {
-		return _contentManager;
+		return contentManager;
 	}
 	public void setContentManager(IContentManager contentManager) {
-		this._contentManager = contentManager;
+		this.contentManager = contentManager;
 	}
-	
-	private ISeoMappingManager _seoMappingManager;
-	private IContentManager _contentManager;
 	
 }

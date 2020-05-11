@@ -7,90 +7,90 @@
 	
     <package name="jpfacetnav_do/jpfacetnav/Page/SpecialWidget" namespace="/do/Page/SpecialWidget" extends="core_do/Page/SpecialWidget">
     	
-    	<!-- ##### WIDGET FACET NAV RESULT **** ENTRY POINT ##### -->
-    	<action name="facetNavResultConfig" class="jpfacetnavFacetNavResultWidgetAction" method="init">
-        	<result type="tiles">admin.Page.Widget.FacetNavResult.config</result>
+        <!-- ##### WIDGET FACET NAV RESULT **** ENTRY POINT ##### -->
+        <action name="facetNavResultConfig" class="jpfacetnavFacetNavResultWidgetAction" method="init">
+            <result type="tiles">admin.Page.Widget.FacetNavResult.config</result>
             <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
         
-    	<!-- ##### WIDGET FACET NAV TREE **** ENTRY POINT ##### -->
-    	<action name="facetNavTreeConfig" class="jpfacetnavFacetNavTreeWidgetAction" method="init">
-        	<result type="tiles">admin.Page.Widget.FacetNavTree.config</result>
+        <!-- ##### WIDGET FACET NAV TREE **** ENTRY POINT ##### -->
+        <action name="facetNavTreeConfig" class="jpfacetnavFacetNavTreeWidgetAction" method="init">
+            <result type="tiles">admin.Page.Widget.FacetNavTree.config</result>
             <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
         
     </package>
 	
-	<package name="jpfacetnav_do/jpfacetnav/Page/SpecialWidget/FacetNavResult" namespace="/do/jpfacetnav/Page/SpecialWidget/FacetNavResult" extends="entando-default">
-		
-		<global-results>
-    		<result name="pageTree" type="chain">
-    			<param name="namespace">/do/Page</param>
-    			<param name="actionName">viewTree</param>
-    		</result>
-    		<result name="configure" type="chain">
-            	<param name="namespace">/do/Page</param>
-    			<param name="actionName">configure</param>
+    <package name="jpfacetnav_do/jpfacetnav/Page/SpecialWidget/FacetNavResult" namespace="/do/jpfacetnav/Page/SpecialWidget/FacetNavResult" extends="entando-default">
+        
+        <global-results>
+            <result name="pageTree" type="chain">
+                <param name="namespace">/do/Page</param>
+                <param name="actionName">viewTree</param>
             </result>
-		</global-results>
-		
-		<action name="joinContentType" class="jpfacetnavFacetNavResultWidgetAction" method="joinContentType">
-            <result type="tiles">admin.Page.Widget.FacetNavResult.config</result>
-        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
-        </action>
-        
-		<action name="removeContentType*" class="jpfacetnavFacetNavResultWidgetAction" method="removeContentType">
-            <result type="tiles">admin.Page.Widget.FacetNavResult.config</result>
-        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
-        </action>
-		
-		<action name="saveConfig" class="jpfacetnavFacetNavResultWidgetAction" method="save">
-    		<result type="tiles" name="input">admin.Page.Widget.FacetNavResult.config</result>
-        	<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
-        </action>
-		
-	</package>
-	
-	<package name="jpfacetnav_do/jpfacetnav/Page/SpecialWidget/FacetNavTree" namespace="/do/jpfacetnav/Page/SpecialWidget/FacetNavTree" extends="entando-default">
-		
-		<global-results>
-    		<result name="pageTree" type="chain">viewTree</result>
-    		<result name="configure" type="chain">
-            	<param name="namespace">/do/Page</param>
-    			<param name="actionName">configure</param>
+            <result name="configure" type="chain">
+                <param name="namespace">/do/Page</param>
+                <param name="actionName">configure</param>
             </result>
-		</global-results>
+        </global-results>
+        
+        <action name="joinContentType" class="jpfacetnavFacetNavResultWidgetAction" method="joinContentType">
+            <result type="tiles">admin.Page.Widget.FacetNavResult.config</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+        
+        <action name="removeContentType*" class="jpfacetnavFacetNavResultWidgetAction" method="removeContentType">
+            <result type="tiles">admin.Page.Widget.FacetNavResult.config</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+        
+        <action name="saveConfig" class="jpfacetnavFacetNavResultWidgetAction" method="save">
+            <result type="tiles" name="input">admin.Page.Widget.FacetNavResult.config</result>
+            <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+        
+    </package>
+    
+    <package name="jpfacetnav_do/jpfacetnav/Page/SpecialWidget/FacetNavTree" namespace="/do/jpfacetnav/Page/SpecialWidget/FacetNavTree" extends="entando-default">
 		
-		<action name="joinContentType" class="jpfacetnavFacetNavTreeWidgetAction" method="joinContentType">
+        <global-results>
+            <result name="pageTree" type="chain">viewTree</result>
+            <result name="configure" type="chain">
+                <param name="namespace">/do/Page</param>
+                <param name="actionName">configure</param>
+            </result>
+        </global-results>
+		
+        <action name="joinContentType" class="jpfacetnavFacetNavTreeWidgetAction" method="joinContentType">
             <result type="tiles">admin.Page.Widget.FacetNavTree.config</result>
-        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
         
-		<action name="removeContentType*" class="jpfacetnavFacetNavTreeWidgetAction" method="removeContentType">
+        <action name="removeContentType*" class="jpfacetnavFacetNavTreeWidgetAction" method="removeContentType">
             <result type="tiles">admin.Page.Widget.FacetNavTree.config</result>
-        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+        
+        <action name="openCloseFacetTreeNode*" class="jpfacetnavFacetNavTreeWidgetAction" method="buildTree">
+            <result type="tiles">admin.Page.Widget.FacetNavTree.config</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+        
+        <action name="joinFacet*" class="jpfacetnavFacetNavTreeWidgetAction" method="joinFacet">
+            <result type="tiles">admin.Page.Widget.FacetNavTree.config</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+        
+        <action name="removeFacet*" class="jpfacetnavFacetNavTreeWidgetAction" method="removeFacet">
+            <result type="tiles">admin.Page.Widget.FacetNavTree.config</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+        
+        <action name="saveConfig" class="jpfacetnavFacetNavTreeWidgetAction" method="save">
+            <result type="tiles" name="input">admin.Page.Widget.FacetNavTree.config</result>
+            <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
 		
-		<action name="openCloseFacetTreeNode*" class="jpfacetnavFacetNavTreeWidgetAction" method="buildTree">
-            <result type="tiles">admin.Page.Widget.FacetNavTree.config</result>
-        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
-        </action>
-        
-		<action name="joinFacet" class="jpfacetnavFacetNavTreeWidgetAction" method="joinFacet">
-            <result type="tiles">admin.Page.Widget.FacetNavTree.config</result>
-        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
-        </action>
-        
-		<action name="removeFacet*" class="jpfacetnavFacetNavTreeWidgetAction" method="removeFacet">
-            <result type="tiles">admin.Page.Widget.FacetNavTree.config</result>
-        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
-        </action>
-        
-		<action name="saveConfig" class="jpfacetnavFacetNavTreeWidgetAction" method="save">
-    		<result type="tiles" name="input">admin.Page.Widget.FacetNavTree.config</result>
-        	<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
-        </action>
-		
-	</package>
+    </package>
 	
 </struts>
