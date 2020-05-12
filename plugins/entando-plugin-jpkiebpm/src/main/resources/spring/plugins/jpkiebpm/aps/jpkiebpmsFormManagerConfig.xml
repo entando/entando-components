@@ -56,9 +56,7 @@
         </property>
         <property name="dataObjectModelManager" ref="DataObjectModelManager" />
         <property name="cacheWrapper">
-            <bean class="com.agiletec.aps.system.services.page.cache.PageManagerCacheWrapper">
-                <property name="springCacheManager" ref="springCacheManager" />
-            </bean>
+            <bean class="com.agiletec.aps.system.services.page.cache.PageManagerCacheWrapper"/>
         </property>
     </bean>
     
