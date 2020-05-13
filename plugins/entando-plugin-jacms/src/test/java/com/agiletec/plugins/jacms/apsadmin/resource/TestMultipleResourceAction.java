@@ -134,7 +134,7 @@ public class TestMultipleResourceAction extends ApsAdminBaseTestCase {
 
     }
 
-    public void testSaveEditedResource() throws Throwable { //
+    public void testSaveEditedResource() throws Throwable {
         String resourceId = "44";
         this.setUserOnSession("admin");
         ResourceInterface resource = this.resourceManager.loadResource(resourceId);
