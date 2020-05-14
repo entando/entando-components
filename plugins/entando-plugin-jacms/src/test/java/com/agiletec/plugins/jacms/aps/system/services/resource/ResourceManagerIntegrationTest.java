@@ -13,15 +13,10 @@
  */
 package com.agiletec.plugins.jacms.aps.system.services.resource;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
-import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.group.Group;
@@ -35,8 +30,11 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ImageResour
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceDataBean;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInstance;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -194,7 +192,8 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
         this.testAddRemoveImageResources("customers");
         this.testAddRemoveImageResources(Group.ADMINS_GROUP_NAME);
     }
-    
+
+
     private void testAddRemoveImageResources(String mainGroup) throws Throwable {
         List<String> allowedGroups = this.getAllGroupCodes();
         String resDescrToAdd1 = "Entando Logo 1";
@@ -315,6 +314,41 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
             }
         }
     }
+
+    public void testLoadSvg() throws Throwable {
+        List<String> allowedGroups = this.getAllGroupCodes();
+        String resDescrToAdd1 = "Svg1";
+        String resourceType = "Image";
+        String categoryCodeToAdd = "resCat1";
+        String mainGroup = "customers";
+
+        List<BaseResourceDataBean> resourceList = new ArrayList<>();
+        resourceList.add(getMockSvgResource(resourceType, mainGroup, resDescrToAdd1, categoryCodeToAdd, "test.svg"));
+
+        List<ResourceInterface> resourceListAdded =null;
+        try {
+            resourceListAdded = this.resourceManager.addResources(resourceList);
+            ResourceInterface res1 = this.resourceManager.loadResource(resourceListAdded.get(0).getId());
+
+            assertEquals("test.svg", res1.getMasterFileName());
+            assertEquals(res1.getCategories().size(), 1);
+            assertEquals(res1.getDescription(), resDescrToAdd1);
+
+
+            ResourceInstance instance01 = ((ImageResource) res1).getInstance(0, null);
+            String fileNameInstance01 = instance01.getFileName();
+
+            assertTrue(fileNameInstance01.startsWith("test"));
+            assertEquals("image/svg+xml", instance01.getMimeType());
+
+        }catch(Throwable t) {
+            throw t;
+        }finally {
+            this.resourceManager.deleteResources(resourceListAdded);
+            List<String> resources = resourceManager.searchResourcesId(resourceType, resDescrToAdd1, null, allowedGroups);
+            assertEquals(resources.size(), 0);
+        }
+    }
     
     private ResourceDataBean getMockResource(String resourceType,
             String mainGroup, String resDescrToAdd, String categoryCodeToAdd) {
@@ -349,6 +383,26 @@ public class ResourceManagerIntegrationTest extends BaseTestCase {
         bean.setMainGroup(mainGroup);
         bean.setResourceType(resourceType);
         bean.setMimeType("image/jpeg");
+        List<Category> categories = new ArrayList<>();
+        ICategoryManager catManager
+                = (ICategoryManager) this.getService(SystemConstants.CATEGORY_MANAGER);
+        Category cat = catManager.getCategory(categoryCodeToAdd);
+        categories.add(cat);
+        bean.setCategories(categories);
+        return bean;
+    }
+
+    private BaseResourceDataBean getMockSvgResource(String resourceType,
+            String mainGroup, String resDescrToAdd, String categoryCodeToAdd,
+            String fileName) {
+        File file = new File("src/test/resources/images/test.svg");
+        BaseResourceDataBean bean = new BaseResourceDataBean();
+        bean.setFile(file);
+        bean.setFileName(fileName);
+        bean.setDescr(resDescrToAdd);
+        bean.setMainGroup(mainGroup);
+        bean.setResourceType(resourceType);
+        bean.setMimeType("image/svg+xml");
         List<Category> categories = new ArrayList<>();
         ICategoryManager catManager
                 = (ICategoryManager) this.getService(SystemConstants.CATEGORY_MANAGER);
