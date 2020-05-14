@@ -27,6 +27,7 @@ public class ContentModelValidator extends AbstractPaginationValidator {
 
     public static final String ERRCODE_CONTENTMODEL_TYPECODE_NOT_FOUND = "6";
     public static final String ERRCODE_CONTENTMODEL_WRONG_UTILIZER = "7";
+    public static final String ERRCODE_CONTENTMODEL_METADATA_REFERENCES = "8";
 
     @Override
     public boolean supports(Class<?> paramClass) {
