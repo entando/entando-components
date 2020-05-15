@@ -57,7 +57,6 @@
         <module>entando-plugin-jpkiebpm</module>
         <module>entando-plugin-jpinfinispan</module>
         <module>entando-plugin-jpseo</module>
-        <module>entando-plugin-jpdigital-exchange</module>
         <module>entando-plugin-jpoidc</module>
     </modules>
     <profiles>
