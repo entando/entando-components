@@ -132,16 +132,16 @@ public class ResourceRecordVO implements Serializable {
 	 * Returns the logical path of the resource
 	 * @return The resources's logical path
 	 */
-	public String getPath() {
-		return _path;
+	public String getFolderPath() {
+		return _folderPath;
 	}
 
 	/**
 	 * Sets the logical path of the resource
-	 * @param path The resources's logical path
+	 * @param folderPath The resources's logical path
 	 */
-	public void setPath(String path) {
-		this._path = path;
+	public void setFolderPath(String folderPath) {
+		this._folderPath = folderPath;
 	}
 
 	public Date getCreationDate() {
@@ -165,7 +165,7 @@ public class ResourceRecordVO implements Serializable {
 	private String _masterFileName;
 	private String _xml;
 	private String _owner;
-	private String _path;
+	private String _folderPath;
 	
 	private Date _creationDate;
 	private Date _lastModified;

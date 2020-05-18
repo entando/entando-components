@@ -574,13 +574,13 @@ public class ResourceAction extends AbstractResourceAction implements ResourceDa
     }
 
     @Override
-    public String getPath() {
+    public String getFolderPath() {
         //Do nothing as these Actions are destined to die
         return null;
     }
 
     @Override
-    public void setPath(String path) {
+    public void setFolderPath(String path) {
         //Do nothing as these Actions are destined to die
     }
 

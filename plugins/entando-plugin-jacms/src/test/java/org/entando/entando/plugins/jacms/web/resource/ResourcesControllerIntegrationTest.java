@@ -15,6 +15,7 @@ package org.entando.entando.plugins.jacms.web.resource;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
 import static org.hamcrest.Matchers.startsWith;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -23,6 +24,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.services.category.Category;
@@ -1033,20 +1035,19 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
     }
 
     @Test
-    public void testCreateCloneDeleteImageResourceWithPath() throws Exception {
+    public void testCreateDeleteImageResourceWithPath() throws Exception {
         UserDetails user = createAccessToken();
         String createdId = null;
-        String clonedId = null;
 
         try {
 
             String type = "image";
             String group = "free";
-            String path = "path123";
+            String folderPath = "abc";
             List<String> categories = Arrays.stream(new String[]{"resCat1", "resCat2"}).collect(Collectors.toList());
             String mimeType = "application/jpeg";
 
-            ResultActions result = performCreateResource(user, type, group, categories, path, mimeType)
+            ResultActions result = performCreateResource(user, type, group, categories, folderPath, mimeType)
                     .andDo(print())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.id", Matchers.anything()))
@@ -1056,13 +1057,120 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
                     .andExpect(jsonPath("$.payload.group", is("free")))
                     .andExpect(jsonPath("$.payload.description", is("image_test.jpeg")))
                     .andExpect(jsonPath("$.payload.owner", is("jack_bauer")))
+                    .andExpect(jsonPath("$.payload.folderPath", is(folderPath)))
                     .andExpect(jsonPath("$.payload.versions.size()", is(4)))
                     .andExpect(jsonPath("$.payload.versions[0].size", is("2 Kb")))
                     .andExpect(jsonPath("$.payload.versions[0].path", startsWith("/Entando/resources/cms/images/image_test")));
 
             createdId = JsonPath.read(result.andReturn().getResponse().getContentAsString(), "$.payload.id");
 
-            ResultActions result2 = performCloneResource(user, createdId)
+        } finally {
+
+            if (createdId != null) {
+                performDeleteResource(user, "image", createdId)
+                        .andDo(print())
+                        .andExpect(status().isOk());
+
+                performGetResources(user, "image", null)
+                        .andDo(print())
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.payload.size()", is(3)));
+            }
+        }
+    }
+
+    @Test
+    public void testCreateEditDeleteImageResourceWithPath() throws Exception {
+        UserDetails user = createAccessToken();
+        String createdId = null;
+
+        try {
+
+            String type = "image";
+            String group = "free";
+            String folderPath = "abc";
+            List<String> categories = Arrays.stream(new String[]{"resCat1", "resCat2"}).collect(Collectors.toList());
+            String mimeType = "application/jpeg";
+
+            ResultActions result = performCreateResource(user, type, group, categories, folderPath, mimeType)
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload.categories.size()", is(2)))
+                    .andExpect(jsonPath("$.payload.categories[0]", is("resCat1")))
+                    .andExpect(jsonPath("$.payload.categories[1]", is("resCat2")))
+                    .andExpect(jsonPath("$.payload.group", is("free")))
+                    .andExpect(jsonPath("$.payload.description", is("image_test.jpeg")))
+                    .andExpect(jsonPath("$.payload.owner", is("jack_bauer")))
+                    .andExpect(jsonPath("$.payload.folderPath", is("abc")))
+                    .andExpect(jsonPath("$.payload.versions.size()", is(4)))
+                    .andExpect(jsonPath("$.payload.versions[0].size", is("2 Kb")))
+                    .andExpect(jsonPath("$.payload.versions[0].path", startsWith("/Entando/resources/cms/images/image_test")));
+
+            createdId = JsonPath.read(result.andReturn().getResponse().getContentAsString(), "$.payload.id");
+
+            performEditResource(user, type, createdId, "new file description", categories, true, "abcd")
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload.categories.size()", is(2)))
+                    .andExpect(jsonPath("$.payload.categories[0]", is("resCat1")))
+                    .andExpect(jsonPath("$.payload.categories[1]", is("resCat2")))
+                    .andExpect(jsonPath("$.payload.group", is("free")))
+                    .andExpect(jsonPath("$.payload.description", is("new file description")))
+                    .andExpect(jsonPath("$.payload.owner", is("jack_bauer")))
+                    .andExpect(jsonPath("$.payload.folderPath", is("abcd")))
+                    .andExpect(jsonPath("$.payload.versions.size()", is(4)))
+                    .andExpect(jsonPath("$.payload.versions[0].size", is("2 Kb")))
+                    .andExpect(jsonPath("$.payload.versions[0].path", startsWith("/Entando/resources/cms/images/image_test")));
+
+        } finally {
+
+            if (createdId != null) {
+                performDeleteResource(user, "image", createdId)
+                        .andDo(print())
+                        .andExpect(status().isOk());
+
+                performGetResources(user, "image", null)
+                        .andDo(print())
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.payload.size()", is(3)));
+            }
+        }
+    }
+
+    @Test
+    public void testCreateCloneDeleteImageResourceWithPath() throws Exception {
+        UserDetails user = createAccessToken();
+        String createdId = null;
+        String clonedId = null;
+
+        try {
+
+            String type = "image";
+            String group = "free";
+            String folderPath = "folderPath123";
+            List<String> categories = Arrays.stream(new String[]{"resCat1", "resCat2"}).collect(Collectors.toList());
+            String mimeType = "application/jpeg";
+
+            ResultActions result = performCreateResource(user, type, group, categories, folderPath, mimeType)
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload.categories.size()", is(2)))
+                    .andExpect(jsonPath("$.payload.categories[0]", is("resCat1")))
+                    .andExpect(jsonPath("$.payload.categories[1]", is("resCat2")))
+                    .andExpect(jsonPath("$.payload.group", is("free")))
+                    .andExpect(jsonPath("$.payload.description", is("image_test.jpeg")))
+                    .andExpect(jsonPath("$.payload.owner", is("jack_bauer")))
+                    .andExpect(jsonPath("$.payload.folderPath", is(folderPath)))
+                    .andExpect(jsonPath("$.payload.versions.size()", is(4)))
+                    .andExpect(jsonPath("$.payload.versions[0].size", is("2 Kb")))
+                    .andExpect(jsonPath("$.payload.versions[0].path", startsWith("/Entando/resources/cms/images/image_test")));
+
+            createdId = JsonPath.read(result.andReturn().getResponse().getContentAsString(), "$.payload.id");
+
+            result = performCloneResource(user, createdId)
                     .andDo(print())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.id", not(createdId)))
@@ -1072,16 +1180,308 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
                     .andExpect(jsonPath("$.payload.group", is("free")))
                     .andExpect(jsonPath("$.payload.description", is("image_test.jpeg")))
                     .andExpect(jsonPath("$.payload.owner", is("jack_bauer")))
+                    .andExpect(jsonPath("$.payload.folderPath", is(folderPath)))
                     .andExpect(jsonPath("$.payload.versions.size()", is(4)))
                     .andExpect(jsonPath("$.payload.versions[0].size", is("2 Kb")))
                     .andExpect(jsonPath("$.payload.versions[0].path", startsWith("/Entando/resources/cms/images/image_test")));
 
-            clonedId = JsonPath.read(result2.andReturn().getResponse().getContentAsString(), "$.payload.id");
+            clonedId = JsonPath.read(result.andReturn().getResponse().getContentAsString(), "$.payload.id");
+
+            performGetResourcesFolder(user, folderPath)
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(2)))
+                    .andExpect(jsonPath("$.metaData.folderPath", is(folderPath)))
+                    .andExpect(jsonPath("$.metaData.subfolders.size()", is(0)));
+
+            performGetResourcesFolder(user, null)
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(6)))
+                    .andExpect(jsonPath("$.metaData.folderPath", isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.metaData.subfolders.size()", is(1)))
+                    .andExpect(jsonPath("$.metaData.subfolders[0]", is("folderPath123")));
 
         } finally {
 
             if (clonedId != null) {
                 performDeleteResource(user, "image", clonedId)
+                        .andDo(print())
+                        .andExpect(status().isOk());
+
+                performGetResources(user, "image", null)
+                        .andDo(print())
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.payload.size()", is(4)));
+            }
+
+            if (createdId != null) {
+                performDeleteResource(user, "image", createdId)
+                        .andDo(print())
+                        .andExpect(status().isOk());
+
+                performGetResources(user, "image", null)
+                        .andDo(print())
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.payload.size()", is(3)));
+            }
+        }
+    }
+
+    @Test
+    public void testSubfoldersOnListAssetsFolderPath() throws Exception {
+        UserDetails user = createAccessToken();
+        String createdId = null;
+        String createdId2 = null;
+        String createdId3 = null;
+        String createdId4 = null;
+        String createdId5 = null;
+
+        try {
+
+            performGetResources(user, "image", null)
+                    .andDo(print())
+                    .andExpect(status().isOk());
+                    //.andExpect(jsonPath("$.payload.size()", is(3)));
+
+            performGetResources(user, "file", null)
+                    .andDo(print())
+                    .andExpect(status().isOk());
+                    //.andExpect(jsonPath("$.payload.size()", is(3)));
+
+            String type = "image";
+            String group = "free";
+            String folderPath = null;
+            List<String> categories = Arrays.stream(new String[]{"resCat1", "resCat2"}).collect(Collectors.toList());
+            String mimeType = "application/jpeg";
+
+            ResultActions result = performCreateResource(user, type, group, categories, folderPath, mimeType)
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload.categories.size()", is(2)))
+                    .andExpect(jsonPath("$.payload.categories[0]", is("resCat1")))
+                    .andExpect(jsonPath("$.payload.categories[1]", is("resCat2")))
+                    .andExpect(jsonPath("$.payload.group", is("free")))
+                    .andExpect(jsonPath("$.payload.description", is("image_test.jpeg")))
+                    .andExpect(jsonPath("$.payload.owner", is("jack_bauer")))
+                    .andExpect(jsonPath("$.payload.folderPath", is(folderPath)))
+                    .andExpect(jsonPath("$.payload.versions.size()", is(4)))
+                    .andExpect(jsonPath("$.payload.versions[0].size", is("2 Kb")))
+                    .andExpect(jsonPath("$.payload.versions[0].path", startsWith("/Entando/resources/cms/images/image_test")));
+
+            createdId = JsonPath.read(result.andReturn().getResponse().getContentAsString(), "$.payload.id");
+
+            performGetResourcesFolder(user, folderPath)
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(7)))
+                    .andExpect(jsonPath("$.metaData.folderPath", isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.metaData.subfolders.size()", is(0)));
+
+            folderPath = "abc";
+
+            result = performCreateResource(user, type, group, categories, folderPath, mimeType)
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.id", not(createdId)))
+                    .andExpect(jsonPath("$.payload.categories.size()", is(2)))
+                    .andExpect(jsonPath("$.payload.categories[0]", is("resCat1")))
+                    .andExpect(jsonPath("$.payload.categories[1]", is("resCat2")))
+                    .andExpect(jsonPath("$.payload.group", is("free")))
+                    .andExpect(jsonPath("$.payload.description", is("image_test.jpeg")))
+                    .andExpect(jsonPath("$.payload.owner", is("jack_bauer")))
+                    .andExpect(jsonPath("$.payload.folderPath", is(folderPath)))
+                    .andExpect(jsonPath("$.payload.versions.size()", is(4)))
+                    .andExpect(jsonPath("$.payload.versions[0].size", is("2 Kb")))
+                    .andExpect(jsonPath("$.payload.versions[0].path", startsWith("/Entando/resources/cms/images/image_test")));
+
+            createdId2 = JsonPath.read(result.andReturn().getResponse().getContentAsString(), "$.payload.id");
+
+            performGetResourcesFolder(user, folderPath)
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.metaData.folderPath", is(folderPath)))
+                    .andExpect(jsonPath("$.metaData.subfolders.size()", is(0)));
+
+            performGetResourcesFolder(user, null)
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(7)))
+                    .andExpect(jsonPath("$.metaData.folderPath", isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.metaData.subfolders.size()", is(1)))
+                    .andExpect(jsonPath("$.metaData.subfolders[0]", is("abc")));
+
+            type = "file";
+            folderPath = "abc/def";
+            mimeType = "application/pdf";
+
+            result = performCreateResource(user, type, group, categories, folderPath, mimeType)
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload.categories.size()", is(2)))
+                    .andExpect(jsonPath("$.payload.categories[0]", is("resCat1")))
+                    .andExpect(jsonPath("$.payload.categories[1]", is("resCat2")))
+                    .andExpect(jsonPath("$.payload.group", is("free")))
+                    .andExpect(jsonPath("$.payload.description", is("file_test.jpeg")))
+                    .andExpect(jsonPath("$.payload.owner", is("jack_bauer")))
+                    .andExpect(jsonPath("$.payload.folderPath", is(folderPath)))
+                    .andExpect(jsonPath("$.payload.path", startsWith("/Entando/resources/cms/documents/file_test")));
+
+            createdId3 = JsonPath.read(result.andReturn().getResponse().getContentAsString(), "$.payload.id");
+
+            performGetResourcesFolder(user, folderPath)
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.metaData.folderPath", is(folderPath)))
+                    .andExpect(jsonPath("$.metaData.subfolders.size()", is(0)));
+
+            performGetResourcesFolder(user, null)
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(7)))
+                    .andExpect(jsonPath("$.metaData.folderPath", isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.metaData.subfolders.size()", is(1)))
+                    .andExpect(jsonPath("$.metaData.subfolders[0]", is("abc")));
+
+            performGetResourcesFolder(user, "/abc")
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.metaData.folderPath", is("abc")))
+                    .andExpect(jsonPath("$.metaData.subfolders.size()", is(1)))
+                    .andExpect(jsonPath("$.metaData.subfolders[0]", is("abc/def")));
+
+            folderPath = "abc/ghi";
+
+            result = performCreateResource(user, type, group, categories, folderPath, mimeType)
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload.categories.size()", is(2)))
+                    .andExpect(jsonPath("$.payload.categories[0]", is("resCat1")))
+                    .andExpect(jsonPath("$.payload.categories[1]", is("resCat2")))
+                    .andExpect(jsonPath("$.payload.group", is("free")))
+                    .andExpect(jsonPath("$.payload.description", is("file_test.jpeg")))
+                    .andExpect(jsonPath("$.payload.owner", is("jack_bauer")))
+                    .andExpect(jsonPath("$.payload.folderPath", is(folderPath)))
+                    .andExpect(jsonPath("$.payload.path", startsWith("/Entando/resources/cms/documents/file_test")));
+
+            createdId4 = JsonPath.read(result.andReturn().getResponse().getContentAsString(), "$.payload.id");
+
+            performGetResourcesFolder(user, folderPath)
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.metaData.folderPath", is(folderPath)))
+                    .andExpect(jsonPath("$.metaData.subfolders.size()", is(0)));
+
+            performGetResourcesFolder(user, " ")
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(7)))
+                    .andExpect(jsonPath("$.metaData.folderPath", isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.metaData.subfolders.size()", is(1)))
+                    .andExpect(jsonPath("$.metaData.subfolders[0]", is("abc")));
+
+            performGetResourcesFolder(user, "abc///")
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.metaData.folderPath", is("abc")))
+                    .andExpect(jsonPath("$.metaData.subfolders.size()", is(2)))
+                    .andExpect(jsonPath("$.metaData.subfolders[0]", is("abc/def")))
+                    .andExpect(jsonPath("$.metaData.subfolders[1]", is("abc/ghi")));
+
+            folderPath = "abc/def/ghi";
+
+            result = performCreateResource(user, type, group, categories, folderPath, mimeType)
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload.categories.size()", is(2)))
+                    .andExpect(jsonPath("$.payload.categories[0]", is("resCat1")))
+                    .andExpect(jsonPath("$.payload.categories[1]", is("resCat2")))
+                    .andExpect(jsonPath("$.payload.group", is("free")))
+                    .andExpect(jsonPath("$.payload.description", is("file_test.jpeg")))
+                    .andExpect(jsonPath("$.payload.owner", is("jack_bauer")))
+                    .andExpect(jsonPath("$.payload.folderPath", is(folderPath)))
+                    .andExpect(jsonPath("$.payload.path", startsWith("/Entando/resources/cms/documents/file_test")));
+
+            createdId5 = JsonPath.read(result.andReturn().getResponse().getContentAsString(), "$.payload.id");
+
+            performGetResourcesFolder(user, folderPath)
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.metaData.folderPath", is(folderPath)))
+                    .andExpect(jsonPath("$.metaData.subfolders.size()", is(0)));
+
+            performGetResourcesFolder(user, "/")
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(7)))
+                    .andExpect(jsonPath("$.metaData.folderPath", isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.metaData.subfolders.size()", is(1)))
+                    .andExpect(jsonPath("$.metaData.subfolders[0]", is("abc")));
+
+            performGetResourcesFolder(user, "abc")
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.metaData.folderPath", is("abc")))
+                    .andExpect(jsonPath("$.metaData.subfolders.size()", is(2)))
+                    .andExpect(jsonPath("$.metaData.subfolders[0]", is("abc/def")))
+                    .andExpect(jsonPath("$.metaData.subfolders[1]", is("abc/ghi")));
+
+            performGetResourcesFolder(user, "abc/////def")
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.metaData.folderPath", is("abc/def")))
+                    .andExpect(jsonPath("$.metaData.subfolders.size()", is(1)))
+                    .andExpect(jsonPath("$.metaData.subfolders[0]", is("abc/def/ghi")));
+
+        } finally {
+
+            if (createdId5 != null) {
+                performDeleteResource(user, "file", createdId5)
+                        .andDo(print())
+                        .andExpect(status().isOk());
+
+                performGetResources(user, "file", null)
+                        .andDo(print())
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.payload.size()", is(5)));
+            }
+
+            if (createdId4 != null) {
+                performDeleteResource(user, "file", createdId4)
+                        .andDo(print())
+                        .andExpect(status().isOk());
+
+                performGetResources(user, "file", null)
+                        .andDo(print())
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.payload.size()", is(4)));
+            }
+
+            if (createdId3 != null) {
+                performDeleteResource(user, "file", createdId3)
+                        .andDo(print())
+                        .andExpect(status().isOk());
+
+                performGetResources(user, "file", null)
+                        .andDo(print())
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.payload.size()", is(3)));
+            }
+
+            if (createdId2 != null) {
+                performDeleteResource(user, "image", createdId2)
                         .andDo(print())
                         .andExpect(status().isOk());
 
@@ -1130,7 +1530,24 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
         String accessToken = mockOAuthInterceptor(user);
         return mockMvc.perform(
                 get(path)
-                    .header("Authorization", "Bearer " + accessToken));
+                    .header("Authorization", "Bearer " + accessToken).with(csrf()));
+    }
+
+    private ResultActions performGetResourcesFolder(UserDetails user, String folderPath) throws Exception {
+        String path = "/plugins/cms/assets/folder";
+
+        if (folderPath != null) {
+            path += "?folderPath=" + folderPath;
+        }
+
+        if (null == user) {
+            return mockMvc.perform(get(path));
+        }
+
+        String accessToken = mockOAuthInterceptor(user);
+        return mockMvc.perform(
+                get(path)
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
     }
 
     private ResultActions performDeleteResource(UserDetails user, String type, String resourceId) throws Exception {
@@ -1143,17 +1560,17 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
         String accessToken = mockOAuthInterceptor(user);
         return mockMvc.perform(
                 delete(path)
-                    .header("Authorization", "Bearer " + accessToken));
+                    .header("Authorization", "Bearer " + accessToken).with(csrf()));
     }
 
-    private ResultActions performCreateResource(UserDetails user, String type, String group, List<String> categories, String path, String mimeType) throws Exception {
+    private ResultActions performCreateResource(UserDetails user, String type, String group, List<String> categories, String folderPath, String mimeType) throws Exception {
         String urlPath = String.format("/plugins/cms/assets", type);
 
         CreateResourceRequest resourceRequest = new CreateResourceRequest();
         resourceRequest.setType(type);
         resourceRequest.setCategories(categories);
         resourceRequest.setGroup(group);
-        resourceRequest.setPath(path);
+        resourceRequest.setFolderPath(folderPath);
 
         if (null == user) {
             return mockMvc.perform(get(urlPath));
@@ -1185,18 +1602,24 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
         MockHttpServletRequestBuilder request = multipart(urlPath)
                 .file(file)
                 .param("metadata", MAPPER.writeValueAsString(resourceRequest))
-                .header("Authorization", "Bearer " + accessToken);
+                .header("Authorization", "Bearer " + accessToken).with(csrf());
 
         return mockMvc.perform(request);
     }
 
     private ResultActions performEditResource(UserDetails user, String type, String resourceId, String description,
             List<String> categories, boolean useFile) throws Exception {
+        return performEditResource(user, type, resourceId, description, categories, useFile, null);
+    }
+
+    private ResultActions performEditResource(UserDetails user, String type, String resourceId, String description,
+            List<String> categories, boolean useFile, String folderPath) throws Exception {
         String path = String.format("/plugins/cms/assets/%s", resourceId, type);
 
         UpdateResourceRequest resourceRequest = new UpdateResourceRequest();
         resourceRequest.setDescription(description);
         resourceRequest.setCategories(categories);
+        resourceRequest.setFolderPath(folderPath);
 
         MockMultipartFile file;
         String contents = "some text very big so it has more than 1Kb size asdklasdhadsjakhdsjadjasdhjhjasd some garbage to make it bigger!!!" +
@@ -1223,7 +1646,7 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
         request.param("metadata", MAPPER.writeValueAsString(resourceRequest));
 
         if (user != null) {
-            request.header("Authorization", "Bearer " + mockOAuthInterceptor(user));
+            request.header("Authorization", "Bearer " + mockOAuthInterceptor(user)).with(csrf());
         }
 
         if (useFile) {
@@ -1246,7 +1669,7 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
         }
 
         return mockMvc.perform(post(path)
-                .header("Authorization", "Bearer " + mockOAuthInterceptor(user)));
+                .header("Authorization", "Bearer " + mockOAuthInterceptor(user)).with(csrf()));
     }
 
 }

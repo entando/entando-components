@@ -129,11 +129,11 @@ public interface ResourceDataBean {
      * Returns the logical path of the resource
      * @return The resources's logical path
      */
-    public String getPath();
+    public String getFolderPath();
 
     /**
      * Sets the logical path of the resource
-     * @param path The resources's logical path
+     * @param folderPath The resources's logical path
      */
-    public void setPath(String path);
+    public void setFolderPath(String folderPath);
 }

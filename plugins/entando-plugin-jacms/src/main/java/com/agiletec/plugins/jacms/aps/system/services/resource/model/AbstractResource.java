@@ -38,7 +38,7 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
     private String folder;
     private String protectedBaseURL;
     private String owner;
-    private String path;
+    private String folderPath;
 
     private String allowedExtensions;
 
@@ -65,7 +65,7 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
         this.setMetadata(new HashMap<>());
         this.setLastModified(null);
         this.setOwner(null);
-        this.setPath(null);
+        this.setFolderPath(null);
     }
 
     /**
@@ -518,12 +518,12 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
     }
 
     @Override
-    public String getPath() {
-        return path;
+    public String getFolderPath() {
+        return folderPath;
     }
 
     @Override
-    public void setPath(String path) {
-        this.path = path;
+    public void setFolderPath(String folderPath) {
+        this.folderPath = folderPath;
     }
 }

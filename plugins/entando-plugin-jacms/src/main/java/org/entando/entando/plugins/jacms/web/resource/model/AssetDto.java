@@ -32,5 +32,5 @@ public abstract class AssetDto {
 
     private String owner;
 
-    private String path;
+    private String folderPath;
 }

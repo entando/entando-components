@@ -29,5 +29,5 @@ UPDATE contents SET published = (xpath('./lastModified/text()', onlinexml::xml))
 
 CREATE INDEX contents_sync_idx ON contents (sync);
 
-ALTER TABLE `resources` ADD COLUMN `path` varchar(128); -- mysql
-ALTER TABLE resources ADD COLUMN path character varying(128); -- postgres
+ALTER TABLE `resources` ADD COLUMN `folderpath` varchar(256); -- mysql
+ALTER TABLE resources ADD COLUMN folderpath character varying(256); -- postgres
