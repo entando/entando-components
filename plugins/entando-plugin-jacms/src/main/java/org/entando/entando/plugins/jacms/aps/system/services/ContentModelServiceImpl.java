@@ -20,6 +20,8 @@ import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.*;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.dictionary.ContentModelDictionaryProvider;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.*;
+import java.lang.reflect.Array;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.*;
 import org.entando.entando.aps.system.services.*;
@@ -44,12 +46,15 @@ public class ContentModelServiceImpl implements ContentModelService {
     private final IContentModelManager contentModelManager;
     private final ContentModelDictionaryProvider dictionaryProvider;
     private final IDtoBuilder<ContentModel, ContentModelDto> dtoBuilder;
-
+    private final ContentTypeService contentTypeService;
     @Autowired
-    public ContentModelServiceImpl(IContentManager contentManager, IContentModelManager contentModelManager, ContentModelDictionaryProvider dictionaryProvider) {
+    public ContentModelServiceImpl(IContentManager contentManager, IContentModelManager contentModelManager,
+            ContentModelDictionaryProvider dictionaryProvider,
+            ContentTypeService contentTypeService) {
         this.contentManager = contentManager;
         this.contentModelManager = contentModelManager;
         this.dictionaryProvider = dictionaryProvider;
+        this.contentTypeService = contentTypeService;
 
         this.dtoBuilder = new DtoBuilder<ContentModel, ContentModelDto>() {
 
@@ -209,11 +214,32 @@ public class ContentModelServiceImpl implements ContentModelService {
         return errors;
     }
 
-    protected BeanPropertyBindingResult validateForDelete(ContentModel contentModel) {
+    protected BeanPropertyBindingResult validateForDelete(ContentModel contentModel) throws ApsSystemException {
         BeanPropertyBindingResult errors = new BeanPropertyBindingResult(contentModel, "contentModel");
         List<ContentModelReference> references = this.contentModelManager.getContentModelReferences(contentModel.getId());
         if (!references.isEmpty()) {
             errors.reject(ContentModelValidator.ERRCODE_CONTENTMODEL_REFERENCES, null, "contentmodel.page.references");
+        }
+        final List<SmallEntityType> defaultContentTemplateUsedList = this.contentManager.getSmallEntityTypes().stream()
+                .filter(
+                        f -> {
+                            final String defaultModel = contentManager.getDefaultModel(f.getCode());
+                            final boolean defaultModelUsed = String.valueOf(contentModel.getId())
+                                    .equals(defaultModel);
+                            final String listModel = contentManager.getListModel(f.getCode());
+                            final boolean listModelUsed = String.valueOf(contentModel.getId())
+                                    .equals(listModel);
+                            return (defaultModelUsed || listModelUsed);
+                        }
+                ).collect(Collectors.toList());
+
+        if (defaultContentTemplateUsedList.size()>0){
+            ArrayList defList = new ArrayList();
+            defaultContentTemplateUsedList.stream().forEach(f->defList.add(f.getCode()));
+            final String defListString = String.join(", ", defList);
+            ArrayList args = new ArrayList();
+            args.add(defListString);
+            errors.reject(ContentModelValidator.ERRCODE_CONTENTMODEL_METADATA_REFERENCES, args.toArray(), "contentmodel.defaultMetadata.references");
         }
         return errors;
     }

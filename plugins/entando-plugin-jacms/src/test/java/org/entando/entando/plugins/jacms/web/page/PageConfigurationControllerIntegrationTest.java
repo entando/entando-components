@@ -1,9 +1,20 @@
 package org.entando.entando.plugins.jacms.web.page;
 
-import com.agiletec.aps.util.FileTextReader;
-import com.opensymphony.xwork2.mock.MockResult;
-import java.io.InputStream;
-import java.util.Map;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
+import static org.junit.Assert.assertThat;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
@@ -15,33 +26,20 @@ import com.agiletec.aps.system.services.pagemodel.IPageModelManager;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsProperties;
+import com.agiletec.aps.util.FileTextReader;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.InputStream;
+import java.util.Map;
 import org.entando.entando.aps.system.services.page.IPageService;
 import org.entando.entando.aps.system.services.page.model.WidgetConfigurationDto;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
-import org.hamcrest.Matchers;
-
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.isEmptyOrNullString;
-import static org.junit.Assert.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class PageConfigurationControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
@@ -63,7 +61,7 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
                 .perform(get("/pages/{pageCode}/configuration", "homepage")
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
         result.andExpect(status().isOk());
 
         result.andExpect(jsonPath("$.payload.online", is(true)));
@@ -105,13 +103,13 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
             ResultActions result = mockMvc
                     .perform(get("/pages/{pageCode}/configuration", new Object[]{pageCode})
                             .param("status", IPageService.STATUS_DRAFT)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
             result.andExpect(status().isOk());
 
             result = mockMvc
                     .perform(get("/pages/{pageCode}/configuration", new Object[]{pageCode})
                             .param("status", IPageService.STATUS_ONLINE)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
             result.andExpect(status().isBadRequest());
             result.andExpect(jsonPath("$.errors[0].code", is("3")));
@@ -138,7 +136,7 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
             ResultActions result = mockMvc
                     .perform(get("/pages/{pageCode}/widgets/{frame}", new Object[]{pageCode, 0})
                             .param("status", IPageService.STATUS_DRAFT)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
             result.andExpect(status().isOk());
 
             String payloadWithOtherModelId = "{\n"
@@ -153,7 +151,7 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
                             .param("status", IPageService.STATUS_DRAFT)
                             .content(payloadWithOtherModelId)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
             result.andExpect(status().isOk());
             
             result
@@ -198,7 +196,7 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
                             .param("status", IPageService.STATUS_DRAFT)
                             .content(payload)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
             result
                 .andDo(print())
@@ -245,7 +243,7 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
                             .param("status", IPageService.STATUS_DRAFT)
                             .content(payload)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
             result
                     .andDo(print())
@@ -298,7 +296,7 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
                             .param("status", IPageService.STATUS_DRAFT)
                             .content(payload)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
             result
                     .andDo(print())
@@ -339,7 +337,7 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
             ResultActions result = mockMvc
                     .perform(get("/pages/{pageCode}/widgets/{frame}", new Object[]{pageCode, "XXX"})
                             .param("status", IPageService.STATUS_DRAFT)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
             String getResult = result.andReturn().getResponse().getContentAsString();
             result.andExpect(status().isBadRequest());
 
@@ -365,7 +363,7 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
             ResultActions result = mockMvc
                     .perform(get("/pages/{pageCode}/widgets/{frame}", new Object[]{pageCode, "500"})
                             .param("status", IPageService.STATUS_DRAFT)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
             result.andExpect(status().isNotFound());
             result.andExpect(jsonPath("$.errors[0].code", is("2")));
 
@@ -391,7 +389,7 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
             ResultActions result = mockMvc
                     .perform(get("/pages/{pageCode}/widgets/{frame}", new Object[]{pageCode, 0})
                             .param("status", IPageService.STATUS_DRAFT)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
             result.andExpect(status().isOk());
 
             InputStream isJsonPostValid = this.getClass().getResourceAsStream("1_PUT_page_description_row_content_viewer_list.json");
@@ -402,7 +400,7 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
                             .param("status", IPageService.STATUS_DRAFT)
                             .content(jsonPostValid)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
             result.andExpect(status().isOk())
                     .andDo(print())
                     .andExpect(jsonPath("$.errors", hasSize(0)))
@@ -432,7 +430,7 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
             ResultActions result = mockMvc
                     .perform(get("/pages/{pageCode}/widgets/{frame}", new Object[]{pageCode, 0})
                             .param("status", IPageService.STATUS_DRAFT)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
             result.andExpect(status().isOk());
 
             InputStream isJsonPostValid = this.getClass().getResourceAsStream("1_PUT_dynamic_properties.json");
@@ -443,7 +441,7 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
                             .param("status", IPageService.STATUS_DRAFT)
                             .content(jsonPostValid)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
             result.andExpect(status().isOk())
                     .andDo(print())
                     .andExpect(jsonPath("$.errors", hasSize(0)))
@@ -480,7 +478,7 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
             ResultActions result = mockMvc
                     .perform(get("/pages/{pageCode}/widgets/{frame}", new Object[]{pageCode, 0})
                             .param("status", IPageService.STATUS_DRAFT)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
             result.andExpect(status().isOk());
 
             InputStream isJsonPostValid = this.getClass().getResourceAsStream("1_PUT_dynamic_properties.json");
@@ -491,7 +489,7 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
                             .param("status", IPageService.STATUS_DRAFT)
                             .content(jsonPostValid)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
             result.andExpect(status().isOk())
                     .andDo(print());
 
@@ -500,7 +498,7 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
                             .param("status", IPageService.STATUS_DRAFT)
                             .content(jsonPostValid)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
             result.andExpect(status().isOk())
                     .andDo(print());
@@ -508,7 +506,7 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
             result = mockMvc
                     .perform(get("/pages/{pageCode}/widgets", new Object[]{pageCode})
                             .param("status", IPageService.STATUS_DRAFT)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
             result.andExpect(status().isOk())
                     .andDo(print())
@@ -557,14 +555,14 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
             ResultActions result = mockMvc
                     .perform(get("/pages/{pageCode}/widgets/{frame}", new Object[]{pageCode, 0})
                             .param("status", IPageService.STATUS_DRAFT)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
             result.andExpect(status().isOk());
 
             result = mockMvc
                     .perform(delete("/pages/{pageCode}/widgets/{frame}", new Object[]{pageCode, "XXX"})
                             .param("status", IPageService.STATUS_DRAFT)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
             result.andExpect(status().isBadRequest());
 
@@ -593,14 +591,14 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
             ResultActions result = mockMvc
                     .perform(get("/pages/{pageCode}/widgets/{frame}", new Object[]{pageCode, 0})
                             .param("status", IPageService.STATUS_DRAFT)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
             result.andExpect(status().isOk());
 
             result = mockMvc
                     .perform(delete("/pages/{pageCode}/widgets/{frame}", new Object[]{pageCode, 9999})
                             .param("status", IPageService.STATUS_DRAFT)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
             result.andExpect(status().isOk());
 
@@ -626,14 +624,14 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
             ResultActions result = mockMvc
                     .perform(get("/pages/{pageCode}/widgets/{frame}", new Object[]{pageCode, 999})
                             .param("status", IPageService.STATUS_DRAFT)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
             result.andExpect(status().isNotFound());
             result.andExpect(jsonPath("$.errors[0].code", is("2")));
 
             result = mockMvc
                     .perform(get("/pages/{pageCode}/widgets/{frame}", new Object[]{pageCode, "ASD"})
                             .param("status", IPageService.STATUS_DRAFT)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
             result.andExpect(status().isBadRequest());
             result.andExpect(jsonPath("$.errors[0].code", is("40")));
@@ -667,7 +665,7 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
             ResultActions result = mockMvc
                     .perform(get("/pages/{pageCode}/configuration", new Object[]{pageCode})
                             .param("status", IPageService.STATUS_DRAFT)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
             Widget[] defaultWidgetConfiguration = pageModel.getDefaultWidget();
             
@@ -685,7 +683,7 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
             result = mockMvc
                     .perform(put("/pages/{pageCode}/configuration/defaultWidgets", new Object[]{pageCode})
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
             result.andExpect(status().isOk());
             for (int i = 0; i < pageModel.getConfiguration().length; i++) {

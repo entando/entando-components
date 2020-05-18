@@ -26,6 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.entity.IEntityManager;
@@ -97,7 +98,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
     private ObjectMapper mapper = new ObjectMapper();
 
     public static final String PLACEHOLDER_STRING = "resourceIdPlaceHolder";
-    
+
     @Test
     public void testGetContentWithModel() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
@@ -109,7 +110,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         result.andExpect(status().isOk());
         String html1 = JsonPath.read(result1, "$.payload.html");
         Assert.assertTrue(!StringUtils.isBlank(html1));
-        
+
         result.andExpect(MockMvcResultMatchers.jsonPath("$.payload.html", Matchers.anything()));
         result = this.performGetContent("ART180", "11", true, null, true, user);
         String result2 = result.andReturn().getResponse().getContentAsString();
@@ -126,7 +127,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         String htmlCopy = JsonPath.read(result1_copy, "$.payload.html");
         Assert.assertTrue(!StringUtils.isBlank(htmlCopy));
         Assert.assertEquals(html1, htmlCopy);
-        
+
         result = this.performGetContent("ART180", "list", true, null, true, user);
         result.andExpect(MockMvcResultMatchers.jsonPath("$.payload.html", Matchers.anything()));
         String result2_copy = result.andReturn().getResponse().getContentAsString();
@@ -271,42 +272,42 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             Assert.assertNotNull(this.contentManager.getEntityPrototype("LNK"));
 
             ResultActions result = this.executeContentPost("1_POST_valid_with_links.json", accessToken, status().isOk())
-                .andDo(print())
-                .andExpect(jsonPath("$.payload.size()", is(1)))
-                .andExpect(jsonPath("$.errors.size()", is(0)))
-                .andExpect(jsonPath("$.metaData.size()", is(0)))
+                    .andDo(print())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
 
-                .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
-                .andExpect(jsonPath("$.payload[0].attributes[0].code", is("link1")))
-                .andExpect(jsonPath("$.payload[0].attributes[0].value.destType", is(SymbolicLink.URL_TYPE)))
-                .andExpect(jsonPath("$.payload[0].attributes[0].value.urlDest", is("https://myurl.com")))
-                .andExpect(jsonPath("$.payload[0].attributes[0].value.symbolicDestination", is("#!U;https://myurl.com!#")))
-                .andExpect(jsonPath("$.payload[0].attributes[0].values.it", is("My URL Link")))
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].code", is("link1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.destType", is(SymbolicLink.URL_TYPE)))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.urlDest", is("https://myurl.com")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].value.symbolicDestination", is("#!U;https://myurl.com!#")))
+                    .andExpect(jsonPath("$.payload[0].attributes[0].values.it", is("My URL Link")))
 
-                .andExpect(jsonPath("$.payload[0].attributes[1].code", is("link2")))
-                .andExpect(jsonPath("$.payload[0].attributes[1].value.destType", is(SymbolicLink.PAGE_TYPE)))
-                .andExpect(jsonPath("$.payload[0].attributes[1].value.pageDest", is("pagina_11")))
-                .andExpect(jsonPath("$.payload[0].attributes[1].value.symbolicDestination", is("#!P;pagina_11!#")))
-                .andExpect(jsonPath("$.payload[0].attributes[1].values.it", is("My Page Link")))
+                    .andExpect(jsonPath("$.payload[0].attributes[1].code", is("link2")))
+                    .andExpect(jsonPath("$.payload[0].attributes[1].value.destType", is(SymbolicLink.PAGE_TYPE)))
+                    .andExpect(jsonPath("$.payload[0].attributes[1].value.pageDest", is("pagina_11")))
+                    .andExpect(jsonPath("$.payload[0].attributes[1].value.symbolicDestination", is("#!P;pagina_11!#")))
+                    .andExpect(jsonPath("$.payload[0].attributes[1].values.it", is("My Page Link")))
 
-                .andExpect(jsonPath("$.payload[0].attributes[2].code", is("link3")))
-                .andExpect(jsonPath("$.payload[0].attributes[2].value.destType", is(SymbolicLink.CONTENT_TYPE)))
-                .andExpect(jsonPath("$.payload[0].attributes[2].value.contentDest", is("ART1")))
-                .andExpect(jsonPath("$.payload[0].attributes[2].value.symbolicDestination", is("#!C;ART1!#")))
-                .andExpect(jsonPath("$.payload[0].attributes[2].values.it", is("My Content Link")))
+                    .andExpect(jsonPath("$.payload[0].attributes[2].code", is("link3")))
+                    .andExpect(jsonPath("$.payload[0].attributes[2].value.destType", is(SymbolicLink.CONTENT_TYPE)))
+                    .andExpect(jsonPath("$.payload[0].attributes[2].value.contentDest", is("ART1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[2].value.symbolicDestination", is("#!C;ART1!#")))
+                    .andExpect(jsonPath("$.payload[0].attributes[2].values.it", is("My Content Link")))
 
-                .andExpect(jsonPath("$.payload[0].attributes[3].code", is("link4")))
-                .andExpect(jsonPath("$.payload[0].attributes[3].value.destType", is(SymbolicLink.CONTENT_ON_PAGE_TYPE)))
-                .andExpect(jsonPath("$.payload[0].attributes[3].value.pageDest", is("pagina_11")))
-                .andExpect(jsonPath("$.payload[0].attributes[3].value.contentDest", is("ART1")))
-                .andExpect(jsonPath("$.payload[0].attributes[3].value.symbolicDestination", is("#!O;ART1;pagina_11!#")))
-                .andExpect(jsonPath("$.payload[0].attributes[3].values.it", is("My Page with Content Link")))
+                    .andExpect(jsonPath("$.payload[0].attributes[3].code", is("link4")))
+                    .andExpect(jsonPath("$.payload[0].attributes[3].value.destType", is(SymbolicLink.CONTENT_ON_PAGE_TYPE)))
+                    .andExpect(jsonPath("$.payload[0].attributes[3].value.pageDest", is("pagina_11")))
+                    .andExpect(jsonPath("$.payload[0].attributes[3].value.contentDest", is("ART1")))
+                    .andExpect(jsonPath("$.payload[0].attributes[3].value.symbolicDestination", is("#!O;ART1;pagina_11!#")))
+                    .andExpect(jsonPath("$.payload[0].attributes[3].values.it", is("My Page with Content Link")))
 
-                .andExpect(jsonPath("$.payload[0].attributes[4].code", is("link5")))
-                .andExpect(jsonPath("$.payload[0].attributes[4].value.destType", is(SymbolicLink.RESOURCE_TYPE)))
-                .andExpect(jsonPath("$.payload[0].attributes[4].value.resourceDest", is("44")))
-                .andExpect(jsonPath("$.payload[0].attributes[4].value.symbolicDestination", is("#!R;44!#")))
-                .andExpect(jsonPath("$.payload[0].attributes[4].values.it", is("My Resource Link")));
+                    .andExpect(jsonPath("$.payload[0].attributes[4].code", is("link5")))
+                    .andExpect(jsonPath("$.payload[0].attributes[4].value.destType", is(SymbolicLink.RESOURCE_TYPE)))
+                    .andExpect(jsonPath("$.payload[0].attributes[4].value.resourceDest", is("44")))
+                    .andExpect(jsonPath("$.payload[0].attributes[4].value.symbolicDestination", is("#!R;44!#")))
+                    .andExpect(jsonPath("$.payload[0].attributes[4].values.it", is("My Resource Link")));
 
             String bodyResult = result.andReturn().getResponse().getContentAsString();
             newContentId = JsonPath.read(bodyResult, "$.payload[0].id");
@@ -1816,8 +1817,8 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             Assert.assertNotNull(contentManager.getEntityPrototype("TST"));
 
             executeContentPost("1_POST_invalid_resource.json", accessToken, status().isBadRequest())
-                .andDo(print())
-                .andExpect(jsonPath("$.errors.size()", is(1)));
+                    .andDo(print())
+                    .andExpect(jsonPath("$.errors.size()", is(1)));
         } finally {
             if (null != contentManager.getEntityPrototype("TST")) {
                 ((IEntityTypesConfigurer) contentManager).removeEntityPrototype("TST");
@@ -1855,32 +1856,32 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             Assert.assertNotNull(this.contentManager.getEntityPrototype("TST"));
 
             ResultActions result = executeContentPost("1_POST_valid.json", accessToken, status().isOk())
-                .andDo(print())
-                .andExpect(jsonPath("$.payload.size()", is(1)))
-                .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
-                .andExpect(jsonPath("$.payload[0].firstEditor", is("jack_bauer")))
-                .andExpect(jsonPath("$.payload[0].lastEditor", is("jack_bauer")))
-                .andExpect(jsonPath("$.payload[0].version", is("0.1")))
-                .andExpect(jsonPath("$.payload[0].attributes.size()", is(13)))
-                .andExpect(jsonPath("$.errors.size()", is(0)))
-                .andExpect(jsonPath("$.metaData.size()", is(0)));
+                    .andDo(print())
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.payload[0].id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload[0].firstEditor", is("jack_bauer")))
+                    .andExpect(jsonPath("$.payload[0].lastEditor", is("jack_bauer")))
+                    .andExpect(jsonPath("$.payload[0].version", is("0.1")))
+                    .andExpect(jsonPath("$.payload[0].attributes.size()", is(13)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)));
 
             newContentId = JsonPath.read(result.andReturn().getResponse().getContentAsString(), "$.payload[0].id");
 
             result = executeContentPut("1_PUT_categories.json", newContentId, accessToken, status().isOk())
-                .andExpect(jsonPath("$.payload.size()", is(1)))
-                .andExpect(jsonPath("$.errors.size()", is(0)))
-                .andExpect(jsonPath("$.metaData.size()", is(0)))
-                .andExpect(jsonPath("$.payload[0].id", is(newContentId)))
-                .andExpect(jsonPath("$.payload[0].attributes.size()", is(13)))
-                .andExpect(jsonPath("$.payload[0].firstEditor", is("jack_bauer")))
-                .andExpect(jsonPath("$.payload[0].lastEditor", is("jack_bauer")))
-                .andExpect(jsonPath("$.payload[0].description", is("New Content for test")))
-                .andExpect(jsonPath("$.payload[0].mainGroup", is("free")))
-                .andExpect(jsonPath("$.payload[0].categories.size()", is(2)))
-                .andExpect(jsonPath("$.payload[0].categories[0]", is("resCat1")))
-                .andExpect(jsonPath("$.payload[0].categories[1]", is("resCat2")))
-                .andExpect(jsonPath("$.payload[0].version", is("0.2")));
+                    .andExpect(jsonPath("$.payload.size()", is(1)))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+                    .andExpect(jsonPath("$.payload[0].id", is(newContentId)))
+                    .andExpect(jsonPath("$.payload[0].attributes.size()", is(13)))
+                    .andExpect(jsonPath("$.payload[0].firstEditor", is("jack_bauer")))
+                    .andExpect(jsonPath("$.payload[0].lastEditor", is("jack_bauer")))
+                    .andExpect(jsonPath("$.payload[0].description", is("New Content for test")))
+                    .andExpect(jsonPath("$.payload[0].mainGroup", is("free")))
+                    .andExpect(jsonPath("$.payload[0].categories.size()", is(2)))
+                    .andExpect(jsonPath("$.payload[0].categories[0]", is("resCat1")))
+                    .andExpect(jsonPath("$.payload[0].categories[1]", is("resCat2")))
+                    .andExpect(jsonPath("$.payload[0].version", is("0.2")));
         } finally {
             if (null != newContentId) {
                 Content newContent = this.contentManager.loadContent(newContentId, false);
@@ -1922,7 +1923,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                     .perform(put("/plugins/cms/contents/{code}/status", newContentId)
                             .content(mapper.writeValueAsString(contentStatusRequest))
                             .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
             result.andExpect(status().isOk());
             newPublicContent = this.contentManager.loadContent(newContentId, true);
             Assert.assertNotNull(newPublicContent);
@@ -1932,7 +1933,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                     .perform(put("/plugins/cms/contents/{code}/status", newContentId)
                             .content(mapper.writeValueAsString(contentStatusRequest))
                             .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
             result.andExpect(status().isOk());
             newPublicContent = this.contentManager.loadContent(newContentId, true);
             Assert.assertNull(newPublicContent);
@@ -1941,7 +1942,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                     .perform(delete("/plugins/cms/contents")
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .content(mapper.writeValueAsString(new String[] { newContentId }))
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
             result.andExpect(status().isOk());
             result.andExpect(jsonPath("$.payload.size()", is(1)));
             result.andExpect(jsonPath("$.payload[0]", is(newContentId)));
@@ -1989,7 +1990,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                     .perform(put("/plugins/cms/contents/status")
                             .content(mapper.writeValueAsString(batchContentStatusRequest))
                             .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
             result.andExpect(status().isOk());
             newPublicContent = this.contentManager.loadContent(newContentId, true);
             Assert.assertNotNull(newPublicContent);
@@ -1999,7 +2000,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                     .perform(put("/plugins/cms/contents/{code}/status", newContentId)
                             .content(mapper.writeValueAsString(batchContentStatusRequest))
                             .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
             result.andExpect(status().isOk());
             newPublicContent = this.contentManager.loadContent(newContentId, true);
             Assert.assertNull(newPublicContent);
@@ -2008,7 +2009,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                     .perform(delete("/plugins/cms/contents")
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .content(mapper.writeValueAsString(new String[] { newContentId }))
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
             result.andExpect(status().isOk());
             result.andExpect(jsonPath("$.payload.size()", is(1)));
             result.andExpect(jsonPath("$.payload[0]", is(newContentId)));
@@ -2076,7 +2077,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                     .perform(put("/plugins/cms/contents/status")
                             .content(mapper.writeValueAsString(batchContentStatusRequest))
                             .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
             result.andExpect(status().isOk());
 
             batchContentStatusRequest.getCodes().stream().forEach(code -> {
@@ -2094,7 +2095,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                     .perform(put("/plugins/cms/contents/status")
                             .content(mapper.writeValueAsString(batchContentStatusRequest))
                             .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
             result.andExpect(status().isOk());
 
             batchContentStatusRequest.getCodes().stream().forEach(code -> {
@@ -2153,8 +2154,8 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         String accessToken = mockOAuthInterceptor(user);
         return mockMvc.perform(
                 get(path, code)
-                .sessionAttr("user", user)
-                .header("Authorization", "Bearer " + accessToken));
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
     }
 
     private ResultActions executeContentPost(String fileName, String accessToken, ResultMatcher expected) throws Exception {
@@ -2178,7 +2179,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                 .perform(post("/plugins/cms/contents")
                         .content(jsonPostValid)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
         result.andDo(print());
         result.andExpect(expected);
         return result;
@@ -2199,7 +2200,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                 .perform(put("/plugins/cms/contents")
                         .content(jsonPutValid)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
         result.andDo(print()).andExpect(expected);
         return result;
     }
@@ -2211,7 +2212,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                 .perform(post("/plugins/cms/contentTypes")
                         .content(jsonPostValid)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
         result.andExpect(expected);
         return result;
     }
@@ -2235,7 +2236,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         MockHttpServletRequestBuilder request = multipart(path)
                 .file(file)
                 .param("metadata", mapper.writeValueAsString(resourceRequest))
-                .header("Authorization", "Bearer " + accessToken);
+                .header("Authorization", "Bearer " + accessToken).with(csrf());
 
         if (type != null) {
             request.param("type", type);
@@ -2248,7 +2249,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
         String path = String.format("/plugins/cms/assets/%s", resourceId);
         return mockMvc.perform(
                 delete(path)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
     }
 
     @Test
@@ -2263,7 +2264,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filter[0].operator", "eq")
                         .param("filter[0].value", "EVN")
                         .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
         result.andExpect(status().isOk());
         System.out.println(result.andReturn().getResponse().getContentAsString());
         result.andExpect(jsonPath("$.payload", Matchers.hasSize(Matchers.greaterThan(0))));
@@ -2281,7 +2282,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filter[0].operator", "eq")
                         .param("filter[0].value", "EVN")
                         .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
         result
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -2348,7 +2349,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[0].value", "EVN")
                         .param("pageSize", "20")
                         .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
         String bodyResult = result.andReturn().getResponse().getContentAsString();
         result.andExpect(status().isOk());
         List<String> expectedFreeContentsId = Arrays.asList("EVN194", "EVN193",
@@ -2371,7 +2372,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[0].value", "EVN")
                         .param("pageSize", "20")
                         .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
         bodyResult = result.andReturn().getResponse().getContentAsString();
         result.andExpect(status().isOk());
         payloadSize = JsonPath.read(bodyResult, "$.payload.size()");
@@ -2404,11 +2405,11 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[1].type", "date")
                         .param("filters[1].value", "2020-09-19 01:00:00")
                         .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
         String bodyResult = result.andReturn().getResponse().getContentAsString();
         result.andExpect(status().isOk());
         String[] expected = {"EVN25", "EVN21", "EVN20", "EVN41", "EVN193",
-            "EVN192", "EVN103", "EVN23", "EVN24"};
+                "EVN192", "EVN103", "EVN23", "EVN24"};
         int payloadSize = JsonPath.read(bodyResult, "$.payload.size()");
         Assert.assertEquals(expected.length, payloadSize);
         for (int i = 0; i < expected.length; i++) {
@@ -2439,7 +2440,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[2].type", "date")
                         .param("filters[2].value", "2020-09-19 01:00:00")
                         .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
         String bodyResult = result.andReturn().getResponse().getContentAsString();
         result.andExpect(status().isOk());
         String[] expected = {"EVN193", "EVN192"};
@@ -2466,11 +2467,11 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[0].operator", "eq")
                         .param("filters[0].value", "EVN")
                         .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
         String bodyResult = result.andReturn().getResponse().getContentAsString();
         result.andExpect(status().isOk());
         String[] expectedFreeContentsId = {"EVN24", "EVN23",
-            "EVN191", "EVN192", "EVN193", "EVN194", "EVN20", "EVN21", "EVN25"};
+                "EVN191", "EVN192", "EVN193", "EVN194", "EVN20", "EVN21", "EVN25"};
         int payloadSize = JsonPath.read(bodyResult, "$.payload.size()");
         Assert.assertEquals(expectedFreeContentsId.length, payloadSize);
         for (int i = 0; i < expectedFreeContentsId.length; i++) {
@@ -2492,7 +2493,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[0].value", "EVN"));
         result.andExpect(status().isOk());
         String[] expectedFreeOrderedContentsId_1 = {"EVN191", "EVN192",
-            "EVN193", "EVN194", "EVN20", "EVN23", "EVN24", "EVN25", "EVN21"};
+                "EVN193", "EVN194", "EVN20", "EVN23", "EVN24", "EVN25", "EVN21"};
         result.andExpect(jsonPath("$.payload", Matchers.hasSize(expectedFreeOrderedContentsId_1.length)));
         for (int i = 0; i < expectedFreeOrderedContentsId_1.length; i++) {
             String expectedId = expectedFreeOrderedContentsId_1[expectedFreeOrderedContentsId_1.length - i - 1];
@@ -2536,11 +2537,11 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[1].value", "EVN")
                         .param("pageSize", "5")
                         .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
         String bodyResult = result.andReturn().getResponse().getContentAsString();
         result.andExpect(status().isOk());
         String[] expectedFreeOrderedContentsId_1 = {"EVN194", "EVN193", "EVN24",
-            "EVN23", "EVN25"};
+                "EVN23", "EVN25"};
         int payloadSize = JsonPath.read(bodyResult, "$.payload.size()");
         Assert.assertEquals(expectedFreeOrderedContentsId_1.length, payloadSize);
         for (int i = 0; i < expectedFreeOrderedContentsId_1.length; i++) {
@@ -2560,7 +2561,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[1].value", "EVN")
                         .param("pageSize", "6")
                         .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
         bodyResult = result.andReturn().getResponse().getContentAsString();
         result.andExpect(status().isOk());
         String[] expectedFreeOrderedContentsId_2 = {"EVN191", "EVN192", "EVN21", "EVN20", "EVN25", "EVN23"};
@@ -2595,11 +2596,11 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                             .param("filters[1].entityAttr", "DataInizio")
                             .param("filters[1].order", FieldSearchFilter.DESC_ORDER)
                             .sessionAttr("user", user)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
             String bodyResult = result.andReturn().getResponse().getContentAsString();
             result.andExpect(status().isOk());
             String[] expectedFreeOrderedContentsId = {"EVN194", masterContent.getId(),
-                "EVN193", "EVN24", "EVN23", "EVN25", "EVN20", "EVN21", "EVN192", "EVN191"};
+                    "EVN193", "EVN24", "EVN23", "EVN25", "EVN20", "EVN21", "EVN192", "EVN191"};
             int payloadSize = JsonPath.read(bodyResult, "$.payload.size()");
             Assert.assertEquals(expectedFreeOrderedContentsId.length, payloadSize);
             for (int i = 0; i < expectedFreeOrderedContentsId.length; i++) {
@@ -2631,7 +2632,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[0].operator", "eq")
                         .param("filters[0].value", "EVN")
                         .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
         result.andDo(print())
                 .andExpect(status().isOk())
@@ -2661,7 +2662,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[0].operator", "eq")
                         .param("filters[0].value", "EVN")
                         .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
         result.andDo(print())
                 .andExpect(status().isOk())
@@ -2683,7 +2684,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[0].operator", "eq")
                         .param("filters[0].value", "EVN")
                         .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
         result.andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.payload.size()", is(3)));
@@ -2703,7 +2704,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[0].operator", "eq")
                         .param("filters[0].value", "EVN")
                         .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
         result.andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.payload.size()", is(9)))
@@ -2732,7 +2733,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[0].operator", "eq")
                         .param("filters[0].value", "EVN")
                         .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
         result.andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.payload.size()", is(9)))
@@ -2761,7 +2762,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[0].operator", "eq")
                         .param("filters[0].value", "EVN")
                         .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
         result.andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.payload.size()", is(9)))
@@ -2790,7 +2791,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[0].operator", "eq")
                         .param("filters[0].value", "EVN")
                         .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
         result.andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.payload.size()", is(9)))
@@ -2817,7 +2818,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[0].attribute", "description")
                         .param("filters[0].value", "Sagra")
                         .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
         result.andDo(print())
                 .andExpect(status().isOk())
@@ -2838,7 +2839,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[0].attribute", "id")
                         .param("filters[0].value", "EVN194")
                         .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
         result.andDo(print())
                 .andExpect(status().isOk())
@@ -2857,7 +2858,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[0].attribute", "firsteditor")
                         .param("filters[0].value", "admin")
                         .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
         result.andDo(print())
                 .andExpect(status().isOk())
@@ -2879,7 +2880,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[1].value", "editor1")
                         .param("filters[1].operator", "eq")
                         .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
         result.andDo(print())
                 .andExpect(status().isOk())
@@ -2901,7 +2902,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[1].value", "editor2")
                         .param("filters[1].operator", "eq")
                         .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
         result.andDo(print())
                 .andExpect(status().isOk())
@@ -2922,7 +2923,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[1].attribute", "firsteditor")
                         .param("filters[1].value", "editor2")
                         .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
         result.andDo(print())
                 .andExpect(status().isOk())
@@ -2944,7 +2945,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[1].value", "editor1")
                         .param("filters[1].operator", "not")
                         .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
         result.andDo(print())
                 .andExpect(status().isOk())
@@ -2966,7 +2967,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[1].value", "free")
                         .param("filters[1].operator", "eq")
                         .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
         result.andDo(print())
                 .andExpect(status().isOk())
@@ -2988,7 +2989,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[1].value", "free")
                         .param("filters[1].operator", "not")
                         .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
         result.andDo(print())
                 .andExpect(status().isOk())
@@ -3008,7 +3009,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[0].value", "EVN")
                         .param("categories[0]", "general_cat1")
                         .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
         result.andDo(print())
                 .andExpect(status().isOk())
@@ -3029,7 +3030,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("categories[0]", "general_cat1")
                         .param("categories[1]", "general_cat2")
                         .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
         result.andDo(print())
                 .andExpect(status().isOk())
@@ -3049,7 +3050,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[0].value", "EVN")
                         .param("categories[0]", "general_cat2")
                         .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
         result.andDo(print())
                 .andExpect(status().isOk())
@@ -3069,13 +3070,13 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[0].value", "EVN")
                         .param("categories[0]", "general_cat3")
                         .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
         result.andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.payload.size()", is(0)));
     }
-    
+
     @Test
     public void testFilteredContent_14() throws Throwable {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
@@ -3090,13 +3091,13 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[1].attribute", "group")
                         .param("filters[1].value", "group1")
                         .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
         result.andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.payload.size()", is(3)));
     }
-    
+
     @Test
     public void testFilteredContent_15() throws Throwable {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
@@ -3117,13 +3118,13 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[4].attribute", "group")
                         .param("filters[4].value", "group3")
                         .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
         result.andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.payload.size()", is(1)));
     }
-    
+
     @Test
     public void testFilteredContent_16() throws Throwable {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
@@ -3138,7 +3139,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[1].attribute", "restriction")
                         .param("filters[1].value", "OPEN")
                         .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
         result.andDo(print())
                 .andExpect(status().isOk())
@@ -3159,7 +3160,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[1].attribute", "restriction")
                         .param("filters[1].value", "RESTRICTED")
                         .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
         result.andDo(print())
                 .andExpect(status().isOk())
@@ -3234,7 +3235,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("status", IContentService.STATUS_ONLINE)
                         .param("categories[0]", "evento")
                         .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
         String bodyResult = result.andReturn().getResponse().getContentAsString();
         result.andExpect(status().isOk());
         List<String> expectedFreeContentsId = Arrays.asList("EVN192", "EVN193");
@@ -3254,7 +3255,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[0].type", "date")
                         .param("filters[0].value", "2005-02-13 01:00:00")
                         .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
         bodyResult = result.andReturn().getResponse().getContentAsString();
         result.andExpect(status().isOk());
         int newPayloadSize = JsonPath.read(bodyResult, "$.payload.size()");
@@ -3273,7 +3274,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("categories[0]", "general_cat3")
                         .param("categories[1]", "general_cat2")
                         .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
         String bodyResult = result.andReturn().getResponse().getContentAsString();
         result.andExpect(status().isOk());
         int payloadSize = JsonPath.read(bodyResult, "$.payload.size()");
@@ -3288,7 +3289,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("categories[1]", "general_cat2")
                         .param("orClauseCategoryFilter", "true")
                         .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
         bodyResult = result.andReturn().getResponse().getContentAsString();
         result.andExpect(status().isOk());
         List<String> expectedFreeContentsId = Arrays.asList("ART111", "ART120", "ART122", "EVN25");
@@ -3313,7 +3314,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                         .param("filters[1].type", "number")
                         .param("filters[1].order", FieldSearchFilter.ASC_ORDER)
                         .sessionAttr("user", user)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
         String bodyResult = result.andReturn().getResponse().getContentAsString();
         result.andExpect(status().isOk());
         String[] expectedContentsId = {"ART120", "ART121"};
@@ -3539,7 +3540,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                             .sessionAttr("user", user)
                             .content(putPageOnlinePayload)
                             .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
             result.andExpect(status().isOk());
 
             this.executeContentPost("1_POST_invalid_with_link.json", accessToken, status().isBadRequest())
@@ -3582,7 +3583,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                             .sessionAttr("user", user)
                             .content(putPageOnlinePayload)
                             .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
             result.andExpect(status().isOk());
 
             this.executeContentPost("1_POST_invalid_with_link.json", accessToken, status().isBadRequest())
@@ -3798,7 +3799,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                     .perform(put("/plugins/cms/contents/{code}/status", newContentId1)
                             .content(mapper.writeValueAsString(contentStatusRequest))
                             .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
             result.andExpect(status().isOk());
 
             result = this.executeContentPost("1_POST_valid_with_link_to_content.json", accessToken, status().isOk(), newContentId1)
@@ -3816,13 +3817,13 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                     .perform(put("/plugins/cms/contents/{code}/status", newContentId2)
                             .content(mapper.writeValueAsString(contentStatusRequest))
                             .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
             result.andExpect(status().isOk());
 
             result = mockMvc
                     .perform(get("/plugins/cms/contents/{code}", newContentId1)
                             .sessionAttr("user", user)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
             result
                     .andDo(print())
                     .andExpect(jsonPath("$.payload.id", is(newContentId1)))
@@ -3834,7 +3835,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                     .perform(put("/plugins/cms/contents/{code}/status", newContentId1)
                             .content(mapper.writeValueAsString(contentStatusRequest))
                             .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
             result.andDo(print())
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.errors.size()", is(1)))
@@ -3896,7 +3897,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                     .perform(put("/plugins/cms/contents/{code}/status", newContentId1)
                             .content(mapper.writeValueAsString(contentStatusRequest))
                             .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
             result.andExpect(status().isOk());
 
             result = this.executeContentPost("1_POST_valid_with_empty_links.json", accessToken, status().isOk())
@@ -3917,7 +3918,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                     .perform(put("/plugins/cms/contents/{code}/status", newContentId2)
                             .content(mapper.writeValueAsString(contentStatusRequest))
                             .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
             result.andExpect(status().isOk());
 
             result = this.executeContentPost("1_POST_valid_with_link_to_contents.json", accessToken, status().isOk(), newContentId1, newContentId2)
@@ -3937,13 +3938,13 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                     .perform(put("/plugins/cms/contents/{code}/status", newContentId3)
                             .content(mapper.writeValueAsString(contentStatusRequest))
                             .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
             result.andExpect(status().isOk());
 
             result = mockMvc
                     .perform(get("/plugins/cms/contents/{code}", newContentId1)
                             .sessionAttr("user", user)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
             result
                     .andDo(print())
                     .andExpect(jsonPath("$.payload.id", is(newContentId1)))
@@ -3953,7 +3954,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
             result = mockMvc
                     .perform(get("/plugins/cms/contents/{code}", newContentId2)
                             .sessionAttr("user", user)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
             result
                     .andDo(print())
                     .andExpect(jsonPath("$.payload.id", is(newContentId2)))
@@ -3969,7 +3970,7 @@ public class ContentControllerIntegrationTest extends AbstractControllerIntegrat
                     .perform(put("/plugins/cms/contents/status")
                             .content(mapper.writeValueAsString(batchContentStatusRequest))
                             .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
             result.andDo(print())
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.errors.size()", is(2)))

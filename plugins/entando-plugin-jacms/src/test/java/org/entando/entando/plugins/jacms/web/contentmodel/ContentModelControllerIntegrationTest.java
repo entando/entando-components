@@ -1,5 +1,16 @@
 package org.entando.entando.plugins.jacms.web.contentmodel;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
@@ -12,16 +23,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ContentModelControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
@@ -40,7 +41,7 @@ public class ContentModelControllerIntegrationTest extends AbstractControllerInt
         ResultActions result = mockMvc
                 .perform(get(BASE_URI)
                         .param("sort", "id")
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$.payload[0].id", is(1)));
 
@@ -48,7 +49,7 @@ public class ContentModelControllerIntegrationTest extends AbstractControllerInt
                 .perform(get(BASE_URI)
                         .param("direction", FieldSearchFilter.DESC_ORDER)
                         .param("sort", "id")
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$.payload[0].id", is(11)));
 
@@ -60,7 +61,7 @@ public class ContentModelControllerIntegrationTest extends AbstractControllerInt
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
                 .perform(get(BASE_URI)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$.metaData.pageSize", is(100)));
         result.andExpect(jsonPath("$.metaData.sort", is("id")));
@@ -76,7 +77,7 @@ public class ContentModelControllerIntegrationTest extends AbstractControllerInt
                 .perform(get(BASE_URI)
                         .param("direction", FieldSearchFilter.ASC_ORDER)
                         .param("sort", "descr")
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$.payload[0].descr", is("List Model")));
 
@@ -84,7 +85,7 @@ public class ContentModelControllerIntegrationTest extends AbstractControllerInt
                 .perform(get(BASE_URI)
                         .param("direction", FieldSearchFilter.DESC_ORDER)
                         .param("sort", "descr")
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$.payload[0].descr", is("scheda di un articolo")));
 
@@ -101,7 +102,7 @@ public class ContentModelControllerIntegrationTest extends AbstractControllerInt
                         .param("sort", "descr")
                         .param("filters[0].attribute", "contentType")
                         .param("filters[0].value", "ART")
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$.payload.length()", is(4)));
 
@@ -113,7 +114,7 @@ public class ContentModelControllerIntegrationTest extends AbstractControllerInt
                         .param("filters[0].value", "ART")
                         .param("filters[1].attribute", "descr")
                         .param("filters[1].value", "MoDeL")
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$.payload.length()", is(2)));
     }
@@ -125,7 +126,7 @@ public class ContentModelControllerIntegrationTest extends AbstractControllerInt
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
                 .perform(get(BASE_URI + "/{modelId}", "1")
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$.payload.id", is(1)));
 
@@ -138,7 +139,7 @@ public class ContentModelControllerIntegrationTest extends AbstractControllerInt
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
                 .perform(get(BASE_URI + "/{modelId}", "0")
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
         result.andExpect(status().isNotFound());
         result.andExpect(jsonPath("$.errors[0].code", is("1")));
     }
@@ -150,7 +151,7 @@ public class ContentModelControllerIntegrationTest extends AbstractControllerInt
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
                 .perform(get(BASE_URI + "/dictionary")
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
         result.andExpect(status().isOk());
 
     }
@@ -163,7 +164,7 @@ public class ContentModelControllerIntegrationTest extends AbstractControllerInt
         ResultActions result = mockMvc
                 .perform(get(BASE_URI + "/dictionary")
                         .param("typeCode", "EVN")
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$.payload").isNotEmpty());
         result.andExpect(jsonPath("$.payload.$content").isNotEmpty());
@@ -177,7 +178,7 @@ public class ContentModelControllerIntegrationTest extends AbstractControllerInt
         ResultActions result = mockMvc
                 .perform(get(BASE_URI + "/dictionary")
                         .param("typeCode", "LOL")
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
         result.andExpect(status().isNotFound());
         result.andExpect(jsonPath("$.errors[0].code", is("6")));
     }
@@ -203,7 +204,7 @@ public class ContentModelControllerIntegrationTest extends AbstractControllerInt
                     .perform(post(BASE_URI)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .content(payload)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
             result.andExpect(status().isOk());
             ContentModel contentModelAdded = this.contentModelManager.getContentModel(modelId);
@@ -225,7 +226,7 @@ public class ContentModelControllerIntegrationTest extends AbstractControllerInt
                     .perform(put(BASE_URI + "/{id}", modelId)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .content(payload)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
             result.andExpect(status().isOk());
             contentModelAdded = this.contentModelManager.getContentModel(modelId);
@@ -239,7 +240,7 @@ public class ContentModelControllerIntegrationTest extends AbstractControllerInt
                     .perform(delete(BASE_URI + "/{id}", modelId)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .content(payload)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
             result.andExpect(status().isOk());
             result.andExpect(jsonPath("$.payload.modelId", is(String.valueOf(modelId))));
@@ -277,7 +278,7 @@ public class ContentModelControllerIntegrationTest extends AbstractControllerInt
                     .perform(post(BASE_URI)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .content(payload)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
             result.andExpect(status().isConflict());
             result.andExpect(jsonPath("$.errors[0].code", is("6")));
@@ -312,7 +313,7 @@ public class ContentModelControllerIntegrationTest extends AbstractControllerInt
                     .perform(post(BASE_URI)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .content(payload)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
             result.andExpect(status().isBadRequest());
             result.andExpect(jsonPath("$.errors[0].code", is("56")));
@@ -347,7 +348,7 @@ public class ContentModelControllerIntegrationTest extends AbstractControllerInt
                     .perform(post(BASE_URI)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .content(payload)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
             result.andExpect(status().isOk());
 
@@ -364,7 +365,7 @@ public class ContentModelControllerIntegrationTest extends AbstractControllerInt
                     .perform(put(BASE_URI + "/{id}", modelId)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .content(payload)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
             result.andExpect(status().isOk())
                 .andExpect(jsonPath("$.errors.size()", is(0)))
@@ -400,7 +401,7 @@ public class ContentModelControllerIntegrationTest extends AbstractControllerInt
                     .perform(post(BASE_URI)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .content(payload)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
             result.andExpect(status().isOk());
 
@@ -416,7 +417,7 @@ public class ContentModelControllerIntegrationTest extends AbstractControllerInt
                     .perform(put(BASE_URI + "/{id}", modelId)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .content(payload)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
             result.andExpect(status().isConflict())
                     .andExpect(jsonPath("$.errors[0].code", is(String.valueOf("6"))));
@@ -450,7 +451,7 @@ public class ContentModelControllerIntegrationTest extends AbstractControllerInt
                     .perform(post(BASE_URI)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .content(payload)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
             result.andExpect(status().isOk());
 
@@ -466,7 +467,7 @@ public class ContentModelControllerIntegrationTest extends AbstractControllerInt
                     .perform(put(BASE_URI + "/{id}", modelId)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .content(payload)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
             result.andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.errors.size()", is(1)));
@@ -491,7 +492,7 @@ public class ContentModelControllerIntegrationTest extends AbstractControllerInt
         ResultActions result = mockMvc
                 .perform(delete(BASE_URI + "/{id}", 2)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
         result.andExpect(status().isConflict());
         result.andExpect(jsonPath("$.errors[0].code", is(String.valueOf("5"))));
@@ -506,7 +507,7 @@ public class ContentModelControllerIntegrationTest extends AbstractControllerInt
         ResultActions result = mockMvc
                 .perform(get(BASE_URI + "/{id}/pagereferences", 2)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
         result.andExpect(status().isOk());
     }

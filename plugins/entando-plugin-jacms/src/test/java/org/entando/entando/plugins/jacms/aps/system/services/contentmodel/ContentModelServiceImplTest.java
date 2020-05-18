@@ -1,6 +1,7 @@
 package org.entando.entando.plugins.jacms.aps.system.services.contentmodel;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
+import com.agiletec.aps.system.common.entity.model.SmallEntityType;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.*;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.*;
@@ -39,6 +40,7 @@ public class ContentModelServiceImplTest {
 
     private Map<Long, ContentModel> mockedContentModels;
     private Map<String, SmallContentType> mockedContentTypes;
+    private List<SmallEntityType> mockedEntityTypes;
 
     @Before
     public void setUp() throws Exception {
@@ -46,7 +48,7 @@ public class ContentModelServiceImplTest {
 
         fillMockedContentModelsMap();
         fillMockedContentTypesMap();
-
+        fillMockedEntityTypes();
         when(contentModelManager.getContentModel(anyLong()))
                 .thenAnswer(invocation -> mockedContentModels.get(invocation.getArgument(0)));
         when(contentModelManager.getContentModels()).thenReturn(new ArrayList<>(mockedContentModels.values()));
@@ -236,6 +238,34 @@ public class ContentModelServiceImplTest {
         }
     }
 
+    @Test(expected = ValidationConflictException.class)
+    public void shoudlFailDeletingContentModelWithDefaultModelTemplate() {
+        when(contentManager.getSmallEntityTypes()).thenReturn(mockedEntityTypes);
+        when(contentManager.getDefaultModel("BBB")).thenReturn("2");
+        try {
+            contentModelService.delete(2L);
+        } catch (ValidationConflictException ex) {
+            List<ObjectError> errors = ex.getBindingResult().getAllErrors();
+            assertThat(errors).isNotNull().hasSize(1);
+            assertThat(errors.get(0).getCode()).isEqualTo(ContentModelValidator.ERRCODE_CONTENTMODEL_METADATA_REFERENCES);
+            throw ex;
+        }
+    }
+
+    @Test(expected = ValidationConflictException.class)
+    public void shoudlFailDeletingContentModelWithDefaultModelListTemplate() {
+        when(contentManager.getSmallEntityTypes()).thenReturn(mockedEntityTypes);
+        when(contentManager.getListModel("BBB")).thenReturn("2");
+        try {
+            contentModelService.delete(2L);
+        } catch (ValidationConflictException ex) {
+            List<ObjectError> errors = ex.getBindingResult().getAllErrors();
+            assertThat(errors).isNotNull().hasSize(1);
+            assertThat(errors.get(0).getCode()).isEqualTo(ContentModelValidator.ERRCODE_CONTENTMODEL_METADATA_REFERENCES);
+            throw ex;
+        }
+    }
+
     @Test
     public void shouldReturnReferences() {
         assertThat(contentModelService.getContentModelReferences(1L))
@@ -283,9 +313,21 @@ public class ContentModelServiceImplTest {
         // CCC needs to be missing for testing validation
     }
 
+    private void fillMockedEntityTypes() {
+        this.mockedEntityTypes = new ArrayList<>();
+        addMockedEntityType("AAA");
+        addMockedEntityType("BBB");
+    }
+
     private void addMockedContentType(String code) {
         SmallContentType contentType = new SmallContentType();
         contentType.setCode(code);
         this.mockedContentTypes.put(code, contentType);
+    }
+
+    private void addMockedEntityType(String code) {
+        SmallEntityType contentType = new SmallEntityType();
+        contentType.setCode(code);
+        this.mockedEntityTypes.add(contentType);
     }
 }
