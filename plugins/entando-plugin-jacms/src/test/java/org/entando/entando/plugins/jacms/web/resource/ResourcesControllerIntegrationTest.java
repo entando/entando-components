@@ -1239,16 +1239,6 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
 
         try {
 
-            performGetResources(user, "image", null)
-                    .andDo(print())
-                    .andExpect(status().isOk());
-                    //.andExpect(jsonPath("$.payload.size()", is(3)));
-
-            performGetResources(user, "file", null)
-                    .andDo(print())
-                    .andExpect(status().isOk());
-                    //.andExpect(jsonPath("$.payload.size()", is(3)));
-
             String type = "image";
             String group = "free";
             String folderPath = null;
