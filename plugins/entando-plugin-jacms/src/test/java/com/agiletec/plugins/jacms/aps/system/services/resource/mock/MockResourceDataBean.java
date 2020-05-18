@@ -39,6 +39,7 @@ public class MockResourceDataBean implements ResourceDataBean {
     private String _mimeType;
     private Map<String,String> metadata = new HashMap<>();
     private String owner;
+    private String path;
     
     @Override
     public String getResourceId() {
@@ -149,5 +150,15 @@ public class MockResourceDataBean implements ResourceDataBean {
     @Override
     public void setOwner(String owner) {
         this.owner = owner;
+    }
+
+    @Override
+    public String getPath() {
+        return path;
+    }
+
+    @Override
+    public void setPath(String path) {
+        this.path = path;
     }
 }

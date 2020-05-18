@@ -302,6 +302,7 @@ public class ResourceManager extends AbstractService implements IResourceManager
         resource.setId(bean.getResourceId());
         resource.setMetadata(bean.getMetadata());
         resource.setOwner(bean.getOwner());
+        resource.setPath(bean.getPath());
         return resource;
     }
 
@@ -397,7 +398,8 @@ public class ResourceManager extends AbstractService implements IResourceManager
     protected void checkFilterKeys(FieldSearchFilter[] filters) {
         if (null != filters && filters.length > 0) {
             String[] allowedFilterKeys = {RESOURCE_ID_FILTER_KEY, RESOURCE_TYPE_FILTER_KEY, RESOURCE_DESCR_FILTER_KEY,
-                RESOURCE_MAIN_GROUP_FILTER_KEY, RESOURCE_FILENAME_FILTER_KEY, RESOURCE_CREATION_DATE_FILTER_KEY, RESOURCE_MODIFY_DATE_FILTER_KEY, RESOURCE_OWNER_FILTER_KEY};
+                    RESOURCE_MAIN_GROUP_FILTER_KEY, RESOURCE_FILENAME_FILTER_KEY, RESOURCE_CREATION_DATE_FILTER_KEY,
+                    RESOURCE_MODIFY_DATE_FILTER_KEY, RESOURCE_OWNER_FILTER_KEY, RESOURCE_PATH_FILTER_KEY};
             List<String> allowedFilterKeysList = Arrays.asList(allowedFilterKeys);
             for (int i = 0; i < filters.length; i++) {
                 FieldSearchFilter filter = filters[i];
@@ -449,6 +451,7 @@ public class ResourceManager extends AbstractService implements IResourceManager
         resource.setCreationDate(resourceVo.getCreationDate());
         resource.setLastModified(resourceVo.getLastModified());
         resource.setOwner(resourceVo.getOwner());
+        resource.setPath(resourceVo.getPath());
         return resource;
     }
 

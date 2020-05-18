@@ -27,6 +27,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.ICategoryManager;
+import com.agiletec.aps.system.services.group.Group;
+import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
@@ -1030,10 +1032,84 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
         }
     }
 
+    @Test
+    public void testCreateCloneDeleteImageResourceWithPath() throws Exception {
+        UserDetails user = createAccessToken();
+        String createdId = null;
+        String clonedId = null;
+
+        try {
+
+            String type = "image";
+            String group = "free";
+            String path = "path123";
+            List<String> categories = Arrays.stream(new String[]{"resCat1", "resCat2"}).collect(Collectors.toList());
+            String mimeType = "application/jpeg";
+
+            ResultActions result = performCreateResource(user, type, group, categories, path, mimeType)
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.id", Matchers.anything()))
+                    .andExpect(jsonPath("$.payload.categories.size()", is(2)))
+                    .andExpect(jsonPath("$.payload.categories[0]", is("resCat1")))
+                    .andExpect(jsonPath("$.payload.categories[1]", is("resCat2")))
+                    .andExpect(jsonPath("$.payload.group", is("free")))
+                    .andExpect(jsonPath("$.payload.description", is("image_test.jpeg")))
+                    .andExpect(jsonPath("$.payload.owner", is("jack_bauer")))
+                    .andExpect(jsonPath("$.payload.versions.size()", is(4)))
+                    .andExpect(jsonPath("$.payload.versions[0].size", is("2 Kb")))
+                    .andExpect(jsonPath("$.payload.versions[0].path", startsWith("/Entando/resources/cms/images/image_test")));
+
+            createdId = JsonPath.read(result.andReturn().getResponse().getContentAsString(), "$.payload.id");
+
+            ResultActions result2 = performCloneResource(user, createdId)
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.id", not(createdId)))
+                    .andExpect(jsonPath("$.payload.categories.size()", is(2)))
+                    .andExpect(jsonPath("$.payload.categories[0]", is("resCat1")))
+                    .andExpect(jsonPath("$.payload.categories[1]", is("resCat2")))
+                    .andExpect(jsonPath("$.payload.group", is("free")))
+                    .andExpect(jsonPath("$.payload.description", is("image_test.jpeg")))
+                    .andExpect(jsonPath("$.payload.owner", is("jack_bauer")))
+                    .andExpect(jsonPath("$.payload.versions.size()", is(4)))
+                    .andExpect(jsonPath("$.payload.versions[0].size", is("2 Kb")))
+                    .andExpect(jsonPath("$.payload.versions[0].path", startsWith("/Entando/resources/cms/images/image_test")));
+
+            clonedId = JsonPath.read(result2.andReturn().getResponse().getContentAsString(), "$.payload.id");
+
+        } finally {
+
+            if (clonedId != null) {
+                performDeleteResource(user, "image", clonedId)
+                        .andDo(print())
+                        .andExpect(status().isOk());
+
+                performGetResources(user, "image", null)
+                        .andDo(print())
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.payload.size()", is(4)));
+            }
+
+            if (createdId != null) {
+                performDeleteResource(user, "image", createdId)
+                        .andDo(print())
+                        .andExpect(status().isOk());
+
+                performGetResources(user, "image", null)
+                        .andDo(print())
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.payload.size()", is(3)));
+            }
+        }
+    }
+
     /* Auxiliary methods */
 
     private UserDetails createAccessToken() throws Exception {
-        return new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        return new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.CONTENT_EDITOR).grantedToRoleAdmin()
+                .build();
     }
 
     private ResultActions performGetResources(UserDetails user, String type, Map<String,String> params) throws Exception {
@@ -1070,16 +1146,17 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
                     .header("Authorization", "Bearer " + accessToken));
     }
 
-    private ResultActions performCreateResource(UserDetails user, String type, String group, List<String> categories, String mimeType) throws Exception {
-        String path = String.format("/plugins/cms/assets", type);
+    private ResultActions performCreateResource(UserDetails user, String type, String group, List<String> categories, String path, String mimeType) throws Exception {
+        String urlPath = String.format("/plugins/cms/assets", type);
 
         CreateResourceRequest resourceRequest = new CreateResourceRequest();
         resourceRequest.setType(type);
         resourceRequest.setCategories(categories);
         resourceRequest.setGroup(group);
+        resourceRequest.setPath(path);
 
         if (null == user) {
-            return mockMvc.perform(get(path));
+            return mockMvc.perform(get(urlPath));
         }
 
         String accessToken = mockOAuthInterceptor(user);
@@ -1105,7 +1182,7 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
             file = new MockMultipartFile("file", "file_test.jpeg", mimeType, contents.getBytes());
         }
 
-        MockHttpServletRequestBuilder request = multipart(path)
+        MockHttpServletRequestBuilder request = multipart(urlPath)
                 .file(file)
                 .param("metadata", MAPPER.writeValueAsString(resourceRequest))
                 .header("Authorization", "Bearer " + accessToken);
@@ -1114,7 +1191,7 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
     }
 
     private ResultActions performEditResource(UserDetails user, String type, String resourceId, String description,
-                              List<String> categories, boolean useFile) throws Exception {
+            List<String> categories, boolean useFile) throws Exception {
         String path = String.format("/plugins/cms/assets/%s", resourceId, type);
 
         UpdateResourceRequest resourceRequest = new UpdateResourceRequest();
@@ -1154,6 +1231,10 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
         }
 
         return mockMvc.perform(request);
+    }
+
+    private ResultActions performCreateResource(UserDetails user, String type, String group, List<String> categories, String mimeType) throws Exception {
+        return performCreateResource(user, type, group, categories, null, mimeType);
     }
 
     private ResultActions performCloneResource(UserDetails user, String resourceId) throws Exception {

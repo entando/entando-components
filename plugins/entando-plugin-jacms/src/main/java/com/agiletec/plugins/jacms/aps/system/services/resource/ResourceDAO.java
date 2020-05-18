@@ -52,11 +52,11 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
     private ICategoryManager categoryManager;
 
     private final String LOAD_RESOURCE_VO
-            = "SELECT restype, descr, maingroup, resourcexml, masterfilename, creationdate, lastmodified, owner FROM resources WHERE resid = ? ";
+            = "SELECT restype, descr, maingroup, resourcexml, masterfilename, creationdate, lastmodified, owner, path FROM resources WHERE resid = ? ";
 
     private final String ADD_RESOURCE
-            = "INSERT INTO resources (resid, restype, descr, maingroup, resourcexml, masterfilename, creationdate, lastmodified, owner) "
-            + "VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ?)";
+            = "INSERT INTO resources (resid, restype, descr, maingroup, resourcexml, masterfilename, creationdate, lastmodified, owner, path) "
+            + "VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ?, ?)";
 
     private final String UPDATE_RESOURCE
             = "UPDATE resources SET restype = ? , descr = ? , maingroup = ? , resourcexml = ? , masterfilename = ? , lastmodified = ? WHERE resid = ? ";
@@ -123,6 +123,7 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
             stat.setTimestamp(7, new java.sql.Timestamp(creationDate.getTime()));
             stat.setTimestamp(8, new java.sql.Timestamp(creationDate.getTime()));
             stat.setString(9, resource.getOwner());
+            stat.setString(10, resource.getPath());
             stat.executeUpdate();
         } catch (Throwable t) {
             logger.error("Error adding resource record", t);
@@ -416,6 +417,7 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
                 resourceVo.setCreationDate(res.getTimestamp(6));
                 resourceVo.setLastModified(res.getTimestamp(7));
                 resourceVo.setOwner(res.getString(8));
+                resourceVo.setPath(res.getString(9));
             }
         } catch (Exception t) {
             logger.error("Errore loading resource {}", id, t);

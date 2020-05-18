@@ -94,7 +94,9 @@ public class ResourcesController {
                 .filter(c -> c.length() > 0)
                 .collect(Collectors.toList());
 
-        AssetDto result = service.createAsset(resourceRequest.getType(), file, resourceRequest.getGroup(), categoriesList, extractCurrentUser());
+        AssetDto result = service
+                .createAsset(resourceRequest.getType(), file, resourceRequest.getGroup(), categoriesList, resourceRequest.getPath(),
+                        extractCurrentUser());
         return ResponseEntity.ok(new SimpleRestResponse<>(result));
     }
 

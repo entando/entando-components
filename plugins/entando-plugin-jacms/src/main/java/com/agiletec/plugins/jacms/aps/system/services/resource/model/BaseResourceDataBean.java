@@ -42,6 +42,7 @@ public class BaseResourceDataBean implements ResourceDataBean {
     private InputStream inputStream;
     private int fileSize;
     private String owner;
+    private String path;
     
     public BaseResourceDataBean() {
     }
@@ -182,5 +183,15 @@ public class BaseResourceDataBean implements ResourceDataBean {
     @Override
     public void setOwner(String owner) {
         this.owner = owner;
+    }
+
+    @Override
+    public String getPath() {
+        return path;
+    }
+
+    @Override
+    public void setPath(String path) {
+        this.path = path;
     }
 }

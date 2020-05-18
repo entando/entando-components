@@ -283,4 +283,16 @@ public interface ResourceInterface {
      */
     public void setOwner(String owner);
 
+    /**
+     * Returns the logical path of the resource
+     * @return The resources's logical path
+     */
+    public String getPath();
+
+    /**
+     * Sets the logical path of the resource
+     * @param path The resources's logical path
+     */
+    public void setPath(String path);
+
 }

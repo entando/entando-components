@@ -99,7 +99,7 @@ public class ResourcesService {
         return pagedResults;
     }
 
-    public AssetDto createAsset(String type, MultipartFile file, String group, List<String> categories, UserDetails user) {
+    public AssetDto createAsset(String type, MultipartFile file, String group, List<String> categories, String path, UserDetails user) {
         BaseResourceDataBean resourceFile = new BaseResourceDataBean();
 
         validateMimeType(type, file.getContentType());
@@ -115,6 +115,7 @@ public class ResourcesService {
             resourceFile.setResourceType(convertResourceType(type));
             resourceFile.setCategories(convertCategories(categories));
             resourceFile.setOwner(user.getUsername());
+            resourceFile.setPath(path);
 
             ResourceInterface resource = resourceManager.addResource(resourceFile);
             return convertResourceToDto(resourceManager.loadResource(resource.getId()));
@@ -187,7 +188,7 @@ public class ResourcesService {
             resourceFile.setResourceId(resourceId);
             resourceFile.setMetadata(resource.getMetadata());
             resourceFile.setOwner(resource.getOwner());
-
+            resourceFile.setPath(resource.getPath());
 
             if (file != null) {
                 validateMimeType(unconvertResourceType(resource.getType()), file.getContentType());
@@ -317,6 +318,9 @@ public class ResourcesService {
                 case "owner":
                     attr = IResourceManager.RESOURCE_OWNER_FILTER_KEY;
                     break;
+                case "path":
+                    attr = IResourceManager.RESOURCE_PATH_FILTER_KEY;
+                    break;
                 default:
                     log.warn("Invalid filter attribute: " + filter.getAttribute());
                     continue;
@@ -376,6 +380,8 @@ public class ResourcesService {
             key = IResourceManager.RESOURCE_OWNER_FILTER_KEY;
         } else if ("group".equals(groupBy)) {
             key = IResourceManager.RESOURCE_MAIN_GROUP_FILTER_KEY;
+        } else if ("path".equals(groupBy)) {
+            key = IResourceManager.RESOURCE_PATH_FILTER_KEY;
         }
 
         EntitySearchFilter filter = new EntitySearchFilter(key, true);
@@ -427,7 +433,8 @@ public class ResourcesService {
                         .path(resource.getImagePath("0"))
                         .size(resource.getDefaultInstance().getFileLength())
                         .build())
-                .owner(resource.getOwner());
+                .owner(resource.getOwner())
+                .path(resource.getPath());
 
         for (ImageResourceDimension dimensions : getImageDimensions()) {
             ResourceInstance instance = resource.getInstance(dimensions.getIdDim(), null);
@@ -460,6 +467,7 @@ public class ResourcesService {
                 .categories(resource.getCategories().stream()
                         .map(Category::getCode).collect(Collectors.toList()))
                 .owner(resource.getOwner())
+                .path(resource.getPath())
                 .build();
     }
 
