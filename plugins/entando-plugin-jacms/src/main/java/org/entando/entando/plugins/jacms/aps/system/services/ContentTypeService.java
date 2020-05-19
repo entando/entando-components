@@ -29,9 +29,9 @@ import org.entando.entando.aps.system.services.entity.model.EntityTypeAttributeF
 import org.entando.entando.aps.system.services.entity.model.EntityTypeShortDto;
 import org.entando.entando.aps.system.services.entity.model.EntityTypesStatusDto;
 import org.entando.entando.aps.system.services.page.IPageService;
+import org.entando.entando.aps.util.HttpSessionHelper;
 import org.entando.entando.plugins.jacms.aps.system.services.content.ContentService;
 import org.entando.entando.plugins.jacms.web.content.validator.RestContentListRequest;
-import org.entando.entando.plugins.jacms.web.resource.util.HttpSessionHelper;
 import org.entando.entando.web.common.assembler.PagedMetadataMapper;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
@@ -59,6 +59,8 @@ public class ContentTypeService extends AbstractEntityTypeService<Content, Conte
 
     @Autowired
     private HttpSession httpSession;
+    @Autowired
+    private PagedMetadataMapper pagedMetadataMapper;
 
     @Override
     protected IDtoBuilder<Content, ContentTypeDto> getEntityTypeFullDtoBuilder(
@@ -180,6 +182,6 @@ public class ContentTypeService extends AbstractEntityTypeService<Content, Conte
                         contentDto.getStatus().equals(Content.STATUS_READY) ? IPageService.STATUS_ONLINE : IPageService.STATUS_DRAFT))
                 .collect(Collectors.toList());
 
-        return PagedMetadataMapper.INSTANCE.getPagedResult(restListRequest, componentUsageEntityList, "code", pagedData.getTotalItems());
+        return pagedMetadataMapper.getPagedResult(restListRequest, componentUsageEntityList, "code", pagedData.getTotalItems());
     }
 }

@@ -13,25 +13,23 @@
  */
 package org.entando.entando.plugins.jacms.aps.system.services;
 
-import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
-import org.entando.entando.aps.system.exception.ResourceNotFoundException;
-import org.entando.entando.aps.system.services.assertionhelper.PageAssertionHelper;
+import org.apache.commons.lang3.ArrayUtils;
 import org.entando.entando.aps.system.services.mockhelper.PageMockHelper;
-import org.entando.entando.aps.system.services.page.PageService;
-import org.entando.entando.aps.system.services.page.model.PageDto;
 import org.entando.entando.aps.system.services.userprofile.MockUser;
 import org.entando.entando.plugins.jacms.aps.system.services.assertionhelper.ContentTypeAssertionHelper;
 import org.entando.entando.plugins.jacms.aps.system.services.content.ContentService;
+import org.entando.entando.plugins.jacms.aps.system.services.content.IContentService;
 import org.entando.entando.plugins.jacms.aps.system.services.mockhelper.ContentMockHelper;
 import org.entando.entando.plugins.jacms.aps.system.services.mockhelper.ContentTypeMockHelper;
 import org.entando.entando.plugins.jacms.web.content.validator.RestContentListRequest;
-import org.entando.entando.web.common.model.Filter;
+import org.entando.entando.web.common.assembler.PagedMetadataMapper;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.component.ComponentUsageEntity;
 import org.entando.entando.web.page.model.PageSearchRequest;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,12 +41,10 @@ import javax.servlet.http.HttpSession;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.assertj.core.api.Assertions.fail;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -58,9 +54,10 @@ public class ContentTypeServiceTest {
 
     @Mock
     private HttpSession httpSession;
-
     @Mock
     private ContentService contentService;
+    @Mock
+    private PagedMetadataMapper pagedMetadataMapper;
 
     @InjectMocks
     private ContentTypeService contentTypeService;
@@ -74,6 +71,11 @@ public class ContentTypeServiceTest {
         Field f = this.contentTypeService.getClass().getDeclaredField("httpSession");
         f.setAccessible(true);
         f.set(this.contentTypeService, this.httpSession);
+
+        Field fp = this.contentTypeService.getClass().getDeclaredField("pagedMetadataMapper");
+        fp.setAccessible(true);
+        fp.set(this.contentTypeService, this.pagedMetadataMapper);
+
     }
 
 
@@ -83,18 +85,21 @@ public class ContentTypeServiceTest {
         int relatedContents = 3;
 
         PagedMetadata<ContentDto> contentDtoPagedMetadata = ContentMockHelper.mockPagedContentDto(this.restListRequest, relatedContents);
-
-        when(this.contentService.getContents(any(), any())).thenReturn(contentDtoPagedMetadata);
+        when(this.contentService.getContents(any(RestContentListRequest.class), any(UserDetails.class))).thenReturn(contentDtoPagedMetadata);
+        when(this.pagedMetadataMapper.getPagedResult(any(RestListRequest.class), any(List.class), anyString(), anyInt()))
+                .thenReturn(ContentMockHelper.mockPagedContentComponentUsageEntity(this.restListRequest, relatedContents));
 
         PagedMetadata<ComponentUsageEntity> pageUsageDetails = this.contentTypeService.getComponentUsageDetails(ContentTypeMockHelper.CONTENT_TYPE_CODE,  this.restListRequest);
 
         ContentTypeAssertionHelper.assertUsageDetails(pageUsageDetails, relatedContents, relatedContents, this.restListRequest.getPage());
     }
 
+
     @Test
     public void getContentTypeUsageDetailsWithPagination() {
 
-        this.restListRequest.setPageSize(2);
+        int pageSize = 2;
+        this.restListRequest.setPageSize(pageSize);
 
         // creates paged data
         List<Integer> pageList = Arrays.asList(1, 2);
@@ -102,6 +107,7 @@ public class ContentTypeServiceTest {
                 { ContentMockHelper.mockContentDto(0), ContentMockHelper.mockContentDto(1) },
                 { ContentMockHelper.mockContentDto(2) }
         };
+        ContentDto[] allUtilizers = ArrayUtils.addAll(utilizers[0], utilizers[1]);
 
         int totalItems = utilizers[0].length + utilizers[1].length;
 
@@ -114,6 +120,7 @@ public class ContentTypeServiceTest {
                     PagedMetadata<ContentDto> contentDtoPagedMetadata = ContentMockHelper.mockPagedContentDto(restListRequest, totalItems);
                     contentDtoPagedMetadata.setTotalItems(totalItems);
                     when(this.contentService.getContents(any(), any())).thenReturn(contentDtoPagedMetadata);
+                    mockPagedMetadata(allUtilizers, pageList.get(i), 2, pageSize, totalItems);
 
                     PagedMetadata<ComponentUsageEntity> usageDetails = contentTypeService.getComponentUsageDetails(restListRequest.getFilters()[0].getValue(), restListRequest);
 
@@ -124,4 +131,28 @@ public class ContentTypeServiceTest {
                 });
     }
 
+
+    /**
+     * init mock for a multipaged request
+     */
+    private void mockPagedMetadata(ContentDto[] utilizers, int currPage, int lastPage, int pageSize, int totalSize) {
+
+        try {
+            PageSearchRequest pageSearchRequest = new PageSearchRequest(PageMockHelper.PAGE_CODE);
+            pageSearchRequest.setPageSize(pageSize);
+
+            List<ComponentUsageEntity> componentUsageEntityList = Arrays.stream(utilizers)
+                    .map(child -> new ComponentUsageEntity(ComponentUsageEntity.TYPE_CONTENT, child.getId(), IContentService.STATUS_ONLINE))
+                    .collect(Collectors.toList());
+
+            PagedMetadata pagedMetadata = new PagedMetadata(pageSearchRequest, componentUsageEntityList, totalSize);
+            pagedMetadata.setPageSize(pageSize);
+            pagedMetadata.setPage(currPage);
+            pagedMetadata.imposeLimits();
+            when(pagedMetadataMapper.getPagedResult(any(), any(), anyString(), anyInt())).thenReturn(pagedMetadata);
+
+        } catch (Exception e) {
+            Assert.fail("Mock Exception");
+        }
+    }
 }

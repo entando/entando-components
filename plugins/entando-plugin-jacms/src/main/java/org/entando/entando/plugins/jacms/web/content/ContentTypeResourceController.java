@@ -42,11 +42,7 @@ import org.entando.entando.plugins.jacms.web.content.validator.RestContentListRe
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
-import org.entando.entando.web.common.model.PagedMetadata;
-import org.entando.entando.web.common.model.PagedRestResponse;
-import org.entando.entando.web.common.model.RestListRequest;
-import org.entando.entando.web.common.model.RestResponse;
-import org.entando.entando.web.common.model.SimpleRestResponse;
+import org.entando.entando.web.common.model.*;
 import org.entando.entando.web.component.ComponentUsage;
 import org.entando.entando.web.component.ComponentUsageEntity;
 import org.entando.entando.web.page.model.PageSearchRequest;
@@ -148,6 +144,14 @@ public class ContentTypeResourceController implements ContentTypeResource {
     public ResponseEntity<PagedRestResponse<ComponentUsageEntity>> getComponentUsageDetails(@PathVariable String code, RestListRequest requestList) {
 
         logger.trace("get {} usage details by code {}", COMPONENT_ID, code);
+
+        // sets required filter overriding
+        Filter filter = new Filter();
+        filter.setOperator("eq");
+        filter.setAttribute("typeCode");
+        filter.setValue(code);
+        requestList.setFilters(new Filter[]{filter});
+        requestList.setSort("typeCode");
 
         validator.validateRestListRequest(requestList, ContentDto.class);
 
