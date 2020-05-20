@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.swing.ImageIcon;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.im4java.core.ConvertCmd;
 import org.im4java.core.IMOperation;
@@ -252,7 +253,8 @@ public class ImageResource extends AbstractMultiInstanceResource {
 
             //svg files won't resize correctly via the image processor so save them directly
             if(bean.getMimeType().contains("svg")) {
-                this.getStorageManager().saveFile(subPath, this.isProtectedResource(), new FileInputStream(bean.getFile()));
+                FileUtils.copyFile(bean.getFile(), tempFile);
+                this.getStorageManager().saveFile(subPath, this.isProtectedResource(), new FileInputStream(tempFile));
             }else {
                 // create the operation, add images and operators/options
                 IMOperation imOper = new IMOperation();
@@ -287,7 +289,14 @@ public class ImageResource extends AbstractMultiInstanceResource {
 
         try {
             if(bean.getMimeType().contains("svg")) {
+                long realLength = bean.getFile().length() / 1000;
+                ResourceInstance resizedInstance = new ResourceInstance();
+                resizedInstance.setSize(dimension.getIdDim());
+                resizedInstance.setFileLength(String.valueOf(realLength) + " Kb");
+                resizedInstance.setMimeType(bean.getMimeType());
+                resizedInstance.setFileName(bean.getFileName());
                 this.getStorageManager().saveFile(subPath, this.isProtectedResource(), new FileInputStream(bean.getFile()));
+                this.addInstance(resizedInstance);
             }else {
                 this.getStorageManager().deleteFile(subPath, this.isProtectedResource());
                 IImageResizer resizer = this.getImageResizer(subPath);

@@ -15,16 +15,21 @@ package org.entando.entando.plugins.jacms.web.content;
 
 import static org.entando.entando.web.entity.validator.AbstractEntityTypeValidator.ERRCODE_URINAME_MISMATCH;
 
+import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.services.role.Permission;
+import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentTypeDto;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentTypeDtoRequest;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentTypeRefreshRequest;
 import com.google.common.collect.ImmutableMap;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.entity.model.AttributeTypeDto;
@@ -33,24 +38,22 @@ import org.entando.entando.aps.system.services.entity.model.EntityTypeShortDto;
 import org.entando.entando.aps.system.services.entity.model.EntityTypesStatusDto;
 import org.entando.entando.plugins.jacms.aps.system.services.ContentTypeService;
 import org.entando.entando.plugins.jacms.web.content.validator.ContentTypeValidator;
+import org.entando.entando.plugins.jacms.web.content.validator.RestContentListRequest;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
-import org.entando.entando.web.common.model.PagedMetadata;
-import org.entando.entando.web.common.model.PagedRestResponse;
-import org.entando.entando.web.common.model.RestListRequest;
-import org.entando.entando.web.common.model.RestResponse;
-import org.entando.entando.web.common.model.SimpleRestResponse;
+import org.entando.entando.web.common.model.*;
 import org.entando.entando.web.component.ComponentUsage;
+import org.entando.entando.web.component.ComponentUsageEntity;
+import org.entando.entando.web.page.model.PageSearchRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ContentTypeResourceController implements ContentTypeResource {
@@ -129,11 +132,33 @@ public class ContentTypeResourceController implements ContentTypeResource {
         ComponentUsage usage = ComponentUsage.builder()
                 .type(COMPONENT_ID)
                 .code(code)
-                .usage(service.usage(code))
+                .usage(service.getComponentUsage(code))
                 .build();
 
         return new ResponseEntity<>(new SimpleRestResponse<>(usage), HttpStatus.OK);
     }
+
+
+    @Override
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    public ResponseEntity<PagedRestResponse<ComponentUsageEntity>> getComponentUsageDetails(@PathVariable String code, RestListRequest requestList) {
+
+        logger.trace("get {} usage details by code {}", COMPONENT_ID, code);
+
+        // sets required filter overriding
+        Filter filter = new Filter();
+        filter.setOperator("eq");
+        filter.setAttribute("typeCode");
+        filter.setValue(code);
+        requestList.setFilters(new Filter[]{filter});
+        requestList.setSort("typeCode");
+
+        validator.validateRestListRequest(requestList, ContentDto.class);
+
+        PagedMetadata<ComponentUsageEntity> result = this.service.getComponentUsageDetails(code, requestList);
+        return new ResponseEntity<>(new PagedRestResponse<>(result), HttpStatus.OK);
+    }
+
 
     @Override
     @RestAccessControl(permission = Permission.SUPERUSER)
