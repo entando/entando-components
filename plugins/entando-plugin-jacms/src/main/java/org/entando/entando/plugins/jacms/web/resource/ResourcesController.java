@@ -23,6 +23,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.entando.entando.aps.util.HttpSessionHelper;
 import org.entando.entando.plugins.jacms.aps.system.services.resource.ResourcesService;
 import org.entando.entando.plugins.jacms.web.resource.model.AssetDto;
 import org.entando.entando.plugins.jacms.web.resource.model.ListAssetsFolderResponse;
@@ -194,7 +195,4 @@ public class ResourcesController {
         return ResponseEntity.ok(new SimpleRestResponse<>(new HashMap()));
     }
 
-    protected UserDetails extractCurrentUser() {
-        return (UserDetails) this.httpSession.getAttribute("user");
-    }
 }

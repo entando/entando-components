@@ -18,6 +18,7 @@ import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.parse.ContentDOM;
+import org.entando.entando.aps.util.HttpSessionHelper;
 import org.entando.entando.plugins.jacms.aps.system.services.content.IContentService;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
 
@@ -129,7 +130,7 @@ public class ContentController {
             filter.setAttribute(normalizeAttributeNames(filter.getAttribute()));
         });
         this.getPaginationValidator().validateRestListRequest(requestList, ContentDto.class);
-        PagedMetadata<ContentDto> result = this.getContentService().getContents(requestList, this.extractCurrentUser());
+        PagedMetadata<ContentDto> result = this.getContentService().getContents(requestList, HttpSessionHelper.extractCurrentUser(httpSession));
         return new ResponseEntity<>(new PagedRestResponse<>(result), HttpStatus.OK);
     }
 
@@ -167,7 +168,7 @@ public class ContentController {
         if (!this.getContentValidator().existContent(code, status)) {
             throw new ResourceNotFoundException(EntityValidator.ERRCODE_ENTITY_DOES_NOT_EXIST, "Content", code);
         } else {
-            dto = this.getContentService().getContent(code, modelId, status, lang, resolveLinks, this.extractCurrentUser());
+            dto = this.getContentService().getContent(code, modelId, status, lang, resolveLinks, HttpSessionHelper.extractCurrentUser(httpSession));
         }
         logger.debug("Main Response -> {}", dto);
         return new ResponseEntity<>(new SimpleRestResponse<>(dto), HttpStatus.OK);
@@ -187,7 +188,7 @@ public class ContentController {
                 if (bindingResult.hasErrors()) {
                     throw new ValidationGenericException(bindingResult);
                 }
-                ContentDto result = this.getContentService().addContent(content, this.extractCurrentUser(), bindingResult);
+                ContentDto result = this.getContentService().addContent(content, HttpSessionHelper.extractCurrentUser(httpSession), bindingResult);
                 if (bindingResult.hasErrors()) {
                     throw new ValidationGenericException(bindingResult);
                 }
@@ -207,7 +208,7 @@ public class ContentController {
             throw new ValidationGenericException(bindingResult);
         }
         this.getContentValidator().validateBodyName(code, bodyRequest, bindingResult);
-        ContentDto response = this.getContentService().updateContent(bodyRequest, this.extractCurrentUser(), bindingResult);
+        ContentDto response = this.getContentService().updateContent(bodyRequest, HttpSessionHelper.extractCurrentUser(httpSession), bindingResult);
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         }
@@ -223,7 +224,7 @@ public class ContentController {
             throw new ValidationGenericException(bindingResult);
         }
 
-        UserDetails userDetails = this.extractCurrentUser();
+        UserDetails userDetails = HttpSessionHelper.extractCurrentUser(httpSession);
         List<ContentDto> response = bodyRequest.stream()
             .map(content -> {
                 ContentDto result = this.getContentService().updateContent(content, userDetails, bindingResult);
@@ -247,7 +248,7 @@ public class ContentController {
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         }
-        ContentDto contentDto = this.getContentService().updateContentStatus(code, contentStatusRequest.getStatus(), this.extractCurrentUser());
+        ContentDto contentDto = this.getContentService().updateContentStatus(code, contentStatusRequest.getStatus(), HttpSessionHelper.extractCurrentUser(httpSession));
         metadata.put("status", contentStatusRequest.getStatus());
         return new ResponseEntity<>(new RestResponse<>(contentDto, metadata), HttpStatus.OK);
     }
@@ -264,7 +265,7 @@ public class ContentController {
         }
 
         List<ContentDto> response = this.getContentService().updateContentsStatus(batchContentStatusRequest.getCodes(),
-                batchContentStatusRequest.getStatus(), this.extractCurrentUser());
+                batchContentStatusRequest.getStatus(), HttpSessionHelper.extractCurrentUser(httpSession));
         metadata.put("status", batchContentStatusRequest.getStatus());
 
         return new ResponseEntity<>(new RestResponse<>(response, metadata), HttpStatus.OK);
@@ -280,7 +281,7 @@ public class ContentController {
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         }
-        this.getContentService().deleteContent(code, this.extractCurrentUser());
+        this.getContentService().deleteContent(code, HttpSessionHelper.extractCurrentUser(httpSession));
         Map<String, String> payload = new HashMap<>();
         payload.put("code", code);
         return new ResponseEntity<>(new SimpleRestResponse<>(payload), HttpStatus.OK);
@@ -291,16 +292,12 @@ public class ContentController {
     public ResponseEntity<SimpleRestResponse<?>> deleteContents(@RequestBody List<String> codes) {
         logger.debug("Deleting contents -> {}", codes);
 
-        UserDetails userDetails = this.extractCurrentUser();
+        UserDetails userDetails = HttpSessionHelper.extractCurrentUser(httpSession);
         List<String> payload = codes.stream()
             .peek(code -> this.getContentService().deleteContent(code, userDetails))
             .collect(Collectors.toList());
 
         return new ResponseEntity<>(new SimpleRestResponse<>(payload), HttpStatus.OK);
-    }
-
-    protected UserDetails extractCurrentUser() {
-        return (UserDetails) this.httpSession.getAttribute("user");
     }
 
 }

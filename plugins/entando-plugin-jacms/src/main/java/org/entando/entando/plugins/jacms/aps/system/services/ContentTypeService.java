@@ -13,38 +13,54 @@
  */
 package org.entando.entando.plugins.jacms.aps.system.services;
 
-import static org.entando.entando.plugins.jacms.web.resource.ResourcesController.ERRCODE_RESOURCE_NOT_FOUND;
-
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentTypeDto;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentTypeDtoBuilder;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentTypeDtoRequest;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
+import org.entando.entando.aps.system.services.IComponentUsageService;
 import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.aps.system.services.entity.AbstractEntityTypeService;
 import org.entando.entando.aps.system.services.entity.model.AttributeTypeDto;
 import org.entando.entando.aps.system.services.entity.model.EntityTypeAttributeFullDto;
 import org.entando.entando.aps.system.services.entity.model.EntityTypeShortDto;
 import org.entando.entando.aps.system.services.entity.model.EntityTypesStatusDto;
+import org.entando.entando.aps.system.services.page.IPageService;
+import org.entando.entando.aps.util.HttpSessionHelper;
 import org.entando.entando.plugins.jacms.aps.system.services.content.ContentService;
+import org.entando.entando.plugins.jacms.web.content.validator.RestContentListRequest;
+import org.entando.entando.web.common.assembler.PagedMetadataMapper;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
+import org.entando.entando.web.component.ComponentUsageEntity;
 import org.entando.entando.web.entity.model.EntityTypeDtoRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
+import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static org.entando.entando.plugins.jacms.web.resource.ResourcesController.ERRCODE_RESOURCE_NOT_FOUND;
+
 @Service
 @RequiredArgsConstructor
-public class ContentTypeService extends AbstractEntityTypeService<Content, ContentTypeDto> {
+public class ContentTypeService extends AbstractEntityTypeService<Content, ContentTypeDto> implements IComponentUsageService {
 
     private static final String CONTENT_MODEL_MANAGER = "jacmsContentManager";
 
     private final ContentService contentService;
+
+    @Autowired
+    private HttpSession httpSession;
+    @Autowired
+    private PagedMetadataMapper pagedMetadataMapper;
 
     @Override
     protected IDtoBuilder<Content, ContentTypeDto> getEntityTypeFullDtoBuilder(
@@ -77,9 +93,6 @@ public class ContentTypeService extends AbstractEntityTypeService<Content, Conte
         }
     }
 
-    public Integer usage(String code) {
-        return contentService.countContentsByType(code);
-    }
 
     public PagedMetadata<String> findManyAttributes(RestListRequest requestList) {
         return getAttributeTypes(CONTENT_MODEL_MANAGER, requestList);
@@ -147,5 +160,28 @@ public class ContentTypeService extends AbstractEntityTypeService<Content, Conte
         result.setListModel(request.getDefaultContentModelList());
 
         return result;
+    }
+
+    @Override
+    public Integer getComponentUsage(String componentCode) {
+        return contentService.countContentsByType(componentCode);
+    }
+
+    @Override
+    public PagedMetadata<ComponentUsageEntity> getComponentUsageDetails(String componentCode, RestListRequest restListRequest) {
+
+        RestContentListRequest contentListRequest = new RestContentListRequest();
+        contentListRequest.setFilters(restListRequest.getFilters());
+        contentListRequest.setSort("typeCode");
+
+        PagedMetadata<ContentDto> pagedData = contentService.getContents(contentListRequest, HttpSessionHelper.extractCurrentUser(httpSession));
+        List<ComponentUsageEntity> componentUsageEntityList = pagedData.getBody().stream()
+                .map(contentDto -> new ComponentUsageEntity(
+                        ComponentUsageEntity.TYPE_CONTENT,
+                        contentDto.getId(),
+                        contentDto.getStatus().equals(Content.STATUS_READY) ? IPageService.STATUS_ONLINE : IPageService.STATUS_DRAFT))
+                .collect(Collectors.toList());
+
+        return pagedMetadataMapper.getPagedResult(restListRequest, componentUsageEntityList, "code", pagedData.getTotalItems());
     }
 }
