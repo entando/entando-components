@@ -144,7 +144,7 @@ public class ResourcesController {
 
         AssetDto result = service
                 .createAsset(resourceRequest.getType(), file, resourceRequest.getGroup(), categoriesList, resourceRequest.getFolderPath(),
-                        extractCurrentUser());
+                        HttpSessionHelper.extractCurrentUser(httpSession));
         return ResponseEntity.ok(new SimpleRestResponse<>(result));
     }
 
