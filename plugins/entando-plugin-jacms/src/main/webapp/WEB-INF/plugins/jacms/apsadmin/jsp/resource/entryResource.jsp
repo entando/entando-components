@@ -78,6 +78,7 @@
 </s:set>
 <s:set var="lockGroupSelect" value="%{resourceId != null}"></s:set>
 <s:form action="save" method="post" cssClass="form-horizontal image-upload-form" enctype="multipart/form-data">
+    <s:hidden name="_csrf" value="%{csrfToken}"/>
     <wpsf:hidden name="fieldCount"/>
     <s:include value="/WEB-INF/apsadmin/jsp/common/inc/inc_fullErrors.jsp"/>
     <p class="sr-only">

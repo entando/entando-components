@@ -21,6 +21,7 @@
 <br>
 
 <s:form action="deleteContentGroup" cssClass="form-horizontal">
+    <s:hidden name="_csrf" value="%{csrfToken}"/>
 
     <p class="sr-only">
         <s:iterator var="contentIdToDelete" value="contentIds"><wpsf:hidden name="contentIds" value="%{#contentIdToDelete}" /></s:iterator>

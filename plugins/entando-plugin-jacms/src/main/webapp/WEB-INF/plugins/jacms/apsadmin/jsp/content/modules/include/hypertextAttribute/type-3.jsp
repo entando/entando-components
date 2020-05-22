@@ -4,6 +4,7 @@
 <%@ taglib prefix="jacmsapsadmin" uri="/jacms-apsadmin-core"%>
 
 <s:form action="entandoSearch" cssClass="form-horizontal" role="search">
+    <s:hidden name="_csrf" value="%{csrfToken}"/>
     <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/content/modules/include/hypertextAttribute/info-prev-value.jsp" />
 
     <p class="sr-only">
@@ -65,6 +66,7 @@
     </div>
 </s:form>
 <s:form action="entandoSearch">
+    <s:hidden name="_csrf" value="%{csrfToken}"/>
     <div class="col-xs-12">
         <p class="sr-only">
             <wpsf:hidden name="text" />

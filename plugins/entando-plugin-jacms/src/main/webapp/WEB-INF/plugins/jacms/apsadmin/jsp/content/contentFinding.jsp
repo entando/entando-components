@@ -39,6 +39,7 @@
 
         <s:form action="%{'/' + #formAction}" cssClass="form-horizontal"
                 role="search">
+            <s:hidden name="_csrf" value="%{csrfToken}"/>
             <s:set var="categoryTreeStyleVar">
                 <wp:info key="systemParam" paramName="treeStyle_category" />
             </s:set>
@@ -335,6 +336,7 @@
 
     <div class="col-xs-12 mt-20">
         <s:form action="search" cssClass="form-horizontal">
+            <s:hidden name="_csrf" value="%{csrfToken}"/>
             <p class="sr-only">
                 <wpsf:hidden name="text" />
                 <wpsf:hidden name="contentType" />

@@ -68,6 +68,7 @@
     <p class="sr-only"><s:text name="note.editContent" /></p>
     <s:url namespace="/do/jacms/Content/Ajax"  action="autosave" var="dataAutosaveActionVar" />
     <s:form cssClass="form-horizontal " data-form-type="autosave" data-autosave-action="%{#dataAutosaveActionVar}">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
 
 
         <legend>

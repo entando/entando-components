@@ -4,6 +4,7 @@
 <%@ taglib prefix="jacmswpsa" uri="/jacms-apsadmin-core" %>
 
 <s:form>
+    <s:hidden name="_csrf" value="%{csrfToken}"/>
     <p class="sr-only">
         <wpsf:hidden name="selectedNode" />
     </p>

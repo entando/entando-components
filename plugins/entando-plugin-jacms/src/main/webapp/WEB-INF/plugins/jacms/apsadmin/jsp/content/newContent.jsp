@@ -24,6 +24,7 @@
 	</s:if>
 
 <s:form action="createNewVoid">
+    <s:hidden name="_csrf" value="%{csrfToken}"/>
 <fieldset><legend><s:text name="label.info" /></legend>
 <p><s:text name="note.editContentIntro" /></p>
 	<p>

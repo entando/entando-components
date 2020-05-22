@@ -13,6 +13,7 @@
 </s:include>
 
 <s:form cssClass="action-form form-horizontal">
+    <s:hidden name="_csrf" value="%{csrfToken}"/>
 	<p class="sr-only"><wpsf:hidden name="contentOnSessionMarker" /></p>
 	
 	<p class="sr-only"><s:text name="title.insertURL" /></p>

@@ -162,6 +162,7 @@
     <div class="tab-content">
         <div id="table-view" class="tab-pane fade">
             <s:form action="search" class="container-fluid container-cards-pf">
+                <s:hidden name="_csrf" value="%{csrfToken}"/>
                 <p class="sr-only">
                 <wpsf:hidden name="text"/>
                 <wpsf:hidden name="categoryCode"/>
@@ -381,6 +382,7 @@
 
         <div id="list-view" class="tab-pane fade in active">
             <s:form action="search" class="container-fluid">
+                <s:hidden name="_csrf" value="%{csrfToken}"/>
                 <p class="sr-only">
                 <wpsf:hidden name="text"/>
                 <wpsf:hidden name="categoryCode"/>

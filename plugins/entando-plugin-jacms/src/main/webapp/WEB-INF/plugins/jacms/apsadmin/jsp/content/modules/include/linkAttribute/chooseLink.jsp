@@ -6,6 +6,7 @@
 </s:set>
 <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/content/modules/include/linkAttribute/linkAttributeConfigIntro.jsp" />
 <s:form action="configLink" cssClass="action-form form-horizontal">
+    <s:hidden name="_csrf" value="%{csrfToken}"/>
 	<p class="sr-only"><wpsf:hidden name="contentOnSessionMarker" /></p>
 	<s:if test="hasFieldErrors()">
 		<div class="alert alert-danger alert-dismissable fade in">

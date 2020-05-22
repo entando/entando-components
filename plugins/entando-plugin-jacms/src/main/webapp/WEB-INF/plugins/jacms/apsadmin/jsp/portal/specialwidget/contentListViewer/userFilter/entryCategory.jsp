@@ -33,6 +33,7 @@
     <s:include value="/WEB-INF/apsadmin/jsp/portal/include/pageInfo_breadcrumbs.jsp" />
     <s:action namespace="/do/Page" name="printPageDetails" executeResult="true" ignoreContextParams="true"><s:param name="selectedNode" value="pageCode"></s:param></s:action>
     <s:form namespace="/do/jacms/Page/SpecialWidget/ListViewer" cssClass="form-horizontal">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <div class="panel panel-default">
             <div class="panel-heading">
                 <s:include value="/WEB-INF/apsadmin/jsp/portal/include/frameInfo.jsp" />

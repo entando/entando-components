@@ -4,6 +4,7 @@
 
 
 <s:form cssClass="form-horizontal" id="form_pageLink">
+    <s:hidden name="_csrf" value="%{csrfToken}"/>
 
     <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/content/modules/include/hypertextAttribute/info-prev-value.jsp" />
 

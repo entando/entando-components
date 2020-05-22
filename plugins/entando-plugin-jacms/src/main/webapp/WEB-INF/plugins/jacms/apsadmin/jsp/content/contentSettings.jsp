@@ -31,6 +31,7 @@
 
 <div id="main" role="main">
     <s:form class="form-horizontal" action="updateSystemParams">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <s:if test="hasActionMessages()">
             <div class="alert alert-success alert-dismissable">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">

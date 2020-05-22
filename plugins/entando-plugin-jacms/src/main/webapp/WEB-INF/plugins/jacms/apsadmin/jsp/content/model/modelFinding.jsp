@@ -32,6 +32,7 @@
                 <s:text name="label.search" />
             </p>
             <s:form action="search" cssClass="form-horizontal" role="search">
+                <s:hidden name="_csrf" value="%{csrfToken}"/>
                 <div class="form-group">
 
                     <label class="col-sm-2 control-label">
@@ -59,6 +60,7 @@
     </a>
 
     <s:form action="search" role="list" namespace="/do/jacms/ContentModel">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <p class="sr-only">
             <wpsf:hidden name="contentType" />
         </p>

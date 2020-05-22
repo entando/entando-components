@@ -21,6 +21,7 @@
 </ol>
 
 <s:form cssClass="form-horizontal">
+    <s:hidden name="_csrf" value="%{csrfToken}"/>
 
     <div id="main" role="main">
 

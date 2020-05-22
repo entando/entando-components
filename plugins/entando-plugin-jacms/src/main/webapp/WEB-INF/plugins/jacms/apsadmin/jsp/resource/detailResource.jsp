@@ -72,6 +72,7 @@
 </s:set>
 <s:set var="lockGroupSelect" value="%{resourceId != null && resourceId != 0}"></s:set>
 <s:form action="save" method="post" enctype="multipart/form-data" cssClass="form-horizontal">
+    <s:hidden name="_csrf" value="%{csrfToken}"/>
     <s:include value="/WEB-INF/apsadmin/jsp/common/inc/inc_fullErrors.jsp" />
     <p class="sr-only">
         <wpsf:hidden name="strutsAction" />
@@ -290,6 +291,7 @@
 
 <%-- TODO: refactor resource detail
 <s:form action="edit" method="post" cssClass="form-horizontal">
+    <s:hidden name="_csrf" value="%{csrfToken}"/>
     <p class="sr-only">
         <wpsf:hidden name="strutsAction" />
         <wpsf:hidden name="resourceTypeCode" />

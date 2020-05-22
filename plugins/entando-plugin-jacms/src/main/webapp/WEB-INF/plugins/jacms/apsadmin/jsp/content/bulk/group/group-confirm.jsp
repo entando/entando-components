@@ -42,6 +42,7 @@
 		</div>
 	</s:if>
 	<s:form action="apply" namespace="/do/jacms/Content/Group" >
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
 		<p class="sr-only">
 			<wpsf:hidden name="strutsAction"/>
 		<s:iterator var="contentId" value="selectedIds" >

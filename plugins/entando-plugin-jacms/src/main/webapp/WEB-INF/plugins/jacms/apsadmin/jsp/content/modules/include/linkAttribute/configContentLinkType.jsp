@@ -17,6 +17,7 @@
 
 <p class="sr-only"><s:text name="note.chooseContentToLink" /></p>
 <s:form action="search" cssClass="form-horizontal">
+    <s:hidden name="_csrf" value="%{csrfToken}"/>
     <div class="panel panel-default no-top-border">
         <div class="panel-body">
             <!-- Search Form -->

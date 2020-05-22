@@ -48,6 +48,7 @@
     </div>
 
     <s:form namespace="/do/jacms/Page/SpecialWidget/ListViewer" cssClass="form-horizontal mt-20">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <div class="panel panel-default">
             <div class="panel-heading">
                 <s:include value="/WEB-INF/apsadmin/jsp/portal/include/frameInfo.jsp" />

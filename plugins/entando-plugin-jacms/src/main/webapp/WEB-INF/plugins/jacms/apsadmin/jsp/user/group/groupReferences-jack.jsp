@@ -6,6 +6,7 @@
 <%-- referenced contents --%>
 <div id="contents" class="tab-pane fade">
     <s:form action="detail" cssClass="form-horizontal">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <s:hidden name="name" />
         <s:if test="null != references['jacmsContentManagerUtilizers']">
             <wpsa:subset source="references['jacmsContentManagerUtilizers']"
@@ -86,6 +87,7 @@
 </div>
 <div id="resources" class="tab-pane fade">
     <s:form action="detail" cssClass="form-horizontal">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <s:hidden name="name" />
         <s:if test="null != references['jacmsResourceManagerUtilizers']">
             <wpsa:subset source="references['jacmsResourceManagerUtilizers']"

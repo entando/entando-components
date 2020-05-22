@@ -30,6 +30,7 @@
     <s:include value="/WEB-INF/apsadmin/jsp/common/inc/inc_fullErrors.jsp" />
 
     <s:form action="applyOffline" namespace="/do/jacms/Content/Bulk" >
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
 
         <p class="sr-only">
             <s:iterator var="contentId" value="selectedIds" >

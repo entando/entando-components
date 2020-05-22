@@ -14,6 +14,7 @@
 </s:include>
 
 <s:form action="joinPageLink" cssClass="form-horizontal">
+    <s:hidden name="_csrf" value="%{csrfToken}"/>
     <p class="sr-only">
         <wpsf:hidden name="contentOnSessionMarker" />
         <s:if test="contentId == null">

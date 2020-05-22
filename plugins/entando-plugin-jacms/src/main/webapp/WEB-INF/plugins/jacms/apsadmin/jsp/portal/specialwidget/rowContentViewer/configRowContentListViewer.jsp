@@ -42,6 +42,7 @@
     </div>
 
     <s:form action="saveRowListViewerConfig" namespace="/do/jacms/Page/SpecialWidget/RowListViewer" cssClass="form-horizontal mt-20">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <div class="panel panel-default">
             <div class="panel-heading">
                 <s:include value="/WEB-INF/apsadmin/jsp/portal/include/frameInfo.jsp" />

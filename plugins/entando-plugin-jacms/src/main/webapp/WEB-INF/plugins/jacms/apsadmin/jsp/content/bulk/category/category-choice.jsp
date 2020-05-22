@@ -63,6 +63,7 @@
     </s:if>
 
     <s:form action="checkApply" namespace="/do/jacms/Content/Category" >
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <p class="sr-only">
             <wpsf:hidden name="strutsAction"/>
             <s:iterator var="contentId" value="selectedIds" >

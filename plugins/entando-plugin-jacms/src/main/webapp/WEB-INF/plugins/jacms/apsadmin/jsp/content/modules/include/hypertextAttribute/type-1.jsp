@@ -3,6 +3,7 @@
 
 
 <s:form cssClass="action-form form-horizontal" id="form_externalUrl">
+    <s:hidden name="_csrf" value="%{csrfToken}"/>
 
     <s:include value="/WEB-INF/plugins/jacms/apsadmin/jsp/content/modules/include/hypertextAttribute/info-prev-value.jsp" />
 

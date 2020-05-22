@@ -43,6 +43,7 @@
     </div>
 
     <s:form action="searchContents" cssClass="form-horizontal">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <div class="panel panel-default mt-20">
             <div class="panel-heading">
                 <s:include value="/WEB-INF/apsadmin/jsp/portal/include/frameInfo.jsp" />
