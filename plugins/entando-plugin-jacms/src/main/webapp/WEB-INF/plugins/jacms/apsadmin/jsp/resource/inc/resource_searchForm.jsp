@@ -5,6 +5,9 @@
 <%--<s:include value="/WEB-INF/apsadmin/jsp/common/layouts/assets-more/category/categoryTree-extra.jsp" />--%>
 
 <s:form action="search" cssClass="form-horizontal" role="search">
+
+    <s:hidden name="_csrf" value="%{csrfToken}"/>
+
     <p class="sr-only">
         <wpsf:hidden name="resourceTypeCode" />
         <s:if test="#categoryTreeStyleVar == 'request'">
