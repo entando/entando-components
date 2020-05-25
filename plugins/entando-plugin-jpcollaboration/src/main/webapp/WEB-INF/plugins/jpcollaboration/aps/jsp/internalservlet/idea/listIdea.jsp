@@ -192,6 +192,7 @@
                             </div>
 
                             <form action="<wp:action path="/ExtStr2/do/collaboration/FrontEnd/Idea/Manage/ideaLike.action" />" method="post" class="form-inline display-inline">
+                                <s:hidden name="_csrf" value="%{csrfToken}"/>
                                 <p class="noscreen">
                                     <s:if test="%{null != #parameters['type']}"><wpsf:hidden name="type" value="%{#parameters['type']}" /></s:if>
                                     <s:if test="%{null != #parameters['ideaTag']}"><wpsf:hidden name="ideaTag" value="%{#parameters['ideaTag']}" /></s:if>
@@ -211,6 +212,7 @@
                             </form>
 
                             <form action="<wp:action path="/ExtStr2/do/collaboration/FrontEnd/Idea/Manage/ideaUnlike.action" />" method="post" class="form-inline display-inline">
+                                <s:hidden name="_csrf" value="%{csrfToken}"/>
                                 <p class="noscreen">
                                     <s:if test="%{null != #parameters['type']}"><wpsf:hidden name="type" value="%{#parameters['type']}" /></s:if>
                                     <s:if test="%{null != #parameters['ideaTag']}"><wpsf:hidden name="ideaTag" value="%{#parameters['ideaTag']}" /></s:if>

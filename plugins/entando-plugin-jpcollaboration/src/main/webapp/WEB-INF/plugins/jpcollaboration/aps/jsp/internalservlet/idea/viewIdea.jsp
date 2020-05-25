@@ -92,6 +92,7 @@
                 </s:if>
 
                 <form action="<wp:action path="/ExtStr2/do/collaboration/FrontEnd/Idea/ideaLike.action"/>" method="post" class="form-inline display-inline">
+                    <s:hidden name="_csrf" value="%{csrfToken}"/>
                     <p class="noscreen">
                         <wpsf:hidden name="ideaId" value="%{ideaId}" />
                         <input type="hidden" name="userAction" value="like" />
@@ -108,6 +109,7 @@
                 </form>
 
                 <form action="<wp:action path="/ExtStr2/do/collaboration/FrontEnd/Idea/ideaUnlike.action"/>" method="post" class="form-inline display-inline">
+                    <s:hidden name="_csrf" value="%{csrfToken}"/>
                     <p class="noscreen">
                         <wpsf:hidden name="ideaId" value="%{ideaId}" />
                         <input type="hidden" name="userAction" value="dislike" />
@@ -134,6 +136,7 @@
                 <c:choose>
                     <c:when test="${sessionScope.currentUser != 'guest'}">
                         <form action="<wp:action path="/ExtStr2/do/collaboration/FrontEnd/Idea/saveComment.action"/>" method="post" accept-charset="UTF-8">
+                            <s:hidden name="_csrf" value="%{csrfToken}"/>
                             <s:if test="null != #parameters.comment_form">
                                 <s:if test="hasActionErrors()">
                                     <div class="alert alert-danger">
@@ -222,6 +225,7 @@
 
                 <%-- //back to list// ${listPage} setted on top --%>
                 <form action="${listPage}" method="post" class="form-inline display-inline">
+                    <s:hidden name="_csrf" value="%{csrfToken}"/>
                     <s:set var="labelList"><wp:i18n key="jpcollaboration_BACK_TO_LIST" escapeXml="false" /></s:set>
                         <p>
                         <wpsf:submit value="%{#labelList}" cssClass="btn btn-default" />
