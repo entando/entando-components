@@ -22,6 +22,7 @@
         <s:action namespace="/do/Page" name="printPageDetails" executeResult="true" ignoreContextParams="true"><s:param name="selectedNode" value="pageCode"></s:param></s:action>
 
         <s:form action="saveListConfig" namespace="/do/jpwebform/Page/SpecialWidget/Webform">
+            <s:hidden name="_csrf" value="%{csrfToken}"/>
             <p class="noscreen"> 
                 <wpsf:hidden name="pageCode" />
                 <wpsf:hidden name="frame" />

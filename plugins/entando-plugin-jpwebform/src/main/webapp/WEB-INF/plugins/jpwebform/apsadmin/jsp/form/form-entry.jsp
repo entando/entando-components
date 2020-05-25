@@ -51,6 +51,7 @@
     </div>    
 
     <s:form action="saveEntityType">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
 
         <s:set var="entityType" value="entityType" />
         <s:if test="operationId != 1">

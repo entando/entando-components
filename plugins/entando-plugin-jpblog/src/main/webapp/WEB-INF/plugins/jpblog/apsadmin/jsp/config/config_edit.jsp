@@ -30,6 +30,7 @@
     </div>
 
     <s:form action="update" cssClass="form-horizontal">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <s:if test="%{categories.size() == 0}">
             <div class="form-group">
                 <div class="col-xs-12">

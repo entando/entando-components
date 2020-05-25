@@ -45,7 +45,7 @@
 <br>
 <div class="col-xs-12">
     <s:form cssClass="form-horizontal" namespace="/do/jpavatar/Avatar" action="saveConfig" method="post" enctype="multipart/form-data">
-
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <fieldset class="form-group">
             <div class="col-xs-2 control-label">
                 <span class="display-block"><s:text name="label.chooseYourEditor"/></span>

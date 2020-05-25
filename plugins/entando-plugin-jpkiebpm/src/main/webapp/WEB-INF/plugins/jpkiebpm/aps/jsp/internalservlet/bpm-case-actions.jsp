@@ -36,6 +36,7 @@
     <div class="ibox float-e-margins">
         <div class="ibox-content">
             <form action="<wp:action path="/ExtStr2/do/bpm/FrontEnd/CaseInstanceActions/view.action"/>" method="post" class="form-horizontal" >
+                <s:hidden name="_csrf" value="%{csrfToken}"/>
                 <s:if test="casePath != null">
                     <s:hidden name="casePath" escapeHtml="false" escapeJavaScript="false"/>
                 </s:if>

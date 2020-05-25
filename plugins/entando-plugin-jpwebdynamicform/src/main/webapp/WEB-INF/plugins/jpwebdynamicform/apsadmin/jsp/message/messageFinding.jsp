@@ -60,6 +60,7 @@
     <s:include value="/WEB-INF/apsadmin/jsp/common/inc/messages.jsp"/>
 
     <s:form action="search" cssClass="form-horizontal" role="search">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <div class="searchPanel form-group">
             <div class="well col-md-offset-3 col-md-6">
                 <p class="search-label col-sm-12"><s:text name="label.search.message.type"/></p>
@@ -325,6 +326,7 @@
         </s:if>
         <s:else>
             <s:form action="search">
+                <s:hidden name="_csrf" value="%{csrfToken}"/>
                 <p class="noscreen">
                     <wpsf:hidden name="entityTypeCode"/>
                     <wpsf:hidden name="from"/>

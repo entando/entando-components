@@ -94,6 +94,7 @@
     <s:if test="%{#contentIdsVar.size() > 0}">
 
         <s:form action="search" cssClass="form-horizontal" role="search">
+            <s:hidden name="_csrf" value="%{csrfToken}"/>
 
             <s:include value="/WEB-INF/apsadmin/jsp/common/inc/messages.jsp"/>
 

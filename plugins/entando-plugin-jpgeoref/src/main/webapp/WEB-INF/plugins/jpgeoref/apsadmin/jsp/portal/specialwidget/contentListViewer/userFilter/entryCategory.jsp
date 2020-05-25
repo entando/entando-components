@@ -23,6 +23,7 @@
         <s:set var="showletType" value="%{getShowletType(widgetTypeCode)}"></s:set>
 
         <s:form namespace="/do/jpgeoref/Page/SpecialWidget/ListViewer" cssClass="form-horizontal">
+            <s:hidden name="_csrf" value="%{csrfToken}"/>
 
             <s:if test="hasFieldErrors()">
                 <div class="alert alert-danger alert-dismissable">

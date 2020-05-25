@@ -64,6 +64,7 @@
         <s:param name="selectedNode" value="pageCode"></s:param>
     </s:action>
     <s:form action="saveConfig" namespace="/do/jpfacetnav/Page/SpecialWidget/FacetNavResult" cssClass="form-horizontal">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <div class="panel panel-default">
             <div class="panel-heading">
                 <s:include value="/WEB-INF/apsadmin/jsp/portal/include/frameInfo.jsp" />

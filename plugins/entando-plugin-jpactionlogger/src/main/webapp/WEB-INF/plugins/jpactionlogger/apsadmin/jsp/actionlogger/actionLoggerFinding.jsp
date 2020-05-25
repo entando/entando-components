@@ -31,6 +31,7 @@
 </div>
 <div id="main">
     <s:form action="list" cssClass="form-horizontal">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <div class="searchPanel form-group">
             <div class="well col-md-offset-3 col-md-6">
                 <p class="search-label">
@@ -111,6 +112,7 @@
         </div>
     </s:form>
     <s:form action="search">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <p class="sr-only">
             <s:hidden name="username" />
             <s:hidden name="namespace" />

@@ -33,6 +33,7 @@
     </s:action>
 
     <s:form action="save" namespace="/do/bpm/Page/SpecialWidget/BpmCaseInstanceSelectorViewer" class="form-horizontal">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <s:include value="/WEB-INF/plugins/jpkiebpm/apsadmin/jsp/common/errors.jsp"/>
 
         <p class="noscreen">

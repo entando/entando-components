@@ -28,6 +28,7 @@
 
 <div class="text-center">
     <s:form action="delete">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <i class="fa fa-exclamation esclamation-big" aria-hidden="true"></i>
         <p class="esclamation-underline"><s:text name="jpavatar.label.confirm.delete"/></p>
         <p class="esclamation-underline-text">

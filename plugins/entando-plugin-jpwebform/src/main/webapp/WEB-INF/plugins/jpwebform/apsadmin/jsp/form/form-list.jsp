@@ -195,6 +195,7 @@
                     <td class="editGui col-sm-3">
                         <s:set var="stepsConfigVar" value="%{getStepsConfigExtended(#entityType.typeCode)}" />
                         <s:form action="editGui" namespace="/do/jpwebform/Config/Gui">
+                            <s:hidden name="_csrf" value="%{csrfToken}"/>
                             <wpsf:hidden name="entityTypeCode" value="%{#entityType.typeCode}"/>
 
                             <div class="input-group">

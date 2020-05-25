@@ -30,7 +30,8 @@
 <div id="main">
     <s:set var="isGuiBuilt" value="(#stepsConfigVar.builtConfirmGui && #stepCode eq 'confirm') ||  (#stepsConfigVar.builtEndPointGui && #stepCode eq 'ending') || #stepVar.builtGui" />
 
-    <s:form action="saveGui" namespace="/do/jpwebform/Config/Gui/" method="post"> 
+    <s:form action="saveGui" namespace="/do/jpwebform/Config/Gui/" method="post">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <p class="noscreen">
             <wpsf:hidden name="entityTypeCode" />
             <wpsf:hidden name="stepCode" />

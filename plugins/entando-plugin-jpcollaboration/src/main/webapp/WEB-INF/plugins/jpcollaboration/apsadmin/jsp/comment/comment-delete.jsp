@@ -32,6 +32,7 @@
 
 <div class="mb-20">
     <s:form action="delete">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <p class="noscreen">
             <wpsf:hidden name="strutsAction" value="%{strutsAction}" />
             <wpsf:hidden name="commentId" value="%{commentId}" />

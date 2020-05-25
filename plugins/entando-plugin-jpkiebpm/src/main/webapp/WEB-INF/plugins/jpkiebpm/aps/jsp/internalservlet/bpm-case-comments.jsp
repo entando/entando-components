@@ -37,6 +37,7 @@
     <div class="ibox-content">
         <div class="chat-activity-list">
             <form action="<wp:action path="/ExtStr2/do/bpm/FrontEnd/CaseInstanceComments/updateComment.action"/>" method="post" class="form-horizontal" ng-repeat="comment in vm.mod.comments track by comment.id" >
+                <s:hidden name="_csrf" value="%{csrfToken}"/>
                 <s:if test="casePath != null">
                     <s:hidden name="casePath" escapeHtml="false" escapeJavaScript="false"/>
                 </s:if>
@@ -86,6 +87,7 @@
         <div class="chat-form">
 
             <form action="<wp:action path="/ExtStr2/do/bpm/FrontEnd/CaseInstanceComments/postComment.action"/>" method="post" class="form-horizontal" >
+                <s:hidden name="_csrf" value="%{csrfToken}"/>
                 <s:if test="casePath != null">
                     <s:hidden name="casePath" escapeHtml="false" escapeJavaScript="false"/>
                 </s:if>

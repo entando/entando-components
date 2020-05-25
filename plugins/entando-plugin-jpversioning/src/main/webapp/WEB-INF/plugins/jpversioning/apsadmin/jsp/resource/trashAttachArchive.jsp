@@ -48,6 +48,7 @@
 <div id="main">
     <div class="subsection-light">
         <s:form action="search" cssClass="form-horizontal">
+            <s:hidden name="_csrf" value="%{csrfToken}"/>
             <p class="sr-only">
                 <wpsf:hidden name="resourceTypeCode" />
             </p>

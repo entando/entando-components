@@ -90,6 +90,7 @@
 </div>
 <div id="main">
     <s:form action="save" cssClass="form-horizontal">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <p class="noscreen">
             <wpsf:hidden name="strutsAction" />
         </p>

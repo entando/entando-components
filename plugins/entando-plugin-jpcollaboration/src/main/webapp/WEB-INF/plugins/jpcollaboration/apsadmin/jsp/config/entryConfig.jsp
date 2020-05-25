@@ -65,6 +65,7 @@
 </div>
 <div id="main">
     <s:form action="saveConfig" class="form-horizontal">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <fieldset class="col-xs-12">
             <legend>
                 <s:text name="jpcrowdsourcing.title.moderation" />

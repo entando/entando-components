@@ -19,6 +19,7 @@
 
 <div class="text-center">
     <s:form action="deleteSender">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <p class="sr-only"><wpsf:hidden name="code"/></p>
         <i class="fa fa-exclamation esclamation-big" aria-hidden="true"></i>
         <p class="esclamation-underline"><s:text name="title.eMailManagement.sendersConfig.trashSender"/></p>

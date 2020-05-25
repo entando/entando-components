@@ -27,6 +27,7 @@
 
 <div class="text-center">
     <s:form action="doDelete">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <p class="sr-only">
             <wpsf:hidden name="code" />
         </p>

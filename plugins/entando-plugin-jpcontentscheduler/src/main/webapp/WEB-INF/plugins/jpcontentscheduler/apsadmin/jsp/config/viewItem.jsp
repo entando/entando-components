@@ -56,6 +56,7 @@
 <div id="main" >
 
     <s:form action="saveItem" class="form-horizontal">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
 
         <s:if test="hasActionErrors()">
             <div class="alert alert-danger alert-dismissable">
@@ -117,6 +118,7 @@
     </div>
 
     <s:form id="configurationForm" name="configurationForm" method="post" action="saveItem" cssClass="form-horizontal">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <legend>
             <s:text name="legend.contentThreadconfigSettings" />
         </legend>

@@ -42,6 +42,7 @@
     </s:if>
 
     <s:form action="publishPreview" namespace="/do/jpwebform/Config/Gui" >
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
 		<%--
         <s:if test="#isGuiBuiltVar" >
             <s:set var="showingPageSelectItems" value="showingPageSelectItems"></s:set>
@@ -151,6 +152,7 @@
 
     <s:if test="#isGuiBuiltVar">
         <s:form action="publish" namespace="/do/jpwebform/Publish" cssClass="form-horizontal">
+            <s:hidden name="_csrf" value="%{csrfToken}"/>
             <wpsf:hidden name="entityTypeCode" />
             <div class="form-group">
                 <div class="col-xs-12 col-sm-4 col-md-3 margin-small-vertical">

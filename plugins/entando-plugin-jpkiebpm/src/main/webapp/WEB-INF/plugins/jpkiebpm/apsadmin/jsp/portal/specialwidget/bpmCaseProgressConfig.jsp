@@ -32,6 +32,7 @@
     </s:action>
 
     <s:form action="save" namespace="/do/bpm/Page/SpecialWidget/BpmCaseProgressViewer" class="form-horizontal">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <p class="noscreen">
             <wpsf:hidden name="pageCode"/>
             <wpsf:hidden name="frame"/>

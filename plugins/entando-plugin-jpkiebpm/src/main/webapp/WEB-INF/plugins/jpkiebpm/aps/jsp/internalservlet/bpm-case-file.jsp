@@ -46,6 +46,7 @@
         <div class="panel-body" style="min-height:400px">
             <div ng-jsoneditor ng-model="vm.mod.caseFile" options="{}"></div>
             <form action="<wp:action path="/ExtStr2/do/bpm/FrontEnd/CaseInstanceFile/updateData.action"/>" method="post" class="form-horizontal" >
+                <s:hidden name="_csrf" value="%{csrfToken}"/>
                 <%--<s:form namespace="/ExtStr2/do/bpm/FrontEnd/CaseInstanceFile" action="updateData" method="post" cssClass="form-horizontal">--%>
                 <s:if test="casePath != null">
                     <s:hidden name="casePath" escapeHtml="false" escapeJavaScript="false"/>

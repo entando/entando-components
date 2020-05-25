@@ -64,6 +64,7 @@
 <br>
 <div id="main">
     <s:form action="search" cssClass="form-horizontal">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <s:set var="statusMap"
             value="#{
                1:'jpcrowdsourcing.label.status_not_approved_m',
@@ -105,6 +106,7 @@
     </s:form>
     <div class="subsection-light">
         <s:form action="search">
+            <s:hidden name="_csrf" value="%{csrfToken}"/>
             <p class="noscreen">
                 <wpsf:hidden name="commentText" />
                 <wpsf:hidden name="searchStatus" />

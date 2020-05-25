@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="jacms" uri="/jacms-aps-core" %>
 <%@ taglib prefix="jpcrwsrc" uri="/jpcrowdsourcing-aps-core" %>
+<%@ taglib prefix="s" uri="/struts-tags"%>
 <div class="ibox float-e-margins">
     <div class="jpcrowdsourcing jpcrowdsourcing_fastEntryIdea">
         <div class="ibox-title">
@@ -13,6 +14,7 @@
                 <c:when test="${sessionScope.currentUser != 'guest'}">
                     <jpcrwsrc:pageWithWidget var="entryIdea_page" widgetTypeCode="jpcollaboration_entryIdea" listResult="false" />
                     <form action="<wp:url page="${entryIdea_page.code}" />" method="post" accept-charset="UTF-8">
+                        <s:hidden name="_csrf" value="%{csrfToken}"/>
                         <c:if test="${null != instanceVar}">
                             <input type="hidden" name="jpcrowdsourcing_fastInstanceCode" value="<c:out value="${instanceVar}" />" />
                         </c:if>

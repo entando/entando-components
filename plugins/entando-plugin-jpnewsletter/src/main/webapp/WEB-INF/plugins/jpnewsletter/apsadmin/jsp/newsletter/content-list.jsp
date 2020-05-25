@@ -67,6 +67,7 @@
     <!-- Search Form -->
     <s:url action="search" var="formAction" namespace="do/jpnewsletter/Newsletter"/>
     <s:form action="%{'/' + #formAction}" cssClass="form-horizontal" role="search">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <p class="sr-only">
             <wpsf:hidden name="lastGroupBy"/>
             <wpsf:hidden name="lastOrder"/>
@@ -163,6 +164,7 @@
     <div class="subsection-light">
 
         <s:form action="search">
+            <s:hidden name="_csrf" value="%{csrfToken}"/>
             <p class="noscreen">
                 <wpsf:hidden name="text"/>
                 <wpsf:hidden name="contentType"/>

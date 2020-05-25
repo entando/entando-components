@@ -27,6 +27,7 @@
 </h1>
 
 <s:form namespace="/do/jpwebform/Form" action="removeFormWorkVersion">
+    <s:hidden name="_csrf" value="%{csrfToken}"/>
     <p class="noscreen">
         <wpsf:hidden name="entityManagerName" />
         <wpsf:hidden name="entityTypeCode" />

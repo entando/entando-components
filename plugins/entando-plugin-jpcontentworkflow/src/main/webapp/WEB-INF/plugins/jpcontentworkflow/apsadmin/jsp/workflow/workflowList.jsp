@@ -43,6 +43,7 @@
 <br>
 <div id="main">
     <s:form action="saveRoles" cssClass="form-horizontal">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
 
         <s:if test="hasActionMessages()">
             <div class="alert alert-success fade in">

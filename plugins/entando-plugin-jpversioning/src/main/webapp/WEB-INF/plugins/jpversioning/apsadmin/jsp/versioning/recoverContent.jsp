@@ -98,6 +98,7 @@
     </s:else>
     <div class="subsection-light">
         <s:form action="recover" >
+            <s:hidden name="_csrf" value="%{csrfToken}"/>
             <p class="sr-only">
                 <wpsf:hidden name="versionId" />
                 <wpsf:hidden name="contentId" />

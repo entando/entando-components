@@ -78,6 +78,7 @@ String cId = java.util.UUID.randomUUID().toString();
                         </td>
                         <td>
                             <form action="<wp:action path="/ExtStr2/do/bpm/FrontEnd/CaseInstanceRoles/addRole.action"/>" method="post" class="form-horizontal" >
+                                <s:hidden name="_csrf" value="%{csrfToken}"/>
                                 <s:if test="casePath != null">
                                     <s:hidden name="casePath" escapeHtml="false" escapeJavaScript="false"/>
                                 </s:if>

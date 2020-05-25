@@ -43,6 +43,7 @@
 
     <s:set var="removeAddressImage"><wp:resourceURL/>administration/common/img/icons/list-remove.png</s:set>
     <s:form action="save">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <s:if test="hasFieldErrors()">
             <div class="alert alert-danger alert-dismissable">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">

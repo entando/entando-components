@@ -46,6 +46,7 @@
         </div>
     </div>
     <s:form action="sendAnswer" enctype="multipart/form-data">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <s:include value="/WEB-INF/apsadmin/jsp/common/inc/messages.jsp" />
         <div>
             <s:include value="inc/include_messageDetails.jsp"/>

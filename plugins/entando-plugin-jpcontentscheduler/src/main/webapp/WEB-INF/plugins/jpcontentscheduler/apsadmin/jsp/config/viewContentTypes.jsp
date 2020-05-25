@@ -73,6 +73,7 @@
     <div class="row mt-5">
         <div class="col-xs-12">
             <s:form id="configurationForm" name="configurationForm" method="post" action="saveContentTypeItem" cssClass="form-horizontal">
+                <s:hidden name="_csrf" value="%{csrfToken}"/>
                 <s:set var="#contentTypeElements" value="%{getTypes()}" />
                 <!--                 <contentType type="NOL" startAttr="Data_inizio" endAttr="Data_fine" idContentReplace="Id_contenuto_sost" modelIdContentReplace="Model_id" suspend="true"> -->
                 <table class="table table-striped table-bordered table-hover mb-20">

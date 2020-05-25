@@ -63,6 +63,7 @@
     </div>
 
     <s:form id="configurationForm" name="configurationForm" method="post" action="addContentType" cssClass="form-horizontal">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <legend>
             <s:text name="jpcontentscheduler.label.addContentType" />
         </legend>

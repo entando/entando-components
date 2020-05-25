@@ -99,6 +99,7 @@
             <c:choose>
                 <c:when test="${null == currentAvatar}">
                     <s:form cssClass="form-horizontal" namespace="/do/jpavatar/Avatar" action="save" method="post" enctype="multipart/form-data">
+                        <s:hidden name="_csrf" value="%{csrfToken}"/>
                         <div class="form-group">
                             <div class="col-xs-12">
                                 <label for="jpavatar_file"><s:text name="label.avatarImage" /></label>
@@ -116,6 +117,7 @@
                 </c:when>
                 <c:otherwise>
                     <s:form namespace="/do/jpavatar/Avatar" action="bin" cssClass="form-horizontal">
+                        <s:hidden name="_csrf" value="%{csrfToken}"/>
                         <div class="form-group">
                             <div class="col-sm-12">
                                 <wpsf:submit type="button" cssClass="btn btn-primary pull-right">

@@ -61,6 +61,7 @@
         <s:text name="jpnewsletter.note.subscribers.intro" />.
     </div>
     <s:form action="search" cssClass="form-horizontal" role="search">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <div class="searchPanel form-group">
             <div class="well col-lg-offset-3 col-lg-6 col-md-offset-2 col-md-8 col-sm-offset-1 col-sm-10">
                 <p class="search-label">

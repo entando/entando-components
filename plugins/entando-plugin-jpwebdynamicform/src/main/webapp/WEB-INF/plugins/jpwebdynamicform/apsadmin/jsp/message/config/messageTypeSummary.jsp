@@ -60,6 +60,7 @@
         </div>
 
         <s:form class="form-horizontal" action="edit">
+            <s:hidden name="_csrf" value="%{csrfToken}"/>
             <%--<legend><s:text name="label.info" /></legend>--%>
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="jpwebdynamicform_message_type"><s:text name="label.messageType" /></label>

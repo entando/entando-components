@@ -24,6 +24,7 @@
             <h4 class="margin-bit-bottom"></h4>
 
         <s:form namespace="/do/jpgeoref/Page/SpecialWidget/ListViewer">
+            <s:hidden name="_csrf" value="%{csrfToken}"/>
             <p class="noscreen">
                 <wpsf:hidden name="pageCode" />
                 <wpsf:hidden name="frame" />

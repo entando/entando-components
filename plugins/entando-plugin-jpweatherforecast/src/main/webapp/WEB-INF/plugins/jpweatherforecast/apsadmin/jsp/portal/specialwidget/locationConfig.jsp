@@ -60,6 +60,7 @@
 		<%-- error //end --%>
 
 <s:form action="localize" namespace="/do/jpweatherforecast/Page/SpecialWidget/location" cssClass="form-horizontal">
+    <s:hidden name="_csrf" value="%{csrfToken}"/>
 
 	<p class="noscreen">
 		<wpsf:hidden name="pageCode" />

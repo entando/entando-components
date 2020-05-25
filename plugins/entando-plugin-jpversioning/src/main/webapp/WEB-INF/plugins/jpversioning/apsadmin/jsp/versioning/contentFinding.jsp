@@ -46,6 +46,7 @@
 
 <div id="main">
     <s:form action="search" class="form-horizontal">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
 
         <div class="searchPanel form-group">
             <label for="descr" class="sr-only">

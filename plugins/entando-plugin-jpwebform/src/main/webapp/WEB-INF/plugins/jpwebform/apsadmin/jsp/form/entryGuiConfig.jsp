@@ -34,6 +34,7 @@
 	<s:set var="entityPrototypeVar" value="%{getEntityPrototype(#entityTypeCode)}" />
 
 	<s:form action="save" namespace="/do/jpwebform/Config/Gui/">
+	    <s:hidden name="_csrf" value="%{csrfToken}"/>
 		<p class="noscreen">
 			<wpsf:hidden name="entityTypeCode" />
 		</p>

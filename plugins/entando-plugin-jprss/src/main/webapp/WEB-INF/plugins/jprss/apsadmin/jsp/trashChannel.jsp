@@ -25,6 +25,7 @@
 
 <div class="text-center">
     <s:form action="delete" namespace="/do/jprss/Rss" cssClass="form-horizontal">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <p class="sr-only"><wpsf:hidden name="id"/></p>
         <i class="fa fa-exclamation esclamation-big" aria-hidden="true"></i>
         <p class="esclamation-underline"><s:text name="note.deleteChannel.areYouSure"/></p>

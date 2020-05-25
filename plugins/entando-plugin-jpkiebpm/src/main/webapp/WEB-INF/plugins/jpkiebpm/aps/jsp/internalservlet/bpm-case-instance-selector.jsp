@@ -9,6 +9,7 @@
 </s:if>
 
 <form action="<wp:action path="/ExtStr2/do/bpm/FrontEnd/CaseInstanceSelector/selectCaseInstance.action"/>" method="post" class="form-horizontal">
+    <s:hidden name="_csrf" value="%{csrfToken}"/>
     <s:if test="knowledgeSourceId != null">
         <s:hidden name="knowledgeSourceId" escapeHtml="false" escapeJavaScript="false"/>
     </s:if>

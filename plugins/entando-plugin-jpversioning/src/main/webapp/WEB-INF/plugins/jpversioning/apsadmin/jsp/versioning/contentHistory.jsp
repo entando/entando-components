@@ -37,6 +37,7 @@
 
 <div id="main">
     <s:form action="history" >
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
     <wpsa:subset source="contentVersions" count="10" objectName="groupContent" advanced="true" offset="5">
         <s:set var="group" value="#groupContent" />
 

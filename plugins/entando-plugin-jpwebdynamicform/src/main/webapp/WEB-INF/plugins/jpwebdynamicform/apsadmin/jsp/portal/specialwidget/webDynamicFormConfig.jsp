@@ -42,6 +42,7 @@
         <s:set var="showletType" value="%{getShowletType(widgetTypeCode)}"></s:set>
 
         <s:form action="saveConfig" namespace="/do/jpwebdynamicform/Page/SpecialWidget/Webdynamicform" cssClass="form-horizontal">
+            <s:hidden name="_csrf" value="%{csrfToken}"/>
             <s:if test="hasActionErrors()">
                 <div class="alert alert-danger alert-dismissable">
                     <button type="button" class="close" data-dismiss="alert"><span class="icon fa fa-times"></span>

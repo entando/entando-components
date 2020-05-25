@@ -9,6 +9,7 @@
 		action="<wp:action path="/ExtStr2/do/jpwebform/Form/Resource/save.action"/>" 
 		method="post" 
 		enctype="multipart/form-data">
+		    <s:hidden name="_csrf" value="%{csrfToken}"/>
 			
 			<%/* FIXME: add the title of the current step */ %>
 			<%--

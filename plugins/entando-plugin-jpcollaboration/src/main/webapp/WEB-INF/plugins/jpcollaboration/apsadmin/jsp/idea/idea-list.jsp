@@ -50,6 +50,7 @@
 
 <div id="main">
     <s:form action="search" cssClass="form-horizontal">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <div class="searchPanel form-group">
             <div class="well col-lg-offset-3 col-lg-6 col-md-offset-2 col-md-8 col-sm-offset-1 col-sm-10">
                 <p class="search-label">
@@ -102,6 +103,7 @@
     </s:form>
     <div class="col-xs-12 no-padding">
         <s:form action="search">
+            <s:hidden name="_csrf" value="%{csrfToken}"/>
             <div class="subsection-light">
                 <p class="noscreen">
                     <wpsf:hidden name="text" />

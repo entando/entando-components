@@ -39,6 +39,7 @@
 
 <div class="mb-20">
     <s:form action="saveSender" cssClass="form-horizontal">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <s:include value="/WEB-INF/apsadmin/jsp/common/inc/messages.jsp" />
 
         <p class="noscreen">

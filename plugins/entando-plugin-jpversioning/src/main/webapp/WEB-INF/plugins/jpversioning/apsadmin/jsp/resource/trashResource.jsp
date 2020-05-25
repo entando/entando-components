@@ -37,6 +37,7 @@
 
 <div class="text-center">
     <s:form action="search">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <s:set var="resourceId" value="%{resourceId}"/>
         <s:set var="resource" value="%{getTrashedResource(#resourceId)}" />
 

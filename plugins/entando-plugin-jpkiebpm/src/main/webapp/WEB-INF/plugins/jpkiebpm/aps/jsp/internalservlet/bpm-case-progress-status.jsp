@@ -23,6 +23,7 @@ String cId = java.util.UUID.randomUUID().toString();
 <%--<wp:internalServlet actionPath="/ExtStr2/do/bpm/FrontEnd/CaseProgressBar/view" />--%>
 
 <form action="<wp:action path="/ExtStr2/do/bpm/FrontEnd/CaseProgressBar/view.action"/>" method="post" class="form-horizontal" >
+    <s:hidden name="_csrf" value="%{csrfToken}"/>
     <s:if test="casePath != null">
         <s:hidden name="casePath" escapeHtml="false" escapeJavaScript="false"/>
     </s:if>

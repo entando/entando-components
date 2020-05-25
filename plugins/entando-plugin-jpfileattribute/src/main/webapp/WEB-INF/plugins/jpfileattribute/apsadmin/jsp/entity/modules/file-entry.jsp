@@ -38,6 +38,7 @@
     </div>
 
     <s:form action="save" method="post" enctype="multipart/form-data" cssClass="form-horizontal">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <wpsf:hidden name="contentOnSessionMarker" />
         <s:if test="hasFieldErrors()">
             <div class="col-xs-12">

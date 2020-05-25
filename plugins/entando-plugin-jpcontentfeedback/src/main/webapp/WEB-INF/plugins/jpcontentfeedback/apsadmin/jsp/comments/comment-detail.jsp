@@ -74,6 +74,7 @@
     </div>
 
     <s:form action="updateStatus">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
 
         <s:include value="/WEB-INF/apsadmin/jsp/common/inc/messages.jsp" />
 

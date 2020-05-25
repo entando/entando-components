@@ -48,6 +48,7 @@
 <div id="main">
 
     <s:form action="search" cssClass="form-horizontal">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <s:if test="hasActionMessages()">
             <div class="alert alert-info alert-dismissable">
                 <button type="button" class="close" data-dismiss="alert"><span class="icon fa fa-times"></span></button>
@@ -89,6 +90,7 @@
                 <div class="well col-md-offset-3 col-md-6  ">
                     <p class="search-label"><s:text name="jpcontentfeedback.label.search"/></p>
                     <s:form action="search" class="search-pf has-button " cssClass="form-horizontal">
+                        <s:hidden name="_csrf" value="%{csrfToken}"/>
                         <div class="form-group">
 
                             <label class="col-sm-2 control-label" for="text" class="sr-only">

@@ -70,6 +70,7 @@
                3:'jpcrowdsourcing.label.status_approved'
            }" />
     <s:form action="changeStatus">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <p class="noscreen">
             <wpsf:hidden name="strutsAction" value="%{strutsAction}" />
             <wpsf:hidden name="commentId" value="%{commentId}" />

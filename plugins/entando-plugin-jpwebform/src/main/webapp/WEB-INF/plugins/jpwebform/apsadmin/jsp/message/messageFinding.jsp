@@ -11,6 +11,7 @@
 <div id="main">
 
     <s:form action="search" cssClass="form-horizontal">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
 
         <div class="form-group">
             <div class="input-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -180,6 +181,7 @@
         </s:if>
         <s:else>
             <s:form action="search" >
+                <s:hidden name="_csrf" value="%{csrfToken}"/>
                 <s:if test="hasActionErrors()">
                     <div class="message message_error">
                         <h3><s:text name="message.title.ActionErrors" /></h3>

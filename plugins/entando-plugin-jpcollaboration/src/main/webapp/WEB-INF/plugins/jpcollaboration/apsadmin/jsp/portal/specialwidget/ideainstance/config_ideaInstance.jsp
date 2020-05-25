@@ -46,6 +46,7 @@
         <s:param name="selectedNode" value="pageCode"></s:param>
     </s:action>
     <s:form action="changeInstance" namespace="/do/collaboration/Page/SpecialWidget/IdeaInstanceViewer">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <p class="noscreen">
             <wpsf:hidden name="pageCode" />
             <wpsf:hidden name="frame" />

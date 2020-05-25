@@ -11,6 +11,7 @@
 </h1>
 <div id="main">
     <s:form action="delete" >
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <p class="noscreen"><wpsf:hidden name="id"/></p>
         <s:set var="id" value="message.id" />
         <s:set var="typeDescr" value="message.typeDescr" />

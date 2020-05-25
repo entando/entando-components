@@ -67,6 +67,7 @@
               </s:if>
 		</wp:action>
         <form action="<c:out value="${insertVoteAction}" escapeXml="false" />" method="post" class="form-inline">
+          <s:hidden name="_csrf" value="%{csrfToken}"/>
           <p class="noscreen">
 			<input type="hidden" name="entaredir_commentsPagerId_item" value="${param.commentsPagerId_item}" />
           </p>
@@ -145,6 +146,7 @@
 			              </s:if>
 					</wp:action>
                     <form action="<c:out value="${insertCommentVote}" escapeXml="false" />" method="post" class="form-inline">
+                      <s:hidden name="_csrf" value="%{csrfToken}"/>
                       <p class="noscreen">
 							<input type="hidden" name="entaredir_commentsPagerId_item" value="${param.commentsPagerId_item}" />
                       </p>
@@ -244,6 +246,7 @@
           </wp:action>
 
           <form action="<c:out value="${insertAction}" escapeXml="false" />" method="post">
+            <s:hidden name="_csrf" value="%{csrfToken}"/>
             <p class="noscreen">
               <c:choose>
                 <c:when test="${groupComment.size > 0 && groupComment.size >= groupComment.max}">

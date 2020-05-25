@@ -32,6 +32,7 @@
 <div id="main" class="text-center">
     <s:set var="contentVersion" value="%{getContentVersion(versionId)}" />
     <s:form action="delete">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <p class="sr-only">
             <s:hidden name="versionId" />
             <s:hidden name="contentId" />

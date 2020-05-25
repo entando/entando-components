@@ -24,6 +24,7 @@
 
 <div  class="ibox float-e-margins" id="<%=cId%>" ng-controller="CaseDetailsController as vm">
     <form action="<wp:action path="/ExtStr2/do/bpm/FrontEnd/CaseInstanceDetails/view.action"/>" method="post" class="form-horizontal" >
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <s:if test="casePath != null">
             <s:hidden name="casePath" escapeHtml="false" escapeJavaScript="false"/>
         </s:if>

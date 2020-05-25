@@ -71,6 +71,7 @@
                 <s:text name="legend.contentThreadconfigSettings.users.help" />
             </p>
             <s:form id="configurationForm" name="configurationForm" method="post" action="saveUsersItem" cssClass="form-horizontal">
+                <s:hidden name="_csrf" value="%{csrfToken}"/>
                 <s:set var="#users" value="%{getUsersContentType()}"/>
 
                 <table class="table table-striped table-bordered table-hover mb-20">

@@ -35,6 +35,7 @@
 
 <div id="main" role="main">
     <s:form action="delete">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <p class="noscreen">
             <wpsf:hidden name="strutsAction" value="%{strutsAction}" />
             <wpsf:hidden name="ideaId" value="%{ideaId}" />

@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="jpcrwsrc" uri="/jpcrowdsourcing-aps-core" %>
 <%@ taglib prefix="jacms" uri="/jacms-aps-core" %>
+<%@ taglib prefix="s" uri="/struts-tags"%>
 
 <div class="ibox float-e-margins">
     <div class="jpcrowdsourcing jpcrowdsourcing_idea_find">
@@ -22,6 +23,7 @@
             <jpcrwsrc:ideaTagList var="categoryInfoList" onlyLeaf="false" categoryFilterType="tag"/>
 
             <form action="<wp:url page="${listIdea_page.code}" />" method="get">
+                <s:hidden name="_csrf" value="%{csrfToken}"/>
                 <input type="hidden" name="jpcrowdsourcing_fastInstanceCode" value="<c:out value="${instanceVar}" />" />
                 <div class="form-group">
                     <label class="control-label" for="jpcrowdsourcing_search_for"><wp:i18n key="jpcollaboration_SEARCH_FOR" /></label>

@@ -61,6 +61,7 @@
     </div>
 
     <s:form id="configurationForm" name="configurationForm" method="post" action="saveEmail" cssClass="form-horizontal">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <legend><s:text name="legend.mail" /></legend>
         <div class="form-group">
             <label class="col-sm-2 control-label">

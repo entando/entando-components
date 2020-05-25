@@ -52,6 +52,7 @@
 <br>
 
 <s:form action="addContentTypeConfig">
+    <s:hidden name="_csrf" value="%{csrfToken}"/>
     <s:include value="/WEB-INF/apsadmin/jsp/common/inc/messages.jsp" />
 
     <fieldset class="margin-large-top form-horizontal">

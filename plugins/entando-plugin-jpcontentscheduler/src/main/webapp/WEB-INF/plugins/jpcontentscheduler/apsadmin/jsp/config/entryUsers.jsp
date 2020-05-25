@@ -72,6 +72,7 @@
 
 
     <s:form id="configurationForm" name="configurationForm" method="post" action="#" cssClass="form-horizontal" accept-charset="utf-8">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <legend><s:text name="legend.User" /></legend>
         <div class="form-group">
             <label class="col-sm-2 control-label"><s:text name="jpcontentscheduler.label.username"/></label>

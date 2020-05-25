@@ -66,6 +66,7 @@
 
     <div class="text-center">
         <s:form action="delete">
+            <s:hidden name="_csrf" value="%{csrfToken}"/>
             <s:include value="/WEB-INF/apsadmin/jsp/common/inc/messages.jsp"/>
 
             <wpsf:hidden name="selectedComment"/>

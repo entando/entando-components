@@ -61,6 +61,7 @@
 <div id="main" role="main">
 
     <s:form action="removeContentType">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <p class="sr-only">
             <wpsf:hidden name="contentType"/>
         </p>

@@ -4,6 +4,7 @@
 <h1><s:text name="title.solrclientConfig" /></h1>
 <div id="main">
 	<s:form namespace="/do/jpsolrclient/Config">
+	    <s:hidden name="_csrf" value="%{csrfToken}"/>
 		<s:if test="hasFieldErrors()">
 			<div class="message message_error">
 				<h4><s:text name="message.title.FieldErrors" /></h4>

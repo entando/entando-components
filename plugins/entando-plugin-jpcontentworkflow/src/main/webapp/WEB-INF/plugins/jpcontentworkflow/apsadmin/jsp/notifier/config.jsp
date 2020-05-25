@@ -43,6 +43,7 @@
 <br>
 <div>
     <s:form action="save" cssClass="">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <s:if test="hasFieldErrors()">
             <div class="alert alert-danger alert-dismissable fade in">
                 <button class="close" data-dismiss="alert">

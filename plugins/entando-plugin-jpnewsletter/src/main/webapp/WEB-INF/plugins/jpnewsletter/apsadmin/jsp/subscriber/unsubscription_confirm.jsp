@@ -58,6 +58,7 @@
     <s:include value="/WEB-INF/apsadmin/jsp/common/inc/inc_fullErrors.jsp" />
 
     <s:form action="delete">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <p class="sr-only">
             <wpsf:hidden name="mailAddress" />
         </p>

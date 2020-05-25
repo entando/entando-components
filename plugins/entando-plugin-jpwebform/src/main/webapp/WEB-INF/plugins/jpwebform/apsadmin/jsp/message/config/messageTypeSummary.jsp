@@ -16,6 +16,7 @@
         </div>
 
         <s:form action="edit">
+            <s:hidden name="_csrf" value="%{csrfToken}"/>
             <fieldset class="col-xs-12">
                 <legend><s:text name="label.info" /></legend>
                 <div class="form-group">

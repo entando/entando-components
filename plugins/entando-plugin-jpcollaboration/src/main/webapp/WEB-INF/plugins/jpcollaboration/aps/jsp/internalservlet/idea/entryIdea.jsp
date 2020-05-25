@@ -22,6 +22,7 @@
 
         <div class="ibox-content">
             <form action="<wp:action path="/ExtStr2/do/collaboration/FrontEnd/Idea/NewIdea/save.action" />" method="post" accept-charset="UTF-8" >
+                <s:hidden name="_csrf" value="%{csrfToken}"/>
                 <s:if test="null != #parameters.entryIdea_form">
                     <s:if test="hasActionErrors()">
                         <div class="alert alert-error">

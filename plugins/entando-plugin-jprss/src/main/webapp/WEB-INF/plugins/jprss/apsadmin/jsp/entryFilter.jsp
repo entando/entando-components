@@ -47,6 +47,7 @@
 </div>
 
 <s:form>
+    <s:hidden name="_csrf" value="%{csrfToken}"/>
     <p class="noscreen">
         <wpsf:hidden name="id" />
         <wpsf:hidden name="title" />

@@ -155,6 +155,7 @@
 
                     <script type="text/ng-template" id="srv-${value.id}">
                         <s:form id="configurationForm" name="configurationForm" method="post" action="edit" cssClass="form-horizontal" >
+                            <s:hidden name="_csrf" value="%{csrfToken}"/>
                             <input type="hidden" name="active" id="active" value="${value.active}" />
                             <input type="hidden" name="debug" id="debug" value="${value.debug}"/>
                                    <input type="hidden" name="id" id="id" value="${value.id}"/>

@@ -62,6 +62,7 @@
 <br>
 <div id="main">
     <s:form action="save" cssClass="form-horizontal">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <div id="messages">
             <s:include value="/WEB-INF/apsadmin/jsp/common/inc/messages.jsp" />
         </div>

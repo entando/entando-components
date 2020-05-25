@@ -56,6 +56,7 @@
 <br>
 <div class="text-center">
     <s:form action="deleteReference">
+        <s:hidden name="_csrf" value="%{csrfToken}"/>
         <p class="noscreen">
             <wpsf:hidden name="strutsAction" value="%{strutsAction}" />
             <wpsf:hidden name="ideaId" value="%{ideaId}" />
