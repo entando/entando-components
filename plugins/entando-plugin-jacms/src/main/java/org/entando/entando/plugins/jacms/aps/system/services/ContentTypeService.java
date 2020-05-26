@@ -152,7 +152,7 @@ public class ContentTypeService extends AbstractEntityTypeService<Content, Conte
 
     @Override
     protected Content createEntityType(IEntityManager entityManager, EntityTypeDtoRequest dto,
-            BindingResult bindingResult) throws Throwable {
+                                       BindingResult bindingResult) throws Throwable {
         ContentTypeDtoRequest request = (ContentTypeDtoRequest) dto;
         Content result = super.createEntityType(entityManager, dto, bindingResult);
         result.setViewPage(request.getViewPage());
@@ -179,9 +179,34 @@ public class ContentTypeService extends AbstractEntityTypeService<Content, Conte
                 .map(contentDto -> new ComponentUsageEntity(
                         ComponentUsageEntity.TYPE_CONTENT,
                         contentDto.getId(),
-                        contentDto.getStatus().equals(Content.STATUS_READY) ? IPageService.STATUS_ONLINE : IPageService.STATUS_DRAFT))
+                        getContentStatus(contentDto)))
                 .collect(Collectors.toList());
 
         return pagedMetadataMapper.getPagedResult(restListRequest, componentUsageEntityList, "code", pagedData.getTotalItems());
+    }
+
+
+    /**
+     * calcs and returns the string representation of a Content status
+     * @param contentDto the ContentDto of which return the status representation
+     * @return the string representation of a Content status
+     */
+    private String getContentStatus(ContentDto contentDto) {
+
+        if (contentDto.getStatus().equals(Content.STATUS_PUBLIC)) {
+            return "Published";
+        } else if (contentDto.getStatus().equals(Content.STATUS_READY)) {
+            if (contentDto.isOnLine()) {
+                return Content.STATUS_PUBLIC + " ≠ " + Content.STATUS_READY;
+            } else {
+                return Content.STATUS_READY;
+            }
+        } else {
+            if (contentDto.isOnLine()) {
+                return Content.STATUS_PUBLIC + " ≠ " + Content.STATUS_DRAFT;
+            } else {
+                return "Unpublished";
+            }
+        }
     }
 }
