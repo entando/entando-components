@@ -22,8 +22,10 @@ import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
+import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.group.Group;
+import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.Widget;
@@ -45,6 +47,7 @@ public class ContentListHelperIntegrationTest extends BaseTestCase {
     private IContentManager contentManager;
     private CacheManager springCacheManager;
     private IPageManager pageManager = null;
+    private ILangManager langManager = null;
     private IWidgetTypeManager widgetTypeManager;
     private IContentListWidgetHelper helper;
 
@@ -53,7 +56,7 @@ public class ContentListHelperIntegrationTest extends BaseTestCase {
         super.setUp();
         this.init();
     }
-
+    
     public void testGetFilters() throws Throwable {
         String filtersShowletParam = "(key=DataInizio;attributeFilter=true;start=21/10/2007;order=DESC)+(key=Titolo;attributeFilter=true;order=ASC)";
         EntitySearchFilter[] filters = this.helper.getFilters("EVN", filtersShowletParam, this.getRequestContext());
@@ -153,7 +156,7 @@ public class ContentListHelperIntegrationTest extends BaseTestCase {
         int frame = 1;
         try {
             this.setUserOnSession("guest");
-            RequestContext reqCtx = this.valueRequestContext(pageCode, frame);
+            RequestContext reqCtx = this.valueRequestContext(pageCode, frame, null, null);
             MockContentListTagBean bean = new MockContentListTagBean();
             bean.setContentType("EVN");
             EntitySearchFilter filter = new EntitySearchFilter("DataInizio", true);
@@ -191,7 +194,7 @@ public class ContentListHelperIntegrationTest extends BaseTestCase {
         int frame = 1;
         try {
             this.setUserOnSession("admin");
-            RequestContext reqCtx = this.valueRequestContext(pageCode, frame);
+            RequestContext reqCtx = this.valueRequestContext(pageCode, frame, null, null);
             MockContentListTagBean bean = new MockContentListTagBean();
             bean.setContentType("EVN");
             bean.addCategory("evento");
@@ -234,7 +237,7 @@ public class ContentListHelperIntegrationTest extends BaseTestCase {
             List<String> contents = this.contentManager.loadPublicContentsId("ART", null, null, userGroupCodes);
 
             this.setUserOnSession("admin");
-            RequestContext reqCtx = this.valueRequestContext(pageCode, frame);
+            RequestContext reqCtx = this.valueRequestContext(pageCode, frame, null, null);
             MockContentListTagBean bean = new MockContentListTagBean();
             bean.setContentType("ART");
 
@@ -261,6 +264,59 @@ public class ContentListHelperIntegrationTest extends BaseTestCase {
             this.deleteTestContent(newContentId);
         }
     }
+    
+    public void testGetContents_4() throws Throwable {
+        String newContentId = null;
+        String pageCode = "pagina_1";
+        int frame = 1;
+        try {
+            ApsProperties config = new ApsProperties();
+            config.setProperty("contentType", "EVN");
+            config.setProperty("filters", "(key=Titolo;attributeFilter=true;order=ASC)");
+            this.setUserOnSession("admin");
+            RequestContext reqCtx = this.valueRequestContext(pageCode, frame, "it", config);
+            List<String> extractedItContents = this.helper.getContentsId(new MockContentListTagBean(), reqCtx);
+            String[] expectedIt = {"EVN24", "EVN23", "EVN21", "EVN20", "EVN41", "EVN25", "EVN191", "EVN192", "EVN193", "EVN103", "EVN194"};
+            for (int i = 0; i < expectedIt.length; i++) {
+                assertEquals(expectedIt[i], extractedItContents.get(i));
+            }
+            reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG, this.langManager.getLang("en"));
+            List<String> extractedEnContents = this.helper.getContentsId(new MockContentListTagBean(), reqCtx);
+            String[] expectedEn = {"EVN41", "EVN24", "EVN103", "EVN23", "EVN21", "EVN194", "EVN192", "EVN191", "EVN193", "EVN25", "EVN20"};
+            for (int i = 0; i < expectedEn.length; i++) {
+                assertEquals(expectedEn[i], extractedEnContents.get(i));
+            }
+            Content content = this.contentManager.createContentType("EVN");
+            content.setDescription("Test Content");
+            content.setMainGroup(Group.ADMINS_GROUP_NAME);
+            ITextAttribute titleAttribute = (ITextAttribute) content.getAttribute("Titolo");
+            titleAttribute.setText("Aaa Title", "it");
+            titleAttribute.setText("Zzz Title", "en");
+            this.contentManager.insertOnLineContent(content);
+            newContentId = content.getId();
+            
+            reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG, this.langManager.getLang("it"));
+            List<String> newExtractedItContents = this.helper.getContentsId(new MockContentListTagBean(), reqCtx);
+            assertEquals(newExtractedItContents.size(), extractedItContents.size()+1);
+            assertEquals(newContentId, newExtractedItContents.get(0));
+            for (int i = 0; i < expectedIt.length; i++) {
+                assertEquals(expectedIt[i], newExtractedItContents.get(i+1));
+            }
+            
+            reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG, this.langManager.getLang("en"));
+            List<String> newExtractedEnContents = this.helper.getContentsId(new MockContentListTagBean(), reqCtx);
+            assertEquals(newExtractedEnContents.size(), extractedEnContents.size()+1);
+            assertEquals(newContentId, newExtractedEnContents.get(newExtractedEnContents.size()-1));
+            for (int i = 0; i < expectedEn.length; i++) {
+                assertEquals(expectedEn[i], newExtractedEnContents.get(i));
+            }
+        } catch (Throwable t) {
+            throw t;
+        } finally {
+            this.setPageWidgets(pageCode, frame, null);
+            this.deleteTestContent(newContentId);
+        }
+    }
 
     private void deleteTestContent(String newContentId) throws ApsSystemException {
         if (null != newContentId) {
@@ -273,17 +329,21 @@ public class ContentListHelperIntegrationTest extends BaseTestCase {
         }
     }
 
-    private RequestContext valueRequestContext(String pageCode, int frame) throws Throwable {
+    private RequestContext valueRequestContext(String pageCode, int frame, String langCode, ApsProperties config) throws Throwable {
         RequestContext reqCtx = this.getRequestContext();
         try {
-            Widget widgetToAdd = this.getwidgetForTest("content_viewer_list", null);
+            Widget widgetToAdd = this.getWidgetForTest("content_viewer_list", config);
             this.setPageWidgets(pageCode, frame, widgetToAdd);
-
             IPage page = this.pageManager.getOnlinePage(pageCode);
             reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE, page);
             Widget widget = page.getWidgets()[frame];
             reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET, widget);
-            reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_FRAME, new Integer(frame));
+            reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_FRAME, frame);
+            if (null != langCode && null != this.langManager.getLang(langCode)) {
+                reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG, this.langManager.getLang(langCode));
+            } else {
+                reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG, this.langManager.getDefaultLang());
+            }
         } catch (Throwable t) {
             this.setPageWidgets(pageCode, frame, null);
             throw t;
@@ -296,9 +356,10 @@ public class ContentListHelperIntegrationTest extends BaseTestCase {
         page.getWidgets()[frame] = widget;
         page.getWidgets()[frame] = widget;
         this.pageManager.updatePage(page);
+        this.pageManager.setPageOnline(pageCode);
     }
 
-    private Widget getwidgetForTest(String widgetTypeCode, ApsProperties config) throws Throwable {
+    private Widget getWidgetForTest(String widgetTypeCode, ApsProperties config) throws Throwable {
         WidgetType type = this.widgetTypeManager.getWidgetType(widgetTypeCode);
         Widget widget = new Widget();
         widget.setType(type);
@@ -313,6 +374,7 @@ public class ContentListHelperIntegrationTest extends BaseTestCase {
             this.springCacheManager = (CacheManager) this.getApplicationContext().getBean(CacheManager.class);
             this.contentManager = (IContentManager) this.getService(JacmsSystemConstants.CONTENT_MANAGER);
             this.pageManager = (IPageManager) this.getService(SystemConstants.PAGE_MANAGER);
+            this.langManager = (ILangManager) this.getService(SystemConstants.LANGUAGE_MANAGER);
             this.widgetTypeManager = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
             this.helper = (IContentListWidgetHelper) this.getApplicationContext().getBean(JacmsSystemConstants.CONTENT_LIST_HELPER);
         } catch (Throwable t) {
