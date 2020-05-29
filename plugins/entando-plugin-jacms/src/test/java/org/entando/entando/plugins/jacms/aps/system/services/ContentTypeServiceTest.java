@@ -16,6 +16,7 @@ package org.entando.entando.plugins.jacms.aps.system.services;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.ContentStatusState;
 import org.apache.commons.lang3.ArrayUtils;
 import org.entando.entando.aps.system.services.mockhelper.PageMockHelper;
 import org.entando.entando.aps.system.services.userprofile.MockUser;
@@ -37,17 +38,15 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.util.ReflectionUtils;
 
 import javax.servlet.http.HttpSession;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.ContentStatusState.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
@@ -167,7 +166,7 @@ public class ContentTypeServiceTest {
 
         ContentDto contentDto = new ContentDto();
         contentDto.setStatus(Content.STATUS_PUBLIC);
-        assertEquals("Published", getContentStatusMethod().invoke(contentTypeService, contentDto));
+        assertEquals(PUBLISHED, ContentStatusState.calculateState(contentDto));
     }
 
     @Test
@@ -176,7 +175,7 @@ public class ContentTypeServiceTest {
         ContentDto contentDto = new ContentDto();
         contentDto.setStatus(Content.STATUS_READY);
         contentDto.setOnLine(true);
-        assertEquals(Content.STATUS_PUBLIC + " not equals to " + Content.STATUS_READY, getContentStatusMethod().invoke(contentTypeService, contentDto));
+        assertEquals(PUBLISHED_WITH_NEW_VERSION_IN_READY_STATE, ContentStatusState.calculateState(contentDto));
     }
 
     @Test
@@ -184,7 +183,7 @@ public class ContentTypeServiceTest {
 
         ContentDto contentDto = new ContentDto();
         contentDto.setStatus(Content.STATUS_READY);
-        assertEquals(Content.STATUS_READY, getContentStatusMethod().invoke(contentTypeService, contentDto));
+        assertEquals(READY, ContentStatusState.calculateState(contentDto));
     }
 
     @Test
@@ -193,7 +192,7 @@ public class ContentTypeServiceTest {
         ContentDto contentDto = new ContentDto();
         contentDto.setStatus(Content.STATUS_DRAFT);
         contentDto.setOnLine(true);
-        assertEquals(Content.STATUS_PUBLIC + " not equals to " + Content.STATUS_DRAFT, getContentStatusMethod().invoke(contentTypeService, contentDto));
+        assertEquals(PUBLISHED_WITH_NEW_VERSION_IN_DRAFT_STATE, ContentStatusState.calculateState(contentDto));
     }
 
     @Test
@@ -201,15 +200,8 @@ public class ContentTypeServiceTest {
 
         ContentDto contentDto = new ContentDto();
         contentDto.setStatus(Content.STATUS_DRAFT);
-        assertEquals("Unpublished", getContentStatusMethod().invoke(contentTypeService, contentDto));
+        assertEquals(UNPUBLISHED, ContentStatusState.calculateState(contentDto));
     }
 
 
-
-    private Method getContentStatusMethod() {
-
-        Method getContentStatusMethod = ReflectionUtils.findMethod(contentTypeService.getClass(), "getContentStatus", ContentDto.class);
-        getContentStatusMethod.setAccessible(true);
-        return getContentStatusMethod;
-    }
 }

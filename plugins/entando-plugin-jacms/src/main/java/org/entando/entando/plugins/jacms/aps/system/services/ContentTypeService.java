@@ -16,6 +16,7 @@ package org.entando.entando.plugins.jacms.aps.system.services;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.ContentStatusState;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentTypeDto;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentTypeDtoBuilder;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentTypeDtoRequest;
@@ -28,7 +29,6 @@ import org.entando.entando.aps.system.services.entity.model.AttributeTypeDto;
 import org.entando.entando.aps.system.services.entity.model.EntityTypeAttributeFullDto;
 import org.entando.entando.aps.system.services.entity.model.EntityTypeShortDto;
 import org.entando.entando.aps.system.services.entity.model.EntityTypesStatusDto;
-import org.entando.entando.aps.system.services.page.IPageService;
 import org.entando.entando.aps.util.HttpSessionHelper;
 import org.entando.entando.plugins.jacms.aps.system.services.content.ContentService;
 import org.entando.entando.plugins.jacms.web.content.validator.RestContentListRequest;
@@ -179,34 +179,11 @@ public class ContentTypeService extends AbstractEntityTypeService<Content, Conte
                 .map(contentDto -> new ComponentUsageEntity(
                         ComponentUsageEntity.TYPE_CONTENT,
                         contentDto.getId(),
-                        getContentStatus(contentDto)))
+                        ContentStatusState.calculateState(contentDto).toString()))
                 .collect(Collectors.toList());
 
         return pagedMetadataMapper.getPagedResult(restListRequest, componentUsageEntityList, "code", pagedData.getTotalItems());
     }
 
 
-    /**
-     * calcs and returns the string representation of a Content status
-     * @param contentDto the ContentDto of which return the status representation
-     * @return the string representation of a Content status
-     */
-    private String getContentStatus(ContentDto contentDto) {
-
-        if (contentDto.getStatus().equals(Content.STATUS_PUBLIC)) {
-            return "Published";
-        } else if (contentDto.getStatus().equals(Content.STATUS_READY)) {
-            if (contentDto.isOnLine()) {
-                return Content.STATUS_PUBLIC + " not equals to " + Content.STATUS_READY;
-            } else {
-                return Content.STATUS_READY;
-            }
-        } else {
-            if (contentDto.isOnLine()) {
-                return Content.STATUS_PUBLIC + " not equals to " + Content.STATUS_DRAFT;
-            } else {
-                return "Unpublished";
-            }
-        }
-    }
 }
