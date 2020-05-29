@@ -37,6 +37,7 @@ import org.slf4j.LoggerFactory;
 import com.agiletec.aps.system.common.AbstractSearcherDAO;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.plugins.jpseo.aps.system.init.portdb.FriendlyCode;
 
 /**
  * @author E.Santoboni
@@ -45,9 +46,21 @@ public class SeoMappingDAO extends AbstractSearcherDAO implements ISeoMappingDAO
 
 	private static final Logger _logger =  LoggerFactory.getLogger(SeoMappingDAO.class);
 
+	private static final String ADD_MAPPING = 
+			"INSERT INTO " + FriendlyCode.TABLE_NAME + " (friendlycode, pagecode, contentid, langcode) VALUES (?, ?, ?, ?)";
+	
+	private static final String LOAD_MAPPINGS = 
+			"SELECT friendlycode, pagecode, contentid, langcode FROM " + FriendlyCode.TABLE_NAME;
+    
+    private static final String DELETE_FROM_CONTENTID = "DELETE FROM " + FriendlyCode.TABLE_NAME + " WHERE contentid = ?";
+    
+    private static final String DELETE_FROM_PAGECODE = "DELETE FROM " + FriendlyCode.TABLE_NAME + " WHERE pagecode = ?";
+
+	private static final String DELETE_FROM_FRIENDLYCODE = "DELETE FROM " + FriendlyCode.TABLE_NAME + " WHERE friendlycode = ?";
+
 	@Override
 	public Map<String, FriendlyCodeVO> loadMapping() {
-		Map<String, FriendlyCodeVO> mapping = new HashMap<String, FriendlyCodeVO>();
+		Map<String, FriendlyCodeVO> mapping = new HashMap<>();
 		Connection conn = null;
 		Statement stat = null;
 		ResultSet res = null;
@@ -79,7 +92,7 @@ public class SeoMappingDAO extends AbstractSearcherDAO implements ISeoMappingDAO
 		try {
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
-			this.deleteRecord(vo.getFriendlyCode(), vo.getPageCode(), vo.getContentId(), conn);
+            super.executeQueryWithoutResultset(conn, DELETE_FROM_FRIENDLYCODE, vo.getFriendlyCode());
 			this.addRecord(vo, conn);
 			conn.commit();
 		} catch (Throwable t) {
@@ -98,7 +111,7 @@ public class SeoMappingDAO extends AbstractSearcherDAO implements ISeoMappingDAO
 		try {
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
-			this.deleteRecord(null, null, contentFriendlyCode.getContentId(), conn);
+            super.executeQueryWithoutResultset(conn, DELETE_FROM_CONTENTID, contentFriendlyCode.getContentId());
 			stat = conn.prepareStatement(ADD_MAPPING);
 			String contentId = contentFriendlyCode.getContentId();
 			Iterator<Entry<String, String>> codes = contentFriendlyCode.getFriendlyCodes().entrySet().iterator();
@@ -138,24 +151,17 @@ public class SeoMappingDAO extends AbstractSearcherDAO implements ISeoMappingDAO
 			closeDaoResources(null, stat);
 		}
 	}
-	
-	@Override
-	public void deleteMapping(String pageCode, String contentId) {
-		Connection conn = null;
-		try {
-			conn = this.getConnection();
-			conn.setAutoCommit(false);
-			this.deleteRecord(null, pageCode, contentId, conn);
-			conn.commit();
-		} catch (Throwable t) {
-			this.executeRollback(conn);
-			_logger.error("Error deleting apping",  t);
-			throw new RuntimeException("Error deleting apping", t);
-		} finally {
-			this.closeConnection(conn);
-		}
-	}
-	
+    
+    @Override
+    public void deleteMappingForContent(String contentId) {
+        super.executeQueryWithoutResultset(DELETE_FROM_CONTENTID, contentId);
+    }
+
+    @Override
+    public void deleteMappingForPage(String pageCode) {
+        super.executeQueryWithoutResultset(DELETE_FROM_PAGECODE, pageCode);
+    }
+/*
 	protected void deleteRecord(String friendlyCode, String pageCode, String contentId, Connection conn) {
 		PreparedStatement stat = null;
 		try {
@@ -202,7 +208,7 @@ public class SeoMappingDAO extends AbstractSearcherDAO implements ISeoMappingDAO
 			closeDaoResources(null, stat);
 		}
 	}
-	
+*/
 	@Override
 	public List<String> searchFriendlyCode(FieldSearchFilter[] filters) {
 		return super.searchId(filters);
@@ -215,18 +221,12 @@ public class SeoMappingDAO extends AbstractSearcherDAO implements ISeoMappingDAO
 	
 	@Override
 	protected String getMasterTableName() {
-		return "jpseo_friendlycode";
+		return FriendlyCode.TABLE_NAME;
 	}
 	
 	@Override
 	protected String getMasterTableIdFieldName() {
 		return "friendlycode";
 	}
-
-	private static final String ADD_MAPPING = 
-			"INSERT INTO jpseo_friendlycode (friendlycode, pagecode, contentid, langcode) VALUES (?, ?, ?, ?)";
-	
-	private static final String LOAD_MAPPINGS = 
-			"SELECT friendlycode, pagecode, contentid, langcode FROM jpseo_friendlycode";
 	
 }

@@ -19,8 +19,8 @@ public class ImageAssetDto extends AssetDto {
     @Builder
     public ImageAssetDto(String id, String name, String description, Date createdAt, Date updatedAt,
              @Singular List<ImageMetadataDto> versions, String group, @Singular List<String> categories,
-            Map<String,String> metadata, String owner) {
-        super(id, RESOURCE_TYPE, name, description, createdAt, updatedAt, group, categories, owner);
+            Map<String,String> metadata, String owner, String folderPath) {
+        super(id, RESOURCE_TYPE, name, description, createdAt, updatedAt, group, categories, owner, folderPath);
         this.versions = versions;
         this.metadata = metadata;
     }

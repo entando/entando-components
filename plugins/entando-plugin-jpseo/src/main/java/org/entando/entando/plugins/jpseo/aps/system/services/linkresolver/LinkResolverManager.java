@@ -41,17 +41,8 @@ public class LinkResolverManager extends com.agiletec.plugins.jacms.aps.system.s
 
     private static final Logger _logger = LoggerFactory.getLogger(LinkResolverManager.class);
 
-    /*
-	@Override
-	protected String convertToURL(String symbolicString, RequestContext reqCtx) {
-		String url = null;
-		SymbolicLink symbolicLink = new SymbolicLink();
-		if (symbolicLink.setSymbolicDestination(symbolicString)) {
-			url = this.resolveLink(symbolicLink, reqCtx);
-		}
-		return url;
-	}
-     */
+    private ISeoMappingManager seoMappingManager;
+
     @Override
     public String resolveLink(SymbolicLink symbolicLink, String contentId, RequestContext reqCtx) {
         if (null == symbolicLink) {
@@ -75,7 +66,7 @@ public class LinkResolverManager extends com.agiletec.plugins.jacms.aps.system.s
                 PageURL pageUrl = (PageURL) this.getUrlManager().createURL(reqCtx);
                 String contentIdDest = symbolicLink.getContentDest();
                 String pageCode = this.getContentPageMapperManager().getPageCode(contentIdDest);
-                boolean forwardToDefaultPage = !this.isPageAllowed(reqCtx, pageCode);// TODO Verificare perché è al contrario
+                boolean forwardToDefaultPage = !this.isPageAllowed(reqCtx, pageCode);
                 if (forwardToDefaultPage) {
                     String viewPageCode = this.getContentManager().getViewPage(contentIdDest);
                     pageUrl.setPageCode(viewPageCode);
@@ -115,13 +106,10 @@ public class LinkResolverManager extends com.agiletec.plugins.jacms.aps.system.s
     }
 
     protected ISeoMappingManager getSeoMappingManager() {
-        return _seoMappingManager;
+        return seoMappingManager;
     }
-
     public void setSeoMappingManager(ISeoMappingManager seoMappingManager) {
-        this._seoMappingManager = seoMappingManager;
+        this.seoMappingManager = seoMappingManager;
     }
-
-    private ISeoMappingManager _seoMappingManager;
 
 }

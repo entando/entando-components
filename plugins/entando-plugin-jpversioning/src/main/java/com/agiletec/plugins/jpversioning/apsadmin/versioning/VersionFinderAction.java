@@ -34,9 +34,8 @@ import com.agiletec.plugins.jpversioning.aps.system.services.versioning.IVersion
 /**
  * @author G.Cocco
  */
-public class VersionFinderAction extends BaseAction implements IVersionFinderAction {
+public class VersionFinderAction extends BaseAction {
 	
-	@Override
 	public List<Long> getLatestVersions() {
 		List<Long> latestVersions = null;
 		try {
@@ -48,7 +47,6 @@ public class VersionFinderAction extends BaseAction implements IVersionFinderAct
 		return latestVersions;
 	}
 	
-	@Override
 	public ContentVersion getContentVersion(long id) {
 		ContentVersion version = null;	
 		try {

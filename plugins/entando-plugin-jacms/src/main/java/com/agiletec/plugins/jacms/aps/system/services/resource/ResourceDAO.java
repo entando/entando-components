@@ -52,14 +52,14 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
     private ICategoryManager categoryManager;
 
     private final String LOAD_RESOURCE_VO
-            = "SELECT restype, descr, maingroup, resourcexml, masterfilename, creationdate, lastmodified, owner FROM resources WHERE resid = ? ";
+            = "SELECT restype, descr, maingroup, resourcexml, masterfilename, creationdate, lastmodified, owner, folderpath FROM resources WHERE resid = ? ";
 
     private final String ADD_RESOURCE
-            = "INSERT INTO resources (resid, restype, descr, maingroup, resourcexml, masterfilename, creationdate, lastmodified, owner) "
-            + "VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ?)";
+            = "INSERT INTO resources (resid, restype, descr, maingroup, resourcexml, masterfilename, creationdate, lastmodified, owner, folderpath) "
+            + "VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ?, ?)";
 
     private final String UPDATE_RESOURCE
-            = "UPDATE resources SET restype = ? , descr = ? , maingroup = ? , resourcexml = ? , masterfilename = ? , lastmodified = ? WHERE resid = ? ";
+            = "UPDATE resources SET restype = ? , descr = ? , maingroup = ? , resourcexml = ? , masterfilename = ? , lastmodified = ?, folderpath = ? WHERE resid = ? ";
 
     private final String DELETE_CONTENTS_REFERENCE
             = "DELETE FROM contentrelations WHERE refresource = ? ";
@@ -123,6 +123,7 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
             stat.setTimestamp(7, new java.sql.Timestamp(creationDate.getTime()));
             stat.setTimestamp(8, new java.sql.Timestamp(creationDate.getTime()));
             stat.setString(9, resource.getOwner());
+            stat.setString(10, resource.getFolderPath());
             stat.executeUpdate();
         } catch (Throwable t) {
             logger.error("Error adding resource record", t);
@@ -175,7 +176,8 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
             } else {
                 stat.setTimestamp(6, new java.sql.Timestamp(new java.util.Date().getTime()));
             }
-            stat.setString(7, resource.getId());
+            stat.setString(7, resource.getFolderPath());
+            stat.setString(8, resource.getId());
             stat.executeUpdate();
         } catch (Throwable t) {
             logger.error("Error updating resource record", t);
@@ -416,6 +418,7 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
                 resourceVo.setCreationDate(res.getTimestamp(6));
                 resourceVo.setLastModified(res.getTimestamp(7));
                 resourceVo.setOwner(res.getString(8));
+                resourceVo.setFolderPath(res.getString(9));
             }
         } catch (Exception t) {
             logger.error("Errore loading resource {}", id, t);

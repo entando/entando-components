@@ -48,6 +48,8 @@ public interface IResourceManager {
 
     public static final String RESOURCE_OWNER_FILTER_KEY = "owner";
 
+    public static final String RESOURCE_FOLDER_PATH_FILTER_KEY = "folderpath";
+
     public static final int STATUS_READY = 0;
     public static final int STATUS_RELOADING_RESOURCE_MAIN_FILENAME_IN_PROGRESS = 1;
     public static final int STATUS_RELOADING_RESOURCE_INSTANCES_IN_PROGRESS = 2;
@@ -174,7 +176,7 @@ public interface IResourceManager {
             List<String> categories, Collection<String> groupCodes) throws ApsSystemException;
 
     public List<String> searchResourcesId(FieldSearchFilter[] filters, List<String> categories) throws ApsSystemException;
-    
+
     public SearcherDaoPaginatedResult<String> getPaginatedResourcesId(FieldSearchFilter[] filters, List<String> categories, Collection<String> userGroupCodes) throws ApsSystemException;
 
     /**

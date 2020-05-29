@@ -35,10 +35,15 @@ import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.plugins.jacms.apsadmin.portal.PageAction;
 import com.opensymphony.xwork2.Action;
+import org.entando.entando.plugins.jpseo.aps.system.JpseoSystemConstants;
+import org.entando.entando.plugins.jpseo.aps.system.services.mapping.ISeoMappingManager;
 import org.entando.entando.plugins.jpseo.aps.system.services.page.PageMetatag;
 import org.entando.entando.plugins.jpseo.aps.system.services.page.SeoPageMetadata;
 
 public class PageActionIntegrationTest extends ApsAdminPluginBaseTestCase {
+
+	private IPageManager pageManager = null;
+    private ISeoMappingManager seoMappingManager;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -50,7 +55,7 @@ public class PageActionIntegrationTest extends ApsAdminPluginBaseTestCase {
 		String selectedPageCode = "pagina_1";
 		String result = this.executeActionOnPage(selectedPageCode, "admin", "edit", null);
 		assertEquals(Action.SUCCESS, result);
-		IPage page = this._pageManager.getDraftPage(selectedPageCode);
+		IPage page = this.pageManager.getDraftPage(selectedPageCode);
         assertTrue(page.getMetadata() instanceof SeoPageMetadata);
 		PageAction action = (PageAction) this.getAction();
 		assertEquals(action.getStrutsAction(), ApsAdminSystemConstants.EDIT);
@@ -67,7 +72,7 @@ public class PageActionIntegrationTest extends ApsAdminPluginBaseTestCase {
 		String selectedPageCode = "seo_page_1";
 		String result = this.executeActionOnPage(selectedPageCode, "admin", "edit", null);
 		assertEquals(Action.SUCCESS, result);
-		IPage page = this._pageManager.getDraftPage(selectedPageCode);
+		IPage page = this.pageManager.getDraftPage(selectedPageCode);
 		PageAction action = (PageAction) this.getAction();
 		assertEquals(action.getStrutsAction(), ApsAdminSystemConstants.EDIT);
 		assertEquals(page.getCode(), action.getPageCode());
@@ -134,10 +139,10 @@ public class PageActionIntegrationTest extends ApsAdminPluginBaseTestCase {
 	public void testValidateSavePage() throws Throwable {
 		String pageCode = "pagina_test";
 		String longPageCode = "very_long_page_code__very_long_page_code";
-		assertNull(this._pageManager.getDraftPage(pageCode));
-		assertNull(this._pageManager.getDraftPage(longPageCode));
+		assertNull(this.pageManager.getDraftPage(pageCode));
+		assertNull(this.pageManager.getDraftPage(longPageCode));
 		try {
-			IPage root = this._pageManager.getOnlineRoot();
+			IPage root = this.pageManager.getOnlineRoot();
 			Map<String, String> params = new HashMap<>();
 			params.put("strutsAction", String.valueOf(ApsAdminSystemConstants.ADD));
 			params.put("parentPageCode", root.getCode());
@@ -161,7 +166,7 @@ public class PageActionIntegrationTest extends ApsAdminPluginBaseTestCase {
 			assertTrue(fieldErrors.containsKey("group"));
 			assertTrue(fieldErrors.containsKey("langen"));
 
-			assertNotNull(this._pageManager.getOnlinePage("pagina_1"));
+			assertNotNull(this.pageManager.getOnlinePage("pagina_1"));
 			params.put("langen", "Test Page");
 			params.put("group", Group.FREE_GROUP_NAME);
 			params.put("pageCode", "pagina_1");//page already present
@@ -178,15 +183,15 @@ public class PageActionIntegrationTest extends ApsAdminPluginBaseTestCase {
 			assertEquals(1, fieldErrors.size());
 			assertTrue(fieldErrors.containsKey("pageCode"));
 		} catch (Throwable t) {
-			this._pageManager.deletePage(pageCode);
-			this._pageManager.deletePage(longPageCode);
+			this.pageManager.deletePage(pageCode);
+			this.pageManager.deletePage(longPageCode);
 			throw t;
 		}
 	}
     
 	public void testSavePage_1() throws Throwable {
 		String pageCode = "seo_test_1";
-		assertNull(this._pageManager.getDraftPage(pageCode));
+		assertNull(this.pageManager.getDraftPage(pageCode));
 		try {
 			Map<String, String> params = this.createParamForTest(pageCode);
 			params.put(PageActionAspect.PARAM_FRIENDLY_CODE, "friendly_code_test_1");
@@ -196,7 +201,7 @@ public class PageActionIntegrationTest extends ApsAdminPluginBaseTestCase {
 			params.put("description_useDefaultLang_it", "false");
 			String result = this.executeSave(params, "admin");
 			assertEquals(Action.SUCCESS, result);
-			IPage addedPage = this._pageManager.getDraftPage(pageCode);
+			IPage addedPage = this.pageManager.getDraftPage(pageCode);
 			assertNotNull(addedPage);
 			assertEquals("Pagina Test 1", addedPage.getTitles().getProperty("it"));
 			assertTrue(addedPage.getMetadata() instanceof SeoPageMetadata);
@@ -213,13 +218,13 @@ public class PageActionIntegrationTest extends ApsAdminPluginBaseTestCase {
 		} catch (Throwable t) {
 			throw t;
 		} finally {
-			this._pageManager.deletePage(pageCode);
+			this.pageManager.deletePage(pageCode);
 		}
 	}
     
 	public void testSavePage_2() throws Throwable {
 		String pageCode = "seo_test_2";
-		assertNull(this._pageManager.getDraftPage(pageCode));
+		assertNull(this.pageManager.getDraftPage(pageCode));
 		try {
 			Map<String, String> params = this.createParamForTest(pageCode);
 			params.put(PageActionAspect.PARAM_FRIENDLY_CODE, "friendly_code_test_2");
@@ -240,7 +245,7 @@ public class PageActionIntegrationTest extends ApsAdminPluginBaseTestCase {
             
 			String result = this.executeSave(params, "admin");
 			assertEquals(Action.SUCCESS, result);
-			IPage addedPage = this._pageManager.getDraftPage(pageCode);
+			IPage addedPage = this.pageManager.getDraftPage(pageCode);
 			assertNotNull(addedPage);
 			assertEquals("Test Page 1", addedPage.getTitles().getProperty("en"));
 			assertTrue(addedPage.getMetadata() instanceof SeoPageMetadata);
@@ -264,12 +269,127 @@ public class PageActionIntegrationTest extends ApsAdminPluginBaseTestCase {
 		} catch (Throwable t) {
 			throw t;
 		} finally {
-			this._pageManager.deletePage(pageCode);
+			this.pageManager.deletePage(pageCode);
 		}
 	}
+    
+    public void testSavePage_3() throws Throwable {
+        String pageCode = "seo_test_3";
+        assertNull(this.pageManager.getDraftPage(pageCode));
+        String friendlyCode_1 = "friendly_code_test_3";
+        String friendlyCode_2 = "friendly_code_test_3_bis";
+        try {
+            assertNull(this.seoMappingManager.getReference(friendlyCode_1));
+            assertNull(this.seoMappingManager.getReference(friendlyCode_2));
+            Map<String, String> params = this.createParamForTest(pageCode);
+            params.put(PageActionAspect.PARAM_FRIENDLY_CODE, friendlyCode_1);
+            String result = this.executeSave(params, "admin");
+            assertEquals(Action.SUCCESS, result);
+            IPage addedPage = this.pageManager.getDraftPage(pageCode);
+            this.pageManager.setPageOnline(pageCode);
 
+            synchronized (this) {
+                this.wait(500);
+            }
+            super.waitNotifyingThread();
+            assertNotNull(this.seoMappingManager.getReference(friendlyCode_1));
+            assertNull(this.seoMappingManager.getReference(friendlyCode_2));
+
+            params.put(PageActionAspect.PARAM_FRIENDLY_CODE, friendlyCode_2);
+            params.put("strutsAction", String.valueOf(ApsAdminSystemConstants.EDIT));
+            result = this.executeSave(params, "admin");
+
+            assertEquals(Action.SUCCESS, result);
+
+            addedPage = this.pageManager.getDraftPage(pageCode);
+            synchronized (this) {
+                this.wait(500);
+            }
+            super.waitNotifyingThread();
+            
+            assertNotNull(this.seoMappingManager.getReference(friendlyCode_1));
+            assertNull(this.seoMappingManager.getReference(friendlyCode_2));
+
+            assertTrue(addedPage.isChanged());
+            this.pageManager.setPageOnline(pageCode);
+
+            synchronized (this) {
+                this.wait(500);
+            }
+            super.waitNotifyingThread();
+            assertNull(this.seoMappingManager.getReference(friendlyCode_1));
+            assertNotNull(this.seoMappingManager.getReference(friendlyCode_2));
+
+            params.put(PageActionAspect.PARAM_FRIENDLY_CODE, "");
+            result = this.executeSave(params, "admin");
+            assertEquals(Action.SUCCESS, result);
+            addedPage = this.pageManager.getDraftPage(pageCode);
+            assertTrue(addedPage.isChanged());
+            this.pageManager.setPageOnline(pageCode);
+
+            super.waitNotifyingThread();
+            assertNull(this.seoMappingManager.getReference(friendlyCode_1));
+            assertNull(this.seoMappingManager.getReference(friendlyCode_2));
+        } catch (Throwable t) {
+            throw t;
+        } finally {
+            this.pageManager.deletePage(pageCode);
+        }
+    }
+    
+    public void testAddRemoveMetatag() throws Throwable {
+        String pageCode = "seo_test_4";
+        try {
+            Map<String, String> params = this.createParamForTest(pageCode);
+            
+            params.put("pageMetataKey_it_0", "metaKey_0");
+            params.put("pageMetataAttribute_it_0", "name");
+            params.put("pageMetataValue_it_0", "meta value IT 0");
+            
+            params.put("pageMetataKey_en_0", "metaKey_0");
+			params.put("pageMetataAttribute_en_0", "property");
+            params.put("pageMetataValue_en_0", "meta value EN 0");
+            
+            params.put("pageMetataKey_it_1", "metaKey_1");
+            params.put("pageMetataAttribute_it_1", "name");
+            params.put("pageMetataValue_it_1", "meta value IT 1");
+            
+            params.put("pageMetataKey_en_1", "metaKey_1");
+			params.put("pageMetataAttribute_en_1", "property");
+            params.put("pageMetataValue_en_1", "meta value EN 1");
+            
+            params.put("metatagKey", "metadataKeyTest");
+            params.put("metatagValue", "metadataValueTest");
+            
+            String result = this.executeAddMetatag(params, "admin");
+            assertEquals(Action.SUCCESS, result);
+            Map<String, Map<String, PageMetatag>> seoParameters = (Map) this.getRequest().getAttribute(PageActionAspect.PARAM_METATAGS);
+            assertNotNull(seoParameters);
+            assertEquals(2, seoParameters.size());
+            assertTrue(seoParameters.containsKey("it") && seoParameters.containsKey("en"));
+            assertTrue(seoParameters.get("it").size() == 3 && seoParameters.get("en").size() == 3);
+            PageMetatag metatag = seoParameters.get("it").get("metadataKeyTest");
+            assertEquals("metadataValueTest", metatag.getValue());
+            
+            params.put("metatagKey", "metaKey_0");
+            params.remove("metatagValue");
+            result = this.executeAction("removeMetatag", params, "admin");
+            assertEquals(Action.SUCCESS, result);
+            seoParameters = (Map) this.getRequest().getAttribute(PageActionAspect.PARAM_METATAGS);
+            assertNotNull(seoParameters);
+            assertEquals(2, seoParameters.size());
+            assertTrue(seoParameters.containsKey("it") && seoParameters.containsKey("en"));
+            assertTrue(seoParameters.get("it").size() == 1 && seoParameters.get("en").size() == 1);
+            assertTrue(seoParameters.get("it").containsKey("metaKey_1") && seoParameters.get("en").containsKey("metaKey_1"));
+        } catch (Throwable t) {
+            throw t;
+        } finally {
+            this.pageManager.deletePage(pageCode);
+        }
+    }
+    
     private Map<String, String> createParamForTest(String pageCode) {
-        IPage root = this._pageManager.getDraftRoot();
+        IPage root = this.pageManager.getDraftRoot();
         Map<String, String> params = new HashMap<>();
         params.put("strutsAction", String.valueOf(ApsAdminSystemConstants.ADD));
         params.put("parentPageCode", root.getCode());
@@ -282,21 +402,27 @@ public class PageActionIntegrationTest extends ApsAdminPluginBaseTestCase {
     }
     
 	private String executeSave(Map<String, String> params, String username) throws Throwable {
+		return this.executeAction("save", params, username);
+	}
+
+	private String executeAddMetatag(Map<String, String> params, String username) throws Throwable {
+		return this.executeAction("addMetatag", params, username);
+	}
+
+	private String executeAction(String actionName, Map<String, String> params, String username) throws Throwable {
 		this.setUserOnSession(username);
-		this.initAction("/do/Page", "save");
+		this.initAction("/do/Page", actionName);
 		this.addParameters(params);
-		String result = this.executeAction();
-		return result;
+		return this.executeAction();
 	}
 
 	private void init() throws Exception {
 		try {
-			this._pageManager = (IPageManager) this.getService(SystemConstants.PAGE_MANAGER);
+			this.pageManager = (IPageManager) this.getService(SystemConstants.PAGE_MANAGER);
+			this.seoMappingManager = (ISeoMappingManager) this.getService(JpseoSystemConstants.SEO_MAPPING_MANAGER);
 		} catch (Throwable t) {
 			throw new Exception(t);
 		}
 	}
-
-	private IPageManager _pageManager = null;
 
 }
