@@ -76,6 +76,12 @@ public class Resource {
 			width = 128,
 			canBeNull = true)
 	private String _owner;
+
+	@DatabaseField(columnName = "folderpath",
+			dataType = DataType.STRING,
+			width = 256,
+			canBeNull = true)
+	private String _folderPath;
 	
 	public static final String TABLE_NAME = "resources";
 	
@@ -92,6 +98,7 @@ CREATE TABLE resources
   creationdate date,
   lastmodified date,
   owner character varying(128),
+  folderpath character varying(256),
   CONSTRAINT resources_pkey PRIMARY KEY (resid )
 )
  */

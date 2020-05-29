@@ -5,6 +5,7 @@ import java.util.List;
 public class CreateResourceRequest {
     private String type;
     private String group;
+    private String folderPath;
     private List<String> categories;
 
     public List<String> getCategories() {
@@ -29,5 +30,13 @@ public class CreateResourceRequest {
 
     public void setGroup(String group) {
         this.group = group;
+    }
+
+    public String getFolderPath() {
+        return folderPath;
+    }
+
+    public void setFolderPath(String folderPath) {
+        this.folderPath = folderPath;
     }
 }
