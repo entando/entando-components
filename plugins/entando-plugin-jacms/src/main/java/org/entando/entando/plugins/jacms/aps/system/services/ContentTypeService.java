@@ -197,13 +197,13 @@ public class ContentTypeService extends AbstractEntityTypeService<Content, Conte
             return "Published";
         } else if (contentDto.getStatus().equals(Content.STATUS_READY)) {
             if (contentDto.isOnLine()) {
-                return Content.STATUS_PUBLIC + " ≠ " + Content.STATUS_READY;
+                return Content.STATUS_PUBLIC + " not equals to " + Content.STATUS_READY;
             } else {
                 return Content.STATUS_READY;
             }
         } else {
             if (contentDto.isOnLine()) {
-                return Content.STATUS_PUBLIC + " ≠ " + Content.STATUS_DRAFT;
+                return Content.STATUS_PUBLIC + " not equals to " + Content.STATUS_DRAFT;
             } else {
                 return "Unpublished";
             }

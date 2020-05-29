@@ -176,7 +176,7 @@ public class ContentTypeServiceTest {
         ContentDto contentDto = new ContentDto();
         contentDto.setStatus(Content.STATUS_READY);
         contentDto.setOnLine(true);
-        assertEquals(Content.STATUS_PUBLIC + " ≠ " + Content.STATUS_READY, getContentStatusMethod().invoke(contentTypeService, contentDto));
+        assertEquals(Content.STATUS_PUBLIC + " not equals to " + Content.STATUS_READY, getContentStatusMethod().invoke(contentTypeService, contentDto));
     }
 
     @Test
@@ -193,7 +193,7 @@ public class ContentTypeServiceTest {
         ContentDto contentDto = new ContentDto();
         contentDto.setStatus(Content.STATUS_DRAFT);
         contentDto.setOnLine(true);
-        assertEquals(Content.STATUS_PUBLIC + " ≠ " + Content.STATUS_DRAFT, getContentStatusMethod().invoke(contentTypeService, contentDto));
+        assertEquals(Content.STATUS_PUBLIC + " not equals to " + Content.STATUS_DRAFT, getContentStatusMethod().invoke(contentTypeService, contentDto));
     }
 
     @Test
