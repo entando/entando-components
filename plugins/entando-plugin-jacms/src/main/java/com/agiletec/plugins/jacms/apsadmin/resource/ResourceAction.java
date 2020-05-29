@@ -573,5 +573,16 @@ public class ResourceAction extends AbstractResourceAction implements ResourceDa
         //Do nothing as these Actions are destined to die
     }
 
+    @Override
+    public String getFolderPath() {
+        //Do nothing as these Actions are destined to die
+        return null;
+    }
+
+    @Override
+    public void setFolderPath(String path) {
+        //Do nothing as these Actions are destined to die
+    }
+
 
 }

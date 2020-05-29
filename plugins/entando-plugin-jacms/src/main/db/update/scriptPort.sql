@@ -11,7 +11,6 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('production', 'jacm
 ALTER TABLE `resources` ADD COLUMN `owner` varchar(128); -- mysql
 ALTER TABLE resources ADD COLUMN owner character varying(128); -- postgres
 
-
 ALTER TABLE contents ADD COLUMN published character varying(20); -- postgres
 ALTER TABLE contents ADD COLUMN sync smallint; -- postgres
 
@@ -29,3 +28,6 @@ UPDATE contents SET published = ExtractValue(onlinexml, '/content/lastModified')
 UPDATE contents SET published = (xpath('./lastModified/text()', onlinexml::xml))[1] WHERE onlinexml is not null; -- postgres
 
 CREATE INDEX contents_sync_idx ON contents (sync);
+
+ALTER TABLE `resources` ADD COLUMN `folderpath` varchar(256); -- mysql
+ALTER TABLE resources ADD COLUMN folderpath character varying(256); -- postgres
