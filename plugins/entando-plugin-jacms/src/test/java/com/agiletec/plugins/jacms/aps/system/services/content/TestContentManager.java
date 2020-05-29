@@ -64,7 +64,7 @@ public class TestContentManager extends BaseTestCase {
         super.setUp();
         this.init();
     }
-
+    
     public void testSearchContents_1_1() throws Throwable {
         List<String> contentIds = this._contentManager.searchId(null);
         assertNotNull(contentIds);
@@ -780,7 +780,7 @@ public class TestContentManager extends BaseTestCase {
         this.testLoadPublicEvents_6(true);
         this.testLoadPublicEvents_6(false);
     }
-
+    
     protected void testLoadPublicEvents_6(boolean useRoleFilter) throws ApsSystemException {
         List<String> groups = new ArrayList<>();
         groups.add(Group.ADMINS_GROUP_NAME);
@@ -810,7 +810,7 @@ public class TestContentManager extends BaseTestCase {
         List<String> groups = new ArrayList<>();
         groups.add(Group.ADMINS_GROUP_NAME);
         List<String> allowedDescription = new ArrayList<>();
-        allowedDescription.add("Mostra Zootecnica");//EVN20
+        allowedDescription.add("Zootechnical exposure");//EVN20
         allowedDescription.add("Title B - Event 2");//EVN192
         EntitySearchFilter filter1 = (useRoleFilter)
                 ? EntitySearchFilter.createRoleFilter(JacmsSystemConstants.ATTRIBUTE_ROLE_TITLE, allowedDescription, false)
@@ -1384,7 +1384,7 @@ public class TestContentManager extends BaseTestCase {
             for (int i = 0; i < newContentIds.length; i++) {
                 Content content = this._contentManager.loadContent(newContentIds[i], false);
                 TextAttribute titleAttribute = (TextAttribute) content.getAttribute("Titolo");
-                if (i % 2 == 1 && i < 4) {
+                if (i % 2 == 1) {
                     titleAttribute.setText(null, "en");
                 }
                 titleAttribute.setText(null, "it");
@@ -1413,7 +1413,7 @@ public class TestContentManager extends BaseTestCase {
             EntitySearchFilter[] filters1 = {filter0, filter1, filter2, filter3};
             String[] expectedContentsId1 = {"EVN191", "EVN192", "EVN193", "EVN194",
                 "EVN103", "EVN20", "EVN23", "EVN24", "EVN25", "EVN41", "EVN21",
-                newContentIds[0], newContentIds[2]};
+                newContentIds[0], newContentIds[2], newContentIds[4]};
 
             contents = this._contentManager.loadWorkContentsId(filters1, groups);
             assertEquals(expectedContentsId1.length, contents.size());
@@ -1436,7 +1436,7 @@ public class TestContentManager extends BaseTestCase {
             filter3.setNullOption(true);
             filter3.setLangCode("en");
             EntitySearchFilter[] filters3 = {filter0, filter1, filter2, filter3};
-            String[] expectedContentsId3 = {newContentIds[1], newContentIds[3], newContentIds[4], newContentIds[5]};
+            String[] expectedContentsId3 = {newContentIds[1], newContentIds[3], newContentIds[5]};
 
             contents = this._contentManager.loadWorkContentsId(filters3, groups);
             assertEquals(expectedContentsId3.length, contents.size());
@@ -1456,7 +1456,7 @@ public class TestContentManager extends BaseTestCase {
             this.deleteContents(newContentIds);
         }
     }
-
+    
     public void testGetLinkProperties() throws Throwable {
         EntitySearchFilter creationOrder = new EntitySearchFilter(IContentManager.CONTENT_CREATION_DATE_FILTER_KEY, false);
         creationOrder.setOrder(EntitySearchFilter.DESC_ORDER);

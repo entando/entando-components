@@ -267,13 +267,17 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
     public static String buildCacheKey(IContentListTagBean bean, RequestContext reqCtx) {
         UserDetails currentUser = (UserDetails) reqCtx.getRequest().getSession().getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
         StringBuilder baseCacheKey = ContentListHelper.buildStringBuilderCacheKey(bean, currentUser);
-        IPage page = (null != reqCtx) ? (IPage) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE) : null;
+        Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
+        if (null != currentLang) {
+            baseCacheKey.append("_LANG_").append(currentLang.getCode());
+        }
+        IPage page = (IPage) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE);
         if (null == page) {
             baseCacheKey.append("_PAGENOTFOUND");
         } else {
-            baseCacheKey.append("_PAGE_" + page.getCode());
+            baseCacheKey.append("_PAGE_").append(page.getCode());
         }
-        Widget currentWidget = (null != reqCtx) ? (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET) : null;
+        Widget currentWidget = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET);
         if (null != currentWidget && null != currentWidget.getConfig()) {
             List<String> paramKeys = new ArrayList(currentWidget.getConfig().keySet());
             Collections.sort(paramKeys);
