@@ -13,6 +13,7 @@
  */
 package com.agiletec.plugins.jacms.apsadmin.resource;
 
+import com.agiletec.aps.system.common.FieldSearchFilter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -27,7 +28,10 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
+import java.io.File;
+import java.nio.file.Files;
 import java.util.HashMap;
+import org.entando.entando.aps.system.services.searchengine.SearchEngineFilter;
 
 /**
  * @author E.Santoboni
@@ -35,6 +39,7 @@ import java.util.HashMap;
 public class TestMultipleResourceAction extends ApsAdminBaseTestCase {
 
     private IResourceManager resourceManager = null;
+    
 
     @Override
     protected void setUp() throws Exception {
@@ -142,6 +147,11 @@ public class TestMultipleResourceAction extends ApsAdminBaseTestCase {
             this.addParameter("resourceId", String.valueOf(resourceId));
             this.addParameter("resourceTypeCode", resource.getType());
             this.addParameter("mainGroup", resource.getMainGroup());
+            // this would trigger en error in the new interface with multiple 
+            // uploads, since this parameter is now always present! This makes 
+            // sure that the edit, and so the patch, works as expected
+            this.addParameter("fileUploadId_0", "trigger error");
+            
             String result = this.executeAction();
             assertEquals(Action.SUCCESS, result);
             ResourceInterface modifiedResource = this.resourceManager.loadResource(resourceId);
@@ -290,5 +300,5 @@ public class TestMultipleResourceAction extends ApsAdminBaseTestCase {
     }
 
     private IResourceManager _resourceManager = null;
-
+    
 }
