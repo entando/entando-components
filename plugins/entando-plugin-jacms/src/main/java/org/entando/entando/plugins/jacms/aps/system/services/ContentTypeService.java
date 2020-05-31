@@ -16,6 +16,7 @@ package org.entando.entando.plugins.jacms.aps.system.services;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.ContentStatusState;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentTypeDto;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentTypeDtoBuilder;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentTypeDtoRequest;
@@ -28,7 +29,6 @@ import org.entando.entando.aps.system.services.entity.model.AttributeTypeDto;
 import org.entando.entando.aps.system.services.entity.model.EntityTypeAttributeFullDto;
 import org.entando.entando.aps.system.services.entity.model.EntityTypeShortDto;
 import org.entando.entando.aps.system.services.entity.model.EntityTypesStatusDto;
-import org.entando.entando.aps.system.services.page.IPageService;
 import org.entando.entando.aps.util.HttpSessionHelper;
 import org.entando.entando.plugins.jacms.aps.system.services.content.ContentService;
 import org.entando.entando.plugins.jacms.web.content.validator.RestContentListRequest;
@@ -152,7 +152,7 @@ public class ContentTypeService extends AbstractEntityTypeService<Content, Conte
 
     @Override
     protected Content createEntityType(IEntityManager entityManager, EntityTypeDtoRequest dto,
-            BindingResult bindingResult) throws Throwable {
+                                       BindingResult bindingResult) throws Throwable {
         ContentTypeDtoRequest request = (ContentTypeDtoRequest) dto;
         Content result = super.createEntityType(entityManager, dto, bindingResult);
         result.setViewPage(request.getViewPage());
@@ -179,9 +179,11 @@ public class ContentTypeService extends AbstractEntityTypeService<Content, Conte
                 .map(contentDto -> new ComponentUsageEntity(
                         ComponentUsageEntity.TYPE_CONTENT,
                         contentDto.getId(),
-                        contentDto.getStatus().equals(Content.STATUS_READY) ? IPageService.STATUS_ONLINE : IPageService.STATUS_DRAFT))
+                        ContentStatusState.calculateState(contentDto).toString()))
                 .collect(Collectors.toList());
 
         return pagedMetadataMapper.getPagedResult(restListRequest, componentUsageEntityList, "code", pagedData.getTotalItems());
     }
+
+
 }
