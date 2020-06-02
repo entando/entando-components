@@ -31,4 +31,6 @@ public abstract class AssetDto {
     private List<String> categories;
 
     private String owner;
+
+    private String folderPath;
 }

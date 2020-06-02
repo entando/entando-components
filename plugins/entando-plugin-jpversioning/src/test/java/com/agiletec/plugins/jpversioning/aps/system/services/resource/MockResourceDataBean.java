@@ -162,4 +162,14 @@ public class MockResourceDataBean implements ResourceDataBean {
         this.owner = owner;
     }
 
+    @Override
+    public String getFolderPath() {
+        return null;
+    }
+
+    @Override
+    public void setFolderPath(String folderPath) {
+
+    }
+
 }

@@ -28,9 +28,13 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.util.IImage
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
@@ -42,11 +46,13 @@ import org.entando.entando.plugins.jacms.web.resource.model.AssetDto;
 import org.entando.entando.plugins.jacms.web.resource.model.FileAssetDto;
 import org.entando.entando.plugins.jacms.web.resource.model.ImageAssetDto;
 import org.entando.entando.plugins.jacms.web.resource.model.ImageMetadataDto;
+import org.entando.entando.plugins.jacms.web.resource.model.ListAssetsFolderResponse;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.Filter;
 import org.entando.entando.web.common.model.FilterOperator;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
+import org.entando.entando.web.common.model.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -99,7 +105,94 @@ public class ResourcesService {
         return pagedResults;
     }
 
-    public AssetDto createAsset(String type, MultipartFile file, String group, List<String> categories, UserDetails user) {
+    public ListAssetsFolderResponse listAssetsFolder(String folderPath) {
+
+        ListAssetsFolderResponse response = new ListAssetsFolderResponse();
+
+        try {
+            List<AssetDto> assets = new ArrayList<>();
+
+            List<String> resourceIds = resourceManager.searchResourcesId(createFolderPathSearchFilter(folderPath), null);
+
+            Set<String> allFolders = new HashSet<>();
+
+            for(String id : resourceIds) {
+                AssetDto asset = convertResourceToDto(resourceManager.loadResource(id));
+                if (asset.getFolderPath() != null && !asset.getFolderPath().equals(folderPath)) {
+                    allFolders.add(asset.getFolderPath());
+                }
+                if (shouldAddAsset(folderPath, asset.getFolderPath())) {
+                    assets.add(asset);
+                }
+            }
+
+            response.setAssets(assets);
+            response.setFolderPath(folderPath);
+            response.setSubfolders(getSubfolders(folderPath, allFolders));
+
+        } catch (ApsException e) {
+            throw new RestServerError("plugins.jacms.resources.resourceManager.error.list", e);
+        }
+
+        return response;
+    }
+
+    private boolean shouldAddAsset(String folderPath, String assetFolderPath) {
+        return (assetFolderAndFolderPathIsNull(folderPath, assetFolderPath)
+                || assetFolderStartsWithFolderPath(folderPath, assetFolderPath))
+                && assetFolderAndFolderPathHasSameDepth(folderPath, assetFolderPath);
+    }
+
+    private boolean assetFolderStartsWithFolderPath(String folderPath, String assetFolderPath) {
+        return folderPath != null && folderPath.startsWith(assetFolderPath);
+    }
+
+    private boolean assetFolderAndFolderPathIsNull(String folderPath, String assetFolderPath) {
+        return folderPath == null && assetFolderPath == null;
+    }
+
+    private boolean assetFolderAndFolderPathHasSameDepth(String folderPath, String assetFolderPath) {
+        return getFolderPathDepth(folderPath) == getFolderPathDepth(assetFolderPath);
+    }
+
+    private int getFolderPathDepth(String folderPath) {
+        if (folderPath == null) {
+            return 0;
+        } else {
+            return folderPath.split("/").length;
+        }
+    }
+
+    private List<String> getSubfolders(String folderPath, Set<String> allFolders) {
+        Set<String> result = new TreeSet<>();
+
+        int folderPathDepth = getFolderPathDepth(folderPath);
+
+        for (String folder : allFolders) {
+            result.add(getFolderPathByDepth(folder, folderPathDepth));
+        }
+
+        return new ArrayList<>(result);
+    }
+
+    private String getFolderPathByDepth(String folder, int folderPathDepth) {
+        StringBuilder sb = new StringBuilder();
+
+        String[] folders = folder.split("/");
+        int currentDepth = 0;
+
+        while (folderPathDepth >= currentDepth && currentDepth < folders.length) {
+            if (currentDepth > 0) {
+                sb.append("/");
+            }
+            sb.append(folders[currentDepth]);
+            currentDepth++;
+        }
+
+        return sb.toString();
+    }
+
+    public AssetDto createAsset(String type, MultipartFile file, String group, List<String> categories, String folderPath, UserDetails user) {
         BaseResourceDataBean resourceFile = new BaseResourceDataBean();
 
         validateMimeType(type, file.getContentType());
@@ -115,6 +208,7 @@ public class ResourcesService {
             resourceFile.setResourceType(convertResourceType(type));
             resourceFile.setCategories(convertCategories(categories));
             resourceFile.setOwner(user.getUsername());
+            resourceFile.setFolderPath(folderPath);
 
             ResourceInterface resource = resourceManager.addResource(resourceFile);
             return convertResourceToDto(resourceManager.loadResource(resource.getId()));
@@ -178,7 +272,7 @@ public class ResourcesService {
         }
     }
 
-    public AssetDto editAsset(String resourceId, MultipartFile file, String description, List<String> categories) {
+    public AssetDto editAsset(String resourceId, MultipartFile file, String description, List<String> categories, String folderPath) {
         try {
             ResourceInterface resource = loadResource(resourceId);
 
@@ -187,7 +281,7 @@ public class ResourcesService {
             resourceFile.setResourceId(resourceId);
             resourceFile.setMetadata(resource.getMetadata());
             resourceFile.setOwner(resource.getOwner());
-
+            resourceFile.setFolderPath(resource.getFolderPath());
 
             if (file != null) {
                 validateMimeType(unconvertResourceType(resource.getType()), file.getContentType());
@@ -207,6 +301,10 @@ public class ResourcesService {
                 resourceFile.setDescr(description.trim());
             } else {
                 resourceFile.setDescr(resource.getDescription());
+            }
+
+            if (folderPath != null) {
+                resourceFile.setFolderPath(folderPath);
             }
 
             resourceFile.setMainGroup(resource.getMainGroup());
@@ -317,6 +415,10 @@ public class ResourcesService {
                 case "owner":
                     attr = IResourceManager.RESOURCE_OWNER_FILTER_KEY;
                     break;
+                case "folderPath":
+                    useLikeOption = true;
+                    attr = IResourceManager.RESOURCE_FOLDER_PATH_FILTER_KEY;
+                    break;
                 default:
                     log.warn("Invalid filter attribute: " + filter.getAttribute());
                     continue;
@@ -336,6 +438,14 @@ public class ResourcesService {
 
         filters.add(createOrderFilter(requestList));
 
+        return filters.stream().toArray(FieldSearchFilter[]::new);
+    }
+
+    private FieldSearchFilter[] createFolderPathSearchFilter(String folderPath) {
+        List<FieldSearchFilter> filters = new ArrayList<>();
+        if (folderPath != null) {
+            filters.add(new FieldSearchFilter(IResourceManager.RESOURCE_FOLDER_PATH_FILTER_KEY, folderPath, true));
+        }
         return filters.stream().toArray(FieldSearchFilter[]::new);
     }
 
@@ -376,6 +486,8 @@ public class ResourcesService {
             key = IResourceManager.RESOURCE_OWNER_FILTER_KEY;
         } else if ("group".equals(groupBy)) {
             key = IResourceManager.RESOURCE_MAIN_GROUP_FILTER_KEY;
+        } else if ("folderPath".equals(groupBy)) {
+            key = IResourceManager.RESOURCE_FOLDER_PATH_FILTER_KEY;
         }
 
         EntitySearchFilter filter = new EntitySearchFilter(key, true);
@@ -427,7 +539,8 @@ public class ResourcesService {
                         .path(resource.getImagePath("0"))
                         .size(resource.getDefaultInstance().getFileLength())
                         .build())
-                .owner(resource.getOwner());
+                .owner(resource.getOwner())
+                .folderPath(resource.getFolderPath());
 
         for (ImageResourceDimension dimensions : getImageDimensions()) {
             ResourceInstance instance = resource.getInstance(dimensions.getIdDim(), null);
@@ -460,6 +573,7 @@ public class ResourcesService {
                 .categories(resource.getCategories().stream()
                         .map(Category::getCode).collect(Collectors.toList()))
                 .owner(resource.getOwner())
+                .folderPath(resource.getFolderPath())
                 .build();
     }
 

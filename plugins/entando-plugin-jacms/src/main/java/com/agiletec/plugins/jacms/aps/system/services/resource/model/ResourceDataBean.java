@@ -124,4 +124,16 @@ public interface ResourceDataBean {
      * @param owner The owner's username
      */
     public void setOwner(String owner);
+
+    /**
+     * Returns the logical path of the resource
+     * @return The resources's logical path
+     */
+    public String getFolderPath();
+
+    /**
+     * Sets the logical path of the resource
+     * @param folderPath The resources's logical path
+     */
+    public void setFolderPath(String folderPath);
 }

@@ -68,15 +68,7 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
 
         result.andExpect(jsonPath("$.payload.online", is(true)));
 
-        /**
-         * The response should have the correct CORS headers and the CORS
-         * configuration should reflect the one set in
-         * org.entando.entando.aps.servlet.CORSFilter class
-         */
-        result.andExpect(header().string("Access-Control-Allow-Origin", "*"));
-        result.andExpect(header().string("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH"));
-        result.andExpect(header().string("Access-Control-Allow-Headers", "Content-Type, Authorization"));
-        result.andExpect(header().string("Access-Control-Max-Age", "3600"));
+        super.testCors("/pages/homepage/configuration");
     }
 
     /**

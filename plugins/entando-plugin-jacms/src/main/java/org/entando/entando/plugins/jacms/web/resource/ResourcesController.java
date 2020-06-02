@@ -26,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 import org.entando.entando.aps.util.HttpSessionHelper;
 import org.entando.entando.plugins.jacms.aps.system.services.resource.ResourcesService;
 import org.entando.entando.plugins.jacms.web.resource.model.AssetDto;
+import org.entando.entando.plugins.jacms.web.resource.model.ListAssetsFolderResponse;
 import org.entando.entando.plugins.jacms.web.resource.request.CreateResourceRequest;
 import org.entando.entando.plugins.jacms.web.resource.request.UpdateResourceRequest;
 import org.entando.entando.plugins.jacms.web.resource.validator.ResourcesValidator;
@@ -33,9 +34,11 @@ import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
+import org.entando.entando.web.common.model.RestResponse;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -76,6 +79,50 @@ public class ResourcesController {
         return ResponseEntity.ok(new PagedRestResponse<>(result));
     }
 
+    @ApiOperation(value = "LIST Resources", nickname = "listResources", tags = {"resources-controller"})
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Created"),
+            @ApiResponse(code = 401, message = "Unauthorized")})
+    @GetMapping("/plugins/cms/assets/folder")
+    @RestAccessControl(permission = Permission.CONTENT_EDITOR)
+    public ResponseEntity<RestResponse<List<AssetDto>, Map<String, Object>>> listAssetsFolder(
+            @RequestParam(value = "folderPath", required = false) String folderPath) {
+        logger.debug("REST request - list resources folder");
+
+        folderPath = sanitizeFolderPath(folderPath);
+
+        ListAssetsFolderResponse result = service.listAssetsFolder(folderPath);
+
+        Map<String, Object> metadata = new HashMap<>();
+        metadata.put("folderPath", result.getFolderPath());
+        metadata.put("subfolders", result.getSubfolders());
+
+        return ResponseEntity.ok(new RestResponse<>(result.getAssets(), metadata));
+    }
+
+    private String sanitizeFolderPath(String folderPath) {
+
+        if (folderPath == null) {
+            return null;
+        }
+
+        String result = folderPath.trim().replaceAll("/+", "/");
+
+        if (result.equals("/") || result.equals("")) {
+            return null;
+        }
+
+        if (result.startsWith("/")) {
+            result = result.substring(1);
+        }
+
+        if (result.endsWith("/")) {
+            result = result.substring(0, result.length()-1);
+        }
+
+        return result;
+    }
+
     @ApiOperation(value = "CREATE Resource", nickname = "createResource", tags = {"resources-controller"})
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
@@ -95,7 +142,9 @@ public class ResourcesController {
                 .filter(c -> c.length() > 0)
                 .collect(Collectors.toList());
 
-        AssetDto result = service.createAsset(resourceRequest.getType(), file, resourceRequest.getGroup(), categoriesList, HttpSessionHelper.extractCurrentUser(httpSession));
+        AssetDto result = service
+                .createAsset(resourceRequest.getType(), file, resourceRequest.getGroup(), categoriesList, resourceRequest.getFolderPath(),
+                        HttpSessionHelper.extractCurrentUser(httpSession));
         return ResponseEntity.ok(new SimpleRestResponse<>(result));
     }
 
@@ -130,7 +179,7 @@ public class ResourcesController {
                 .filter(c -> c.length() > 0)
                 .collect(Collectors.toList());
 
-        AssetDto result = service.editAsset(resourceId, file, resourceRequest.getDescription(), categoriesList);
+        AssetDto result = service.editAsset(resourceId, file, resourceRequest.getDescription(), categoriesList, sanitizeFolderPath(resourceRequest.getFolderPath()));
         return ResponseEntity.ok(new SimpleRestResponse<>(result));
     }
 

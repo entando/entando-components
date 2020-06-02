@@ -4,6 +4,7 @@ import java.util.List;
 
 public class UpdateResourceRequest {
     private String description;
+    private String folderPath;
     private List<String> categories;
 
     public String getDescription() {
@@ -20,5 +21,13 @@ public class UpdateResourceRequest {
 
     public void setCategories(List<String> categories) {
         this.categories = categories;
+    }
+
+    public String getFolderPath() {
+        return folderPath;
+    }
+
+    public void setFolderPath(String folderPath) {
+        this.folderPath = folderPath;
     }
 }
