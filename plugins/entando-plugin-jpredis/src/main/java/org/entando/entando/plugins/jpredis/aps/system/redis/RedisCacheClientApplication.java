@@ -24,10 +24,13 @@ package org.entando.entando.plugins.jpredis.aps.system.redis;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.codec.SerializationCodec;
+import org.redisson.config.BaseConfig;
 import org.redisson.config.Config;
+import org.redisson.config.SingleServerConfig;
 import org.redisson.spring.cache.CacheConfig;
 import org.redisson.spring.cache.RedissonSpringCacheManager;
 import org.springframework.beans.factory.annotation.Value;
@@ -48,12 +51,20 @@ public class RedisCacheClientApplication {
     
     @Value("${REDIS_ADDRESS:redis://localhost:6379}")
     private String redisAddress;
-
+    
+    @Value("${REDIS_USERNAME:}")
+    private String redisUsername;
+    
+    @Value("${REDIS_PASSWORD:}")
+    private String redisPassword;
+    
     @Bean(destroyMethod = "shutdown")
     RedissonClient redisson() throws IOException {
         Config clientConfig = new Config();
         //clientConfig.useClusterServers().addNodeAddress("redis://127.0.0.1:6379");
-        clientConfig.useSingleServer().setAddress(this.redisAddress);
+        clientConfig.useSingleServer().setAddress(this.redisAddress)
+                .setUsername((StringUtils.isBlank(this.redisUsername) ? null : this.redisUsername))
+                .setPassword((StringUtils.isBlank(this.redisPassword) ? null : this.redisPassword));
         //config.useClusterServers()
         //        .addNodeAddress("redis://127.0.0.1:7004", "redis://127.0.0.1:7001");
         //clientConfig.setCodec(new CompositeCodec(new FstCodec(), new SerializationCodec(), new SerializationCodec()));
