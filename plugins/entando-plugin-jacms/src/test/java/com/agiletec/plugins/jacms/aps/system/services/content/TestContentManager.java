@@ -1502,9 +1502,12 @@ public class TestContentManager extends BaseTestCase {
                     new String[]{"ALL4", addedContents.get(1), addedContents.get(5), addedContents.get(7), addedContents.get(11), addedContents.get(13)}, // FALSE
                     new String[]{addedContents.get(2), addedContents.get(4), addedContents.get(8), addedContents.get(10), addedContents.get(14)}); // TRUE
         } catch (Exception e) {
+            throw e;
+        } finally {
             for (int i = 0; i < addedContents.size(); i++) {
                 String id = addedContents.get(i);
                 this._contentManager.deleteContent(id);
+                assertNull(this._contentManager.loadContent(id, false));
             }
             booleanAttribute.setSearchable(false);
             checkBoxAttribute.setSearchable(false);

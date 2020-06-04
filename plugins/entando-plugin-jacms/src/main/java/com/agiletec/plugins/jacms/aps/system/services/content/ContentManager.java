@@ -420,7 +420,7 @@ public class ContentManager extends ApsEntityManager
     @CacheEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME,
             key = "T(com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants).CONTENT_CACHE_PREFIX.concat(#contentId)", condition = "#contentId != null")
     @CacheInfoEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME,
-            groups = "T(com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager).getContentCacheGroupsToEvictCsv(#content.id)")
+            groups = "T(com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager).getContentCacheGroupsToEvictCsv(#contentId)")
     public void deleteContent(String contentId) throws ApsSystemException {
         try {
             this.getContentDAO().deleteEntity(contentId);
