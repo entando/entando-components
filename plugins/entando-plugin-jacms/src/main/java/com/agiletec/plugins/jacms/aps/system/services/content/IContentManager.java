@@ -157,6 +157,8 @@ public interface IContentManager extends IEntityManager {
      */
     public void deleteContent(Content content) throws ApsSystemException;
 
+    public void deleteContent(String contentId) throws ApsSystemException;
+
     /**
      * Carica una lista di identificativi di contenuti publici in base ai
      * parametri immessi.

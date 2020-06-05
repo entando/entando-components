@@ -197,7 +197,7 @@ public class CmsHypertextAttribute extends HypertextAttribute implements IRefere
 
     @Override
     public boolean isSearchableOptionSupported() {
-        return true;
+        return false;
     }
 
     private transient IContentManager contentManager;

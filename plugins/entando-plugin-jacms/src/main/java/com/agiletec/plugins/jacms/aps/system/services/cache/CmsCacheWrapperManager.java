@@ -131,6 +131,11 @@ public class CmsCacheWrapperManager extends AbstractService
 		return builder.toString();
 	}
 	
+    public static String getContentCacheGroupsToEvictCsv(String contentId) {
+        String typeCode = contentId.substring(0, 3);
+        return getContentCacheGroupsToEvictCsv(contentId, typeCode);
+    }
+	
 	public static String getContentCacheGroupsToEvictCsv(String contentId, String typeCode) {
 		StringBuilder builder = new StringBuilder();
 		String contentsIdCacheGroupId = JacmsSystemConstants.CONTENTS_ID_CACHE_GROUP_PREFIX + typeCode;

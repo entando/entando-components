@@ -89,7 +89,7 @@ public class AttachAttribute extends AbstractResourceAttribute {
 
 	@Override
 	public boolean isSearchableOptionSupported() {
-		return true;
+		return false;
 	}
 
 }
