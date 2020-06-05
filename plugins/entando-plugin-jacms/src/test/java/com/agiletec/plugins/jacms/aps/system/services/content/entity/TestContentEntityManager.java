@@ -35,7 +35,7 @@ public class TestContentEntityManager extends BaseTestCase {
 		super.setUp();
 		this.init();
 	}
-	
+
 	public void testSearchRecords() throws Throwable {
 		List<ApsEntityRecord> contents = this._contentManager.searchRecords(null);
 		assertNotNull(contents);
@@ -114,7 +114,7 @@ public class TestContentEntityManager extends BaseTestCase {
 		EntitySearchFilter[] filters2 = {filterEn};
 		contents = this._contentManager.searchId("EVN", filters2);
 		assertFalse(contents.isEmpty());
-		String[] expectedEnglishContentsId = {"EVN103", "EVN193", "EVN191", "EVN192", "EVN194"};
+		String[] expectedEnglishContentsId = {"EVN193", "EVN191", "EVN192", "EVN194", "EVN103"};
 		assertEquals(expectedEnglishContentsId.length, contents.size());
 		for (int i=0; i<expectedEnglishContentsId.length; i++) {
 			assertTrue(contents.contains(expectedEnglishContentsId[i]));

@@ -336,7 +336,58 @@ public class PageActionIntegrationTest extends ApsAdminPluginBaseTestCase {
             this.pageManager.deletePage(pageCode);
         }
     }
-
+    
+    public void testAddRemoveMetatag() throws Throwable {
+        String pageCode = "seo_test_4";
+        try {
+            Map<String, String> params = this.createParamForTest(pageCode);
+            
+            params.put("pageMetataKey_it_0", "metaKey_0");
+            params.put("pageMetataAttribute_it_0", "name");
+            params.put("pageMetataValue_it_0", "meta value IT 0");
+            
+            params.put("pageMetataKey_en_0", "metaKey_0");
+			params.put("pageMetataAttribute_en_0", "property");
+            params.put("pageMetataValue_en_0", "meta value EN 0");
+            
+            params.put("pageMetataKey_it_1", "metaKey_1");
+            params.put("pageMetataAttribute_it_1", "name");
+            params.put("pageMetataValue_it_1", "meta value IT 1");
+            
+            params.put("pageMetataKey_en_1", "metaKey_1");
+			params.put("pageMetataAttribute_en_1", "property");
+            params.put("pageMetataValue_en_1", "meta value EN 1");
+            
+            params.put("metatagKey", "metadataKeyTest");
+            params.put("metatagValue", "metadataValueTest");
+            
+            String result = this.executeAddMetatag(params, "admin");
+            assertEquals(Action.SUCCESS, result);
+            Map<String, Map<String, PageMetatag>> seoParameters = (Map) this.getRequest().getAttribute(PageActionAspect.PARAM_METATAGS);
+            assertNotNull(seoParameters);
+            assertEquals(2, seoParameters.size());
+            assertTrue(seoParameters.containsKey("it") && seoParameters.containsKey("en"));
+            assertTrue(seoParameters.get("it").size() == 3 && seoParameters.get("en").size() == 3);
+            PageMetatag metatag = seoParameters.get("it").get("metadataKeyTest");
+            assertEquals("metadataValueTest", metatag.getValue());
+            
+            params.put("metatagKey", "metaKey_0");
+            params.remove("metatagValue");
+            result = this.executeAction("removeMetatag", params, "admin");
+            assertEquals(Action.SUCCESS, result);
+            seoParameters = (Map) this.getRequest().getAttribute(PageActionAspect.PARAM_METATAGS);
+            assertNotNull(seoParameters);
+            assertEquals(2, seoParameters.size());
+            assertTrue(seoParameters.containsKey("it") && seoParameters.containsKey("en"));
+            assertTrue(seoParameters.get("it").size() == 1 && seoParameters.get("en").size() == 1);
+            assertTrue(seoParameters.get("it").containsKey("metaKey_1") && seoParameters.get("en").containsKey("metaKey_1"));
+        } catch (Throwable t) {
+            throw t;
+        } finally {
+            this.pageManager.deletePage(pageCode);
+        }
+    }
+    
     private Map<String, String> createParamForTest(String pageCode) {
         IPage root = this.pageManager.getDraftRoot();
         Map<String, String> params = new HashMap<>();
@@ -351,11 +402,18 @@ public class PageActionIntegrationTest extends ApsAdminPluginBaseTestCase {
     }
     
 	private String executeSave(Map<String, String> params, String username) throws Throwable {
+		return this.executeAction("save", params, username);
+	}
+
+	private String executeAddMetatag(Map<String, String> params, String username) throws Throwable {
+		return this.executeAction("addMetatag", params, username);
+	}
+
+	private String executeAction(String actionName, Map<String, String> params, String username) throws Throwable {
 		this.setUserOnSession(username);
-		this.initAction("/do/Page", "save");
+		this.initAction("/do/Page", actionName);
 		this.addParameters(params);
-		String result = this.executeAction();
-		return result;
+		return this.executeAction();
 	}
 
 	private void init() throws Exception {
