@@ -28,6 +28,8 @@ import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.junit.Test;
 import org.springframework.test.web.servlet.ResultActions;
+
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -42,7 +44,7 @@ public class ConfigControllerIntegrationTest extends AbstractControllerIntegrati
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
                 .perform(get("/kiebpm/serverConfigs")
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
         result.andExpect(status().isOk());
     }
 

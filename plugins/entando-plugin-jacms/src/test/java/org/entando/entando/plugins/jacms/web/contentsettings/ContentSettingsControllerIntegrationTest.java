@@ -14,6 +14,7 @@
 package org.entando.entando.plugins.jacms.web.contentsettings;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -340,7 +341,7 @@ public class ContentSettingsControllerIntegrationTest extends AbstractController
         String accessToken = mockOAuthInterceptor(user);
         return mockMvc.perform(
                 get(path)
-                    .header("Authorization", "Bearer " + accessToken));
+                    .header("Authorization", "Bearer " + accessToken).with(csrf()));
     }
 
     private ResultActions performCreateMetadata(UserDetails user, String key, String mapping) throws Exception {
@@ -356,7 +357,7 @@ public class ContentSettingsControllerIntegrationTest extends AbstractController
 
         return mockMvc.perform(
                 post(path)
-                    .header("Authorization", "Bearer " + accessToken)
+                    .header("Authorization", "Bearer " + accessToken).with(csrf())
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
                     .content(mapper.writeValueAsString(request))
                     .accept(MediaType.APPLICATION_JSON_UTF8));
@@ -374,7 +375,7 @@ public class ContentSettingsControllerIntegrationTest extends AbstractController
 
         return mockMvc.perform(
                 put(path)
-                    .header("Authorization", "Bearer " + accessToken)
+                    .header("Authorization", "Bearer " + accessToken).with(csrf())
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
                     .content(mapper.writeValueAsString(request))
                     .accept(MediaType.APPLICATION_JSON_UTF8));
@@ -389,7 +390,7 @@ public class ContentSettingsControllerIntegrationTest extends AbstractController
 
         return mockMvc.perform(
                 delete(path)
-                    .header("Authorization", "Bearer " + accessToken)
+                    .header("Authorization", "Bearer " + accessToken).with(csrf())
                     .accept(MediaType.APPLICATION_JSON_UTF8));
     }
 
@@ -405,7 +406,7 @@ public class ContentSettingsControllerIntegrationTest extends AbstractController
 
         return mockMvc.perform(
                 post(path)
-                    .header("Authorization", "Bearer " + accessToken)
+                    .header("Authorization", "Bearer " + accessToken).with(csrf())
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
                     .content(mapper.writeValueAsString(request))
                     .accept(MediaType.APPLICATION_JSON_UTF8));
@@ -423,7 +424,7 @@ public class ContentSettingsControllerIntegrationTest extends AbstractController
 
         return mockMvc.perform(
                 put(path)
-                    .header("Authorization", "Bearer " + accessToken)
+                    .header("Authorization", "Bearer " + accessToken).with(csrf())
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
                     .content(mapper.writeValueAsString(request))
                     .accept(MediaType.APPLICATION_JSON_UTF8));
@@ -438,7 +439,7 @@ public class ContentSettingsControllerIntegrationTest extends AbstractController
 
         return mockMvc.perform(
                 delete(path)
-                    .header("Authorization", "Bearer " + accessToken)
+                    .header("Authorization", "Bearer " + accessToken).with(csrf())
                     .accept(MediaType.APPLICATION_JSON_UTF8));
     }
 
@@ -454,7 +455,7 @@ public class ContentSettingsControllerIntegrationTest extends AbstractController
 
         return mockMvc.perform(
                 put(path)
-                        .header("Authorization", "Bearer " + accessToken)
+                        .header("Authorization", "Bearer " + accessToken).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(mapper.writeValueAsString(request))
                         .accept(MediaType.APPLICATION_JSON_UTF8));
@@ -469,7 +470,7 @@ public class ContentSettingsControllerIntegrationTest extends AbstractController
 
         return mockMvc.perform(
                 post(path)
-                        .header("Authorization", "Bearer " + accessToken)
+                        .header("Authorization", "Bearer " + accessToken).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON_UTF8));
     }
@@ -483,7 +484,7 @@ public class ContentSettingsControllerIntegrationTest extends AbstractController
 
         return mockMvc.perform(
                 post(path)
-                        .header("Authorization", "Bearer " + accessToken)
+                        .header("Authorization", "Bearer " + accessToken).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON_UTF8));
     }

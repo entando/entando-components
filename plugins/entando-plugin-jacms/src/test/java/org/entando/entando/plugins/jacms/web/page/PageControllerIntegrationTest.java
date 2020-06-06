@@ -20,6 +20,7 @@ import org.junit.Test;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -36,7 +37,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
                 .perform(get("/pages/{code}", "pagina_11")
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$.payload.code", is("pagina_11")));
@@ -49,7 +50,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
                 .perform(get("/pages/{code}/references/{manager}", "pagina_11", "jacmsContentManager")
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$.metaData.totalItems", is(2)));

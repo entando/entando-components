@@ -17,6 +17,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.isEmptyOrNullString;
 import static org.hamcrest.Matchers.startsWith;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
@@ -1519,7 +1520,7 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
         String accessToken = mockOAuthInterceptor(user);
         return mockMvc.perform(
                 get(path)
-                    .header("Authorization", "Bearer " + accessToken));
+                    .header("Authorization", "Bearer " + accessToken).with(csrf()));
     }
 
     private ResultActions performGetResourcesFolder(UserDetails user, String folderPath) throws Exception {
@@ -1536,7 +1537,7 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
         String accessToken = mockOAuthInterceptor(user);
         return mockMvc.perform(
                 get(path)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
     }
 
     private ResultActions performDeleteResource(UserDetails user, String type, String resourceId) throws Exception {
@@ -1549,7 +1550,7 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
         String accessToken = mockOAuthInterceptor(user);
         return mockMvc.perform(
                 delete(path)
-                    .header("Authorization", "Bearer " + accessToken));
+                    .header("Authorization", "Bearer " + accessToken).with(csrf()));
     }
 
     private ResultActions performCreateResource(UserDetails user, String type, String group, List<String> categories, String folderPath, String mimeType) throws Exception {
@@ -1591,7 +1592,7 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
         MockHttpServletRequestBuilder request = multipart(urlPath)
                 .file(file)
                 .param("metadata", MAPPER.writeValueAsString(resourceRequest))
-                .header("Authorization", "Bearer " + accessToken);
+                .header("Authorization", "Bearer " + accessToken).with(csrf());
 
         return mockMvc.perform(request);
     }
@@ -1635,7 +1636,7 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
         request.param("metadata", MAPPER.writeValueAsString(resourceRequest));
 
         if (user != null) {
-            request.header("Authorization", "Bearer " + mockOAuthInterceptor(user));
+            request.header("Authorization", "Bearer " + mockOAuthInterceptor(user)).with(csrf());
         }
 
         if (useFile) {
@@ -1658,7 +1659,7 @@ public class ResourcesControllerIntegrationTest extends AbstractControllerIntegr
         }
 
         return mockMvc.perform(post(path)
-                .header("Authorization", "Bearer " + mockOAuthInterceptor(user)));
+                .header("Authorization", "Bearer " + mockOAuthInterceptor(user)).with(csrf()));
     }
 
 }

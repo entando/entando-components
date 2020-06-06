@@ -29,6 +29,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -70,7 +71,7 @@ public class ConfigControllerUnitTest extends AbstractControllerTest {
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc.perform(
                 get("/kiebpm/serverConfigs")
-                        .header("Authorization", "Bearer " + accessToken)
+                        .header("Authorization", "Bearer " + accessToken).with(csrf())
         );
 
         result.andExpect(status().isOk());
@@ -88,7 +89,7 @@ public class ConfigControllerUnitTest extends AbstractControllerTest {
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc.perform(
                 get("/kiebpm/serverConfigs/testConfigCode")
-                        .header("Authorization", "Bearer " + accessToken)
+                        .header("Authorization", "Bearer " + accessToken).with(csrf())
         );
 
         result.andExpect(status().isOk());
@@ -113,7 +114,7 @@ public class ConfigControllerUnitTest extends AbstractControllerTest {
                 post("/kiebpm/serverConfigs")
                         .content(payload)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
         Mockito.verify(kieConfigService, Mockito.times(1)).addConfig(Mockito.any(), Mockito.any());
 
@@ -135,7 +136,7 @@ public class ConfigControllerUnitTest extends AbstractControllerTest {
                 put("/kiebpm/serverConfigs/test")
                         .content(payload)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
         Mockito.verify(kieConfigService, Mockito.times(1)).updateConfig(Mockito.any(), Mockito.any());
 
@@ -151,7 +152,7 @@ public class ConfigControllerUnitTest extends AbstractControllerTest {
 
         ResultActions result = mockMvc.perform(
                 delete("/kiebpm/serverConfigs/test")
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
         Mockito.verify(kieConfigService, Mockito.times(1)).removeConfig("test");
         String response = result.andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
@@ -172,7 +173,7 @@ public class ConfigControllerUnitTest extends AbstractControllerTest {
                 post("/kiebpm/testServerConfigs")
                         .content(payload)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
         Mockito.verify(kieConfigService, Mockito.times(1)).testServerConfigs(Mockito.any());
         String response = result.andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
@@ -192,7 +193,7 @@ public class ConfigControllerUnitTest extends AbstractControllerTest {
                 post("/kiebpm/testAllServerConfigs")
                         .content(payload)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
         Mockito.verify(kieConfigService, Mockito.times(1)).testAllServerConfigs();
         String response = result.andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
@@ -207,7 +208,7 @@ public class ConfigControllerUnitTest extends AbstractControllerTest {
 
         ResultActions result = mockMvc.perform(
                 get("/kiebpm/serverConfigs/1/deploymentUnits")
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
         Mockito.verify(kieFormManager, Mockito.times(1)).getContainersList(any());
         String response = result.andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
@@ -226,7 +227,7 @@ public class ConfigControllerUnitTest extends AbstractControllerTest {
 
         ResultActions result = mockMvc.perform(
                 get("/kiebpm/serverConfigs/1/caseDefinitions/test")
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
         Mockito.verify(caseManager, Mockito.times(1)).getCasesDefinitions(any(), eq("test"));
         String response = result.andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
@@ -241,7 +242,7 @@ public class ConfigControllerUnitTest extends AbstractControllerTest {
 
         ResultActions result = mockMvc.perform(
                 get("/kiebpm/serverConfigs/1/processList")
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
         Mockito.verify(kieFormManager, Mockito.times(1)).getProcessDefinitionsList(any());
         String response = result.andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
@@ -258,7 +259,7 @@ public class ConfigControllerUnitTest extends AbstractControllerTest {
 
         ResultActions result = mockMvc.perform(
                 get("/kiebpm/datatableWidget/{configId}", "1")
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
         String response = result.andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertNotNull(response);
@@ -288,7 +289,7 @@ public class ConfigControllerUnitTest extends AbstractControllerTest {
                 put("/kiebpm/datatableWidget/{configId}", "1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mockJsonResult)
-                        .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken).with(csrf()));
 
         String response = result.andReturn().getResponse().getContentAsString();
         result.andExpect(status().isBadRequest());

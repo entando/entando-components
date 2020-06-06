@@ -25,6 +25,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -185,7 +186,7 @@ public class ContentModelControllerUnitTest extends AbstractControllerTest {
 
         requestBuilder = requestBuilder
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header("Authorization", "Bearer " + accessToken);
+                .header("Authorization", "Bearer " + accessToken).with(csrf());
 
         if (payload != null) {
             requestBuilder = requestBuilder.content(payload);
