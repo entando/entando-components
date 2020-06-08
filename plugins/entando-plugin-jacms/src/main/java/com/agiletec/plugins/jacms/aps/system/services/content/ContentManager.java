@@ -416,13 +416,22 @@ public class ContentManager extends ApsEntityManager
     @CacheEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME,
             key = "T(com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants).CONTENT_CACHE_PREFIX.concat(#content.id)", condition = "#content.id != null")
     @CacheInfoEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME,
-            groups = "T(com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager).getContentCacheGroupsToEvictCsv(#content.id, #content.typeCode)")
+            groups = "T(com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager).getContentCacheGroupsToEvictCsv(#content.id)")
     public void deleteContent(Content content) throws ApsSystemException {
+        this.deleteContent(content.getId());
+    }
+
+    @Override
+    @CacheEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME,
+            key = "T(com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants).CONTENT_CACHE_PREFIX.concat(#contentId)", condition = "#contentId != null")
+    @CacheInfoEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME,
+            groups = "T(com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager).getContentCacheGroupsToEvictCsv(#contentId)")
+    public void deleteContent(String contentId) throws ApsSystemException {
         try {
-            this.getContentDAO().deleteEntity(content.getId());
+            this.getContentDAO().deleteEntity(contentId);
         } catch (Throwable t) {
-            logger.error("Error while deleting content {}", content.getId(), t);
-            throw new ApsSystemException("Error while deleting content " + content.getId(), t);
+            logger.error("Error while deleting content {}", contentId, t);
+            throw new ApsSystemException("Error while deleting content " + contentId, t);
         }
     }
 
