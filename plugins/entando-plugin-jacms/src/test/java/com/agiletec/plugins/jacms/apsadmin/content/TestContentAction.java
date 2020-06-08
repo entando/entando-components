@@ -30,12 +30,14 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.Li
 import com.agiletec.plugins.jacms.apsadmin.content.util.AbstractBaseTestContentAction;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * @author E.Santoboni
  */
 public class TestContentAction extends AbstractBaseTestContentAction {
-
+    
     public void testEditForAdminUser() throws Throwable {
         this.testSuccesfullEdit("ART1", "admin");
         this.testSuccesfullEdit("RAH101", "admin");
@@ -201,7 +203,7 @@ public class TestContentAction extends AbstractBaseTestContentAction {
             this.removeTestContent(insertedDescr);
         }
     }
-
+    
     /*
 	 * We test, among other things the CheckBox attribute
      */
@@ -333,8 +335,44 @@ public class TestContentAction extends AbstractBaseTestContentAction {
             this.removeTestContent(insertedDescr);
         }
     }
-
+    
     public void testValidate_6() throws Throwable {
+        String contentTypeCode = "RAH";
+        String contentOnSessionMarker = this.extractSessionMarker(contentTypeCode, ApsAdminSystemConstants.ADD);
+        String longDescr = IntStream.range(0, 25).mapToObj(i -> "1234567890 ").collect(Collectors.joining());
+        try {
+            String result = this.executeCreateNewVoid(contentTypeCode, "descr",
+                    Content.STATUS_DRAFT, Group.FREE_GROUP_NAME, "admin");
+            assertEquals(Action.SUCCESS, result);
+            Content contentOnSession = this.getContentOnEdit(contentOnSessionMarker);
+            assertNotNull(contentOnSession);
+
+            this.initContentAction("/do/jacms/Content", "saveAndContinue", contentOnSessionMarker);
+            this.setUserOnSession("admin");
+            this.addParameter("descr", longDescr);
+
+            result = this.executeAction();
+            assertEquals(Action.SUCCESS, result);
+
+            ActionSupport action = this.getAction();
+            Map<String, List<String>> fieldErros = action.getFieldErrors();
+            assertEquals(1, fieldErros.size());
+            List<String> descrFieldErrors = fieldErros.get("descr");
+            assertEquals(1, descrFieldErrors.size());
+
+            EntitySearchFilter filter1 = new EntitySearchFilter(IContentManager.CONTENT_MODIFY_DATE_FILTER_KEY, false);
+            filter1.setOrder(EntitySearchFilter.DESC_ORDER);
+            EntitySearchFilter filter2 = new EntitySearchFilter(IContentManager.CONTENT_DESCR_FILTER_KEY, false, longDescr, false);
+            EntitySearchFilter[] filters = {filter1, filter2};
+            List<String> contentsId = this.getContentManager().searchId(filters);
+            assertEquals(0, contentsId.size());
+        } catch (Throwable t) {
+            this.removeTestContent(longDescr);
+            throw t;
+        }
+    }
+    
+    public void testValidate_7() throws Throwable {
         String contentId = "ART112";
         String contentOnSessionMarker = this.extractSessionMarker(contentId, ApsAdminSystemConstants.EDIT);
         try {
@@ -546,7 +584,7 @@ public class TestContentAction extends AbstractBaseTestContentAction {
             throw t;
         }
     }
-
+    
     private void removeTestContent(String descr) throws Throwable {
         EntitySearchFilter filter1 = new EntitySearchFilter(IContentManager.CONTENT_MODIFY_DATE_FILTER_KEY, false);
         filter1.setOrder(EntitySearchFilter.DESC_ORDER);
@@ -560,7 +598,7 @@ public class TestContentAction extends AbstractBaseTestContentAction {
             this.getContentManager().deleteContent(extractContent);
         }
     }
-
+    
     public void testSuspendReferencedContent() throws Throwable {
         String contentId = "ART1";
         Content master = this.getContentManager().loadContent(contentId, false);
@@ -643,5 +681,5 @@ public class TestContentAction extends AbstractBaseTestContentAction {
         this.addParameter("copyPublicVersion", String.valueOf(copyPublicVersion));
         return this.executeAction();
     }
-
+    
 }
