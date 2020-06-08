@@ -203,6 +203,9 @@ public class ContentAction extends AbstractContentAction {
                 String descr = currentContent.getDescription();
                 if (StringUtils.isEmpty(descr)) {
                     this.addFieldError("descr", this.getText("error.content.descr.required"));
+                } else if (descr.length() > 250) {
+                    String[] args = {String.valueOf(250)};
+                    this.addFieldError("descr", this.getText("error.content.descr.wrongMaxLength", args));
                 } else if (StringUtils.isEmpty(currentContent.getMainGroup())) {
                     this.addFieldError("mainGroup", this.getText("error.content.mainGroup.required"));
                 } else {
