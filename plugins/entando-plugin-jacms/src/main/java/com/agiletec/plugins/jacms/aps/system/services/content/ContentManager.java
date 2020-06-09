@@ -184,7 +184,7 @@ public class ContentManager extends ApsEntityManager
                     content.setMainGroup(contentVo.getMainGroupCode());
                     content.setSync(contentVo.isSync());
                     content.setStatus(contentVo.getStatus());
-                    if (null == content.getVersion()) {
+                    if (null != contentVo.getVersion() && !onLine) {
                         content.setVersion(contentVo.getVersion());
                     }
                     if (null == content.getFirstEditor()) {

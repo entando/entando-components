@@ -40,7 +40,9 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentRecordVO;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SmallContentType;
 import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
@@ -102,9 +104,25 @@ public class VersionAction extends AbstractContentAction {
 					this.getTrashedResourceManager().restoreResource(resourceId);
 				}
 			}
-			content = this.getVersioningManager().getContent(contentVersion);
+            content = this.getVersioningManager().getContent(contentVersion);
+            String lastVersionNumber = null;
+            ContentRecordVO currentRecordVo = this.getContentManager().loadContentVO(contentVersion.getContentId());
+            if (null != currentRecordVo) {
+                lastVersionNumber = currentRecordVo.getVersion();
+            } else {
+                ContentVersion lastVersion = this.getVersioningManager().getLastVersion(contentVersion.getContentId());
+                lastVersionNumber = lastVersion.getVersion();
+            }
+            String[] item = lastVersionNumber.split("\\.");
+            int workVersion = Integer.parseInt(item[1]);
+            int newWorkVersion = workVersion + 1;
+            String newVersionId = item[0] + "." + newWorkVersion;
+            content.setVersion(newVersionId);
+            String marker = AbstractContentAction.buildContentOnSessionMarker(contentVersion.getContentId(), 
+                    contentVersion.getContentType(), ApsAdminSystemConstants.EDIT);
+            this.setContentOnSessionMarker(marker);
 			this.getRequest().getSession()
-					.setAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + super.getContentOnSessionMarker(), content);
+					.setAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + marker, content);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "recover");
 			return FAILURE;
@@ -225,7 +243,7 @@ public class VersionAction extends AbstractContentAction {
 					resourceInterface = this.getResourceManager().loadResource(id);
 					if (null != resourceInterface) {
 						if ( null == archivedResources) {
-							archivedResources = new ArrayList<String>();
+							archivedResources = new ArrayList<>();
 						}
 						archivedResources.add(id);
 					}

@@ -21,6 +21,7 @@
  */
 package com.agiletec.plugins.jpversioning.apsadmin.versioning;
 
+import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -30,9 +31,13 @@ import com.agiletec.plugins.jpversioning.util.JpversioningTestHelper;
 
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
+import com.agiletec.plugins.jacms.apsadmin.content.ContentActionConstants;
+import com.agiletec.plugins.jacms.apsadmin.content.AbstractContentAction;
+import com.agiletec.plugins.jpversioning.aps.system.JpversioningSystemConstants;
 import com.agiletec.plugins.jpversioning.aps.system.services.versioning.ContentVersion;
-import com.agiletec.plugins.jpversioning.apsadmin.versioning.VersionAction;
+import com.agiletec.plugins.jpversioning.aps.system.services.versioning.IVersioningManager;
 import com.opensymphony.xwork2.Action;
 
 /**
@@ -87,6 +92,36 @@ public class TestVersionAction extends ApsAdminPluginBaseTestCase {
 		String result = this.executeEntryRecover("admin", 3);
 		assertEquals(Action.SUCCESS, result);
 	}
+    
+    public void testRecoverAction() throws Throwable {
+        String contentId = "ART187";
+        try {
+            Content contentToVersion = this._contentManager.loadContent(contentId, false);
+            for (int i = 0; i < 15; i++) {
+                this._contentManager.saveContent(contentToVersion);
+                if (i % 4 == 0) {
+                    this._contentManager.insertOnLineContent(contentToVersion);
+                }
+            }
+            List<Long> versions = this.versioningManager.getVersions(contentId);
+            assertTrue(versions.size() > 13);
+            ContentVersion versionToRestore = this.versioningManager.getVersion(versions.get(7));
+            assertEquals("3.4", versionToRestore.getVersion());
+            Content currentWorkContent = this._contentManager.loadContent(contentId, false);
+            assertEquals("5.2", currentWorkContent.getVersion());
+            assertEquals("5.0", this._contentManager.loadContent(contentId, true).getVersion());
+            String result = this.executeRecover("admin", versions.get(7));
+            assertEquals(Action.SUCCESS, result);
+            String marker = AbstractContentAction.buildContentOnSessionMarker(contentId, "ART", ApsAdminSystemConstants.EDIT);
+            Content contentOnSession = (Content) this.getRequest().getSession().getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + marker);
+            assertNotNull(contentOnSession);
+            assertEquals("5.3", contentOnSession.getVersion());
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            this._helper.cleanContentVersions();
+        }
+    }
 	
 	public String executeHistory(String username, String contentId) throws Throwable {
 		this.setUserOnSession(username);
@@ -138,7 +173,8 @@ public class TestVersionAction extends ApsAdminPluginBaseTestCase {
 	
 	private void init() {
 		this._contentManager = (IContentManager) this.getService(JacmsSystemConstants.CONTENT_MANAGER);
-		this._resourceManager = (IResourceManager) this.getService(JacmsSystemConstants.RESOURCE_MANAGER);
+		//this._resourceManager = (IResourceManager) this.getService(JacmsSystemConstants.RESOURCE_MANAGER);
+        this.versioningManager = (IVersioningManager) this.getService(JpversioningSystemConstants.VERSIONING_MANAGER);
 		DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
 		this._helper = new JpversioningTestHelper(dataSource, this.getApplicationContext());
 	}
@@ -146,6 +182,7 @@ public class TestVersionAction extends ApsAdminPluginBaseTestCase {
 	private JpversioningTestHelper _helper;
 	
 	private IContentManager _contentManager;
-	private IResourceManager _resourceManager;
+    private IVersioningManager versioningManager;
+	//private IResourceManager _resourceManager;
 	
 }
