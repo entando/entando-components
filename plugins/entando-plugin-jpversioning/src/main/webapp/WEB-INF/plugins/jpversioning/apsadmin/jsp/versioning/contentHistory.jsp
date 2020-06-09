@@ -35,58 +35,61 @@
 
 <br/>
 
-<div id="jpcontentinspection_info">
-    <table class="table table-striped table-bordered table-hover no-mb">
-        <s:set var="contentGroup" value="%{getGroup(contentVersion.getMainGroup())}" />
-        <thead>
-        <tr>
-            <th class="text-nowrap"><s:text name="label.description" /></th>
-            <th class="text-center text-nowrap"><s:text name="jpversioning.label.version.date" /></th>
-            <th class="text-center text-nowrap"><s:text name="jpversioning.label.author" /></th>
-            <th class="text-center text-nowrap"><s:text name="jpversioning.label.version" /></th>
-            <th class="text-center text-nowrap"><s:text name="jpversioning.label.status" /></th>
-            <th class="text-center text-nowrap"><s:text name="label.ownerGroup" /></th>
-            <th class="text-center text-nowrap"><s:text name="label.viewgroups" /></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td><s:property value="%{contentVersion.descr}" /></td>
-            <td class="text-center col-sm-2"><code><s:date name="%{contentVersion.versionDate}" format="dd/MM/yyyy HH:mm" /></code></td>
-            <td class="text-center"><code><s:property value="%{contentVersion.username}" /></code></td>
-            <td class="text-center col-sm-2">
-                <code><s:property value="%{contentVersion.version}" />&#32;(<s:date name="%{contentVersion.versionDate}" format="dd/MM/yyyy" />)</code>
-            </td>
-            <td class="text-center col-sm-1">
-                <s:if test="%{#contentVersion.status == 'PUBLIC'}">
-                    <s:set var="iconName">check</s:set>
-                    <s:set var="textVariant">success</s:set>
-                    <s:set var="isOnlineStatus" value="%{getText('label.yes')}" />
-                </s:if>
-                <s:else>
-                    <s:set var="iconName">pause</s:set>
-                    <s:set var="textVariant">warning</s:set>
-                    <s:set var="isOnlineStatus" value="%{getText('label.no')}" />
-                </s:else>
-                <span class="icon fa fa-<s:property value="iconName" /> text-<s:property value="textVariant" />" title="<s:property value="isOnlineStatus" />"></span>
-                <span class="sr-only"><s:property value="isOnlineStatus" /></span>
-            </td>
-            <td class="text-center">x<s:property value="%{#contentGroup}" />x</td>
-            <td class="text-center">
-                <s:if test="%{contentVersion.groups.size() <= 0}">
-                    <span class="text-muted"><s:text name="noExtraGroup" /></span>
-                </s:if>
-                <s:if test="%{contentVersion.groups.size() > 0}">
-                    <s:iterator value="contentVersion.groups" var="groupName">
-                        <s:property value="%{getGroupsMap()[#groupName].getDescr()}"/>&#32;
-                    </s:iterator>
-                </s:if>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-
+<s:set var="currentContentVar" value="%{getCurrentContent(contentId)}" />
+<s:if test="null != #currentContentVar" >
+    <div id="jpcontentinspection_info">
+        <table class="table table-striped table-bordered table-hover no-mb">
+            <s:set var="contentGroup" value="%{getGroup(#currentContentVar.getMainGroup())}" />
+            <thead>
+                <tr>
+                    <th class="text-nowrap"><s:text name="label.description" /></th>
+                    <th class="text-center text-nowrap"><s:text name="jpversioning.label.version.date" /></th>
+                    <th class="text-center text-nowrap"><s:text name="jpversioning.label.author" /></th>
+                    <th class="text-center text-nowrap"><s:text name="jpversioning.label.version" /></th>
+                    <th class="text-center text-nowrap"><s:text name="jpversioning.label.status" /></th>
+                    <th class="text-center text-nowrap"><s:text name="label.ownerGroup" /></th>
+                    <th class="text-center text-nowrap"><s:text name="label.viewgroups" /></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><s:property value="%{#currentContentVar.descr}" /></td>
+                    <td class="text-center col-sm-2"><code><s:date name="%{#currentContentVar.lastModified}" format="dd/MM/yyyy HH:mm" /></code></td>
+                    <td class="text-center"><code><s:property value="%{#currentContentVar.lastEditor}" /></code></td>
+                    <td class="text-center col-sm-2">
+                        <code><s:property value="%{#currentContentVar.version}" /></code>
+                    </td>
+                    <td class="text-center col-sm-1">
+                        <s:if test="%{#currentContentVar.onLine && #currentContentVar.sync}">
+                            <s:set value="%{getText('name.contentStatus.' + #content.status)}" var="statusLabel" />
+                            <span class="fa fa-circle green" aria-hidden="true" title="${statusLabel}"></span>
+                        </s:if>
+                        <s:elseif test="%{#currentContentVar.onLine && !(#currentContentVar.sync)}">
+                            <s:set var="statusLabel"><s:property value="%{getText('name.contentStatus.' + 'PUBLIC')}" />&#32;&ne;&#32;<s:property value="%{getText('name.contentStatus.' + 'DRAFT')}" />
+                            </s:set>
+                            <span class="fa fa-circle yellow" aria-hidden="true" title="${statusLabel}"></span>
+                        </s:elseif>
+                        <s:else>
+                            <s:set var="statusLabel" value="%{getText('name.contentStatus.' + 'OFFLINE')}" />
+                            <span class="fa fa-circle gray" aria-hidden="true" title="${statusLabel}"></span>
+                        </s:else>
+                    </td>
+                    <td class="text-center"><s:property value="%{#contentGroup.descr}" /></td>
+                    <td class="text-center">
+                        <s:if test="%{#currentContentVar.groups.size() <= 0}">
+                            <span class="text-muted"><s:text name="noExtraGroup" /></span>
+                        </s:if>
+                        <s:if test="%{#currentContentVar.groups.size() > 0}">
+                            <s:iterator value="#currentContentVar.groups" var="groupName">
+                                <s:property value="%{getGroupsMap()[#groupName].getDescr()}"/>&#32;
+                            </s:iterator>
+                        </s:if>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</s:if>
 <br />
 
 <s:form action="history" >
@@ -99,7 +102,6 @@
             <s:hidden name="backId" />
             <s:hidden name="fromEdit" />
         </p>
-
         <div class="col-xs-12 no-padding">
             <table class="table table-striped table-bordered table-hover no-mb">
                 <thead>
@@ -112,7 +114,6 @@
                         <th class="text-center col-sm-1"><s:text name="label.actions" /></th>
                     </tr>
                 </thead>
-
                 <tbody>
                     <s:iterator var="id" status="statusIndex">
                         <s:set var="contentVersion" value="%{getContentVersion(#id)}" />
@@ -131,14 +132,19 @@
                             <td class="text-center col-sm-2"><code><s:date name="#contentVersion.versionDate" format="dd/MM/yyyy HH:mm" /></code> </td>
                             <td class="text-center"><s:property value="#contentVersion.username" /></td>
                             <td class="text-center">
-                                <s:if test="(#contentVersion.status == 'PUBLIC')">
-                                    <s:set var="isOnlineStatus" value="%{getText('label.yes')}" />
-                                    <span class="fa fa-circle green" aria-hidden="true" title="${isOnlineStatus}"></span>
+                                <s:if test="%{#contentVersion.version.endsWith('.0')}">
+                                    <s:set value="%{getText('name.contentStatus.' + #content.status)}" var="statusLabel" />
+                                    <span class="fa fa-circle green" aria-hidden="true" title="${statusLabel}"></span>
                                 </s:if>
-                                <s:if test="(#contentVersion.status != 'PUBLIC')">
-                                    <s:set var="isOnlineStatus" value="%{getText('label.no')}" />
-                                    <span class="fa fa-circle yellow" aria-hidden="true" title="${isOnlineStatus}"></span>
-                                </s:if>
+                                <s:elseif test="%{#contentVersion.onlineVersion == 0}">
+                                    <s:set var="statusLabel" value="%{getText('name.contentStatus.' + 'OFFLINE')}" />
+                                    <span class="fa fa-circle gray" aria-hidden="true" title="${statusLabel}"></span>
+                                </s:elseif>
+                                <s:else>
+                                    <s:set var="statusLabel"><s:property value="%{getText('name.contentStatus.' + 'PUBLIC')}" />&#32;&ne;&#32;<s:property value="%{getText('name.contentStatus.' + 'DRAFT')}" />
+                                    </s:set>
+                                    <span class="fa fa-circle yellow" aria-hidden="true" title="${statusLabel}"></span>
+                                </s:else>
                             </td>
                             <td class="text-center">
                                 <div class="dropdown dropdown-kebab-pf">
@@ -170,13 +176,13 @@
                 </tbody>
             </table>
         </div>
-                    <div class="content-view-pf-pagination clearfix">
-                        <div class="form-group">
-                            <span><s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" /></span>
-                            <div class="mt-5">
-                                <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formTable.jsp" />
-                            </div>
-                        </div>
-                    </div>
+        <div class="content-view-pf-pagination clearfix">
+            <div class="form-group">
+                <span><s:include value="/WEB-INF/apsadmin/jsp/common/inc/pagerInfo.jsp" /></span>
+                <div class="mt-5">
+                    <s:include value="/WEB-INF/apsadmin/jsp/common/inc/pager_formTable.jsp" />
+                </div>
+            </div>
+        </div>
     </wpsa:subset>
 </s:form>

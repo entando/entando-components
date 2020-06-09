@@ -129,6 +129,17 @@ public class VersionAction extends AbstractContentAction {
 		}
 		return SUCCESS;
 	}
+    
+    public Content getCurrentContent(String contentId) {
+        Content current = null;
+		try {
+			current = this.getContentManager().loadContent(contentId, false);
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "getCurrentContent");
+			throw new RuntimeException("Errorextracting current Content " + contentId, t);
+		}
+		return current;
+    }
 	
 	public List<Long> getContentVersions() {
 		List<Long> versions = null;
