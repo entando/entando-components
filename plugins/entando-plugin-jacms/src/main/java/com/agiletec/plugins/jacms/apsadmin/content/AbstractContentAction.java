@@ -141,16 +141,20 @@ public abstract class AbstractContentAction extends BaseAction {
 	}
 	
 	public static String buildContentOnSessionMarker(Content content, int operation) {
+		return buildContentOnSessionMarker(content.getId(), content.getTypeCode(), operation);
+	}
+	
+	public static String buildContentOnSessionMarker(String contentId, String typeCode, int operation) {
 		String marker = null;
 		switch (operation) {
 			case ApsAdminSystemConstants.ADD:
-				marker = content.getTypeCode() + "_newContent";
+				marker = typeCode + "_newContent";
 				break;
 			case ApsAdminSystemConstants.EDIT:
-				marker = content.getTypeCode() + "_editContent_" + content.getId();
+				marker = typeCode + "_editContent_" + contentId;
 				break;
 			case ApsAdminSystemConstants.PASTE:
-				marker = content.getTypeCode() + "_pasteContent_" + content.getId();
+				marker = typeCode + "_pasteContent_" + contentId;
 				break;
 			default:
 				throw new RuntimeException("Unrecognized operation : " + operation);
