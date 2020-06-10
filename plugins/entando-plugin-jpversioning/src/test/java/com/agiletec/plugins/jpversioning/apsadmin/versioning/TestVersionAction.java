@@ -32,7 +32,6 @@ import com.agiletec.plugins.jpversioning.util.JpversioningTestHelper;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
-import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
 import com.agiletec.plugins.jacms.apsadmin.content.ContentActionConstants;
 import com.agiletec.plugins.jacms.apsadmin.content.AbstractContentAction;
 import com.agiletec.plugins.jpversioning.aps.system.JpversioningSystemConstants;
@@ -49,12 +48,12 @@ public class TestVersionAction extends ApsAdminPluginBaseTestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		this.init();
-		this._helper.initContentVersions();
+		this.helper.initContentVersions();
     }
 	
 	@Override
 	protected void tearDown() throws Exception {
-		this._helper.cleanContentVersions();
+		this.helper.cleanContentVersions();
 		super.tearDown();
 	}
 	
@@ -85,7 +84,6 @@ public class TestVersionAction extends ApsAdminPluginBaseTestCase {
 	public void testPreview() throws Throwable {
 		String result = this.executePreview("admin", 3);
 		assertEquals(Action.SUCCESS, result);
-		// TODO contenuto in sessione?
 	}
 	
 	public void testEntryRecover() throws Throwable {
@@ -96,20 +94,20 @@ public class TestVersionAction extends ApsAdminPluginBaseTestCase {
     public void testRecoverAction() throws Throwable {
         String contentId = "ART187";
         try {
-            Content contentToVersion = this._contentManager.loadContent(contentId, false);
+            Content contentToVersion = this.contentManager.loadContent(contentId, false);
             for (int i = 0; i < 15; i++) {
-                this._contentManager.saveContent(contentToVersion);
+                this.contentManager.saveContent(contentToVersion);
                 if (i % 4 == 0) {
-                    this._contentManager.insertOnLineContent(contentToVersion);
+                    this.contentManager.insertOnLineContent(contentToVersion);
                 }
             }
             List<Long> versions = this.versioningManager.getVersions(contentId);
             assertTrue(versions.size() > 13);
             ContentVersion versionToRestore = this.versioningManager.getVersion(versions.get(7));
             assertEquals("3.4", versionToRestore.getVersion());
-            Content currentWorkContent = this._contentManager.loadContent(contentId, false);
+            Content currentWorkContent = this.contentManager.loadContent(contentId, false);
             assertEquals("5.2", currentWorkContent.getVersion());
-            assertEquals("5.0", this._contentManager.loadContent(contentId, true).getVersion());
+            assertEquals("5.0", this.contentManager.loadContent(contentId, true).getVersion());
             String result = this.executeRecover("admin", versions.get(7));
             assertEquals(Action.SUCCESS, result);
             String marker = AbstractContentAction.buildContentOnSessionMarker(contentId, "ART", ApsAdminSystemConstants.EDIT);
@@ -119,7 +117,7 @@ public class TestVersionAction extends ApsAdminPluginBaseTestCase {
         } catch (Exception e) {
             throw e;
         } finally {
-            this._helper.cleanContentVersions();
+            this.helper.cleanContentVersions();
         }
     }
 	
@@ -172,17 +170,15 @@ public class TestVersionAction extends ApsAdminPluginBaseTestCase {
 	}
 	
 	private void init() {
-		this._contentManager = (IContentManager) this.getService(JacmsSystemConstants.CONTENT_MANAGER);
-		//this._resourceManager = (IResourceManager) this.getService(JacmsSystemConstants.RESOURCE_MANAGER);
+		this.contentManager = (IContentManager) this.getService(JacmsSystemConstants.CONTENT_MANAGER);
         this.versioningManager = (IVersioningManager) this.getService(JpversioningSystemConstants.VERSIONING_MANAGER);
 		DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
-		this._helper = new JpversioningTestHelper(dataSource, this.getApplicationContext());
+		this.helper = new JpversioningTestHelper(dataSource, this.getApplicationContext());
 	}
 	
-	private JpversioningTestHelper _helper;
+	private JpversioningTestHelper helper;
 	
-	private IContentManager _contentManager;
+	private IContentManager contentManager;
     private IVersioningManager versioningManager;
-	//private IResourceManager _resourceManager;
 	
 }
