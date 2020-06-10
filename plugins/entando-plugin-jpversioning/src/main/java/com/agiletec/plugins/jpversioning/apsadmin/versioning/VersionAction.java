@@ -182,8 +182,8 @@ public class VersionAction extends AbstractContentAction {
             try {
                 this.loadTrashResources();
             } catch (Exception e) {
-                logger.error("Error loading trashed resources " + this.getVersionId(), e);
-                throw new RuntimeException("Errore in recupero id risorse cestinate per la versione contenuto corrente " + getVersionId(), e);
+                logger.error("Error loading trashed resources for content with version " + this.getVersionId(), e);
+                throw new RuntimeException("Error loading trashed resources for content with version " + getVersionId(), e);
             }
         }
         return this._trashedResources;
@@ -194,8 +194,8 @@ public class VersionAction extends AbstractContentAction {
             try {
                 this.loadTrashResources();
             } catch (Exception e) {
-                logger.error("Error loading trashed resources " + this.getVersionId(), e);
-                throw new RuntimeException("Errore in recupero id risorse rimosse dal cestino (non più ripristinabili) per la versione contenuto corrente " + getVersionId(), e);
+                logger.error("Error loading trashed resources for content with version " + this.getVersionId(), e);
+                throw new RuntimeException("Error loading trashed resources for content with version " + getVersionId(), e);
             }
         }
         return this._trashRemovedResources;
@@ -235,8 +235,8 @@ public class VersionAction extends AbstractContentAction {
 					trashRemovedResources.add(id);
 				}
 			} catch (Throwable t) {
-				logger.error("Errore in verifica risorsa rimossa definitivamente da cestino, id " + id, t);
-				throw new RuntimeException("Errore in verifica risorsa rimossa definitivamente da cestino, id " + id, t);
+				logger.error("Error checking resource permanently removed, id " + id, t);
+				throw new RuntimeException("Error checking resource permanently removed, id " + id, t);
 			}
 		}
 		return trashRemovedResources;
@@ -262,8 +262,8 @@ public class VersionAction extends AbstractContentAction {
 						archivedResources.add(id);
 					}
 				} catch (Throwable t) {
-                    logger.error("Errore in verifica risorsa " + id, t);
-					throw new RuntimeException("Errore in verifica risorsa in archivio, id " + id, t);
+                    logger.error("Error checking resource " + id, t);
+					throw new RuntimeException("Error checking resource " + id, t);
 				}
 			}
 		}
@@ -282,13 +282,13 @@ public class VersionAction extends AbstractContentAction {
 					resourceInterface = this.getTrashedResourceManager().loadTrashedResource(id);
 					if (null != resourceInterface) {
 						if (null == trashedResources) {
-							trashedResources = new ArrayList<String>();
+							trashedResources = new ArrayList<>();
 						}
 						trashedResources.add(id);
 					}
 				} catch (Throwable t) {
-                    logger.error("Errore in verifica risorsa " + id, t);
-					throw new RuntimeException("Errore in verifica risorsa cestinata, id " + id, t);
+                    logger.error("Error checking resource " + id, t);
+					throw new RuntimeException("Error checking resource " + id, t);
 				}
 			}
 		}
@@ -305,7 +305,7 @@ public class VersionAction extends AbstractContentAction {
 			Node node = listaNodiAttributi.item(i);
 			NamedNodeMap namedNodeMap = node.getAttributes();
 			if (null == resourcesId) {
-				resourcesId = new ArrayList<String>();
+				resourcesId = new ArrayList<>();
 			}
 			resourcesId.add(namedNodeMap.getNamedItem(RESOURCE_ID).getNodeValue());
 		}
@@ -326,7 +326,7 @@ public class VersionAction extends AbstractContentAction {
 				this._contentVersion = this.getVersioningManager().getVersion(this.getVersionId());
 			} catch (Throwable t) {
                 logger.error("Error extracting content version " + this.getVersionId(), t);
-				throw new RuntimeException("Errore in estrazione versione contenuto, id versione " + this.getVersionId(), t);
+				throw new RuntimeException("Error extracting content version " + this.getVersionId(), t);
 			}
 		}
 		return this._contentVersion;
