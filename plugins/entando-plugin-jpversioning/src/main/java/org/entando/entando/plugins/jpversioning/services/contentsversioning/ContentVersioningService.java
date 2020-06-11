@@ -44,12 +44,11 @@ public class ContentVersioningService {
     public PagedMetadata<ContentVersionDTO> getListContentVersions(String contentId, RestListRequest requestList) {
         logger.debug("LIST listContentVersions for content {} with req {}", contentId, requestList);
         List<ContentVersionDTO> contentVersionDTOs = new ArrayList<>();
-        List<ContentVersion> contentVersions = new ArrayList<>();
+        List<Long> contentVersions = new ArrayList<>();
         try {
-            contentVersions = versioningManager.getVersions(contentId).stream()
-                    .map(v -> getContentVersion(v))
-                    .collect(Collectors.toList());
-            contentVersionDTOs = requestList.getSublist(contentVersions).stream().map(cv -> mapContentVersionToDTO(cv))
+            contentVersions = versioningManager.getVersions(contentId);
+            contentVersionDTOs = requestList.getSublist(contentVersions).stream()
+                    .map(cv -> mapContentVersionToDTO(getContentVersion(cv)))
                     .collect(Collectors.toList());
         } catch (ApsSystemException e) {
             e.printStackTrace();
