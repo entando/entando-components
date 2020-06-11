@@ -116,11 +116,8 @@ public class VersionAction extends AbstractContentAction {
                 ContentVersion lastVersion = this.getVersioningManager().getLastVersion(contentVersion.getContentId());
                 lastVersionNumber = lastVersion.getVersion();
             }
-            String[] item = lastVersionNumber.split("\\.");
-            int workVersion = Integer.parseInt(item[1]);
-            int newWorkVersion = workVersion + 1;
-            String newVersionId = item[0] + "." + newWorkVersion;
-            content.setVersion(newVersionId);
+            content.setVersion(lastVersionNumber);
+            this.getContentManager().saveContent(content);
             String marker = AbstractContentAction.buildContentOnSessionMarker(contentVersion.getContentId(), 
                     contentVersion.getContentType(), ApsAdminSystemConstants.EDIT);
             this.setContentOnSessionMarker(marker);
