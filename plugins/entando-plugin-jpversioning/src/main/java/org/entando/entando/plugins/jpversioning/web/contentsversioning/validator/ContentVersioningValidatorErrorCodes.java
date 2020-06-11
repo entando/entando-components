@@ -14,7 +14,8 @@
 package org.entando.entando.plugins.jpversioning.web.contentsversioning.validator;
 
 public enum ContentVersioningValidatorErrorCodes {
-    ERRCODE_CONTENT_VERSIONING_DOES_NOT_EXIST("1");
+    ERRCODE_CONTENT_VERSIONING_DOES_NOT_EXIST("1"),
+    ERRCODE_CONTENT_VERSIONING_WRONG_CONTENT_ID("2") ;
 
     public final String value;
 

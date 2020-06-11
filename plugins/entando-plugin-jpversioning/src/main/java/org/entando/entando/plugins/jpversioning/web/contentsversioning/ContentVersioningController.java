@@ -14,6 +14,7 @@
 package org.entando.entando.plugins.jpversioning.web.contentsversioning;
 
 import com.agiletec.aps.system.services.role.Permission;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.plugins.jpversioning.services.contentsversioning.ContentVersioningService;
 import org.entando.entando.plugins.jpversioning.web.contentsversioning.model.ContentVersionDTO;
@@ -51,10 +52,28 @@ public class ContentVersioningController implements IContentVersioning {
         logger.debug("REST request - list versions for a content with contentId: {}", contentId);
 
         if (!contentVersioningValidator.contentVersioningExist(contentId)) {
-            throw new ResourceNotFoundException(ContentVersioningValidatorErrorCodes.ERRCODE_CONTENT_VERSIONING_DOES_NOT_EXIST.value, "Content Versions", contentId);
+            throw new ResourceNotFoundException(
+                    ContentVersioningValidatorErrorCodes.ERRCODE_CONTENT_VERSIONING_DOES_NOT_EXIST.value,
+                    "Content Versions", contentId);
         }
 
-        PagedMetadata<ContentVersionDTO> result = contentVersioningService.getListContentVersions(contentId, requestList);
+        PagedMetadata<ContentVersionDTO> result = contentVersioningService
+                .getListContentVersions(contentId, requestList);
         return new ResponseEntity<>(new PagedRestResponse<>(result), HttpStatus.OK);
     }
+
+    @Override
+    @RestAccessControl(permission = Permission.CONTENT_EDITOR)
+    public ResponseEntity<ContentDto> getContentVersion(@PathVariable(value = "contentId") String contentId,
+            @PathVariable(value = "versionId") Long versionId) {
+        logger.debug("REST request - get content version for contentId: {} and versionId", contentId, versionId);
+        if (!contentVersioningValidator.checkContentIdForVersion(contentId, versionId)) {
+            throw new ResourceNotFoundException(
+                    ContentVersioningValidatorErrorCodes.ERRCODE_CONTENT_VERSIONING_WRONG_CONTENT_ID.value,
+                    "Content Version", contentId + " version " + versionId);
+        }
+        ContentDto result = contentVersioningService.getContent(versionId);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 }
