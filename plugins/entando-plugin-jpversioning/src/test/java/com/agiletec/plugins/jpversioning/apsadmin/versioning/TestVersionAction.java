@@ -92,18 +92,24 @@ public class TestVersionAction extends ApsAdminPluginBaseTestCase {
 	}
     
     public void testRecoverAction() throws Throwable {
-        String contentId = "ART187";
+        String contentId = null;
         try {
-            Content contentToVersion = this.contentManager.loadContent(contentId, false);
+            Content contentToVersion = this.contentManager.loadContent("ART187", false);
+            contentToVersion.setId(null);
             for (int i = 0; i < 15; i++) {
+                contentToVersion.setDescription("Version " + i);
                 this.contentManager.saveContent(contentToVersion);
+                contentId = contentToVersion.getId();
                 if (i % 4 == 0) {
                     this.contentManager.insertOnLineContent(contentToVersion);
                 }
             }
+            String lastVersionDescription = contentToVersion.getDescription();
             List<Long> versions = this.versioningManager.getVersions(contentId);
-            assertTrue(versions.size() > 13);
+            int versionSize = versions.size();
+            assertTrue(versionSize > 13);
             ContentVersion versionToRestore = this.versioningManager.getVersion(versions.get(7));
+            String versionToRestoreDescr = versionToRestore.getDescr();
             assertEquals("3.4", versionToRestore.getVersion());
             Content currentWorkContent = this.contentManager.loadContent(contentId, false);
             assertEquals("5.2", currentWorkContent.getVersion());
@@ -114,9 +120,20 @@ public class TestVersionAction extends ApsAdminPluginBaseTestCase {
             Content contentOnSession = (Content) this.getRequest().getSession().getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + marker);
             assertNotNull(contentOnSession);
             assertEquals("5.3", contentOnSession.getVersion());
+            versions = this.versioningManager.getVersions(contentId);
+            assertEquals(versionSize+1, versions.size());
+            ContentVersion lastVersion = this.versioningManager.getVersion(versions.get(0));
+            assertEquals("5.2", lastVersion.getVersion());
+            assertEquals(lastVersionDescription, lastVersion.getDescr());
+            Content currentContent = this.contentManager.loadContent(contentId, false);
+            assertEquals("5.3", currentContent.getVersion());
+            assertEquals(versionToRestoreDescr, currentContent.getDescription());
         } catch (Exception e) {
             throw e;
         } finally {
+            Content lastContent = this.contentManager.loadContent(contentId, false);
+            this.contentManager.removeOnLineContent(lastContent);
+            this.contentManager.deleteContent(contentId);
             this.helper.cleanContentVersions();
         }
     }
