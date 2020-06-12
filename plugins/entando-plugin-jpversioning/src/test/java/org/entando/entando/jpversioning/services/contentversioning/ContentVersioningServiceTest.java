@@ -17,11 +17,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
 import com.agiletec.plugins.jpversioning.aps.system.services.versioning.ContentVersion;
 import com.agiletec.plugins.jpversioning.aps.system.services.versioning.VersioningManager;
 import java.util.ArrayList;
 import java.util.List;
 import junit.framework.TestCase;
+import org.entando.entando.aps.system.services.DtoBuilder;
+import org.entando.entando.plugins.jacms.aps.system.services.content.ContentService;
 import org.entando.entando.plugins.jpversioning.services.contentsversioning.ContentVersioningService;
 import org.entando.entando.plugins.jpversioning.web.contentsversioning.model.ContentVersionDTO;
 import org.entando.entando.web.common.model.PagedMetadata;
@@ -35,11 +39,19 @@ import org.mockito.MockitoAnnotations;
 public class ContentVersioningServiceTest extends TestCase {
 
     private static final String CONTENT_ID = "TST";
-    private static final Long CONTENT_VERSION_ID_1 =1L;
-    private static final Long CONTENT_VERSION_ID_2 =2L;
+    private static final Long VERSION_ID_1 =1L;
+    private static final Long VERSION_ID_2 =2L;
+    private static final String STATUS = "NEW";
 
     @Mock
     private VersioningManager manager;
+
+    @Mock
+    private ContentVersion contentVersion;
+    @Mock
+    private DtoBuilder dtoBuilder;
+    @Mock
+    private ContentService contentService;
 
     @InjectMocks
     private ContentVersioningService service;
@@ -53,26 +65,41 @@ public class ContentVersioningServiceTest extends TestCase {
     public void testGetListContentVersions() throws ApsSystemException{
         RestListRequest requestList = new RestListRequest();
         List<Long> mockedVersions = new ArrayList();
-        mockedVersions.add(CONTENT_VERSION_ID_1);
-        mockedVersions.add(CONTENT_VERSION_ID_2);
+        mockedVersions.add(VERSION_ID_1);
+        mockedVersions.add(VERSION_ID_2);
         when(manager.getVersions(CONTENT_ID)).thenReturn(mockedVersions);
-        when(manager.getVersion(CONTENT_VERSION_ID_1)).thenReturn(getMockedVersion1());
+        when(manager.getVersion(VERSION_ID_1)).thenReturn(getMockedVersion1());
         when(manager.getVersion(2L)).thenReturn(getMockedVersion2());
         final PagedMetadata<ContentVersionDTO> listContentVersions = service
                 .getListContentVersions(CONTENT_ID, requestList);
         assertThat(listContentVersions.getBody().size()).isEqualTo(mockedVersions.size());
-        assertThat(listContentVersions.getBody().get(0).getId()).isEqualTo(CONTENT_VERSION_ID_1);
-        assertThat(listContentVersions.getBody().get(1).getId()).isEqualTo(CONTENT_VERSION_ID_2);
+        assertThat(listContentVersions.getBody().get(0).getId()).isEqualTo(VERSION_ID_1);
+        assertThat(listContentVersions.getBody().get(1).getId()).isEqualTo(VERSION_ID_2);
+    }
+
+    @Test
+    public void testGetContent() throws ApsSystemException {
+        Content content = new Content();
+        ContentDto contentDto = new ContentDto();
+        contentDto.setStatus(STATUS);
+
+        when(contentService.getDtoBuilder()).thenReturn(dtoBuilder);
+        when(dtoBuilder.convert(content)).thenReturn(contentDto);
+        when(manager.getVersion(VERSION_ID_1)).thenReturn(contentVersion);
+        when(manager.getContent(contentVersion)).thenReturn(content);
+
+        final ContentDto contentDto1 = service.getContent(VERSION_ID_1);
+        assertThat(contentDto1.getStatus()).isEqualTo(STATUS);
     }
 
     private ContentVersion getMockedVersion1() {
         final ContentVersion contentVersion = new ContentVersion();
-        contentVersion.setId(CONTENT_VERSION_ID_1);
+        contentVersion.setId(VERSION_ID_1);
         return contentVersion;
     }
     private ContentVersion getMockedVersion2() {
         final ContentVersion contentVersion = new ContentVersion();
-        contentVersion.setId(CONTENT_VERSION_ID_2);
+        contentVersion.setId(VERSION_ID_2);
         return contentVersion;
     }
 }

@@ -20,6 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpSession;
@@ -43,6 +44,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 public class ContentVersioningControllerTest extends AbstractControllerTest {
 
     private static final String CONTENT_ID = "TST";
+    private static final Long VERSION_ID = Long.valueOf(1);
+
 
     @Mock
     private ContentVersioningValidator validator;
@@ -91,11 +94,42 @@ public class ContentVersioningControllerTest extends AbstractControllerTest {
 
     @Test
     public void testGetExistingContentVersioningNotExist() throws Exception {
-        PagedMetadata<ContentVersionDTO> pagedMetadata = getContentVersionDTOPagedMetadata();
         UserDetails user = this.createUser(true);
         when(this.httpSession.getAttribute("user")).thenReturn(user);
         when(this.validator.contentVersioningExist(CONTENT_ID)).thenReturn(false);
         ResultActions result = getListContentVersioning(CONTENT_ID, user);
+        result.andExpect(status().isNotFound());
+    }
+
+
+    @Test
+    public void testNotAuthorizedGetContentVersion() throws Exception {
+        ContentDto content = new ContentDto();
+        UserDetails user = this.createUser(false);
+        when(this.httpSession.getAttribute("user")).thenReturn(user);
+        when(this.validator.checkContentIdForVersion(CONTENT_ID, VERSION_ID)).thenReturn(true);
+        when(this.service.getContent(Mockito.eq(VERSION_ID))).thenReturn(content);
+        ResultActions result = getContentVersion(CONTENT_ID, VERSION_ID, user);
+        result.andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void testGetContentVersion() throws Exception {
+        ContentDto content = new ContentDto();
+        UserDetails user = this.createUser(true);
+        when(this.httpSession.getAttribute("user")).thenReturn(user);
+        when(this.validator.checkContentIdForVersion(CONTENT_ID, VERSION_ID)).thenReturn(true);
+        when(this.service.getContent(Mockito.eq(VERSION_ID))).thenReturn(content);
+        ResultActions result = getContentVersion(CONTENT_ID , VERSION_ID, user);
+        result.andExpect(status().isOk());
+    }
+
+    @Test
+    public void testGetContentVersionNotExist() throws Exception {
+        UserDetails user = this.createUser(true);
+        when(this.httpSession.getAttribute("user")).thenReturn(user);
+        when(this.validator.checkContentIdForVersion(CONTENT_ID, VERSION_ID)).thenReturn(false);
+        ResultActions result = getContentVersion(CONTENT_ID + 1, VERSION_ID, user);
         result.andExpect(status().isNotFound());
     }
 
@@ -105,6 +139,15 @@ public class ContentVersioningControllerTest extends AbstractControllerTest {
         allResults.add(new ContentVersionDTO());
         pagedMetadata.setBody(allResults);
         return pagedMetadata;
+    }
+
+    private ResultActions getContentVersion(String contentId, Long versionId,UserDetails user) throws Exception {
+        String accessToken = mockOAuthInterceptor(user);
+        String path = "/plugins/versioning/contents/{contentId}/versions/{versionId}";
+        return mockMvc.perform(
+                get(path, contentId, versionId)
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
     }
 
     private ResultActions getListContentVersioning(String contentId, UserDetails user) throws Exception {

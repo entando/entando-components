@@ -14,6 +14,7 @@
 package org.entando.entando.plugins.jpversioning.web.contentsversioning.validator;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.plugins.jpversioning.aps.system.services.versioning.ContentVersion;
 import com.agiletec.plugins.jpversioning.aps.system.services.versioning.VersioningManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -36,4 +37,16 @@ public class ContentVersioningValidator {
         return validationResult;
     }
 
+    public boolean checkContentIdForVersion(String contentId, Long versionId) {
+        boolean validationResult = false;
+        try {
+            final ContentVersion version = versioningManager.getVersion(versionId);
+            if (version.getContentId().equals(contentId)){
+                return true;
+            }
+        } catch (ApsSystemException e) {
+            e.printStackTrace();
+        }
+        return validationResult;
+    }
 }
