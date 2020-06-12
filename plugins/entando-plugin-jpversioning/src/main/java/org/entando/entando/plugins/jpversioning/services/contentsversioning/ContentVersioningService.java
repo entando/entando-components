@@ -51,7 +51,7 @@ public class ContentVersioningService {
                     .map(cv -> mapContentVersionToDTO(getContentVersion(cv)))
                     .collect(Collectors.toList());
         } catch (ApsSystemException e) {
-            e.printStackTrace();
+            logger.error("Error reading the list of content versions for content {}",contentId, e);
         }
         PagedMetadata<ContentVersionDTO> pagedResults = new PagedMetadata<>(requestList, contentVersions.size());
         pagedResults.setBody(contentVersionDTOs);
@@ -63,7 +63,7 @@ public class ContentVersioningService {
             ContentVersion contentVersion = versioningManager.getVersion(versionId);
             return contentVersion;
         } catch (ApsSystemException e) {
-            e.printStackTrace();
+            logger.error("Error reading version {} " + versionId, e);
         }
         return null;
     }
@@ -75,7 +75,7 @@ public class ContentVersioningService {
             final ContentDto contentDto = contentService.getDtoBuilder().convert(content);
             return contentDto;
         } catch (ApsSystemException e) {
-            e.printStackTrace();
+            logger.error("Error reading the content from version {} ", versionId, e);
         }
         return null;
     }
