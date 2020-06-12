@@ -37,7 +37,6 @@ import com.agiletec.plugins.jpversioning.aps.system.JpversioningSystemConstants;
 import com.agiletec.plugins.jpversioning.aps.system.services.resource.ITrashedResourceDAO;
 import com.agiletec.plugins.jpversioning.aps.system.services.resource.ITrashedResourceManager;
 import com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceDAO;
-import com.agiletec.plugins.jpversioning.apsadmin.resource.ITrashedResourceAction;
 import com.opensymphony.xwork2.Action;
 
 /**
@@ -57,9 +56,9 @@ public class TestTrashedResourceAction extends ApsAdminPluginBaseTestCase {
 		this.addParameter("resourceTypeCode", "Image");
 		String result = this.executeAction();
 		assertEquals("success", result);
-		ITrashedResourceAction action = (ITrashedResourceAction) this.getAction();
+		TrashedResourceAction action = (TrashedResourceAction) this.getAction();
 		assertNotNull(action);
-		assertTrue(action instanceof com.agiletec.plugins.jpversioning.apsadmin.resource.ITrashedResourceAction);
+		assertTrue(action instanceof com.agiletec.plugins.jpversioning.apsadmin.resource.TrashedResourceAction);
 	}
 	
 	public void testGetTrashedResources() throws Throwable{
@@ -68,7 +67,7 @@ public class TestTrashedResourceAction extends ApsAdminPluginBaseTestCase {
 		this.addParameter("resourceTypeCode", "Image");
 		String result = this.executeAction();
 		assertEquals("success", result);
-		ITrashedResourceAction action = (ITrashedResourceAction) this.getAction();
+		TrashedResourceAction action = (TrashedResourceAction) this.getAction();
 		List<String> trashedResources = action.getTrashedResources();
 		assertNotNull(trashedResources);
 		assertEquals(5, trashedResources.size());
@@ -81,7 +80,7 @@ public class TestTrashedResourceAction extends ApsAdminPluginBaseTestCase {
 		this.addParameter("text", "tux");
 		result = this.executeAction();
 		assertEquals("success", result);
-		action = (ITrashedResourceAction) this.getAction();
+		action = (TrashedResourceAction) this.getAction();
 		trashedResources = action.getTrashedResources();
 		assertNotNull(trashedResources);
 		assertEquals(1, trashedResources.size());
@@ -91,7 +90,7 @@ public class TestTrashedResourceAction extends ApsAdminPluginBaseTestCase {
 		this.addParameter("resourceTypeCode", "Attach");
 		result = this.executeAction();
 		assertEquals("success", result);
-		action = (ITrashedResourceAction) this.getAction();
+		action = (TrashedResourceAction) this.getAction();
 		trashedResources = action.getTrashedResources();
 		assertNotNull(trashedResources);
 		assertEquals(1, trashedResources.size());
@@ -101,16 +100,16 @@ public class TestTrashedResourceAction extends ApsAdminPluginBaseTestCase {
 	public void testList() throws Throwable{
 		String result = this.executeList("admin", "Image");
 		assertEquals(Action.SUCCESS, result);
-		List<String> trashedResources = ((ITrashedResourceAction) this.getAction()).getTrashedResources();
+		List<String> trashedResources = ((TrashedResourceAction) this.getAction()).getTrashedResources();
 		assertEquals(5, trashedResources.size());
 		assertEquals("67", trashedResources.get(0));
 		
-		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> params = new HashMap<>();
 		params.put("resourceTypeCode", "Image");
 		params.put("text", "tux");
 		result = this.executeSearch("admin", params);
 		assertEquals(Action.SUCCESS, result);
-		trashedResources = ((ITrashedResourceAction) this.getAction()).getTrashedResources();
+		trashedResources = ((TrashedResourceAction) this.getAction()).getTrashedResources();
 		assertEquals(1, trashedResources.size());
 		assertEquals("70", trashedResources.get(0));
 		
@@ -118,12 +117,12 @@ public class TestTrashedResourceAction extends ApsAdminPluginBaseTestCase {
 		params.remove("text");
 		result = this.executeSearch("admin", params);
 		assertEquals(Action.SUCCESS, result);
-		trashedResources = ((ITrashedResourceAction) this.getAction()).getTrashedResources();
+		trashedResources = ((TrashedResourceAction) this.getAction()).getTrashedResources();
 		assertEquals(1, trashedResources.size());
 		assertEquals("66", trashedResources.get(0));
 		
-		ResourceInterface trashedResource = ((ITrashedResourceAction) this.getAction()).getTrashedResource("70");
-		assertEquals("tux", trashedResource.getDescr());
+		ResourceInterface trashedResource = ((TrashedResourceAction) this.getAction()).getTrashedResource("70");
+		assertEquals("tux", trashedResource.getDescription());
 		assertEquals("Image", trashedResource.getType());
 		assertEquals("free", trashedResource.getMainGroup());
 		assertNotNull(trashedResource.getXML());
@@ -138,7 +137,7 @@ public class TestTrashedResourceAction extends ApsAdminPluginBaseTestCase {
 			
 			String result = this.executeList("admin", "Image");
 			assertEquals(Action.SUCCESS, result);
-			List<String> trashedResources = ((ITrashedResourceAction) this.getAction()).getTrashedResources();
+			List<String> trashedResources = ((TrashedResourceAction) this.getAction()).getTrashedResources();
 			assertTrue(trashedResources.contains(resourceId));
 			
 			result = this.executeRemove("admin", "Image", resourceId);
@@ -158,7 +157,7 @@ public class TestTrashedResourceAction extends ApsAdminPluginBaseTestCase {
 			String result = this.executeRestore("admin", "Image", resourceId);
 			assertEquals(Action.SUCCESS, result);
 			ResourceInterface resourceInterface = this._resourceManager.loadResource(resourceId);
-			assertEquals("tux", resourceInterface.getDescr());
+			assertEquals("tux", resourceInterface.getDescription());
 			assertEquals("Image", resourceInterface.getType());
 			assertEquals(resourceId, resourceInterface.getId());
 			

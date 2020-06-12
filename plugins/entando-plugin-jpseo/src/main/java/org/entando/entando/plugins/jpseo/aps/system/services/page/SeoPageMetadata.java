@@ -105,11 +105,9 @@ public class SeoPageMetadata extends PageMetadata implements Serializable {
     public String getDescription(String langCode) {
         return this.getDescriptions().getProperty(langCode);
     }
-
     public ApsProperties getDescriptions() {
         return descriptions;
     }
-
     public void setDescriptions(ApsProperties descriptions) {
         this.descriptions = descriptions;
     }
@@ -117,7 +115,6 @@ public class SeoPageMetadata extends PageMetadata implements Serializable {
     public ApsProperties getKeywords() {
         return keywords;
     }
-
     public void setKeywords(ApsProperties keywords) {
         this.keywords = keywords;
     }
@@ -125,7 +122,6 @@ public class SeoPageMetadata extends PageMetadata implements Serializable {
     public boolean isUseExtraDescriptions() {
         return useExtraDescriptions;
     }
-
     public void setUseExtraDescriptions(boolean useExtraDescriptions) {
         this.useExtraDescriptions = useExtraDescriptions;
     }
@@ -133,7 +129,6 @@ public class SeoPageMetadata extends PageMetadata implements Serializable {
     public String getFriendlyCode() {
         return friendlyCode;
     }
-
     public void setFriendlyCode(String friendlyCode) {
         this.friendlyCode = friendlyCode;
     }
@@ -141,7 +136,6 @@ public class SeoPageMetadata extends PageMetadata implements Serializable {
     public Map<String, Map<String, PageMetatag>> getComplexParameters() {
         return complexParameters;
     }
-
     public void setComplexParameters(Map<String, Map<String, PageMetatag>> complexParameters) {
         this.complexParameters = complexParameters;
     }
@@ -156,6 +150,13 @@ public class SeoPageMetadata extends PageMetadata implements Serializable {
             return check;
         }
         SeoPageMetadata other = (SeoPageMetadata) obj;
+        if (this.getFriendlyCode() == null) {
+            if (other.getFriendlyCode() != null) {
+                return false;
+            }
+        } else if (!this.getFriendlyCode().equals(other.getFriendlyCode())) {
+            return false;
+        }
         if ((null != other.getComplexParameters() && null == this.getComplexParameters())
                 || (null == other.getComplexParameters() && null != this.getComplexParameters())
                 || (null != other.getComplexParameters() && null != this.getComplexParameters()) && !other.getComplexParameters().equals(this.getComplexParameters())) {

@@ -22,8 +22,10 @@
 package com.agiletec.plugins.jpfacetnav.apsadmin.portal.specialwidget.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 
 public class FacetNavWidgetHelper {
 	
@@ -34,7 +36,7 @@ public class FacetNavWidgetHelper {
 	 * @return concatenated string.
 	 */
 	public static String concatStrings(List<String> values, String separator) {
-		StringBuffer concatedValues = new StringBuffer();
+		StringBuilder concatedValues = new StringBuilder();
 		Iterator<String> valuesIter = values.iterator();
 		if (valuesIter.hasNext()) {
 			concatedValues.append(valuesIter.next());
@@ -53,14 +55,9 @@ public class FacetNavWidgetHelper {
 	 * @return The list of strings extracted from the parameter values.
 	 */
 	public static List<String> splitValues(String values, String separator) {
-		List<String> valuesList = new ArrayList<String>();
-		if (values!=null && values.length()>0) {
-			String[] splittedValues = values.split(separator);
-			for (int i=0; i<splittedValues.length; i++) {
-				if (splittedValues[i].length()>0) {
-					valuesList.add(splittedValues[i]);
-				}
-			}
+		List<String> valuesList = new ArrayList<>();
+		if (!StringUtils.isEmpty(values)) {
+			valuesList.addAll(Arrays.asList(values.split(separator)));
 		}
 		return valuesList;
 	}

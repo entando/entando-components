@@ -108,7 +108,7 @@ public class FacetNavResultWidgetAction extends SimpleWidgetConfigAction {
 			List<String> contentTypes = this.getContentTypeCodes();
 			String contentTypeCode = this.getContentTypeCode();
 			if (contentTypeCode != null) {
-				contentTypes.remove(contentTypeCode);
+                contentTypes.remove(contentTypeCode);
 				String contentTypesFilter = FacetNavWidgetHelper.concatStrings(contentTypes, ",");
 				String configParamName = JpFacetNavSystemConstants.CONTENT_TYPES_FILTER_WIDGET_PARAM_NAME;
 				this.getWidget().getConfig().setProperty(configParamName, contentTypesFilter);
@@ -156,7 +156,7 @@ public class FacetNavResultWidgetAction extends SimpleWidgetConfigAction {
 		}
 		return null;
 	}
-
+    
 	public List<SmallContentType> getContentTypes() {
 		return this.getContentManager().getSmallContentTypes();
 	}

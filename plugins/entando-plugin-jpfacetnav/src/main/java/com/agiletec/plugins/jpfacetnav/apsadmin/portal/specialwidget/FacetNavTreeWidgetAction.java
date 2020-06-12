@@ -109,7 +109,7 @@ public class FacetNavTreeWidgetAction extends FacetNavResultWidgetAction impleme
 			String facetCode = this.getFacetCode();
 			List<String> facetCodes = this.getFacetRootCodes();
 			if (facetCode != null) {
-				facetCodes.remove(facetCode);
+                facetCodes.remove(facetCode);
 				String facetsFilter = FacetNavWidgetHelper.concatStrings(facetCodes, ",");
 				String configParamName = JpFacetNavSystemConstants.FACET_ROOTS_WIDGET_PARAM_NAME;
 				this.getWidget().getConfig().setProperty(configParamName, facetsFilter);
@@ -251,7 +251,7 @@ public class FacetNavTreeWidgetAction extends FacetNavResultWidgetAction impleme
 	private String _facetRootNodes;
 	
 	private String _targetNode;
-	private Set<String> _treeNodesToOpen = new HashSet<String>();
+	private Set<String> _treeNodesToOpen = new HashSet<>();
 	
 	private String _treeNodeActionMarkerCode;
 

@@ -23,8 +23,11 @@ import java.util.Map;
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.FieldSearchFilter;
+import com.agiletec.aps.system.common.entity.ApsEntityManager;
+import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
+import com.agiletec.aps.system.common.entity.model.attribute.BooleanAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.CheckBoxAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.CompositeAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.DateAttribute;
@@ -51,6 +54,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.Im
 import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.LinkAttribute;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.ResourceAttributeInterface;
 import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
+import java.util.Arrays;
 import java.util.stream.Collectors;
 import org.entando.entando.aps.system.common.entity.model.attribute.EnumeratorMapAttribute;
 
@@ -64,7 +68,7 @@ public class TestContentManager extends BaseTestCase {
         super.setUp();
         this.init();
     }
-
+    
     public void testSearchContents_1_1() throws Throwable {
         List<String> contentIds = this._contentManager.searchId(null);
         assertNotNull(contentIds);
@@ -780,7 +784,7 @@ public class TestContentManager extends BaseTestCase {
         this.testLoadPublicEvents_6(true);
         this.testLoadPublicEvents_6(false);
     }
-
+    
     protected void testLoadPublicEvents_6(boolean useRoleFilter) throws ApsSystemException {
         List<String> groups = new ArrayList<>();
         groups.add(Group.ADMINS_GROUP_NAME);
@@ -810,7 +814,7 @@ public class TestContentManager extends BaseTestCase {
         List<String> groups = new ArrayList<>();
         groups.add(Group.ADMINS_GROUP_NAME);
         List<String> allowedDescription = new ArrayList<>();
-        allowedDescription.add("Mostra Zootecnica");//EVN20
+        allowedDescription.add("Zootechnical exposure");//EVN20
         allowedDescription.add("Title B - Event 2");//EVN192
         EntitySearchFilter filter1 = (useRoleFilter)
                 ? EntitySearchFilter.createRoleFilter(JacmsSystemConstants.ATTRIBUTE_ROLE_TITLE, allowedDescription, false)
@@ -1384,7 +1388,7 @@ public class TestContentManager extends BaseTestCase {
             for (int i = 0; i < newContentIds.length; i++) {
                 Content content = this._contentManager.loadContent(newContentIds[i], false);
                 TextAttribute titleAttribute = (TextAttribute) content.getAttribute("Titolo");
-                if (i % 2 == 1 && i < 4) {
+                if (i % 2 == 1) {
                     titleAttribute.setText(null, "en");
                 }
                 titleAttribute.setText(null, "it");
@@ -1413,7 +1417,7 @@ public class TestContentManager extends BaseTestCase {
             EntitySearchFilter[] filters1 = {filter0, filter1, filter2, filter3};
             String[] expectedContentsId1 = {"EVN191", "EVN192", "EVN193", "EVN194",
                 "EVN103", "EVN20", "EVN23", "EVN24", "EVN25", "EVN41", "EVN21",
-                newContentIds[0], newContentIds[2]};
+                newContentIds[0], newContentIds[2], newContentIds[4]};
 
             contents = this._contentManager.loadWorkContentsId(filters1, groups);
             assertEquals(expectedContentsId1.length, contents.size());
@@ -1436,7 +1440,7 @@ public class TestContentManager extends BaseTestCase {
             filter3.setNullOption(true);
             filter3.setLangCode("en");
             EntitySearchFilter[] filters3 = {filter0, filter1, filter2, filter3};
-            String[] expectedContentsId3 = {newContentIds[1], newContentIds[3], newContentIds[4], newContentIds[5]};
+            String[] expectedContentsId3 = {newContentIds[1], newContentIds[3], newContentIds[5]};
 
             contents = this._contentManager.loadWorkContentsId(filters3, groups);
             assertEquals(expectedContentsId3.length, contents.size());
@@ -1456,7 +1460,94 @@ public class TestContentManager extends BaseTestCase {
             this.deleteContents(newContentIds);
         }
     }
-
+    
+    public void testLoadWorkContentsByAttribute_4() throws Throwable {
+        Content prototype = this._contentManager.createContentType("ALL");
+        AttributeInterface booleanAttribute = prototype.getAttribute("Boolean");
+        booleanAttribute.setSearchable(true);
+        AttributeInterface checkBoxAttribute = prototype.getAttribute("CheckBox");
+        checkBoxAttribute.setSearchable(true);
+        AttributeInterface threeStateAttribute = prototype.getAttribute("ThreeState");
+        threeStateAttribute.setSearchable(true);
+        List<String> addedContents = new ArrayList<>();
+        try {
+            ((IEntityTypesConfigurer) this._contentManager).updateEntityPrototype(prototype);
+            this._contentManager.reloadEntitiesReferences("ALL");
+            super.waitThreads(ApsEntityManager.RELOAD_REFERENCES_THREAD_NAME_PREFIX);
+            String[] booleanAttributeCodes = {"Boolean", "CheckBox", "ThreeState"};
+            for (int i = 0; i < 15; i++) {
+                Content clone = this._contentManager.loadContent("ALL4", false);
+                clone.setId(null);
+                Boolean valueToSet = null;
+                if (i%3 == 0) {
+                    // leave null
+                } else if (i%2 == 0) {
+                    valueToSet = Boolean.TRUE;
+                } else {
+                    valueToSet = Boolean.FALSE;
+                }
+                this.setBooleanValue(clone, booleanAttributeCodes, valueToSet);
+                this._contentManager.saveContent(clone);
+                addedContents.add(clone.getId());
+            }
+            this.testBooleanAttribute_test4("Boolean", new String[]{}, // null
+                    new String[]{addedContents.get(0), addedContents.get(1), addedContents.get(3), addedContents.get(5), addedContents.get(6), 
+                        addedContents.get(7), addedContents.get(9), addedContents.get(11), addedContents.get(12), addedContents.get(13)}, // FALSE
+                    new String[]{"ALL4", addedContents.get(2), addedContents.get(4), addedContents.get(8), addedContents.get(10), addedContents.get(14)}); // TRUE
+            this.testBooleanAttribute_test4("CheckBox", new String[]{}, 
+                    new String[]{"ALL4", addedContents.get(0), addedContents.get(1), addedContents.get(3), addedContents.get(5), addedContents.get(6), 
+                        addedContents.get(7), addedContents.get(9), addedContents.get(11), addedContents.get(12), addedContents.get(13)}, // FALSE
+                    new String[]{addedContents.get(2), addedContents.get(4), addedContents.get(8), addedContents.get(10), addedContents.get(14)}); // TRUE
+            this.testBooleanAttribute_test4("ThreeState", new String[]{addedContents.get(0), addedContents.get(3), addedContents.get(6), addedContents.get(9), addedContents.get(12)}, // NULL
+                    new String[]{"ALL4", addedContents.get(1), addedContents.get(5), addedContents.get(7), addedContents.get(11), addedContents.get(13)}, // FALSE
+                    new String[]{addedContents.get(2), addedContents.get(4), addedContents.get(8), addedContents.get(10), addedContents.get(14)}); // TRUE
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            for (int i = 0; i < addedContents.size(); i++) {
+                String id = addedContents.get(i);
+                this._contentManager.deleteContent(id);
+                assertNull(this._contentManager.loadContent(id, false));
+            }
+            booleanAttribute.setSearchable(false);
+            checkBoxAttribute.setSearchable(false);
+            threeStateAttribute.setSearchable(false);
+            ((IEntityTypesConfigurer) this._contentManager).updateEntityPrototype(prototype);
+            this._contentManager.reloadEntitiesReferences("ALL");
+            super.waitThreads(ApsEntityManager.RELOAD_REFERENCES_THREAD_NAME_PREFIX);
+        }
+    }
+    
+    private void setBooleanValue(Content content, String[] attributeCodes, Boolean value) {
+        for (int i = 0; i < attributeCodes.length; i++) {
+            BooleanAttribute booleanAttribute = (BooleanAttribute) content.getAttribute(attributeCodes[i]);
+            booleanAttribute.setBooleanValue(value);
+        }
+    }
+    
+    private void testBooleanAttribute_test4(String booleanAttribute, String[] nullResults, String[] falseResults, String[] trueResults) throws Exception {
+        EntitySearchFilter<String> filterForTrue = new EntitySearchFilter<>(booleanAttribute, true, "true", false);
+        this.checkResult_test4(trueResults, filterForTrue);
+        EntitySearchFilter<String> filterForFalse = new EntitySearchFilter<>(booleanAttribute, true, "false", false);
+        this.checkResult_test4(falseResults, filterForFalse);
+        EntitySearchFilter<String> filterForNull = new EntitySearchFilter<>(booleanAttribute, true);
+        filterForNull.setNullOption(true);
+        this.checkResult_test4(nullResults, filterForNull);
+    }
+    
+    private void checkResult_test4(String[] expected, EntitySearchFilter<String> filterForBoolean) throws Exception {
+        List<String> groups = new ArrayList<>();
+        groups.add(Group.ADMINS_GROUP_NAME);
+        EntitySearchFilter<String> filterForType = new EntitySearchFilter<>(IContentManager.ENTITY_TYPE_CODE_FILTER_KEY, false, "ALL", false);
+        EntitySearchFilter[] filtersForTrue = {filterForType, filterForBoolean};
+        List<String> result = this._contentManager.loadWorkContentsId(filtersForTrue, groups);
+        assertEquals(expected.length, result.size());
+        for (int i = 0; i < expected.length; i++) {
+            String id = expected[i];
+            assertTrue(result.contains(id));
+        }
+    }
+    
     public void testGetLinkProperties() throws Throwable {
         EntitySearchFilter creationOrder = new EntitySearchFilter(IContentManager.CONTENT_CREATION_DATE_FILTER_KEY, false);
         creationOrder.setOrder(EntitySearchFilter.DESC_ORDER);
