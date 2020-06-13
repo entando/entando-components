@@ -106,9 +106,9 @@ public class ContentVersioningControllerTest extends AbstractControllerTest {
         PagedMetadata<ContentVersionDTO> pagedMetadata = getContentVersionDTOPagedMetadata();
         UserDetails user = this.createUser(true);
         when(this.httpSession.getAttribute("user")).thenReturn(user);
-        when(this.validator.contentVersioningExist(CONTENT_ID)).thenReturn(false);
-        ResultActions result = getListContentsVersioning(user);
-        result.andExpect(status().isNotFound());
+        when(this.service.getLatestVersions(Mockito.any(RestListRequest.class))).thenReturn(pagedMetadata);
+        ResultActions result = getListLatestVersions(user);
+        result.andExpect(status().isOk());
     }
 
     @Test
@@ -168,7 +168,7 @@ public class ContentVersioningControllerTest extends AbstractControllerTest {
                         .header("Authorization", "Bearer " + accessToken));
     }
 
-    private ResultActions getListContentsVersioning(UserDetails user) throws Exception {
+    private ResultActions getListLatestVersions(UserDetails user) throws Exception {
         String accessToken = mockOAuthInterceptor(user);
         String path = "/plugins/versioning/contents/";
         return mockMvc.perform(
