@@ -43,4 +43,13 @@ public interface IContentVersioning {
     @RestAccessControl(permission = Permission.CONTENT_EDITOR)
     ResponseEntity<PagedRestResponse<ContentVersionDTO>> listContentVersions(
             @PathVariable(value = "contentId") String contentId, RestListRequest requestList);
+
+    @ApiOperation(value = "LIST contents versions", nickname = "listContentsVersions", tags = {
+            "content-versioning-controller"})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 403, message = "Forbidden")})
+    @GetMapping("/")
+    @RestAccessControl(permission = Permission.CONTENT_EDITOR)
+    ResponseEntity<PagedRestResponse<ContentVersionDTO>> listLatestVersions(RestListRequest requestList);
 }

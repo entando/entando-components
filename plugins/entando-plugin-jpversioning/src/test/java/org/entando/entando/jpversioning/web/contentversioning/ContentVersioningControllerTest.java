@@ -99,6 +99,16 @@ public class ContentVersioningControllerTest extends AbstractControllerTest {
         result.andExpect(status().isNotFound());
     }
 
+    @Test
+    public void testGetContentsVersioning() throws Exception {
+        PagedMetadata<ContentVersionDTO> pagedMetadata = getContentVersionDTOPagedMetadata();
+        UserDetails user = this.createUser(true);
+        when(this.httpSession.getAttribute("user")).thenReturn(user);
+        when(this.validator.contentVersioningExist(CONTENT_ID)).thenReturn(false);
+        ResultActions result = getListContentsVersioning(user);
+        result.andExpect(status().isNotFound());
+    }
+
     private PagedMetadata<ContentVersionDTO> getContentVersionDTOPagedMetadata() {
         PagedMetadata<ContentVersionDTO> pagedMetadata = new PagedMetadata<>();
         List<ContentVersionDTO> allResults = new ArrayList<>();
@@ -112,6 +122,15 @@ public class ContentVersioningControllerTest extends AbstractControllerTest {
         String path = "/plugins/versioning/contents/{contentId}";
         return mockMvc.perform(
                 get(path, contentId)
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+    }
+
+    private ResultActions getListContentsVersioning(UserDetails user) throws Exception {
+        String accessToken = mockOAuthInterceptor(user);
+        String path = "/plugins/versioning/contents/";
+        return mockMvc.perform(
+                get(path)
                         .sessionAttr("user", user)
                         .header("Authorization", "Bearer " + accessToken));
     }

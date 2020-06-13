@@ -1,0 +1,15 @@
+[
+    {
+        "typeCode":"CT2",
+        "groups":[],
+        "mainGroup":"free",
+        "description":"another description",
+        "categories":[],
+        "attributes":[
+            {
+                "code":"bool",
+                "value":true
+            }
+        ]
+    }
+]
