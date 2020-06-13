@@ -14,6 +14,8 @@
 package org.entando.entando.plugins.jpversioning.web.contentsversioning;
 
 import javax.servlet.http.HttpSession;
+import com.agiletec.aps.system.services.role.Permission;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.plugins.jpversioning.services.contentsversioning.ContentVersioningService;
 import org.entando.entando.plugins.jpversioning.web.contentsversioning.model.ContentVersionDTO;
@@ -58,7 +60,8 @@ public class ContentVersioningController implements IContentVersioning {
                     "Content Versions", contentId);
         }
 
-        PagedMetadata<ContentVersionDTO> result = contentVersioningService.getListContentVersions(contentId, requestList);
+        PagedMetadata<ContentVersionDTO> result = contentVersioningService
+                .getListContentVersions(contentId, requestList);
         return new ResponseEntity<>(new PagedRestResponse<>(result), HttpStatus.OK);
     }
 
@@ -71,4 +74,16 @@ public class ContentVersioningController implements IContentVersioning {
         PagedMetadata<ContentVersionDTO> result = contentVersioningService.getLatestVersions(requestList);
         return new ResponseEntity<>(new PagedRestResponse<>(result), HttpStatus.OK);
     }
+
+    public ResponseEntity<ContentDto> getContentVersion(String contentId, Long versionId) {
+        logger.debug("REST request - get content version for contentId: {} and versionId", contentId, versionId);
+        if (!contentVersioningValidator.checkContentIdForVersion(contentId, versionId)) {
+            throw new ResourceNotFoundException(
+                    ContentVersioningValidatorErrorCodes.ERRCODE_CONTENT_VERSIONING_WRONG_CONTENT_ID.value,
+                    "Content Version", contentId + " version " + versionId);
+        }
+        ContentDto result = contentVersioningService.getContent(versionId);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 }

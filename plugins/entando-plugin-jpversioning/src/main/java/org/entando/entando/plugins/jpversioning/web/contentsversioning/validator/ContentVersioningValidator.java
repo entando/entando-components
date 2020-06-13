@@ -20,6 +20,7 @@ import static com.agiletec.plugins.jpversioning.aps.system.services.versioning.I
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jpversioning.aps.system.services.versioning.IVersioningManager;
+import com.agiletec.plugins.jpversioning.aps.system.services.versioning.ContentVersion;
 import com.agiletec.plugins.jpversioning.aps.system.services.versioning.VersioningManager;
 import java.util.Arrays;
 import java.util.List;
@@ -83,5 +84,18 @@ public class ContentVersioningValidator extends AbstractPaginationValidator {
         } else {
             return Arrays.asList(IVersioningManager.METADATA_FILTER_KEYS).contains(fieldName);
         }
+    }
+
+    public boolean checkContentIdForVersion(String contentId, Long versionId) {
+        boolean validationResult = false;
+        try {
+            final ContentVersion version = versioningManager.getVersion(versionId);
+            if (version.getContentId().equals(contentId)){
+                return true;
+            }
+        } catch (ApsSystemException e) {
+            e.printStackTrace();
+        }
+        return validationResult;
     }
 }

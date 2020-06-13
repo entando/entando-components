@@ -14,6 +14,7 @@
 package org.entando.entando.plugins.jpversioning.web.contentsversioning;
 
 import com.agiletec.aps.system.services.role.Permission;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -28,17 +29,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @Api(tags = {"content-versioning-controller"})
 @ApiResponses({
+        @ApiResponse(code = 201, message = "Created"),
         @ApiResponse(code = 400, message = "Bad Request"),
         @ApiResponse(code = 409, message = "Conflict"),
         @ApiResponse(code = 401, message = "Unauthorized"),
         @ApiResponse(code = 500, message = "Server Error")
 })
 public interface IContentVersioning {
+
     @ApiOperation(value = "LIST content versions", nickname = "listContentVersions", tags = {
             "content-versioning-controller"})
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created"),
-            @ApiResponse(code = 401, message = "Unauthorized")})
     @GetMapping("/{contentId}")
     @RestAccessControl(permission = Permission.CONTENT_EDITOR)
     ResponseEntity<PagedRestResponse<ContentVersionDTO>> listContentVersions(
@@ -52,4 +52,11 @@ public interface IContentVersioning {
     @GetMapping("/")
     @RestAccessControl(permission = Permission.CONTENT_EDITOR)
     ResponseEntity<PagedRestResponse<ContentVersionDTO>> listLatestVersions(RestListRequest requestList);
+
+    @ApiOperation(value = "GET content version", nickname = "getContentVersion", tags = {
+            "content-versioning-controller"})
+    @GetMapping("/{contentId}/versions/{versionId}")
+    @RestAccessControl(permission = Permission.CONTENT_EDITOR)
+    ResponseEntity<ContentDto> getContentVersion(@PathVariable(value = "contentId") String contentId,
+            @PathVariable(value = "versionId") Long versionId);
 }

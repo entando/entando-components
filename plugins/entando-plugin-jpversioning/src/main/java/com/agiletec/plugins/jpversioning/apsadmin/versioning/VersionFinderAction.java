@@ -24,25 +24,29 @@ package com.agiletec.plugins.jpversioning.apsadmin.versioning;
 import java.util.List;
 import java.util.Map;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.apsadmin.system.BaseAction;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SmallContentType;
+import com.agiletec.plugins.jacms.apsadmin.portal.PageAction;
 import com.agiletec.plugins.jpversioning.aps.system.services.versioning.ContentVersion;
 import com.agiletec.plugins.jpversioning.aps.system.services.versioning.IVersioningManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author G.Cocco
  */
 public class VersionFinderAction extends BaseAction {
 	
-	public List<Long> getLatestVersions() {
+	private static final Logger logger = LoggerFactory.getLogger(VersionFinderAction.class);
+
+    public List<Long> getLatestVersions() {
 		List<Long> latestVersions = null;
 		try {
 			latestVersions = this.getVersioningManager().getLastVersions(this.getContentType(), this.getDescr());
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getLatestVersions");
-			throw new RuntimeException("Error loading latest content versions", t);
+		} catch (Exception e) {
+            logger.error("Error loading latest content versions", e);
+			throw new RuntimeException("Error loading latest content versions", e);
 		}
 		return latestVersions;
 	}
@@ -51,9 +55,9 @@ public class VersionFinderAction extends BaseAction {
 		ContentVersion version = null;	
 		try {
 			version = this.getVersioningManager().getVersion(id);
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "viewVersions");
-			throw new RuntimeException("Error loading content version of id " + id, t);
+		} catch (Exception e) {
+            logger.error("Error loading content version of id " + id, e);
+			throw new RuntimeException("Error loading content version of id " + id, e);
 		}
 		return version;
 	}

@@ -13,10 +13,8 @@
  */
 package org.entando.entando.plugins.jpversioning.services.contentsversioning;
 
-
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.user.UserDetails;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
 import com.agiletec.plugins.jpversioning.aps.system.services.versioning.ContentVersion;
 import com.agiletec.plugins.jpversioning.aps.system.services.versioning.VersioningManager;
@@ -24,8 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.entando.entando.aps.system.exception.RestServerError;
-import org.entando.entando.plugins.jacms.aps.system.services.content.IContentService;
-import org.entando.entando.plugins.jacms.web.content.validator.RestContentListRequest;
+import org.entando.entando.plugins.jacms.aps.system.services.content.ContentService;
 import org.entando.entando.plugins.jpversioning.web.contentsversioning.model.ContentVersionDTO;
 import org.entando.entando.web.common.model.Filter;
 import org.entando.entando.web.common.model.PagedMetadata;
@@ -44,21 +41,23 @@ public class ContentVersioningService {
     private VersioningManager versioningManager;
 
     @Autowired
-    private IContentService contentService;
+    private ContentService contentService;
 
     public PagedMetadata<ContentVersionDTO> getListContentVersions(String contentId, RestListRequest requestList) {
         logger.debug("LIST listContentVersions for content {} with req {}", contentId, requestList);
-        List<ContentVersionDTO> contentVersions = new ArrayList<>();
+        List<ContentVersionDTO> contentVersionDTOs = new ArrayList<>();
+        List<Long> contentVersions = new ArrayList<>();
         try {
-            contentVersions = versioningManager.getVersions(contentId).stream().map(v -> mapContentVersionToDTO(getContentVersion(v)))
+            contentVersions = versioningManager.getVersions(contentId);
+            contentVersionDTOs = requestList.getSublist(contentVersions).stream()
+                    .map(cv -> mapContentVersionToDTO(getContentVersion(cv)))
                     .collect(Collectors.toList());
         } catch (ApsSystemException e) {
-            logger.error("Error while getting content versions for content {}", contentId, e);
+            logger.error("Error reading the list of content versions for content {}",contentId, e);
             throw new RestServerError(String.format("Error while getting content versions for content %s", contentId), e);
         }
-        final List<ContentVersionDTO> sublist = requestList.getSublist(contentVersions);
         PagedMetadata<ContentVersionDTO> pagedResults = new PagedMetadata<>(requestList, contentVersions.size());
-        pagedResults.setBody(sublist);
+        pagedResults.setBody(contentVersionDTOs);
         return pagedResults;
     }
 
@@ -96,6 +95,28 @@ public class ContentVersioningService {
         return null;
     }
 
+    public ContentVersion getContentVersion(Long versionId) {
+        try {
+            ContentVersion contentVersion = versioningManager.getVersion(versionId);
+            return contentVersion;
+        } catch (ApsSystemException e) {
+            logger.error("Error reading version {} " + versionId, e);
+        }
+        return null;
+    }
+
+    public ContentDto getContent(Long versionId) {
+        try {
+            final ContentVersion contentVersion = versioningManager.getVersion(versionId);
+            final Content content = versioningManager.getContent(contentVersion);
+            final ContentDto contentDto = contentService.getDtoBuilder().convert(content);
+            return contentDto;
+        } catch (ApsSystemException e) {
+            logger.error("Error reading the content from version {} ", versionId, e);
+        }
+        return null;
+    }
+
     private ContentVersionDTO mapContentVersionToDTO(ContentVersion contentVersion) {
         ContentVersionDTO contentVersionDTO = new ContentVersionDTO();
         contentVersionDTO.setApproved(contentVersion.isApproved());
@@ -109,15 +130,6 @@ public class ContentVersioningService {
         contentVersionDTO.setVersionDate(contentVersion.getVersionDate());
         contentVersionDTO.setContentId(contentVersion.getContentId());
         return contentVersionDTO;
-    }
-
-    private ContentVersion getContentVersion(Long version) {
-        try {
-            return versioningManager.getVersion(version);
-        } catch (ApsSystemException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
 }

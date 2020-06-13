@@ -39,8 +39,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentRecordVO;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SmallContentType;
 import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
@@ -49,13 +50,17 @@ import com.agiletec.plugins.jacms.apsadmin.content.ContentActionConstants;
 import com.agiletec.plugins.jpversioning.aps.system.services.resource.ITrashedResourceManager;
 import com.agiletec.plugins.jpversioning.aps.system.services.versioning.ContentVersion;
 import com.agiletec.plugins.jpversioning.aps.system.services.versioning.IVersioningManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author G.Cocco
  */
 public class VersionAction extends AbstractContentAction {
 	
-	public String history() {
+	private static final Logger logger = LoggerFactory.getLogger(VersionAction.class);
+
+    public String history() {
 		return SUCCESS;
 	}
 	
@@ -65,9 +70,9 @@ public class VersionAction extends AbstractContentAction {
 	
 	public String delete() {
 		try {
-			this.getVersioningManager().deleteVersion(getVersionId());
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "delete");
+			this.getVersioningManager().deleteVersion(this.getVersionId());
+		} catch (Exception e) {
+			logger.error("Error deleting version " + this.getVersionId(), e);
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -78,8 +83,8 @@ public class VersionAction extends AbstractContentAction {
 			ContentVersion contentVersion = this.getContentVersion();
 			Content currentContent = this.getVersioningManager().getContent(contentVersion);
 			this.setContent(currentContent);
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "preview");
+		} catch (Exception e) {
+			logger.error("Error on preview of version ", e);
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -102,23 +107,47 @@ public class VersionAction extends AbstractContentAction {
 					this.getTrashedResourceManager().restoreResource(resourceId);
 				}
 			}
-			content = this.getVersioningManager().getContent(contentVersion);
+            content = this.getVersioningManager().getContent(contentVersion);
+            String lastVersionNumber = null;
+            ContentRecordVO currentRecordVo = this.getContentManager().loadContentVO(contentVersion.getContentId());
+            if (null != currentRecordVo) {
+                lastVersionNumber = currentRecordVo.getVersion();
+            } else {
+                ContentVersion lastVersion = this.getVersioningManager().getLastVersion(contentVersion.getContentId());
+                lastVersionNumber = lastVersion.getVersion();
+            }
+            content.setVersion(lastVersionNumber);
+            this.getContentManager().saveContent(content);
+            String marker = AbstractContentAction.buildContentOnSessionMarker(contentVersion.getContentId(), 
+                    contentVersion.getContentType(), ApsAdminSystemConstants.EDIT);
+            this.setContentOnSessionMarker(marker);
 			this.getRequest().getSession()
-					.setAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + super.getContentOnSessionMarker(), content);
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "recover");
+					.setAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + marker, content);
+		} catch (Exception e) {
+			logger.error("Error recovering version " + this.getVersionId(), e);
 			return FAILURE;
 		}
 		return SUCCESS;
 	}
+    
+    public Content getCurrentContent(String contentId) {
+        Content current = null;
+		try {
+			current = this.getContentManager().loadContent(contentId, false);
+		} catch (Exception e) {
+			logger.error("Error extracting current content " + contentId, e);
+			throw new RuntimeException("Error extracting current content " + contentId, e);
+		}
+		return current;
+    }
 	
 	public List<Long> getContentVersions() {
 		List<Long> versions = null;
 		try {
 			versions = this.getVersioningManager().getVersions(this.getContentId());
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getContentVersions");
-			throw new RuntimeException("Errore in estrazione lista versioni per contenuto " + this.getContentId(), t);
+		} catch (Exception e) {
+			logger.error("Error extracting versions of content " + this.getContentId(), e);
+			throw new RuntimeException("Errore in estrazione lista versioni per contenuto " + this.getContentId(), e);
 		}
 		return versions;
 	}
@@ -127,9 +156,9 @@ public class VersionAction extends AbstractContentAction {
 		ContentVersion version = null;	
 		try {
 			version = this.getVersioningManager().getVersion(versionId);
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getContentVersion");
-			throw new RuntimeException("Errore in estrazione versione contenuto, id versione " + versionId, t);
+		} catch (Exception e) {
+			logger.error("Error extracting current content " + versionId, e);
+			throw new RuntimeException("Error extracting current version " + versionId, e);
 		}
 		return version;
 	}
@@ -138,36 +167,36 @@ public class VersionAction extends AbstractContentAction {
 		ResourceInterface resource = null;	
 		try {
 			resource  = this.getTrashedResourceManager().loadTrashedResource(id);
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getTrashedResource");
-			throw new RuntimeException("Errore in caricamento risorsa, id " + id, t);
+		} catch (Exception e) {
+			logger.error("Error loading resource " + id, e);
+			throw new RuntimeException("Error loading resource " + id, e);
 		}
 		return resource;
 	}
 	
-	public List<String> getTrashedResources() {
-		if (this._trashedResources == null) {
-			try {
-				this.loadTrashResources();
-			} catch (Throwable t) {
-				ApsSystemUtils.logThrowable(t, this, "getTrashedResources");
-				throw new RuntimeException("Errore in recupero id risorse cestinate per la versione contenuto corrente " + getVersionId(), t);
-			}
-		}
-		return this._trashedResources;
-	}
+    public List<String> getTrashedResources() {
+        if (this._trashedResources == null) {
+            try {
+                this.loadTrashResources();
+            } catch (Exception e) {
+                logger.error("Error loading trashed resources for content with version " + this.getVersionId(), e);
+                throw new RuntimeException("Error loading trashed resources for content with version " + getVersionId(), e);
+            }
+        }
+        return this._trashedResources;
+    }
 	
-	public Set<String> getTrashRemovedResources() {
-		if (this._trashRemovedResources == null) {
-			try {
-				this.loadTrashResources();
-			} catch (Throwable t) {
-				ApsSystemUtils.logThrowable(t, this, "getTrashRemovedResources");
-				throw new RuntimeException("Errore in recupero id risorse rimosse dal cestino (non più ripristinabili) per la versione contenuto corrente " + getVersionId(), t);
-			}
-		}
-		return this._trashRemovedResources;
-	}
+    public Set<String> getTrashRemovedResources() {
+        if (this._trashRemovedResources == null) {
+            try {
+                this.loadTrashResources();
+            } catch (Exception e) {
+                logger.error("Error loading trashed resources for content with version " + this.getVersionId(), e);
+                throw new RuntimeException("Error loading trashed resources for content with version " + getVersionId(), e);
+            }
+        }
+        return this._trashRemovedResources;
+    }
 	
 	private void loadTrashResources() throws Exception {
 		ContentVersion contentVersion = this.getContentVersion();
@@ -203,8 +232,8 @@ public class VersionAction extends AbstractContentAction {
 					trashRemovedResources.add(id);
 				}
 			} catch (Throwable t) {
-				ApsSystemUtils.logThrowable(t, this, "getTrashRemovedResourcesId");
-				throw new RuntimeException("Errore in verifica risorsa rimossa definitivamente da cestino, id " + id, t);
+				logger.error("Error checking resource permanently removed, id " + id, t);
+				throw new RuntimeException("Error checking resource permanently removed, id " + id, t);
 			}
 		}
 		return trashRemovedResources;
@@ -225,13 +254,13 @@ public class VersionAction extends AbstractContentAction {
 					resourceInterface = this.getResourceManager().loadResource(id);
 					if (null != resourceInterface) {
 						if ( null == archivedResources) {
-							archivedResources = new ArrayList<String>();
+							archivedResources = new ArrayList<>();
 						}
 						archivedResources.add(id);
 					}
 				} catch (Throwable t) {
-					ApsSystemUtils.logThrowable(t, this, "verifyArchivedResourcesId");
-					throw new RuntimeException("Errore in verifica risorsa in archivio, id " + id, t);
+                    logger.error("Error checking resource " + id, t);
+					throw new RuntimeException("Error checking resource " + id, t);
 				}
 			}
 		}
@@ -250,13 +279,13 @@ public class VersionAction extends AbstractContentAction {
 					resourceInterface = this.getTrashedResourceManager().loadTrashedResource(id);
 					if (null != resourceInterface) {
 						if (null == trashedResources) {
-							trashedResources = new ArrayList<String>();
+							trashedResources = new ArrayList<>();
 						}
 						trashedResources.add(id);
 					}
 				} catch (Throwable t) {
-					ApsSystemUtils.logThrowable(t, this, "verifyNotTrashedResources");
-					throw new RuntimeException("Errore in verifica risorsa cestinata, id " + id, t);
+                    logger.error("Error checking resource " + id, t);
+					throw new RuntimeException("Error checking resource " + id, t);
 				}
 			}
 		}
@@ -273,7 +302,7 @@ public class VersionAction extends AbstractContentAction {
 			Node node = listaNodiAttributi.item(i);
 			NamedNodeMap namedNodeMap = node.getAttributes();
 			if (null == resourcesId) {
-				resourcesId = new ArrayList<String>();
+				resourcesId = new ArrayList<>();
 			}
 			resourcesId.add(namedNodeMap.getNamedItem(RESOURCE_ID).getNodeValue());
 		}
@@ -293,8 +322,8 @@ public class VersionAction extends AbstractContentAction {
 			try {
 				this._contentVersion = this.getVersioningManager().getVersion(this.getVersionId());
 			} catch (Throwable t) {
-				ApsSystemUtils.logThrowable(t, this, "viewVersions");
-				throw new RuntimeException("Errore in estrazione versione contenuto, id versione " + this.getVersionId(), t);
+                logger.error("Error extracting content version " + this.getVersionId(), t);
+				throw new RuntimeException("Error extracting content version " + this.getVersionId(), t);
 			}
 		}
 		return this._contentVersion;
