@@ -1,0 +1,11 @@
+{
+    "code": "CT1",
+    "name": "Content Type CT1",
+    "attributes": [
+        {
+            "code": "bool",
+            "type": "Boolean",
+            "name": "Description of Boolean attribute"
+        }
+    ]
+}

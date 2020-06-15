@@ -13,6 +13,7 @@
  */
 package org.entando.entando.plugins.jpversioning.web.contentsversioning;
 
+import javax.servlet.http.HttpSession;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
@@ -20,7 +21,6 @@ import org.entando.entando.plugins.jpversioning.services.contentsversioning.Cont
 import org.entando.entando.plugins.jpversioning.web.contentsversioning.model.ContentVersionDTO;
 import org.entando.entando.plugins.jpversioning.web.contentsversioning.validator.ContentVersioningValidator;
 import org.entando.entando.plugins.jpversioning.web.contentsversioning.validator.ContentVersioningValidatorErrorCodes;
-import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
@@ -29,7 +29,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -45,11 +44,15 @@ public class ContentVersioningController implements IContentVersioning {
     @Autowired
     private ContentVersioningValidator contentVersioningValidator;
 
+    @Autowired
+    private HttpSession httpSession;
+
     @Override
-    @RestAccessControl(permission = Permission.CONTENT_EDITOR)
-    public ResponseEntity<PagedRestResponse<ContentVersionDTO>> listContentVersions(
-            @PathVariable(value = "contentId") String contentId, RestListRequest requestList) {
+    public ResponseEntity<PagedRestResponse<ContentVersionDTO>> listContentVersions(String contentId,
+            RestListRequest requestList) {
         logger.debug("REST request - list versions for a content with contentId: {}", contentId);
+
+        contentVersioningValidator.validateRestListRequest(requestList, ContentVersionDTO.class);
 
         if (!contentVersioningValidator.contentVersioningExist(contentId)) {
             throw new ResourceNotFoundException(
@@ -63,9 +66,16 @@ public class ContentVersioningController implements IContentVersioning {
     }
 
     @Override
-    @RestAccessControl(permission = Permission.CONTENT_EDITOR)
-    public ResponseEntity<ContentDto> getContentVersion(@PathVariable(value = "contentId") String contentId,
-            @PathVariable(value = "versionId") Long versionId) {
+    public ResponseEntity<PagedRestResponse<ContentVersionDTO>> listLatestVersions(RestListRequest requestList) {
+        logger.debug("REST request - list versions for all content with request: {}", requestList);
+
+        contentVersioningValidator.validateRestListRequest(requestList, ContentVersionDTO.class);
+
+        PagedMetadata<ContentVersionDTO> result = contentVersioningService.getLatestVersions(requestList);
+        return new ResponseEntity<>(new PagedRestResponse<>(result), HttpStatus.OK);
+    }
+
+    public ResponseEntity<ContentDto> getContentVersion(String contentId, Long versionId) {
         logger.debug("REST request - get content version for contentId: {} and versionId", contentId, versionId);
         if (!contentVersioningValidator.checkContentIdForVersion(contentId, versionId)) {
             throw new ResourceNotFoundException(

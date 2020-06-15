@@ -21,6 +21,7 @@
  */
 package com.agiletec.plugins.jpversioning.aps.system.services.versioning;
 
+import com.agiletec.aps.system.common.entity.IEntityManager;
 import java.util.List;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -31,7 +32,14 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
  * @author E.Santoboni
  */
 public interface IVersioningManager {
-	
+
+	static final String VERSION_ID_FILTER_KEY = "id";
+	static final String VERSION_CONTENT_TYPE_FILTER_KEY = "contentType";
+	static final String VERSION_DESCRIPTION_FILTER_KEY = "description";
+
+	static final String[] METADATA_FILTER_KEYS = {VERSION_ID_FILTER_KEY, VERSION_CONTENT_TYPE_FILTER_KEY,
+			VERSION_DESCRIPTION_FILTER_KEY};
+
 	public List<Long> getVersions(String contentId) throws ApsSystemException;
 	
 	public List<Long> getLastVersions(String contentType, String descr) throws ApsSystemException;

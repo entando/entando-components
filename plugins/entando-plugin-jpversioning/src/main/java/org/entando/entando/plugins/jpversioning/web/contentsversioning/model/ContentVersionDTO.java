@@ -21,6 +21,7 @@ import java.util.Objects;
 public class ContentVersionDTO {
 
     private long id;
+    private String contentId;
     private String contentType;
     private String description;
     private String status;
@@ -36,6 +37,14 @@ public class ContentVersionDTO {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getContentId() {
+        return contentId;
+    }
+
+    public void setContentId(String contentId) {
+        this.contentId = contentId;
     }
 
     public String getContentType() {
@@ -106,6 +115,7 @@ public class ContentVersionDTO {
     public String toString() {
         return "ContentVersionDTO{" +
                 "id=" + id +
+                ", contentId='" + contentId + '\'' +
                 ", contentType='" + contentType + '\'' +
                 ", description='" + description + '\'' +
                 ", status='" + status + '\'' +
@@ -129,6 +139,7 @@ public class ContentVersionDTO {
         return id == that.id &&
                 onlineVersion == that.onlineVersion &&
                 approved == that.approved &&
+                Objects.equals(contentId, that.contentId) &&
                 Objects.equals(contentType, that.contentType) &&
                 Objects.equals(description, that.description) &&
                 Objects.equals(status, that.status) &&
@@ -140,7 +151,7 @@ public class ContentVersionDTO {
     @Override
     public int hashCode() {
         return Objects
-                .hash(id, contentType, description, status, versionDate, version, onlineVersion, approved,
+                .hash(id, contentId, contentType, description, status, versionDate, version, onlineVersion, approved,
                         username);
     }
 }

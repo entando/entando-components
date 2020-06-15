@@ -21,8 +21,10 @@ import com.agiletec.plugins.jpversioning.aps.system.services.versioning.Versioni
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.plugins.jacms.aps.system.services.content.ContentService;
 import org.entando.entando.plugins.jpversioning.web.contentsversioning.model.ContentVersionDTO;
+import org.entando.entando.web.common.model.Filter;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.slf4j.Logger;
@@ -52,10 +54,45 @@ public class ContentVersioningService {
                     .collect(Collectors.toList());
         } catch (ApsSystemException e) {
             logger.error("Error reading the list of content versions for content {}",contentId, e);
+            throw new RestServerError(String.format("Error while getting content versions for content %s", contentId), e);
         }
         PagedMetadata<ContentVersionDTO> pagedResults = new PagedMetadata<>(requestList, contentVersions.size());
         pagedResults.setBody(contentVersionDTOs);
         return pagedResults;
+    }
+
+    public PagedMetadata<ContentVersionDTO> getLatestVersions(RestListRequest requestList) {
+
+        try {
+            logger.debug("GET getLatestVersions with req {}", requestList);
+
+            String contentType = extractAttributeValue(requestList.getFilters(), "contentType");
+            String description = extractAttributeValue(requestList.getFilters(), "description");
+
+            List<ContentVersionDTO> result = versioningManager.getLastVersions(contentType, description).stream()
+                    .map(v -> mapContentVersionToDTO(getContentVersion(v))).collect(
+                            Collectors.toList());
+
+            final List<ContentVersionDTO> sublist = requestList.getSublist(result);
+            PagedMetadata<ContentVersionDTO> pagedResults = new PagedMetadata<>(requestList, result.size());
+            pagedResults.setBody(sublist);
+
+            return pagedResults;
+        } catch (ApsSystemException e) {
+            logger.error("Error while getting latest versions for request {}", requestList, e);
+            throw new RestServerError(String.format("Error while getting content versions for request %s", requestList), e);
+        }
+    }
+
+    private String extractAttributeValue(Filter[] filters, String attributeName) {
+        if (filters != null) {
+            for (Filter filter : filters) {
+                if (filter.getAttribute().equals(attributeName)) {
+                    return filter.getValue();
+                }
+            }
+        }
+        return null;
     }
 
     public ContentVersion getContentVersion(Long versionId) {
@@ -91,6 +128,7 @@ public class ContentVersioningService {
         contentVersionDTO.setStatus(contentVersion.getStatus());
         contentVersionDTO.setVersion(contentVersion.getVersion());
         contentVersionDTO.setVersionDate(contentVersion.getVersionDate());
+        contentVersionDTO.setContentId(contentVersion.getContentId());
         return contentVersionDTO;
     }
 
