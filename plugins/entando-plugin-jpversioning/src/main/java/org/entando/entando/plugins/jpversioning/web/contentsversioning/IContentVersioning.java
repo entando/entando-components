@@ -26,11 +26,14 @@ import org.entando.entando.web.common.model.RestListRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Api(tags = {"content-versioning-controller"})
 @ApiResponses({
+        @ApiResponse(code = 200, message = "OK"),
         @ApiResponse(code = 201, message = "Created"),
         @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 403, message = "Forbidden"),
         @ApiResponse(code = 409, message = "Conflict"),
         @ApiResponse(code = 401, message = "Unauthorized"),
         @ApiResponse(code = 500, message = "Server Error")
@@ -46,10 +49,7 @@ public interface IContentVersioning {
 
     @ApiOperation(value = "LIST contents versions", nickname = "listContentsVersions", tags = {
             "content-versioning-controller"})
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK"),
-            @ApiResponse(code = 403, message = "Forbidden")})
-    @GetMapping("/")
+    @GetMapping("")
     @RestAccessControl(permission = Permission.CONTENT_EDITOR)
     ResponseEntity<PagedRestResponse<ContentVersionDTO>> listLatestVersions(RestListRequest requestList);
 
@@ -58,5 +58,12 @@ public interface IContentVersioning {
     @GetMapping("/{contentId}/versions/{versionId}")
     @RestAccessControl(permission = Permission.CONTENT_EDITOR)
     ResponseEntity<ContentDto> getContentVersion(@PathVariable(value = "contentId") String contentId,
+            @PathVariable(value = "versionId") Long versionId);
+
+    @ApiOperation(value = "POST content version to Recover", nickname = "recover", tags = {
+            "content-versioning-controller"})
+    @PostMapping("/{contentId}/versions/{versionId}/recover")
+    @RestAccessControl(permission = Permission.CONTENT_EDITOR)
+    ResponseEntity<ContentDto> recoverContentVersion(@PathVariable(value = "contentId") String contentId,
             @PathVariable(value = "versionId") Long versionId);
 }

@@ -1,0 +1,16 @@
+[
+    {
+        "id": "CONTENT_ID",
+        "typeCode":"CT1",
+        "groups":[],
+        "mainGroup":"free",
+        "description":"test description",
+        "categories":[],
+        "attributes":[
+            {
+                "code":"bool",
+                "value":true
+            }
+        ]
+    }
+]

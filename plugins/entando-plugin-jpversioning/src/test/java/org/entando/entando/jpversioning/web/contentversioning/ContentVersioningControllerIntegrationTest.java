@@ -1,10 +1,12 @@
 package org.entando.entando.jpversioning.web.contentversioning;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -15,6 +17,7 @@ import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.FileTextReader;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
+import com.agiletec.plugins.jpversioning.aps.system.services.versioning.ContentVersion;
 import com.agiletec.plugins.jpversioning.aps.system.services.versioning.VersioningManager;
 import com.jayway.jsonpath.JsonPath;
 import java.io.InputStream;
@@ -25,6 +28,8 @@ import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
@@ -32,6 +37,8 @@ import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 public class ContentVersioningControllerIntegrationTest extends AbstractControllerIntegrationTest {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private VersioningManager versioningManager;
@@ -207,6 +214,77 @@ public class ContentVersioningControllerIntegrationTest extends AbstractControll
                     .andExpect(jsonPath("$.metaData.page", is(2)))
                     .andExpect(jsonPath("$.metaData.pageSize", is(4)))
                     .andExpect(jsonPath("$.metaData.totalItems", is(5)));
+
+        } finally {
+            deleteContent(user, newContentId);
+            deleteContentType(contentTypeCode);
+        }
+    }
+
+    @Test
+    public void testRecoverContentVersion() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        String contentTypeCode = "CT1";
+        String newContentId = null;
+        String checkVersion1 = "0.4";
+        String description1 = "content-bool";
+        String checkVersion2 = "0.5";
+        String description2 = "another description";
+        try {
+            String accessToken = mockOAuthInterceptor(user);
+            postContentType("json/1_POST_content_type_with_boolean_attribute.json", accessToken,
+                    status().isCreated());
+            newContentId = saveContent("json/1_POST_content_with_boolean_attribute.json", accessToken);
+            updateContent("json/1_PUT_content_with_boolean_attribute.json", newContentId, accessToken);
+            final ContentVersion lastVersion = versioningManager.getLastVersion(newContentId);
+            final Long versionId = lastVersion.getId();
+            updateContent("json/2_PUT_content_with_boolean_attribute.json", newContentId, accessToken);
+            postRecoverContentVersion(user, newContentId, versionId)
+                    .andExpect(status().isOk());
+            Content recoveredContent = contentManager.loadContent(newContentId, false);
+            assertThat(recoveredContent.getEntityPrototype().getDescription()).isEqualTo(description1);
+            assertThat(recoveredContent.getVersion()).isEqualTo(checkVersion1);
+
+            postRecoverContentVersion(user, newContentId, versionId+1)
+                    .andExpect(status().isOk());
+            recoveredContent = contentManager.loadContent(newContentId, false);
+            assertThat(recoveredContent.getEntityPrototype().getDescription()).isEqualTo(description2);
+            assertThat(recoveredContent.getVersion()).isEqualTo(checkVersion2);
+
+        } finally {
+            deleteContent(user, newContentId);
+            deleteContentType(contentTypeCode);
+        }
+    }
+
+    @Test
+    public void testGetContentVersion() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        String contentTypeCode = "CT1";
+        String newContentId = null;
+        String checkVersion = "0.1";
+        String description = "content-bool";
+        try {
+            String accessToken = mockOAuthInterceptor(user);
+            postContentType("json/1_POST_content_type_with_boolean_attribute.json", accessToken,
+                    status().isCreated());
+            newContentId = saveContent("json/1_POST_content_with_boolean_attribute.json", accessToken);
+            updateContent("json/1_PUT_content_with_boolean_attribute.json", newContentId, accessToken);
+
+            final ContentVersion lastVersion = versioningManager.getLastVersion(newContentId);
+            final Long versionId = lastVersion.getId();
+
+            updateContent("json/2_PUT_content_with_boolean_attribute.json", newContentId, accessToken);
+
+            final String contentVersionResult = getContentVersion(user, newContentId, versionId);
+
+            Content actualContent = contentManager.loadContent(newContentId, false);
+            String actualContentVersion = actualContent.getVersion();
+
+            assertThat((String) JsonPath.read(contentVersionResult, "$.description")).isEqualTo(description);
+            assertThat((String) JsonPath.read(contentVersionResult, "$.version")).isEqualTo(checkVersion);
+            assertThat((String) JsonPath.read(contentVersionResult, "$.version")).isNotEqualTo(actualContentVersion);
+
 
         } finally {
             deleteContent(user, newContentId);
@@ -449,6 +527,18 @@ public class ContentVersioningControllerIntegrationTest extends AbstractControll
         return JsonPath.read(bodyResult, "$.payload[0].id");
     }
 
+    private String updateContent(String filename,String contentId, String accessToken) throws Exception {
+        ResultActions result = putContent(filename, contentId, accessToken, status().isOk());
+        String bodyResult = result.andReturn().getResponse().getContentAsString();
+        return JsonPath.read(bodyResult, "$.payload[0].id");
+    }
+
+    private String getContentVersion(UserDetails user, String contentId, Long versionId) throws Exception {
+        ResultActions result = getContentVersionApi(user, contentId, versionId, status().isOk());
+        String bodyResult = result.andReturn().getResponse().getContentAsString();
+        return bodyResult;
+    }
+
     private Integer saveContentVersion(UserDetails user, String contentId) throws Exception {
         versioningManager.saveContentVersion(contentId);
         ResultActions result = listContentVersions(user, contentId);
@@ -473,6 +563,19 @@ public class ContentVersioningControllerIntegrationTest extends AbstractControll
 
         return mockMvc.perform(requestBuilder)
                 .andDo(print());
+    }
+
+    private ResultActions getContentVersionApi(UserDetails user, String contentId, Long versionId, ResultMatcher expected ) throws Exception {
+        String accessToken = mockOAuthInterceptor(user);
+
+        final MockHttpServletRequestBuilder requestBuilder = get("/plugins/versioning/contents/{contentId}/versions/{versionId}", contentId, versionId)
+                .sessionAttr("user", user)
+                .header("Authorization", "Bearer " + accessToken);
+        final ResultActions result = mockMvc.perform(requestBuilder)
+                .andDo(print());
+        result.andExpect(expected);
+
+        return result;
     }
 
     private ResultActions listLatestVersions(UserDetails user) throws Exception {
@@ -526,5 +629,39 @@ public class ContentVersioningControllerIntegrationTest extends AbstractControll
         result.andDo(print());
         result.andExpect(expected);
         return result;
+    }
+
+    private ResultActions putContent(String fileName, String contentId,String accessToken, ResultMatcher expected, String... replacements) throws Exception {
+        InputStream isJsonPostValid = getClass().getResourceAsStream(fileName);
+        String jsonPostValid = FileTextReader.getText(isJsonPostValid).replaceAll("CONTENT_ID", contentId);;
+
+        if (replacements != null) {
+            for (int i = replacements.length-1; i >= 0; i--) {
+                StringBuilder sb = new StringBuilder(PLACEHOLDER_STRING);
+                if (i > 0) {
+                    sb.append(i+1);
+                }
+                jsonPostValid = jsonPostValid.replace(sb.toString(), replacements[i]);
+            }
+        }
+        ResultActions result = mockMvc
+                .perform(put("/plugins/cms/contents")
+                        .content(jsonPostValid)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .header("Authorization", "Bearer " + accessToken));
+        result.andDo(print());
+        result.andExpect(expected);
+        return result;
+    }
+
+    private ResultActions postRecoverContentVersion(UserDetails user, String contentId, Long versionId) throws Exception {
+        String accessToken = mockOAuthInterceptor(user);
+
+        final MockHttpServletRequestBuilder requestBuilder = post("/plugins/versioning/contents/{contentId}/versions/{versionId}/recover", contentId, versionId)
+                .sessionAttr("user", user)
+                .header("Authorization", "Bearer " + accessToken);
+        
+        return mockMvc.perform(requestBuilder)
+                .andDo(print());
     }
 }
