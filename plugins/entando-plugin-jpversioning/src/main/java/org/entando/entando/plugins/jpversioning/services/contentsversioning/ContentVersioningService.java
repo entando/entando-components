@@ -147,7 +147,7 @@ public class ContentVersioningService {
     }
 
     public ContentDto recover(Long versionId) {
-        logger.info("recover versionId {}", versionId);
+        logger.debug("recover versionId {}", versionId);
         Content content;
         String lastVersionCode;
         try {
