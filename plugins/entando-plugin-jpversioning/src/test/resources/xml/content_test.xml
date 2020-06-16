@@ -1,0 +1,15 @@
+<content id="TST1" typecode="TST" typedescr="This is a test">
+    <descr>This is a test</descr>
+    <groups mainGroup="free" /><categories/>
+        <attributes>
+            <attribute name="Text" attributetype="Longtext">
+            <text lang="en">Hello!</text>
+        </attribute>
+    </attributes>
+    <status>DRAFT</status>
+    <version>1.8</version>
+    <firstEditor>admin</firstEditor>
+    <lastEditor>admin</lastEditor>
+    <created>20200608153046</created>
+    <lastModified>20200610172904</lastModified>
+ </content>

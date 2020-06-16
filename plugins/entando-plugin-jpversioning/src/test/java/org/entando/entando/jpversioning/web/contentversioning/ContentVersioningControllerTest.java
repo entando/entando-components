@@ -142,6 +142,37 @@ public class ContentVersioningControllerTest extends AbstractControllerTest {
         result.andExpect(status().isNotFound());
     }
 
+    @Test
+    public void testNotAuthorizedPostRecoverContentVersion() throws Exception {
+        ContentDto content = new ContentDto();
+        UserDetails user = this.createUser(false);
+        when(this.httpSession.getAttribute("user")).thenReturn(user);
+        when(this.validator.checkContentIdForVersion(CONTENT_ID, VERSION_ID)).thenReturn(true);
+        when(this.service.getContent(Mockito.eq(VERSION_ID))).thenReturn(content);
+        ResultActions result = postRecoverContentVersion(CONTENT_ID, VERSION_ID, user);
+        result.andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void testPostRecoverContentVersion() throws Exception {
+        ContentDto content = new ContentDto();
+        UserDetails user = this.createUser(true);
+        when(this.httpSession.getAttribute("user")).thenReturn(user);
+        when(this.validator.checkContentIdForVersion(CONTENT_ID, VERSION_ID)).thenReturn(true);
+        when(this.service.getContent(Mockito.eq(VERSION_ID))).thenReturn(content);
+        ResultActions result = postRecoverContentVersion(CONTENT_ID , VERSION_ID, user);
+        result.andExpect(status().isOk());
+    }
+
+    @Test
+    public void testPostRecoverContentVersionNotExist() throws Exception {
+        UserDetails user = this.createUser(true);
+        when(this.httpSession.getAttribute("user")).thenReturn(user);
+        when(this.validator.checkContentIdForVersion(CONTENT_ID, VERSION_ID)).thenReturn(false);
+        ResultActions result = postRecoverContentVersion(CONTENT_ID + 1, VERSION_ID, user);
+        result.andExpect(status().isNotFound());
+    }
+
     private PagedMetadata<ContentVersionDTO> getContentVersionDTOPagedMetadata() {
         PagedMetadata<ContentVersionDTO> pagedMetadata = new PagedMetadata<>();
         List<ContentVersionDTO> allResults = new ArrayList<>();
@@ -170,13 +201,21 @@ public class ContentVersioningControllerTest extends AbstractControllerTest {
 
     private ResultActions getListLatestVersions(UserDetails user) throws Exception {
         String accessToken = mockOAuthInterceptor(user);
-        String path = "/plugins/versioning/contents/";
+        String path = "/plugins/versioning/contents";
         return mockMvc.perform(
                 get(path)
                         .sessionAttr("user", user)
                         .header("Authorization", "Bearer " + accessToken));
     }
 
+    private ResultActions postRecoverContentVersion(String contentId, Long versionId,UserDetails user)  throws Exception {
+        String accessToken = mockOAuthInterceptor(user);
+        String path = "/plugins/versioning/contents/{contentId}/versions/{versionId}";
+        return mockMvc.perform(
+                get(path, contentId, versionId)
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+    }
     private UserDetails createUser(boolean adminAuth) throws Exception {
         UserDetails user = (adminAuth) ? (new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.ADMINS_GROUP_NAME, "roletest", Permission.CONTENT_EDITOR)

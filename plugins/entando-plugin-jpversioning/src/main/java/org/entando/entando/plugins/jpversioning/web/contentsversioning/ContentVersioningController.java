@@ -13,9 +13,8 @@
  */
 package org.entando.entando.plugins.jpversioning.web.contentsversioning;
 
-import javax.servlet.http.HttpSession;
-import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
+import javax.servlet.http.HttpSession;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.plugins.jpversioning.services.contentsversioning.ContentVersioningService;
 import org.entando.entando.plugins.jpversioning.web.contentsversioning.model.ContentVersionDTO;
@@ -75,6 +74,7 @@ public class ContentVersioningController implements IContentVersioning {
         return new ResponseEntity<>(new PagedRestResponse<>(result), HttpStatus.OK);
     }
 
+    @Override
     public ResponseEntity<ContentDto> getContentVersion(String contentId, Long versionId) {
         logger.debug("REST request - get content version for contentId: {} and versionId", contentId, versionId);
         if (!contentVersioningValidator.checkContentIdForVersion(contentId, versionId)) {
@@ -86,4 +86,15 @@ public class ContentVersioningController implements IContentVersioning {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @Override
+    public ResponseEntity<ContentDto> recoverContentVersion(String contentId, Long versionId) {
+        logger.debug("REST request - recover version content with contentId: {} and versionId", contentId, versionId);
+        if (!contentVersioningValidator.checkContentIdForVersion(contentId, versionId)) {
+            throw new ResourceNotFoundException(
+                    ContentVersioningValidatorErrorCodes.ERRCODE_CONTENT_VERSIONING_WRONG_CONTENT_ID.value,
+                    "Content Version", contentId + " version " + versionId);
+        }
+        ContentDto result = contentVersioningService.recover(versionId);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 }

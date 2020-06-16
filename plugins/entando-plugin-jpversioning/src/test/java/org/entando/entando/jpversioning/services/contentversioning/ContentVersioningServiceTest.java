@@ -17,10 +17,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.util.FileTextReader;
+import com.agiletec.plugins.jacms.aps.system.services.content.ContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentRecordVO;
 import com.agiletec.plugins.jpversioning.aps.system.services.versioning.ContentVersion;
 import com.agiletec.plugins.jpversioning.aps.system.services.versioning.VersioningManager;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import junit.framework.TestCase;
@@ -41,17 +46,25 @@ public class ContentVersioningServiceTest extends TestCase {
     private static final String CONTENT_ID = "TST";
     private static final Long VERSION_ID_1 =1L;
     private static final Long VERSION_ID_2 =2L;
-    private static final String STATUS = "NEW";
+    private static final String STATUS = "DRAFT";
 
     @Mock
     private VersioningManager manager;
 
     @Mock
     private ContentVersion contentVersion;
+
     @Mock
     private DtoBuilder dtoBuilder;
+
     @Mock
     private ContentService contentService;
+
+    @Mock
+    private ContentManager contentManager;
+
+    @Mock
+    private ContentRecordVO currentRecordVo;
 
     @InjectMocks
     private ContentVersioningService service;
@@ -90,6 +103,31 @@ public class ContentVersioningServiceTest extends TestCase {
 
         final ContentDto contentDto1 = service.getContent(VERSION_ID_1);
         assertThat(contentDto1.getStatus()).isEqualTo(STATUS);
+    }
+
+    @Test
+    public void testRecoverContentVersion() throws ApsSystemException {
+        Content content = new Content();
+        ContentDto contentDto = new ContentDto();
+        String contentXml = null;
+        try {
+            InputStream xml = getClass().getClassLoader().getResourceAsStream("xml/content_test.xml");
+            contentXml = FileTextReader.getText(xml);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        contentDto.setStatus(STATUS);
+        when(manager.getVersion(VERSION_ID_1)).thenReturn(contentVersion);
+        when(contentVersion.getXml()).thenReturn(contentXml);
+        when(contentVersion.getContentId()).thenReturn(CONTENT_ID);
+        when(contentManager.loadContentVO(CONTENT_ID)).thenReturn(currentRecordVo);
+        when(currentRecordVo.getVersion()).thenReturn("1.8");
+        when(manager.getLastVersion(CONTENT_ID)).thenReturn(contentVersion);
+        when(manager.getContent(contentVersion)).thenReturn(content);
+        when(contentService.getDtoBuilder()).thenReturn(dtoBuilder);
+        when(dtoBuilder.convert(content)).thenReturn(contentDto);
+        final ContentDto recoveredContent = service.recover(VERSION_ID_1);
+        assertThat(recoveredContent.getStatus()).isEqualTo(STATUS);
     }
 
     private ContentVersion getMockedVersion1() {
