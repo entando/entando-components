@@ -1,4 +1,4 @@
-package org.entando.entando.jpversioning.web.contentversioning;
+package org.entando.entando.jpversioning.web.content;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.empty;

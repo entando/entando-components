@@ -11,7 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.jpversioning.web.contentversioning;
+package org.entando.entando.jpversioning.web.content;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -24,10 +24,10 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpSession;
-import org.entando.entando.plugins.jpversioning.services.contentsversioning.ContentVersioningService;
-import org.entando.entando.plugins.jpversioning.web.contentsversioning.ContentVersioningController;
-import org.entando.entando.plugins.jpversioning.web.contentsversioning.model.ContentVersionDTO;
-import org.entando.entando.plugins.jpversioning.web.contentsversioning.validator.ContentVersioningValidator;
+import org.entando.entando.plugins.jpversioning.services.content.ContentVersioningService;
+import org.entando.entando.plugins.jpversioning.web.content.ContentVersioningController;
+import org.entando.entando.plugins.jpversioning.web.content.model.ContentVersionDTO;
+import org.entando.entando.plugins.jpversioning.web.content.validator.ContentVersioningValidator;
 import org.entando.entando.web.AbstractControllerTest;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
@@ -216,6 +216,7 @@ public class ContentVersioningControllerTest extends AbstractControllerTest {
                         .sessionAttr("user", user)
                         .header("Authorization", "Bearer " + accessToken));
     }
+
     private UserDetails createUser(boolean adminAuth) throws Exception {
         UserDetails user = (adminAuth) ? (new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.ADMINS_GROUP_NAME, "roletest", Permission.CONTENT_EDITOR)

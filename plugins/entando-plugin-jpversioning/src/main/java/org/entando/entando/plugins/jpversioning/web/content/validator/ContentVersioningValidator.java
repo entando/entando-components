@@ -11,7 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.plugins.jpversioning.web.contentsversioning.validator;
+package org.entando.entando.plugins.jpversioning.web.content.validator;
 
 import static com.agiletec.plugins.jpversioning.aps.system.services.versioning.IVersioningManager.VERSION_CONTENT_TYPE_FILTER_KEY;
 import static com.agiletec.plugins.jpversioning.aps.system.services.versioning.IVersioningManager.VERSION_DESCRIPTION_FILTER_KEY;
@@ -19,8 +19,8 @@ import static com.agiletec.plugins.jpversioning.aps.system.services.versioning.I
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.plugins.jpversioning.aps.system.services.versioning.IVersioningManager;
 import com.agiletec.plugins.jpversioning.aps.system.services.versioning.ContentVersion;
+import com.agiletec.plugins.jpversioning.aps.system.services.versioning.IVersioningManager;
 import com.agiletec.plugins.jpversioning.aps.system.services.versioning.VersioningManager;
 import java.util.Arrays;
 import java.util.List;

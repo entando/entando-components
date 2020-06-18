@@ -11,15 +11,15 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.plugins.jpversioning.web.contentsversioning;
+package org.entando.entando.plugins.jpversioning.web.content;
 
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
 import javax.servlet.http.HttpSession;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
-import org.entando.entando.plugins.jpversioning.services.contentsversioning.ContentVersioningService;
-import org.entando.entando.plugins.jpversioning.web.contentsversioning.model.ContentVersionDTO;
-import org.entando.entando.plugins.jpversioning.web.contentsversioning.validator.ContentVersioningValidator;
-import org.entando.entando.plugins.jpversioning.web.contentsversioning.validator.ContentVersioningValidatorErrorCodes;
+import org.entando.entando.plugins.jpversioning.services.content.ContentVersioningService;
+import org.entando.entando.plugins.jpversioning.web.content.model.ContentVersionDTO;
+import org.entando.entando.plugins.jpversioning.web.content.validator.ContentVersioningValidator;
+import org.entando.entando.plugins.jpversioning.web.content.validator.ContentVersioningValidatorErrorCodes;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
