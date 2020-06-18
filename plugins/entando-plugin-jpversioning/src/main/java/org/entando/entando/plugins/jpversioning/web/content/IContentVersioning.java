@@ -11,7 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.plugins.jpversioning.web.contentsversioning;
+package org.entando.entando.plugins.jpversioning.web.content;
 
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
@@ -19,7 +19,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.entando.entando.plugins.jpversioning.web.contentsversioning.model.ContentVersionDTO;
+import org.entando.entando.plugins.jpversioning.web.content.model.ContentVersionDTO;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;

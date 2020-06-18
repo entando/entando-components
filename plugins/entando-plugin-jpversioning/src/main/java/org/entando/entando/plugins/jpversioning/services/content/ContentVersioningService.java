@@ -11,7 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.plugins.jpversioning.services.contentsversioning;
+package org.entando.entando.plugins.jpversioning.services.content;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jacms.aps.system.services.content.ContentManager;
@@ -34,7 +34,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.plugins.jacms.aps.system.services.content.ContentService;
-import org.entando.entando.plugins.jpversioning.web.contentsversioning.model.ContentVersionDTO;
+import org.entando.entando.plugins.jpversioning.web.content.model.ContentVersionDTO;
 import org.entando.entando.web.common.model.Filter;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;

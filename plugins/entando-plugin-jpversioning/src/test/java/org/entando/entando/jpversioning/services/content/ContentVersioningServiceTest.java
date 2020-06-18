@@ -11,7 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.jpversioning.services.contentversioning;
+package org.entando.entando.jpversioning.services.content;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -31,8 +31,8 @@ import java.util.List;
 import junit.framework.TestCase;
 import org.entando.entando.aps.system.services.DtoBuilder;
 import org.entando.entando.plugins.jacms.aps.system.services.content.ContentService;
-import org.entando.entando.plugins.jpversioning.services.contentsversioning.ContentVersioningService;
-import org.entando.entando.plugins.jpversioning.web.contentsversioning.model.ContentVersionDTO;
+import org.entando.entando.plugins.jpversioning.services.content.ContentVersioningService;
+import org.entando.entando.plugins.jpversioning.web.content.model.ContentVersionDTO;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.junit.Before;

@@ -11,7 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.plugins.jpversioning.web.contentsversioning.validator;
+package org.entando.entando.plugins.jpversioning.web.content.validator;
 
 public enum ContentVersioningValidatorErrorCodes {
     ERRCODE_CONTENT_VERSIONING_DOES_NOT_EXIST("1"),

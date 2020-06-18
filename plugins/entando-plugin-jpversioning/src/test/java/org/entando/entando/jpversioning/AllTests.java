@@ -24,8 +24,12 @@ package org.entando.entando.jpversioning;
 import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import org.entando.entando.jpversioning.services.contentversioning.ContentVersioningServiceTest;
-import org.entando.entando.jpversioning.web.contentversioning.ContentVersioningControllerTest;
+import org.entando.entando.jpversioning.services.configuration.VersioningConfigurationServiceTest;
+import org.entando.entando.jpversioning.services.content.ContentVersioningServiceTest;
+import org.entando.entando.jpversioning.web.configuration.VersioningConfigurationControllerIntegrationTest;
+import org.entando.entando.jpversioning.web.configuration.VersioningConfigurationControllerTest;
+import org.entando.entando.jpversioning.web.content.ContentVersioningControllerIntegrationTest;
+import org.entando.entando.jpversioning.web.content.ContentVersioningControllerTest;
 
 public class AllTests {
 	
@@ -34,8 +38,12 @@ public class AllTests {
 		System.out.println("Test for org.entando.entando.jpversioning");
 
 		suite.addTestSuite(ContentVersioningServiceTest.class);
+		suite.addTestSuite(VersioningConfigurationServiceTest.class);
+		suite.addTest(new JUnit4TestAdapter(ContentVersioningControllerIntegrationTest.class));
 		suite.addTest(new JUnit4TestAdapter(ContentVersioningControllerTest.class));
-		
+		suite.addTest(new JUnit4TestAdapter(VersioningConfigurationControllerIntegrationTest.class));
+		suite.addTest(new JUnit4TestAdapter(VersioningConfigurationControllerTest.class));
+
 		return suite;
 	}
 	
