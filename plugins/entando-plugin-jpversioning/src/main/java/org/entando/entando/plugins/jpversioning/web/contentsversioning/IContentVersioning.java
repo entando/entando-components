@@ -47,7 +47,7 @@ public interface IContentVersioning {
     ResponseEntity<PagedRestResponse<ContentVersionDTO>> listContentVersions(
             @PathVariable(value = "contentId") String contentId, RestListRequest requestList);
 
-    @ApiOperation(value = "LIST contents versions", nickname = "listContentsVersions", tags = {
+    @ApiOperation(value = "LIST contents versions", nickname = "listLatestVersions", tags = {
             "content-versioning-controller"})
     @GetMapping("")
     @RestAccessControl(permission = Permission.CONTENT_EDITOR)
