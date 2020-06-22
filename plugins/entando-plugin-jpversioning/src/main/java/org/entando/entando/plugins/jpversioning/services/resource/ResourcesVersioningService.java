@@ -11,7 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.plugins.jpversioning.services.contentsversioning;
+package org.entando.entando.plugins.jpversioning.services.resource;
 
 import static org.entando.entando.plugins.jacms.web.resource.ResourcesController.ERRCODE_INVALID_RESOURCE_TYPE;
 
@@ -20,15 +20,25 @@ import com.agiletec.aps.system.services.authorization.AuthorizationManager;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.user.UserDetails;
+import com.agiletec.plugins.jacms.aps.system.services.resource.model.AbstractResource;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.AttachResource;
+import com.agiletec.plugins.jacms.aps.system.services.resource.model.ImageResource;
+import com.agiletec.plugins.jacms.aps.system.services.resource.model.ImageResourceDimension;
+import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInstance;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
+import com.agiletec.plugins.jacms.aps.system.services.resource.model.util.IImageDimensionReader;
 import com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import org.apache.commons.beanutils.BeanComparator;
 import org.entando.entando.aps.system.exception.RestServerError;
-import org.entando.entando.plugins.jpversioning.web.contentsversioning.model.FileResourceDTO;
-import org.entando.entando.plugins.jpversioning.web.contentsversioning.model.ResourceDTO;
+import org.entando.entando.plugins.jpversioning.web.resource.model.FileResourceDTO;
+import org.entando.entando.plugins.jpversioning.web.resource.model.ImageResourceDTO;
+import org.entando.entando.plugins.jpversioning.web.resource.model.ImageVersionDTO;
+import org.entando.entando.plugins.jpversioning.web.resource.model.ResourceDTO;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.Filter;
 import org.entando.entando.web.common.model.PagedMetadata;
@@ -49,6 +59,9 @@ public class ResourcesVersioningService {
 
     @Autowired
     private AuthorizationManager authorizationManager;
+
+    @Autowired
+    private IImageDimensionReader imageDimensionManager;
 
     public PagedMetadata<ResourceDTO> getTrashedResources(String resourceTypeCode, RestListRequest requestList, UserDetails user) {
 
@@ -119,8 +132,10 @@ public class ResourcesVersioningService {
 
         if (FileResourceDTO.RESOURCE_TYPE.equals(type)) {
             return convertResourceToFileResourceDto((AttachResource) resource);
+        } else if (ImageResourceDTO.RESOURCE_TYPE.equals(type)) {
+            return convertResourceToImageResourceDto((ImageResource) resource);
         } else {
-            logger.error("Resource type not allowed");
+            logger.error("Resource type not supported");
             BeanPropertyBindingResult errors = new BeanPropertyBindingResult(type, "resources.file.type");
             errors.reject(ERRCODE_INVALID_RESOURCE_TYPE, "plugins.jacms.resources.invalidResourceType");
             throw new ValidationGenericException(errors);
@@ -128,16 +143,53 @@ public class ResourcesVersioningService {
     }
 
     private FileResourceDTO convertResourceToFileResourceDto(AttachResource resource){
-        return new FileResourceDTO(resource.getId(), resource.getMasterFileName(),
-                resource.getDescription(), resource.getCreationDate(), resource.getLastModified(),
-                resource.getMainGroup(), resource.getCategories().stream()
-                .map(Category::getCode).collect(Collectors.toList()), resource.getDefaultInstance().getFileLength(),
-                resource.getAttachPath(), resource.getOwner(), resource.getFolderPath());
+        return new FileResourceDTO(resource.getId(), resource.getMasterFileName(), resource.getDescription(),
+                resource.getCreationDate(), resource.getLastModified(), resource.getMainGroup(),
+                getCategories(resource), resource.getDefaultInstance().getFileLength(), resource.getAttachPath(),
+                resource.getOwner(), resource.getFolderPath());
+    }
+
+    private ImageResourceDTO convertResourceToImageResourceDto(ImageResource resource) {
+        List<ImageVersionDTO> versions = new ArrayList<>();
+
+        for (ImageResourceDimension dimensions : getImageDimensions()) {
+            ResourceInstance instance = resource.getInstance(dimensions.getIdDim(), null);
+
+            if (instance == null) {
+                logger.warn("ResourceInstance not found for dimensions id {} and image id {}", dimensions.getIdDim(), resource.getId());
+                continue;
+            }
+
+            String dimension = String.format("%dx%d px", dimensions.getDimx(), dimensions.getDimy());
+            String path = resource.getImagePath(String.valueOf(dimensions.getIdDim()));
+            String size = instance.getFileLength();
+
+            versions.add(new ImageVersionDTO(dimension, path, size));
+        }
+
+        return new ImageResourceDTO(resource.getId(), resource.getMasterFileName(), resource.getDescription(),
+                resource.getCreationDate(), resource.getLastModified(), null, resource.getMainGroup(),
+                getCategories(resource), resource.getOwner(), resource.getFolderPath());
+    }
+
+    private List<ImageResourceDimension> getImageDimensions() {
+        Map<Integer, ImageResourceDimension> master = imageDimensionManager.getImageDimensions();
+        List<ImageResourceDimension> dimensions = new ArrayList<>(master.values());
+        BeanComparator comparator = new BeanComparator("dimx");
+        Collections.sort(dimensions, comparator);
+        return dimensions;
+    }
+
+    private List<String> getCategories(AbstractResource resource) {
+        return resource.getCategories().stream()
+                .map(Category::getCode).collect(Collectors.toList());
     }
 
     public String extractTypeFromResource(String resourceType) {
         if ("Attach".equals(resourceType)) {
             return FileResourceDTO.RESOURCE_TYPE;
+        } else if ("Image".equals(resourceType)) {
+            return ImageResourceDTO.RESOURCE_TYPE;
         } else {
             throw new RestServerError(String.format("Invalid resource type: %s", resourceType), null);
         }
