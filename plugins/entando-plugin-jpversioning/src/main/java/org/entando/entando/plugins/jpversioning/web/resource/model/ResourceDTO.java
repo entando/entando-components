@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Objects;
 
 @ApiModel("TrashedResource")
-public class ResourceDTO {
+public abstract class ResourceDTO {
 
     private String id;
     private String type;

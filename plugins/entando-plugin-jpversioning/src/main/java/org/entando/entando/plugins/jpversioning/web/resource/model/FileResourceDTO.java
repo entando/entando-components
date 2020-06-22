@@ -17,4 +17,20 @@ public class FileResourceDTO extends ResourceDTO {
         this.size = size;
         this.path = path;
     }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
 }

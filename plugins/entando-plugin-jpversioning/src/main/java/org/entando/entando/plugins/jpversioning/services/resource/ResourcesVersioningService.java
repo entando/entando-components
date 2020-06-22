@@ -168,7 +168,7 @@ public class ResourcesVersioningService {
         }
 
         return new ImageResourceDTO(resource.getId(), resource.getMasterFileName(), resource.getDescription(),
-                resource.getCreationDate(), resource.getLastModified(), null, resource.getMainGroup(),
+                resource.getCreationDate(), resource.getLastModified(), versions, resource.getMainGroup(),
                 getCategories(resource), resource.getOwner(), resource.getFolderPath());
     }
 

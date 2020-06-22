@@ -14,6 +14,10 @@ public class ImageResourceDTO extends ResourceDTO {
         this.versions = versions;
     }
 
+    public List<ImageVersionDTO> getVersions() {
+        return versions;
+    }
+
     public void setVersions(
             List<ImageVersionDTO> versions) {
         this.versions = versions;
