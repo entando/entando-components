@@ -43,4 +43,11 @@ public class VersioningConfigurationController implements IVersioningConfigurati
         return new ResponseEntity<>(versioningConfiguration, HttpStatus.OK);
     }
 
+    @Override
+    public ResponseEntity<VersioningConfigurationDTO> putVersioningConfiguration(VersioningConfigurationDTO versioningConfigurationDTO) {
+        logger.debug("REST request - put Versioning Configuration");
+        final VersioningConfigurationDTO versioningConfiguration = versioningConfigurationService.putVersioningConfiguration(versioningConfigurationDTO);
+        return new ResponseEntity<>(versioningConfiguration, HttpStatus.OK);
+    }
+
 }

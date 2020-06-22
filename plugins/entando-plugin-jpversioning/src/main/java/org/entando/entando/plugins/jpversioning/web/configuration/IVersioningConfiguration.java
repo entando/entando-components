@@ -22,8 +22,10 @@ import org.entando.entando.plugins.jpversioning.web.configuration.model.Versioni
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
-@Api(tags = {"content-versioning-controller"})
+@Api(tags = {"versioning-configuration-controller"})
 @ApiResponses({
         @ApiResponse(code = 200, message = "OK"),
         @ApiResponse(code = 201, message = "Created"),
@@ -40,5 +42,11 @@ public interface IVersioningConfiguration {
     @GetMapping("")
     @RestAccessControl(permission = Permission.SUPERUSER)
     ResponseEntity<VersioningConfigurationDTO> getVersioningConfiguration();
+
+    @ApiOperation(value = "PUT versioning configuration", nickname = "putVersioningConfiguration", tags = {
+            "versioning-configuration-controller"})
+    @PutMapping("")
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    ResponseEntity<VersioningConfigurationDTO> putVersioningConfiguration(@RequestBody VersioningConfigurationDTO bodyRequest);
 
 }

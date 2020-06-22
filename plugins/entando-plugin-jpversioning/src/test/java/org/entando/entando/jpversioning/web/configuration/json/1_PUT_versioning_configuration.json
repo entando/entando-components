@@ -1,0 +1,9 @@
+{
+    "contentTypesToIgnore": [
+        "CT1"
+    ],
+    "contentsToIgnore": [
+        "TST1"
+    ],
+    "deleteMidVersions": true
+}
