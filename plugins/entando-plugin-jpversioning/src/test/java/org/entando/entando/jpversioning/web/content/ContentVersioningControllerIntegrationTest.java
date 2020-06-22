@@ -631,22 +631,12 @@ public class ContentVersioningControllerIntegrationTest extends AbstractControll
         return result;
     }
 
-    private ResultActions putContent(String fileName, String contentId,String accessToken, ResultMatcher expected, String... replacements) throws Exception {
-        InputStream isJsonPostValid = getClass().getResourceAsStream(fileName);
-        String jsonPostValid = FileTextReader.getText(isJsonPostValid).replaceAll("CONTENT_ID", contentId);;
-
-        if (replacements != null) {
-            for (int i = replacements.length-1; i >= 0; i--) {
-                StringBuilder sb = new StringBuilder(PLACEHOLDER_STRING);
-                if (i > 0) {
-                    sb.append(i+1);
-                }
-                jsonPostValid = jsonPostValid.replace(sb.toString(), replacements[i]);
-            }
-        }
+    private ResultActions putContent(String fileName, String contentId,String accessToken, ResultMatcher expected) throws Exception {
+        InputStream jsonStream = getClass().getResourceAsStream(fileName);
+        String json = FileTextReader.getText(jsonStream).replaceAll("CONTENT_ID", contentId);;
         ResultActions result = mockMvc
                 .perform(put("/plugins/cms/contents")
-                        .content(jsonPostValid)
+                        .content(json)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));
         result.andDo(print());

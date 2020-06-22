@@ -30,6 +30,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -76,7 +77,37 @@ public class VersioningConfigurationControllerTest extends AbstractControllerTes
         result.andExpect(status().isForbidden());
     }
 
+    @Test
+    public void testPutExistingContentVersioning() throws Exception {
+        VersioningConfigurationDTO configuration = new VersioningConfigurationDTO();
+        UserDetails user = this.createUser(true);
+        when(this.httpSession.getAttribute("user")).thenReturn(user);
+        when(this.service.putVersioningConfiguration(Mockito.any(VersioningConfigurationDTO.class)))
+                .thenReturn(configuration);
+        ResultActions result = getVersioningConfiguration(user);
+        result.andExpect(status().isOk());
+    }
+
+    @Test
+    public void testNotAuthorizedPutExistingContentVersioning() throws Exception {
+        VersioningConfigurationDTO configuration = new VersioningConfigurationDTO();
+        UserDetails user = this.createUser(false);
+        when(this.httpSession.getAttribute("user")).thenReturn(user);
+        when(this.service.putVersioningConfiguration(Mockito.any(VersioningConfigurationDTO.class)))
+                .thenReturn(configuration);
+        ResultActions result = putVersioningConfiguration(user);
+        result.andExpect(status().isForbidden());
+    }
+
     private ResultActions getVersioningConfiguration(UserDetails user) throws Exception {
+        String accessToken = mockOAuthInterceptor(user);
+        String path = "/plugins/versioning/configuration";
+        return mockMvc.perform(
+                get(path)
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+    }
+    private ResultActions putVersioningConfiguration(UserDetails user) throws Exception {
         String accessToken = mockOAuthInterceptor(user);
         String path = "/plugins/versioning/configuration";
         return mockMvc.perform(

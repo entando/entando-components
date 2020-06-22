@@ -50,8 +50,8 @@ public class VersioningConfigurationServiceTest extends TestCase {
         MockitoAnnotations.initMocks(this);
         contentsToIgnoreList = Arrays.asList(CONTENTS_TO_IGNORE.trim().split(SPLIT_REGEX));
         contentTypesToIgnoreList =Arrays.asList(CONTENT_TYPES_TO_IGNORE.trim().split(SPLIT_REGEX));
-
     }
+
     @Test
     public void testGetVersioningConfigurationNotExists() {
         when(baseConfigManager.getParam(JpversioningSystemConstants.CONFIG_PARAM_DELETE_MID_VERSIONS)).thenReturn(null);
