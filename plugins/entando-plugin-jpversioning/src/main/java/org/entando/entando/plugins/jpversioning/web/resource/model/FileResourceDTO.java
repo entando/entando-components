@@ -1,12 +1,8 @@
-package org.entando.entando.plugins.jpversioning.web.contentsversioning.model;
+package org.entando.entando.plugins.jpversioning.web.resource.model;
 
 import java.util.Date;
 import java.util.List;
 import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Singular;
-import org.entando.entando.plugins.jacms.web.resource.model.AssetDto;
 
 public class FileResourceDTO extends ResourceDTO {
     public static final String RESOURCE_TYPE = "file";
@@ -16,9 +12,25 @@ public class FileResourceDTO extends ResourceDTO {
 
     @Builder
     public FileResourceDTO(String id, String name, String description, Date createdAt, Date updatedAt,
-                         String group, @Singular List<String> categories, String size, String path, String owner, String folderPath) {
+                         String group, List<String> categories, String size, String path, String owner, String folderPath) {
         super(id, RESOURCE_TYPE, name, description, createdAt, updatedAt, group, categories, owner, folderPath);
         this.size = size;
+        this.path = path;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
         this.path = path;
     }
 }

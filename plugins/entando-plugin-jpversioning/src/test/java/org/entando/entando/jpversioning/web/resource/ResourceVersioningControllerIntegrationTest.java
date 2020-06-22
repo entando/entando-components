@@ -1,7 +1,6 @@
-package org.entando.entando.jpversioning.web.contentversioning;
+package org.entando.entando.jpversioning.web.resource;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -13,34 +12,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
-import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.user.UserDetails;
-import com.agiletec.aps.util.FileTextReader;
-import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
-import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager;
-import com.agiletec.plugins.jpversioning.aps.system.services.versioning.ContentVersion;
-import com.agiletec.plugins.jpversioning.aps.system.services.versioning.VersioningManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
-import java.io.InputStream;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.entando.entando.plugins.jacms.web.resource.request.CreateResourceRequest;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
-import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 public class ResourceVersioningControllerIntegrationTest extends AbstractControllerIntegrationTest {
@@ -63,6 +50,8 @@ public class ResourceVersioningControllerIntegrationTest extends AbstractControl
 
             Map<String,String> params = new HashMap<>();
             params.put("resourceTypeCode", resourceTypeCode);
+
+            trashedResourceManager.removeFromTrash("66");
 
             listTrashedResources(user, params)
                     .andExpect(status().isOk())
@@ -89,9 +78,7 @@ public class ResourceVersioningControllerIntegrationTest extends AbstractControl
             versionResourceId = JsonPath.read(bodyResult, "$.payload[0].id");
 
         } finally {
-            if (versionResourceId != null) {
-                trashedResourceManager.removeFromTrash(versionResourceId);
-            }
+            trashedResourceManager.removeFromTrash(versionResourceId);
         }
     }
 
@@ -99,6 +86,7 @@ public class ResourceVersioningControllerIntegrationTest extends AbstractControl
     public void testListDeletedAttachmentsPagination() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String resourceTypeCode = "Attach";
+        String type = "file";
         String versionResourceId1 = null;
         String versionResourceId2 = null;
         String versionResourceId3 = null;
@@ -115,12 +103,12 @@ public class ResourceVersioningControllerIntegrationTest extends AbstractControl
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.size()", is(0)));
 
-            versionResourceId1 = createAndDeleteResource(user, resourceTypeCode, params);
-            versionResourceId2 = createAndDeleteResource(user, resourceTypeCode, params);
-            versionResourceId3 = createAndDeleteResource(user, resourceTypeCode, params);
-            versionResourceId4 = createAndDeleteResource(user, resourceTypeCode, params);
-            versionResourceId5 = createAndDeleteResource(user, resourceTypeCode, params);
-            versionResourceId6 = createAndDeleteResource(user, resourceTypeCode, params);
+            versionResourceId1 = createAndDeleteResource(user, resourceTypeCode, type, params);
+            versionResourceId2 = createAndDeleteResource(user, resourceTypeCode, type, params);
+            versionResourceId3 = createAndDeleteResource(user, resourceTypeCode, type, params);
+            versionResourceId4 = createAndDeleteResource(user, resourceTypeCode, type, params);
+            versionResourceId5 = createAndDeleteResource(user, resourceTypeCode, type, params);
+            versionResourceId6 = createAndDeleteResource(user, resourceTypeCode, type, params);
 
             listTrashedResources(user, params)
                     .andExpect(status().isOk())
@@ -147,24 +135,12 @@ public class ResourceVersioningControllerIntegrationTest extends AbstractControl
                     .andExpect(jsonPath("$.metaData.totalItems", is(6)));
 
         } finally {
-            if (versionResourceId6 != null) {
-                trashedResourceManager.removeFromTrash(versionResourceId6);
-            }
-            if (versionResourceId5 != null) {
-                trashedResourceManager.removeFromTrash(versionResourceId5);
-            }
-            if (versionResourceId4 != null) {
-                trashedResourceManager.removeFromTrash(versionResourceId4);
-            }
-            if (versionResourceId3 != null) {
-                trashedResourceManager.removeFromTrash(versionResourceId3);
-            }
-            if (versionResourceId2 != null) {
-                trashedResourceManager.removeFromTrash(versionResourceId2);
-            }
-            if (versionResourceId1 != null) {
-                trashedResourceManager.removeFromTrash(versionResourceId1);
-            }
+            trashedResourceManager.removeFromTrash(versionResourceId6);
+            trashedResourceManager.removeFromTrash(versionResourceId5);
+            trashedResourceManager.removeFromTrash(versionResourceId4);
+            trashedResourceManager.removeFromTrash(versionResourceId3);
+            trashedResourceManager.removeFromTrash(versionResourceId2);
+            trashedResourceManager.removeFromTrash(versionResourceId1);
         }
     }
 
@@ -172,6 +148,7 @@ public class ResourceVersioningControllerIntegrationTest extends AbstractControl
     public void testListDeletedAttachmentsFiltering() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String resourceTypeCode = "Attach";
+        String type = "file";
         String versionResourceId1 = null;
         String versionResourceId2 = null;
         String versionResourceId3 = null;
@@ -185,9 +162,9 @@ public class ResourceVersioningControllerIntegrationTest extends AbstractControl
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.size()", is(0)));
 
-            versionResourceId1 = createAndDeleteResource(user, resourceTypeCode, params);
-            versionResourceId2 = createAndDeleteResource(user, resourceTypeCode, params);
-            versionResourceId3 = createAndDeleteResource(user, resourceTypeCode, params);
+            versionResourceId1 = createAndDeleteResource(user, resourceTypeCode, type, params);
+            versionResourceId2 = createAndDeleteResource(user, resourceTypeCode, type, params);
+            versionResourceId3 = createAndDeleteResource(user, resourceTypeCode, type, params);
 
             listTrashedResources(user, params)
                     .andExpect(status().isOk())
@@ -215,20 +192,167 @@ public class ResourceVersioningControllerIntegrationTest extends AbstractControl
                     .andExpect(jsonPath("$.metaData.filters[0].value", is("wrong description")));
 
         } finally {
-            if (versionResourceId3 != null) {
-                trashedResourceManager.removeFromTrash(versionResourceId3);
-            }
-            if (versionResourceId2 != null) {
-                trashedResourceManager.removeFromTrash(versionResourceId2);
-            }
-            if (versionResourceId1 != null) {
-                trashedResourceManager.removeFromTrash(versionResourceId1);
-            }
+            trashedResourceManager.removeFromTrash(versionResourceId3);
+            trashedResourceManager.removeFromTrash(versionResourceId2);
+            trashedResourceManager.removeFromTrash(versionResourceId1);
         }
     }
 
-    private String createAndDeleteResource(UserDetails user, String resourceTypeCode, Map<String, String> params) throws Exception {
-        ResultActions result = performCreateResource(user, "file", "free", "application/pdf");
+    @Test
+    public void testListDeletedImage() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        String resourceTypeCode = "Image";
+        String type = "image";
+        String versionResourceId = null;
+
+        try {
+
+            Map<String,String> params = new HashMap<>();
+            params.put("resourceTypeCode", resourceTypeCode);
+
+            trashedResourceManager.removeFromTrash("251");
+
+            listTrashedResources(user, params)
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)));
+
+            versionResourceId = createAndDeleteResource(user, resourceTypeCode, type, params);
+
+            listTrashedResources(user, params)
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(2)));
+
+        } finally {
+            trashedResourceManager.removeFromTrash(versionResourceId);
+        }
+    }
+
+    @Test
+    public void testListDeletedImagePagination() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        String resourceTypeCode = "Image";
+        String type = "image";
+        String versionResourceId1 = null;
+        String versionResourceId2 = null;
+        String versionResourceId3 = null;
+        String versionResourceId4 = null;
+        String versionResourceId5 = null;
+        String versionResourceId6 = null;
+
+        try {
+
+            Map<String,String> params = new HashMap<>();
+            params.put("resourceTypeCode", resourceTypeCode);
+
+            listTrashedResources(user, params)
+                    .andExpect(status().isOk());
+
+            trashedResourceManager.removeFromTrash("67");
+            trashedResourceManager.removeFromTrash("68");
+            trashedResourceManager.removeFromTrash("398");
+
+            listTrashedResources(user, params)
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)));
+
+            versionResourceId1 = createAndDeleteResource(user, resourceTypeCode, type, params);
+            versionResourceId2 = createAndDeleteResource(user, resourceTypeCode, type, params);
+            versionResourceId3 = createAndDeleteResource(user, resourceTypeCode, type, params);
+            versionResourceId4 = createAndDeleteResource(user, resourceTypeCode, type, params);
+            versionResourceId5 = createAndDeleteResource(user, resourceTypeCode, type, params);
+            versionResourceId6 = createAndDeleteResource(user, resourceTypeCode, type, params);
+
+            listTrashedResources(user, params)
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(7)));
+
+            params.put("pageSize", "4");
+            params.put("page", "1");
+
+            listTrashedResources(user, params)
+                    .andExpect(jsonPath("$.payload.size()", is(4)))
+                    .andExpect(jsonPath("$.metaData.page", is(1)))
+                    .andExpect(jsonPath("$.metaData.pageSize", is(4)))
+                    .andExpect(jsonPath("$.metaData.totalItems", is(7)));
+
+            params.clear();
+            params.put("resourceTypeCode", resourceTypeCode);
+            params.put("pageSize", "4");
+            params.put("page", "2");
+
+            listTrashedResources(user, params)
+                    .andExpect(jsonPath("$.payload.size()", is(3)))
+                    .andExpect(jsonPath("$.metaData.page", is(2)))
+                    .andExpect(jsonPath("$.metaData.pageSize", is(4)))
+                    .andExpect(jsonPath("$.metaData.totalItems", is(7)));
+
+        } finally {
+            trashedResourceManager.removeFromTrash(versionResourceId6);
+            trashedResourceManager.removeFromTrash(versionResourceId5);
+            trashedResourceManager.removeFromTrash(versionResourceId4);
+            trashedResourceManager.removeFromTrash(versionResourceId3);
+            trashedResourceManager.removeFromTrash(versionResourceId2);
+            trashedResourceManager.removeFromTrash(versionResourceId1);
+        }
+    }
+
+    @Test
+    public void testListDeletedImageFiltering() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        String resourceTypeCode = "Image";
+        String type = "image";
+        String versionResourceId1 = null;
+        String versionResourceId2 = null;
+        String versionResourceId3 = null;
+
+        try {
+
+            Map<String,String> params = new HashMap<>();
+            params.put("resourceTypeCode", resourceTypeCode);
+
+            listTrashedResources(user, params)
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)));
+
+            versionResourceId1 = createAndDeleteResource(user, resourceTypeCode, type, params);
+            versionResourceId2 = createAndDeleteResource(user, resourceTypeCode, type, params);
+            versionResourceId3 = createAndDeleteResource(user, resourceTypeCode, type, params);
+
+            listTrashedResources(user, params)
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(4)));
+
+            params.put("filters[0].attribute", "description");
+            params.put("filters[0].value", "image_test.jpeg");
+
+            listTrashedResources(user, params)
+                    .andExpect(jsonPath("$.payload.size()", is(3)))
+                    .andExpect(jsonPath("$.payload[0].description", is("image_test.jpeg")))
+                    .andExpect(jsonPath("$.metaData.filters.size()", is(1)))
+                    .andExpect(jsonPath("$.metaData.filters[0].attribute", is("description")))
+                    .andExpect(jsonPath("$.metaData.filters[0].value", is("image_test.jpeg")));
+
+            params.clear();
+            params.put("resourceTypeCode", resourceTypeCode);
+            params.put("filters[0].attribute", "description");
+            params.put("filters[0].value", "wrong description");
+
+            listTrashedResources(user, params)
+                    .andExpect(jsonPath("$.payload.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.filters.size()", is(1)))
+                    .andExpect(jsonPath("$.metaData.filters[0].attribute", is("description")))
+                    .andExpect(jsonPath("$.metaData.filters[0].value", is("wrong description")));
+
+        } finally {
+            trashedResourceManager.removeFromTrash(versionResourceId3);
+            trashedResourceManager.removeFromTrash(versionResourceId2);
+            trashedResourceManager.removeFromTrash(versionResourceId1);
+        }
+    }
+
+    private String createAndDeleteResource(UserDetails user, String resourceTypeCode, String type, Map<String, String> params) throws Exception {
+        String mimeType = type.equals("image") ? "application/jpeg" : "application/pdf";
+        ResultActions result = performCreateResource(user, type, "free", mimeType);
         String bodyResult = result.andReturn().getResponse().getContentAsString();
         String resourceId = JsonPath.read(bodyResult, "$.payload.id");
 
@@ -239,7 +363,13 @@ public class ResourceVersioningControllerIntegrationTest extends AbstractControl
                 .andExpect(status().isOk());
         bodyResult = result.andReturn().getResponse().getContentAsString();
 
-        return JsonPath.read(bodyResult, "$.payload[0].id");
+        Integer payloadSize = JsonPath.read(bodyResult, "$.payload.size()");
+        for (int i = 0; i < payloadSize; i++) {
+            if (!JsonPath.read(bodyResult, "$.payload[" + i + "].description").equals("Logo jAPS")) {
+                return JsonPath.read(bodyResult, "$.payload[" + i + "].id");
+            }
+        }
+        return null;
     }
 
     private ResultActions listTrashedResources(UserDetails user, Map<String,String> params) throws Exception {
