@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -256,6 +257,39 @@ public class ContentVersioningControllerIntegrationTest extends AbstractControll
             deleteContentType(contentTypeCode);
         }
     }
+
+    @Test
+    public void testDeleteContentVersion() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        String contentTypeCode = "CT1";
+        String contentId = null;
+        try {
+            String accessToken = mockOAuthInterceptor(user);
+            postContentType("json/1_POST_content_type_with_boolean_attribute.json", accessToken,
+                    status().isCreated());
+
+            contentId = saveContent("json/1_POST_content_with_boolean_attribute.json", accessToken);
+            updateContent("json/1_PUT_content_with_boolean_attribute.json", contentId, accessToken);
+            updateContent("json/2_PUT_content_with_boolean_attribute.json", contentId, accessToken);
+
+            final ContentVersion lastVersion = versioningManager.getLastVersion(contentId);
+            final Long versionId = lastVersion.getId();
+
+            listContentVersions(user, contentId)
+                    .andExpect(jsonPath("$.payload.size()", is(2)));
+
+            deleteContentVersion(user, contentId, versionId)
+                    .andExpect(status().isOk());
+            getContentVersionApi(user, contentId, versionId).andExpect(status().isNotFound());
+            listContentVersions(user, contentId)
+                    .andExpect(jsonPath("$.payload.size()", is(1)));
+
+        } finally {
+            deleteContent(user, contentId);
+            deleteContentType(contentTypeCode);
+        }
+    }
+
 
     @Test
     public void testGetContentVersion() throws Exception {
@@ -578,6 +612,16 @@ public class ContentVersioningControllerIntegrationTest extends AbstractControll
         return result;
     }
 
+    private ResultActions getContentVersionApi(UserDetails user, String contentId, Long versionId ) throws Exception {
+        String accessToken = mockOAuthInterceptor(user);
+
+        final MockHttpServletRequestBuilder requestBuilder = get("/plugins/versioning/contents/{contentId}/versions/{versionId}", contentId, versionId)
+                .sessionAttr("user", user)
+                .header("Authorization", "Bearer " + accessToken);
+        final ResultActions result = mockMvc.perform(requestBuilder)
+                .andDo(print());
+        return result;
+    }
     private ResultActions listLatestVersions(UserDetails user) throws Exception {
         return listLatestVersions(user, null);
     }
@@ -651,6 +695,17 @@ public class ContentVersioningControllerIntegrationTest extends AbstractControll
                 .sessionAttr("user", user)
                 .header("Authorization", "Bearer " + accessToken);
         
+        return mockMvc.perform(requestBuilder)
+                .andDo(print());
+    }
+
+    private ResultActions deleteContentVersion(UserDetails user, String contentId, Long versionId) throws Exception {
+        String accessToken = mockOAuthInterceptor(user);
+
+        final MockHttpServletRequestBuilder requestBuilder = delete("/plugins/versioning/contents/{contentId}/versions/{versionId}", contentId, versionId)
+                .sessionAttr("user", user)
+                .header("Authorization", "Bearer " + accessToken);
+
         return mockMvc.perform(requestBuilder)
                 .andDo(print());
     }

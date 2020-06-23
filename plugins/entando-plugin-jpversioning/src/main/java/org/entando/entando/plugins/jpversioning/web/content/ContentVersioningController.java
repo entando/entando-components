@@ -14,6 +14,8 @@
 package org.entando.entando.plugins.jpversioning.web.content;
 
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentDto;
+import com.google.common.collect.ImmutableMap;
+import java.util.Map;
 import javax.servlet.http.HttpSession;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.plugins.jpversioning.services.content.ContentVersioningService;
@@ -23,6 +25,7 @@ import org.entando.entando.plugins.jpversioning.web.content.validator.ContentVer
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
+import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/plugins/versioning/contents")
 public class ContentVersioningController implements IContentVersioning {
 
+    private static final String CONTENT_VERSION_ID = "versionId";
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
@@ -77,6 +81,7 @@ public class ContentVersioningController implements IContentVersioning {
     @Override
     public ResponseEntity<ContentDto> getContentVersion(String contentId, Long versionId) {
         logger.debug("REST request - get content version for contentId: {} and versionId", contentId, versionId);
+
         if (!contentVersioningValidator.checkContentIdForVersion(contentId, versionId)) {
             throw new ResourceNotFoundException(
                     ContentVersioningValidatorErrorCodes.ERRCODE_CONTENT_VERSIONING_WRONG_CONTENT_ID.value,
@@ -96,5 +101,20 @@ public class ContentVersioningController implements IContentVersioning {
         }
         ContentDto result = contentVersioningService.recover(versionId);
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<SimpleRestResponse<Map>> delete(String contentId, Long versionId){
+        logger.debug("REST request - delete content version with versionId: {}", versionId);
+        if (!contentVersioningValidator.checkContentIdForVersion(contentId, versionId)) {
+            throw new ResourceNotFoundException(
+                    ContentVersioningValidatorErrorCodes.ERRCODE_CONTENT_VERSIONING_WRONG_CONTENT_ID.value,
+                    "Content Version", contentId + " version " + versionId);
+        }
+        contentVersioningService.delete(versionId);
+        Map<String, String> metadata = ImmutableMap.of(
+                CONTENT_VERSION_ID, String.valueOf(versionId)
+        );
+        return ResponseEntity.ok(new SimpleRestResponse<>(metadata));
     }
 }

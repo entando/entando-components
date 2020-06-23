@@ -19,11 +19,14 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import java.util.Map;
 import org.entando.entando.plugins.jpversioning.web.content.model.ContentVersionDTO;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
+import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -60,10 +63,17 @@ public interface IContentVersioning {
     ResponseEntity<ContentDto> getContentVersion(@PathVariable(value = "contentId") String contentId,
             @PathVariable(value = "versionId") Long versionId);
 
-    @ApiOperation(value = "POST content version to Recover", nickname = "recover", tags = {
+    @ApiOperation(value = "DELETE content version", nickname = "deleteContentVersion", tags = {
+            "content-versioning-controller"})
+    @DeleteMapping("/{contentId}/versions/{versionId}")
+    @RestAccessControl(permission = Permission.CONTENT_EDITOR)
+    ResponseEntity<SimpleRestResponse<Map>> delete(@PathVariable String contentId, @PathVariable Long versionId);
+
+    @ApiOperation(value = "POST content version to Recover", nickname = "recoverContentVersion", tags = {
             "content-versioning-controller"})
     @PostMapping("/{contentId}/versions/{versionId}/recover")
     @RestAccessControl(permission = Permission.CONTENT_EDITOR)
     ResponseEntity<ContentDto> recoverContentVersion(@PathVariable(value = "contentId") String contentId,
             @PathVariable(value = "versionId") Long versionId);
+
 }
