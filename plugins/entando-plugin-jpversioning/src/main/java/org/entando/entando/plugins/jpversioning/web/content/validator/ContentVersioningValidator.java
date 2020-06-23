@@ -25,8 +25,6 @@ import com.agiletec.plugins.jpversioning.aps.system.services.versioning.Versioni
 import java.util.Arrays;
 import java.util.List;
 import org.entando.entando.web.common.validator.AbstractPaginationValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -34,13 +32,10 @@ import org.springframework.validation.Errors;
 @Component
 public class ContentVersioningValidator extends AbstractPaginationValidator {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
     @Autowired
     private VersioningManager versioningManager;
 
     public boolean contentVersioningExist(String contentId) {
-        boolean validationResult = false;
         try {
             if (versioningManager.getVersions(contentId) != null) {
                 return true;
@@ -48,7 +43,7 @@ public class ContentVersioningValidator extends AbstractPaginationValidator {
         } catch (ApsSystemException e) {
             e.printStackTrace();
         }
-        return validationResult;
+        return false;
     }
 
     public void checkFilterKeys(FieldSearchFilter[] filters) throws ApsSystemException {
@@ -87,15 +82,14 @@ public class ContentVersioningValidator extends AbstractPaginationValidator {
     }
 
     public boolean checkContentIdForVersion(String contentId, Long versionId) {
-        boolean validationResult = false;
         try {
             final ContentVersion version = versioningManager.getVersion(versionId);
-            if (version.getContentId().equals(contentId)){
+            if (version != null && version.getContentId().equals(contentId)){
                 return true;
             }
-        } catch (ApsSystemException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return validationResult;
+        return false;
     }
 }

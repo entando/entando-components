@@ -14,6 +14,7 @@
 package org.entando.entando.jpversioning.web.content;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -173,6 +174,37 @@ public class ContentVersioningControllerTest extends AbstractControllerTest {
         result.andExpect(status().isNotFound());
     }
 
+    @Test
+    public void testNotAuthorizedDeleteContentVersion() throws Exception {
+        ContentDto content = new ContentDto();
+        UserDetails user = this.createUser(false);
+        when(this.httpSession.getAttribute("user")).thenReturn(user);
+        when(this.validator.checkContentIdForVersion(CONTENT_ID, VERSION_ID)).thenReturn(true);
+        when(this.service.getContent(Mockito.eq(VERSION_ID))).thenReturn(content);
+        ResultActions result = deleteContentVersion(CONTENT_ID, VERSION_ID, user);
+        result.andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void testDeleteContentVersion() throws Exception {
+        ContentDto content = new ContentDto();
+        UserDetails user = this.createUser(true);
+        when(this.httpSession.getAttribute("user")).thenReturn(user);
+        when(this.validator.checkContentIdForVersion(CONTENT_ID, VERSION_ID)).thenReturn(true);
+        when(this.service.getContent(Mockito.eq(VERSION_ID))).thenReturn(content);
+        ResultActions result = deleteContentVersion(CONTENT_ID , VERSION_ID, user);
+        result.andExpect(status().isOk());
+    }
+
+    @Test
+    public void testDeleteRecoverContentVersionNotExist() throws Exception {
+        UserDetails user = this.createUser(true);
+        when(this.httpSession.getAttribute("user")).thenReturn(user);
+        when(this.validator.checkContentIdForVersion(CONTENT_ID, VERSION_ID)).thenReturn(false);
+        ResultActions result = deleteContentVersion(CONTENT_ID + 1, VERSION_ID, user);
+        result.andExpect(status().isNotFound());
+    }
+
     private PagedMetadata<ContentVersionDTO> getContentVersionDTOPagedMetadata() {
         PagedMetadata<ContentVersionDTO> pagedMetadata = new PagedMetadata<>();
         List<ContentVersionDTO> allResults = new ArrayList<>();
@@ -213,6 +245,15 @@ public class ContentVersioningControllerTest extends AbstractControllerTest {
         String path = "/plugins/versioning/contents/{contentId}/versions/{versionId}";
         return mockMvc.perform(
                 get(path, contentId, versionId)
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
+    }
+
+    private ResultActions deleteContentVersion(String contentId, Long versionId,UserDetails user)  throws Exception {
+        String accessToken = mockOAuthInterceptor(user);
+        String path = "/plugins/versioning/contents/{contentId}/versions/{versionId}";
+        return mockMvc.perform(
+                delete(path, contentId, versionId)
                         .sessionAttr("user", user)
                         .header("Authorization", "Bearer " + accessToken));
     }

@@ -73,8 +73,8 @@ public class ContentVersioningService {
 
     public PagedMetadata<ContentVersionDTO> getListContentVersions(String contentId, RestListRequest requestList) {
         logger.debug("LIST listContentVersions for content {} with req {}", contentId, requestList);
-        List<ContentVersionDTO> contentVersionDTOs = new ArrayList<>();
-        List<Long> contentVersions = new ArrayList<>();
+        List<ContentVersionDTO> contentVersionDTOs;
+        List<Long> contentVersions;
         try {
             contentVersions = versioningManager.getVersions(contentId);
             contentVersionDTOs = requestList.getSublist(contentVersions).stream()
@@ -195,7 +195,16 @@ public class ContentVersioningService {
             throw new RestServerError(
                     String.format("Error loading trashed resources for content with version %s", versionId), e);
         }
+    }
 
+    public void delete(Long versionId) {
+        try {
+            versioningManager.deleteVersion(versionId);
+        } catch (Exception e) {
+            logger.error("Error deleting version " + versionId, e);
+            throw new RestServerError(
+                    String.format("Error deleting version for content with version %s", versionId), e);
+        }
     }
 
     private List<String> getArchivedResourcesId(List<String> resourceIds) {
