@@ -21,7 +21,7 @@ import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.plugins.jpversioning.services.content.ContentVersioningService;
 import org.entando.entando.plugins.jpversioning.web.content.model.ContentVersionDTO;
 import org.entando.entando.plugins.jpversioning.web.content.validator.ContentVersioningValidator;
-import org.entando.entando.plugins.jpversioning.web.content.validator.ContentVersioningValidatorErrorCodes;
+import org.entando.entando.plugins.jpversioning.web.content.validator.VersioningValidatorErrorCodes;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
@@ -59,7 +59,7 @@ public class ContentVersioningController implements IContentVersioning {
 
         if (!contentVersioningValidator.contentVersioningExist(contentId)) {
             throw new ResourceNotFoundException(
-                    ContentVersioningValidatorErrorCodes.ERRCODE_CONTENT_VERSIONING_DOES_NOT_EXIST.value,
+                    VersioningValidatorErrorCodes.ERRCODE_CONTENT_VERSIONING_DOES_NOT_EXIST.value,
                     "Content Versions", contentId);
         }
 
@@ -84,7 +84,7 @@ public class ContentVersioningController implements IContentVersioning {
 
         if (!contentVersioningValidator.checkContentIdForVersion(contentId, versionId)) {
             throw new ResourceNotFoundException(
-                    ContentVersioningValidatorErrorCodes.ERRCODE_CONTENT_VERSIONING_WRONG_CONTENT_ID.value,
+                    VersioningValidatorErrorCodes.ERRCODE_CONTENT_VERSIONING_WRONG_CONTENT_ID.value,
                     "Content Version", contentId + " version " + versionId);
         }
         ContentDto result = contentVersioningService.getContent(versionId);
@@ -96,7 +96,7 @@ public class ContentVersioningController implements IContentVersioning {
         logger.debug("REST request - recover version content with contentId: {} and versionId", contentId, versionId);
         if (!contentVersioningValidator.checkContentIdForVersion(contentId, versionId)) {
             throw new ResourceNotFoundException(
-                    ContentVersioningValidatorErrorCodes.ERRCODE_CONTENT_VERSIONING_WRONG_CONTENT_ID.value,
+                    VersioningValidatorErrorCodes.ERRCODE_CONTENT_VERSIONING_WRONG_CONTENT_ID.value,
                     "Content Version", contentId + " version " + versionId);
         }
         ContentDto result = contentVersioningService.recover(versionId);
@@ -108,7 +108,7 @@ public class ContentVersioningController implements IContentVersioning {
         logger.debug("REST request - delete content version with versionId: {}", versionId);
         if (!contentVersioningValidator.checkContentIdForVersion(contentId, versionId)) {
             throw new ResourceNotFoundException(
-                    ContentVersioningValidatorErrorCodes.ERRCODE_CONTENT_VERSIONING_WRONG_CONTENT_ID.value,
+                    VersioningValidatorErrorCodes.ERRCODE_CONTENT_VERSIONING_WRONG_CONTENT_ID.value,
                     "Content Version", contentId + " version " + versionId);
         }
         contentVersioningService.delete(versionId);

@@ -34,7 +34,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.commons.beanutils.BeanComparator;
+import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
+import org.entando.entando.plugins.jpversioning.web.content.validator.VersioningValidatorErrorCodes;
 import org.entando.entando.plugins.jpversioning.web.resource.model.FileResourceDTO;
 import org.entando.entando.plugins.jpversioning.web.resource.model.ImageResourceDTO;
 import org.entando.entando.plugins.jpversioning.web.resource.model.ImageVersionDTO;
@@ -95,6 +97,28 @@ public class ResourcesVersioningService {
         } catch (ApsSystemException e) {
             logger.error("Error while getting trashed resources with request {}", requestList, e);
             throw new RestServerError(String.format("Error while getting trashed resources with request %s", requestList),
+                    e);
+        }
+    }
+
+    public ResourceDTO recoverResource(String resourceId) {
+
+        try {
+            logger.debug("POST recover resource {}", resourceId);
+
+            ResourceInterface resource = trashedResourceManager.loadTrashedResource(resourceId);
+
+            if (resource != null) {
+                trashedResourceManager.restoreResource(resourceId);
+                return convertResourceToDto(resource);
+            } else {
+                throw new ResourceNotFoundException(
+                        VersioningValidatorErrorCodes.ERRCODE_TRASHED_RESOURCE_DOES_NOT_EXIST.value,
+                        "Trashed resource: ", resourceId);
+            }
+        } catch (ApsSystemException e) {
+            logger.error("Error while recovering trashed resources with id {}", resourceId, e);
+            throw new RestServerError(String.format("Error while recovering trashed resources with id %s", resourceId),
                     e);
         }
     }

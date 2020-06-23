@@ -13,13 +13,14 @@
  */
 package org.entando.entando.plugins.jpversioning.web.content.validator;
 
-public enum ContentVersioningValidatorErrorCodes {
+public enum VersioningValidatorErrorCodes {
     ERRCODE_CONTENT_VERSIONING_DOES_NOT_EXIST("1"),
-    ERRCODE_CONTENT_VERSIONING_WRONG_CONTENT_ID("2") ;
+    ERRCODE_CONTENT_VERSIONING_WRONG_CONTENT_ID("2"),
+    ERRCODE_TRASHED_RESOURCE_DOES_NOT_EXIST("3");
 
     public final String value;
 
-    ContentVersioningValidatorErrorCodes(String value) {
+    VersioningValidatorErrorCodes(String value) {
         this.value = value;
     }
 }

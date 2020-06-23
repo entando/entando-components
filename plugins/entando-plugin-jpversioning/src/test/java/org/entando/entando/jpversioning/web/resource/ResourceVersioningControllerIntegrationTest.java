@@ -51,8 +51,6 @@ public class ResourceVersioningControllerIntegrationTest extends AbstractControl
             Map<String,String> params = new HashMap<>();
             params.put("resourceTypeCode", resourceTypeCode);
 
-            trashedResourceManager.removeFromTrash("66");
-
             listTrashedResources(user, params)
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.size()", is(0)));
@@ -210,8 +208,6 @@ public class ResourceVersioningControllerIntegrationTest extends AbstractControl
             Map<String,String> params = new HashMap<>();
             params.put("resourceTypeCode", resourceTypeCode);
 
-            trashedResourceManager.removeFromTrash("251");
-
             listTrashedResources(user, params)
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.size()", is(1)));
@@ -246,10 +242,6 @@ public class ResourceVersioningControllerIntegrationTest extends AbstractControl
 
             listTrashedResources(user, params)
                     .andExpect(status().isOk());
-
-            trashedResourceManager.removeFromTrash("67");
-            trashedResourceManager.removeFromTrash("68");
-            trashedResourceManager.removeFromTrash("398");
 
             listTrashedResources(user, params)
                     .andExpect(status().isOk())
@@ -350,6 +342,150 @@ public class ResourceVersioningControllerIntegrationTest extends AbstractControl
         }
     }
 
+    @Test
+    public void testTrashedAttachmentsRecover() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        String resourceTypeCode = "Attach";
+        String resourceId = null;
+        String versionResourceId = null;
+
+        try {
+
+            Map<String,String> params = new HashMap<>();
+            params.put("resourceTypeCode", resourceTypeCode);
+
+            listTrashedResources(user, params)
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(0)));
+
+            ResultActions result = performCreateResource(user, "file", "free", "application/pdf");
+
+            String bodyResult = result.andReturn().getResponse().getContentAsString();
+            resourceId = JsonPath.read(bodyResult, "$.payload.id");
+
+            listTrashedResources(user, params)
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(0)));
+
+            performGetResources(user, "file")
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)));
+
+            performDeleteResource(user, resourceTypeCode, resourceId)
+                    .andExpect(status().isOk());
+
+            result = listTrashedResources(user, params)
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)));
+
+            performGetResources(user, "file")
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(0)));
+
+            bodyResult = result.andReturn().getResponse().getContentAsString();
+
+            versionResourceId = JsonPath.read(bodyResult, "$.payload[0].id");
+
+            recoverResource(user, versionResourceId)
+                    .andExpect(status().isOk());
+
+            listTrashedResources(user, params)
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(0)));
+
+            performGetResources(user, "file")
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)));
+
+            performDeleteResource(user, resourceTypeCode, resourceId)
+                    .andExpect(status().isOk());
+
+            bodyResult = result.andReturn().getResponse().getContentAsString();
+
+            versionResourceId = JsonPath.read(bodyResult, "$.payload[0].id");
+
+        } finally {
+            trashedResourceManager.removeFromTrash(versionResourceId);
+        }
+    }
+
+    @Test
+    public void testTrashedImageRecover() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        String resourceTypeCode = "Image";
+        String resourceId = null;
+        String versionResourceId = null;
+
+        try {
+
+            Map<String,String> params = new HashMap<>();
+            params.put("resourceTypeCode", resourceTypeCode);
+
+            listTrashedResources(user, params)
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)));
+
+            ResultActions result = performCreateResource(user, "image", "free", "application/jpeg");
+
+            String bodyResult = result.andReturn().getResponse().getContentAsString();
+            resourceId = JsonPath.read(bodyResult, "$.payload.id");
+
+            listTrashedResources(user, params)
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)));
+
+            performGetResources(user, "image")
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(4)));
+
+            performDeleteResource(user, resourceTypeCode, resourceId)
+                    .andExpect(status().isOk());
+
+            result = listTrashedResources(user, params)
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(2)));
+
+            performGetResources(user, "image")
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(3)));
+
+            bodyResult = result.andReturn().getResponse().getContentAsString();
+
+            versionResourceId = JsonPath.read(bodyResult, "$.payload[1].id");
+
+            recoverResource(user, versionResourceId)
+                    .andExpect(status().isOk());
+
+            listTrashedResources(user, params)
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(1)));
+
+            performGetResources(user, "image")
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.size()", is(4)));
+
+            performDeleteResource(user, resourceTypeCode, resourceId)
+                    .andExpect(status().isOk());
+
+            bodyResult = result.andReturn().getResponse().getContentAsString();
+
+            versionResourceId = JsonPath.read(bodyResult, "$.payload[1].id");
+
+        } finally {
+            trashedResourceManager.removeFromTrash(versionResourceId);
+        }
+    }
+
+    private ResultActions recoverResource(UserDetails user, String versionResourceId) throws Exception {
+        final MockHttpServletRequestBuilder requestBuilder = post(
+                "/plugins/versioning/resources/{resourceId}/recover", versionResourceId)
+                .sessionAttr("user", user)
+                .header("Authorization", "Bearer " + mockOAuthInterceptor(user));
+
+        return mockMvc.perform(requestBuilder)
+                .andDo(print());
+    }
+
     private String createAndDeleteResource(UserDetails user, String resourceTypeCode, String type, Map<String, String> params) throws Exception {
         String mimeType = type.equals("image") ? "application/jpeg" : "application/pdf";
         ResultActions result = performCreateResource(user, type, "free", mimeType);
@@ -440,6 +576,23 @@ public class ResourceVersioningControllerIntegrationTest extends AbstractControl
                 .header("Authorization", "Bearer " + accessToken);
 
         return mockMvc.perform(request).andDo(print());
+    }
+
+    private ResultActions performGetResources(UserDetails user, String type) throws Exception {
+        String path = "/plugins/cms/assets";
+
+        if (type != null) {
+            path += "?type=" + type;
+        }
+
+        if (null == user) {
+            return mockMvc.perform(get(path));
+        }
+
+        String accessToken = mockOAuthInterceptor(user);
+        return mockMvc.perform(
+                get(path)
+                        .header("Authorization", "Bearer " + accessToken)).andDo(print());
     }
 
 }
