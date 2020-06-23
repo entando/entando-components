@@ -48,15 +48,19 @@
             scrollX: true,
             scrollCollapse: true,
             paging: false,
+            "autoWidth": false,
             fixedColumns: true,
             "colVis": {
                 "buttonText": '<s:text name="title.searchResultOptions" />&#32;',
                 "sAlign": "right"
             },
             columnDefs: [
-                {width: 50, targets: 0},
-                {width: 200, "targets": [1, 2, 3, 4, 7, 8, 9], },
-                {width: 80, "targets": [5, 6, 10], }
+                {width: 50, targets: [0, 6], },
+                {width: 60, "targets": 3},
+                {width: 300, "targets": 1},
+                {width: 100, "targets": [2, 3, 7], },
+                {width: 115, "targets": [4, 8, 9], },
+                {width: 80, "targets": [5, 10], }
 
             ],
             fixedColumns: {
