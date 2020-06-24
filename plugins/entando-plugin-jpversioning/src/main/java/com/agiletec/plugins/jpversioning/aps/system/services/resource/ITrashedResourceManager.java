@@ -83,5 +83,7 @@ public interface ITrashedResourceManager {
 	
 	//Map<String, String> resourceInstancesTrashFilePaths(
 	//		ResourceInterface resource) throws ApsSystemException;
+
+	String getSubfolder(ResourceInterface resource);
 	
 }
