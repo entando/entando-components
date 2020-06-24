@@ -43,13 +43,13 @@
 
         /* DataTables con ColVis e FixeColumns */
         var table = $('#contentListTable').DataTable({
-            dom: 'Ct',
             "bSort": false,
             scrollY: false,
             scrollX: true,
             scrollCollapse: true,
             paging: false,
             "bStateSave": true,
+            "autoWidth": false,
             "fnStateSave": function (oSettings, oData) {
                 localStorage.setItem('DataTables', JSON.stringify(oData));
             },
@@ -61,10 +61,12 @@
                 "sAlign": "right"
             },
             columnDefs: [
-                {width: 50, targets: 0},
-                {width: 200, "targets": [1, 2, 3, 4, 7], },
-                {width: 115, "targets": [8, 9], },
-                {width: 80, "targets": [5, 6, 10], }
+                {width: 50, targets: [0, 6], },
+                {width: 60, "targets": 3},
+                {width: 300, "targets": 1},
+                {width: 100, "targets": [2, 3, 7], },
+                {width: 115, "targets": [4, 8, 9], },
+                {width: 80, "targets": [5, 10], }
 
             ],
             fixedColumns: {
@@ -82,7 +84,6 @@
                 $(".ColVis").removeClass("open");
             });
         });
-
 
         /* Selezione multipla elementi della tabella */
         var itemsNum = $('.DTFC_LeftBodyLiner .content-list tbody input[type="checkbox"]').length;
