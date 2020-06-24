@@ -20,6 +20,8 @@ import com.agiletec.aps.system.services.authorization.AuthorizationManager;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.user.UserDetails;
+import com.agiletec.plugins.jacms.aps.system.services.resource.model.AbstractMonoInstanceResource;
+import com.agiletec.plugins.jacms.aps.system.services.resource.model.AbstractMultiInstanceResource;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.AbstractResource;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.AttachResource;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ImageResource;
@@ -34,7 +36,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.commons.beanutils.BeanComparator;
+import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
+import org.entando.entando.plugins.jpversioning.web.content.validator.VersioningValidatorErrorCodes;
 import org.entando.entando.plugins.jpversioning.web.resource.model.FileResourceDTO;
 import org.entando.entando.plugins.jpversioning.web.resource.model.ImageResourceDTO;
 import org.entando.entando.plugins.jpversioning.web.resource.model.ImageVersionDTO;
@@ -79,8 +83,7 @@ public class ResourcesVersioningService {
 
             for (String id : resourcesId) {
                 try {
-                    ResourceDTO resource = convertResourceToDto(trashedResourceManager.loadTrashedResource(id));
-                    result.add(resource);
+                    result.add(convertResourceToDto(trashedResourceManager.loadTrashedResource(id)));
                 } catch (ApsSystemException e) {
                     logger.error("Error loading trashedResource with id: {}", id);
                 }
@@ -95,6 +98,28 @@ public class ResourcesVersioningService {
         } catch (ApsSystemException e) {
             logger.error("Error while getting trashed resources with request {}", requestList, e);
             throw new RestServerError(String.format("Error while getting trashed resources with request %s", requestList),
+                    e);
+        }
+    }
+
+    public ResourceDTO recoverResource(String resourceId) {
+
+        try {
+            logger.debug("POST recover resource {}", resourceId);
+
+            ResourceInterface resource = trashedResourceManager.loadTrashedResource(resourceId);
+
+            if (resource != null) {
+                trashedResourceManager.restoreResource(resourceId);
+                return convertResourceToDto(resource);
+            } else {
+                throw new ResourceNotFoundException(
+                        VersioningValidatorErrorCodes.ERRCODE_TRASHED_RESOURCE_DOES_NOT_EXIST.value,
+                        "Trashed resource: ", resourceId);
+            }
+        } catch (ApsSystemException e) {
+            logger.error("Error while recovering trashed resources with id {}", resourceId, e);
+            throw new RestServerError(String.format("Error while recovering trashed resources with id %s", resourceId),
                     e);
         }
     }
@@ -128,6 +153,7 @@ public class ResourcesVersioningService {
     }
 
     public ResourceDTO convertResourceToDto(ResourceInterface resource) {
+
         String type = extractTypeFromResource(resource.getType());
 
         if (FileResourceDTO.RESOURCE_TYPE.equals(type)) {
@@ -142,10 +168,11 @@ public class ResourcesVersioningService {
         }
     }
 
-    private FileResourceDTO convertResourceToFileResourceDto(AttachResource resource){
+    private FileResourceDTO convertResourceToFileResourceDto(AttachResource resource) {
+        String path = trashedResourceManager.getSubfolder(resource) + resource.getInstance().getFileName();
         return new FileResourceDTO(resource.getId(), resource.getMasterFileName(), resource.getDescription(),
                 resource.getCreationDate(), resource.getLastModified(), resource.getMainGroup(),
-                getCategories(resource), resource.getDefaultInstance().getFileLength(), resource.getAttachPath(),
+                getCategories(resource), resource.getDefaultInstance().getFileLength(), path,
                 resource.getOwner(), resource.getFolderPath());
     }
 
@@ -161,7 +188,7 @@ public class ResourcesVersioningService {
             }
 
             String dimension = String.format("%dx%d px", dimensions.getDimx(), dimensions.getDimy());
-            String path = resource.getImagePath(String.valueOf(dimensions.getIdDim()));
+            String path = trashedResourceManager.getSubfolder(resource) + instance.getFileName();
             String size = instance.getFileLength();
 
             versions.add(new ImageVersionDTO(dimension, path, size));

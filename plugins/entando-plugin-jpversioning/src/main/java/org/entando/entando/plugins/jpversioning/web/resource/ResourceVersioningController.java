@@ -42,10 +42,20 @@ public class ResourceVersioningController implements IResourceVersioning {
     private HttpSession httpSession;
 
     @Override
-    public ResponseEntity<PagedRestResponse<ResourceDTO>> listTrashedResources(String resourceTypeCode, RestListRequest requestList) {
-        logger.debug("REST request - list trashed resources for resourceTypeCode: {} and with request: {}", resourceTypeCode, requestList);
+    public ResponseEntity<PagedRestResponse<ResourceDTO>> listTrashedResources(String resourceTypeCode,
+            RestListRequest requestList) {
+        logger.debug("REST request - list trashed resources for resourceTypeCode: {} and with request: {}",
+                resourceTypeCode, requestList);
         UserDetails userDetails = HttpSessionHelper.extractCurrentUser(httpSession);
-        PagedMetadata<ResourceDTO> result = resourcesVersioningService.getTrashedResources(resourceTypeCode, requestList, userDetails);
+        PagedMetadata<ResourceDTO> result = resourcesVersioningService
+                .getTrashedResources(resourceTypeCode, requestList, userDetails);
         return new ResponseEntity<>(new PagedRestResponse<>(result), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<ResourceDTO> recoverResource(String resourceId) {
+        logger.debug("REST request - recover resource: {}", resourceId);
+        ResourceDTO result = resourcesVersioningService.recoverResource(resourceId);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

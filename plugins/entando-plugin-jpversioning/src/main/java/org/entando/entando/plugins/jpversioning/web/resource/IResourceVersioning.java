@@ -24,6 +24,8 @@ import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Api(tags = {"resource-versioning-controller"})
@@ -44,4 +46,10 @@ public interface IResourceVersioning {
     @RestAccessControl(permission = Permission.CONTENT_EDITOR)
     ResponseEntity<PagedRestResponse<ResourceDTO>> listTrashedResources(@RequestParam(value = "resourceTypeCode") String resourceTypeCode,
             RestListRequest requestList);
+
+    @ApiOperation(value = "POST resource to recover", nickname = "recover", tags = {
+            "resource-versioning-controller"})
+    @PostMapping("/{resourceId}/recover")
+    @RestAccessControl(permission = Permission.CONTENT_EDITOR)
+    ResponseEntity<ResourceDTO> recoverResource(@PathVariable(value = "resourceId") String resourceId);
 }

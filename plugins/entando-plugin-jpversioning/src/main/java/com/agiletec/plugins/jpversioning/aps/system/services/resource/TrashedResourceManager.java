@@ -280,8 +280,9 @@ public class TrashedResourceManager extends AbstractService implements ITrashedR
     		throw new ApsSystemException("Error on extracting stream", t);
 		}
 	}
-	
-	protected String getSubfolder(ResourceInterface resource) {
+
+	@Override
+	public String getSubfolder(ResourceInterface resource) {
 		StringBuilder subfolder = new StringBuilder(this.getResourceTrashRootDiskSubFolder());
 		subfolder.append(File.separator).append(resource.getType())
 				.append(File.separator).append(resource.getId()).append(File.separator);
