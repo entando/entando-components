@@ -30,6 +30,7 @@ import org.entando.entando.jpversioning.web.configuration.VersioningConfiguratio
 import org.entando.entando.jpversioning.web.configuration.VersioningConfigurationControllerTest;
 import org.entando.entando.jpversioning.web.content.ContentVersioningControllerIntegrationTest;
 import org.entando.entando.jpversioning.web.content.ContentVersioningControllerTest;
+import org.entando.entando.jpversioning.web.resource.ResourceVersioningControllerIntegrationTest;
 
 public class AllTests {
 	
@@ -43,6 +44,7 @@ public class AllTests {
 		suite.addTest(new JUnit4TestAdapter(ContentVersioningControllerTest.class));
 		suite.addTest(new JUnit4TestAdapter(VersioningConfigurationControllerIntegrationTest.class));
 		suite.addTest(new JUnit4TestAdapter(VersioningConfigurationControllerTest.class));
+		suite.addTest(new JUnit4TestAdapter(ResourceVersioningControllerIntegrationTest.class));
 
 		return suite;
 	}
