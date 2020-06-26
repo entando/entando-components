@@ -28,8 +28,6 @@ import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentRestri
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.AttachResource;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -42,8 +40,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.entity.model.EntityAttributeDto;
 import org.entando.entando.aps.system.services.entity.model.EntityDto;
 import org.entando.entando.plugins.jacms.web.content.validator.ContentValidator;
-import org.entando.entando.web.common.json.JsonDateDeserializer;
-import org.entando.entando.web.common.json.JsonDateSerializer;
 import org.springframework.validation.BindingResult;
 
 public class ContentDto extends EntityDto implements Serializable {
@@ -131,8 +127,6 @@ public class ContentDto extends EntityDto implements Serializable {
         this.defaultModel = defaultModel;
     }
 
-    @JsonSerialize(using = JsonDateSerializer.class)
-    @JsonDeserialize(using = JsonDateDeserializer.class)
     public Date getCreated() {
         return created;
     }
@@ -141,8 +135,6 @@ public class ContentDto extends EntityDto implements Serializable {
         this.created = created;
     }
 
-    @JsonSerialize(using = JsonDateSerializer.class)
-    @JsonDeserialize(using = JsonDateDeserializer.class)
     public Date getLastModified() {
         return lastModified;
     }
