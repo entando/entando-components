@@ -14,6 +14,7 @@
 package org.entando.entando.plugins.jpversioning.web.resource;
 
 import com.agiletec.aps.system.services.user.UserDetails;
+import java.util.Map;
 import javax.servlet.http.HttpSession;
 import org.entando.entando.aps.util.HttpSessionHelper;
 import org.entando.entando.plugins.jpversioning.services.resource.ResourcesVersioningService;
@@ -21,6 +22,7 @@ import org.entando.entando.plugins.jpversioning.web.resource.model.ResourceDTO;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
+import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +58,13 @@ public class ResourceVersioningController implements IResourceVersioning {
     public ResponseEntity<ResourceDTO> recoverResource(String resourceId) {
         logger.debug("REST request - recover resource: {}", resourceId);
         ResourceDTO result = resourcesVersioningService.recoverResource(resourceId);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<ResourceDTO> deleteTrashedResource(String resourceId) {
+        logger.debug("REST request - deleting trashed resource: {}", resourceId);
+        ResourceDTO result = resourcesVersioningService.deleteTrashedResource(resourceId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

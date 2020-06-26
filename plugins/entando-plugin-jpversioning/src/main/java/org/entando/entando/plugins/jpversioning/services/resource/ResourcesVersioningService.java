@@ -124,6 +124,28 @@ public class ResourcesVersioningService {
         }
     }
 
+    public ResourceDTO deleteTrashedResource(String resourceId) {
+
+        try {
+            logger.debug("POST recover resource {}", resourceId);
+
+            ResourceInterface resource = trashedResourceManager.loadTrashedResource(resourceId);
+
+            if (resource != null) {
+                trashedResourceManager.removeFromTrash(resourceId);
+                return convertResourceToDto(resource);
+            } else {
+                throw new ResourceNotFoundException(
+                        VersioningValidatorErrorCodes.ERRCODE_TRASHED_RESOURCE_DOES_NOT_EXIST.value,
+                        "Trashed resource: ", resourceId);
+            }
+        } catch (ApsSystemException e) {
+            logger.error("Error while deleting trashed resources with id {}", resourceId, e);
+            throw new RestServerError(String.format("Error while deleting trashed resources with id %s", resourceId),
+                    e);
+        }
+    }
+
     private List<String> getAllowedGroups(UserDetails user) {
         List<String> result = new ArrayList<>();
         List<Group> userGroups = authorizationManager.getUserGroups(user);
