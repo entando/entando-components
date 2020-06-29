@@ -13,9 +13,13 @@
  */
 package org.entando.entando.plugins.jpversioning.web.content.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModel;
 import java.util.Date;
 import java.util.Objects;
+import org.entando.entando.web.common.json.JsonDateDeserializer;
+import org.entando.entando.web.common.json.JsonDateSerializer;
 
 @ApiModel("ContentVersion")
 public class ContentVersionDTO {
@@ -25,11 +29,14 @@ public class ContentVersionDTO {
     private String contentType;
     private String description;
     private String status;
-    private Date versionDate;
     private String version;
     private int onlineVersion;
     private boolean approved;
     private String username;
+
+    @JsonSerialize(using = JsonDateSerializer.class)
+    @JsonDeserialize(using = JsonDateDeserializer.class)
+    private Date versionDate;
 
     public long getId() {
         return id;
