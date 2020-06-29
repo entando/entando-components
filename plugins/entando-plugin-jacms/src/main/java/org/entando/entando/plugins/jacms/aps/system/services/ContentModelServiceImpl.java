@@ -13,29 +13,38 @@
  */
 package org.entando.entando.plugins.jacms.aps.system.services;
 
-import com.agiletec.aps.system.common.entity.model.*;
+import com.agiletec.aps.system.common.entity.model.IApsEntity;
+import com.agiletec.aps.system.common.entity.model.SmallEntityType;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
-import com.agiletec.plugins.jacms.aps.system.services.contentmodel.*;
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModelManager;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.dictionary.ContentModelDictionaryProvider;
-import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.*;
-import java.lang.reflect.Array;
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentModelDto;
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentModelReference;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
-import org.entando.entando.aps.system.exception.*;
-import org.entando.entando.aps.system.services.*;
+import org.entando.entando.aps.system.exception.ResourceNotFoundException;
+import org.entando.entando.aps.system.exception.RestServerError;
+import org.entando.entando.aps.system.services.DtoBuilder;
+import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.aps.system.services.dataobjectmodel.model.IEntityModelDictionary;
+import org.entando.entando.plugins.jacms.aps.system.services.contentmodel.ContentModelReferencesRequestListProcessor;
+import org.entando.entando.plugins.jacms.aps.system.services.contentmodel.ContentModelRequestListProcessor;
+import org.entando.entando.plugins.jacms.web.contentmodel.model.ContentModelReferenceDTO;
 import org.entando.entando.plugins.jacms.web.contentmodel.validator.ContentModelValidator;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
-import org.entando.entando.web.common.model.*;
-import org.slf4j.*;
+import org.entando.entando.web.common.model.PagedMetadata;
+import org.entando.entando.web.common.model.RestListRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
-
-import java.util.*;
-import org.entando.entando.plugins.jacms.aps.system.services.contentmodel.ContentModelRequestListProcessor;
 
 @Service
 public class ContentModelServiceImpl implements ContentModelService {
@@ -171,13 +180,39 @@ public class ContentModelServiceImpl implements ContentModelService {
     }
 
     @Override
-    public List<ContentModelReference> getContentModelReferences(Long modelId) {
+    public PagedMetadata<ContentModelReferenceDTO> getContentModelReferences(Long modelId, RestListRequest requestList) {
         ContentModel contentModel = this.contentModelManager.getContentModel(modelId);
         if (null == contentModel) {
-            logger.info("contentModel {} does not exists", modelId);
+            logger.debug("contentModel {} does not exists", modelId);
             throw new ResourceNotFoundException(ContentModelValidator.ERRCODE_CONTENTMODEL_NOT_FOUND, "contentModel", String.valueOf(modelId));
         }
-        return this.contentModelManager.getContentModelReferences(modelId);
+
+        final List<ContentModelReference> contentModelReferences = new ContentModelReferencesRequestListProcessor(
+                requestList, this.contentModelManager
+                .getContentModelReferences(modelId))
+                .filterAndSort().toList();
+
+        final List<ContentModelReference> subList = requestList.getSublist(contentModelReferences);
+        final List<ContentModelReferenceDTO> contentModelReferenceDTOS = mapContentModelReferencesToDTOs(subList);
+        SearcherDaoPaginatedResult<ContentModelReferenceDTO> paginatedResult = new SearcherDaoPaginatedResult<>(contentModelReferences.size(), contentModelReferenceDTOS);
+        PagedMetadata<ContentModelReferenceDTO> pagedMetadata = new PagedMetadata<>(requestList, paginatedResult);
+        pagedMetadata.setBody(contentModelReferenceDTOS);
+        return pagedMetadata;
+    }
+
+    private List<ContentModelReferenceDTO> mapContentModelReferencesToDTOs(List<ContentModelReference> contentModelReferences) {
+        final List<ContentModelReferenceDTO> contentModelReferencesDTOs = contentModelReferences.stream().map(cmr ->
+                mapContentModelReferenceToDTO(cmr)
+        ).collect(Collectors.toList());
+        return contentModelReferencesDTOs;
+    }
+
+    private ContentModelReferenceDTO mapContentModelReferenceToDTO(ContentModelReference cmr) {
+        ContentModelReferenceDTO contentModelReferenceDTO = new ContentModelReferenceDTO();
+        contentModelReferenceDTO.setPageCode(cmr.getPageCode());
+        contentModelReferenceDTO.setOnline(cmr.isOnline());
+        contentModelReferenceDTO.setWidgetPosition(cmr.getWidgetPosition());
+        return contentModelReferenceDTO;
     }
 
     @Override
