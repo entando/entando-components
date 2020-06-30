@@ -21,13 +21,32 @@ import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+
+import static org.junit.Assert.assertThat;
 
 public class ResourceVersioningControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
+    private static final String CONTENT = "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
+            "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
+            "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
+            "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
+            "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
+            "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
+            "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
+            "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
+            "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
+            "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
+            "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
+            "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
+            "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
+            "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x";
 
     @Autowired
     private TrashedResourceManager trashedResourceManager;
@@ -431,7 +450,7 @@ public class ResourceVersioningControllerIntegrationTest extends AbstractControl
 
         versionResourceId = JsonPath.read(bodyResult, "$.payload[0].id");
 
-        recoverResource(user, versionResourceId)
+        deleteTrashedResource(user, versionResourceId)
                 .andExpect(status().isOk());
 
         listTrashedResources(user, params)
@@ -440,10 +459,7 @@ public class ResourceVersioningControllerIntegrationTest extends AbstractControl
 
         performGetResources(user, "file")
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.payload.size()", is(4)));
-
-        performDeleteResource(user, resourceTypeCode, resourceId)
-                .andExpect(status().isOk());
+                .andExpect(jsonPath("$.payload.size()", is(3)));
 
     }
 
@@ -502,6 +518,126 @@ public class ResourceVersioningControllerIntegrationTest extends AbstractControl
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.payload.size()", is(0)));
 
+    }
+
+    @Test
+    public void testGetTrashedAttachment() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        String resourceTypeCode = "Attach";
+        String resourceId = null;
+
+        cleanUpAttach(user);
+
+        Map<String, String> params = new HashMap<>();
+        params.put("resourceTypeCode", resourceTypeCode);
+
+        listTrashedResources(user, params)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(0)));
+
+        ResultActions result = performCreateResource(user, "file", "free", "application/pdf");
+
+        String bodyResult = result.andReturn().getResponse().getContentAsString();
+        resourceId = JsonPath.read(bodyResult, "$.payload.id");
+
+        listTrashedResources(user, params)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(0)));
+
+        performGetResources(user, "file")
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(4)));
+
+        performDeleteResource(user, resourceTypeCode, resourceId)
+                .andExpect(status().isOk());
+
+        listTrashedResources(user, params)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(1)));
+
+        performGetResources(user, "file")
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(3)));
+
+        result = performDownloadResource(user, resourceId, 0);
+
+        MockHttpServletResponse servletResponse = result.andReturn().getResponse();
+
+        assertThat(servletResponse.getHeader(HttpHeaders.CONTENT_DISPOSITION), is("attachment; filename=file_test.jpeg"));
+        assertThat(servletResponse.getHeader(HttpHeaders.CONTENT_TYPE), is("application/pdf"));
+        assertThat(servletResponse.getHeader(HttpHeaders.CONTENT_LENGTH), is("2324"));
+        assertThat(servletResponse.getContentAsString(), is(CONTENT));
+
+        servletResponse = performDownloadResource(user, resourceId, 1).andReturn().getResponse();
+        assertThat(servletResponse.getHeader(HttpHeaders.CONTENT_DISPOSITION), is("attachment; filename=file_test.jpeg"));
+        assertThat(servletResponse.getHeader(HttpHeaders.CONTENT_TYPE), is("application/pdf"));
+        assertThat(servletResponse.getHeader(HttpHeaders.CONTENT_LENGTH), is("2324"));
+        assertThat(servletResponse.getContentAsString(), is(CONTENT));
+
+        servletResponse = performDownloadResource(user, resourceId, 30).andReturn().getResponse();
+        assertThat(servletResponse.getHeader(HttpHeaders.CONTENT_DISPOSITION), is("attachment; filename=file_test.jpeg"));
+        assertThat(servletResponse.getHeader(HttpHeaders.CONTENT_TYPE), is("application/pdf"));
+        assertThat(servletResponse.getHeader(HttpHeaders.CONTENT_LENGTH), is("2324"));
+        assertThat(servletResponse.getContentAsString(), is(CONTENT));
+
+        performDownloadResource(user, "-1", 0).andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errors.size()", is(1)))
+                .andExpect(jsonPath("$.errors[0].code", is("3")))
+                .andExpect(jsonPath("$.errors[0].message", is("a Trashed resource:  with -1 code could not be found")));
+    }
+
+    @Test
+    public void testGetTrashedImage() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        String resourceTypeCode = "Image";
+        String resourceId = null;
+
+        cleanUpImage(user);
+
+        Map<String, String> params = new HashMap<>();
+        params.put("resourceTypeCode", resourceTypeCode);
+
+        listTrashedResources(user, params)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(1)));
+
+        ResultActions result = performCreateResource(user, "image", "free", "application/jpeg");
+
+        String bodyResult = result.andReturn().getResponse().getContentAsString();
+        resourceId = JsonPath.read(bodyResult, "$.payload.id");
+
+        listTrashedResources(user, params)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(1)));
+
+        performGetResources(user, "image")
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(1)));
+
+        performDeleteResource(user, resourceTypeCode, resourceId)
+                .andExpect(status().isOk());
+
+        listTrashedResources(user, params)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(2)));
+
+        result = performDownloadResource(user, resourceId, 0);
+
+        MockHttpServletResponse servletResponse = result.andReturn().getResponse();
+
+        assertThat(servletResponse.getHeader(HttpHeaders.CONTENT_DISPOSITION), is("attachment; filename=image_test_d0.jpeg"));
+        assertThat(servletResponse.getHeader(HttpHeaders.CONTENT_TYPE), is("application/jpeg"));
+        assertThat(servletResponse.getHeader(HttpHeaders.CONTENT_LENGTH), is("2324"));
+        assertThat(servletResponse.getContentAsString(), is(CONTENT));
+
+        servletResponse = performDownloadResource(user, resourceId, 1).andReturn().getResponse();
+        assertThat(servletResponse.getHeader(HttpHeaders.CONTENT_DISPOSITION), is("attachment; filename=image_test_d1.jpeg"));
+        assertThat(servletResponse.getHeader(HttpHeaders.CONTENT_TYPE), is("image/jpeg"));
+
+        performDownloadResource(user, "-1", 0).andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errors.size()", is(1)))
+                .andExpect(jsonPath("$.errors[0].code", is("3")))
+                .andExpect(jsonPath("$.errors[0].message", is("a Trashed resource:  with -1 code could not be found")));
     }
 
     private void cleanUpImage(UserDetails user) throws Exception {
@@ -635,26 +771,12 @@ public class ResourceVersioningControllerIntegrationTest extends AbstractControl
         }
 
         String accessToken = mockOAuthInterceptor(user);
-        String contents = "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
-                "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
-                "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
-                "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
-                "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
-                "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
-                "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
-                "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
-                "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
-                "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
-                "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
-                "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
-                "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
-                "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x";
 
         MockMultipartFile file;
         if ("image".equals(type)) {
-            file = new MockMultipartFile("file", "image_test.jpeg", mimeType, contents.getBytes());
+            file = new MockMultipartFile("file", "image_test.jpeg", mimeType, CONTENT.getBytes());
         } else {
-            file = new MockMultipartFile("file", "file_test.jpeg", mimeType, contents.getBytes());
+            file = new MockMultipartFile("file", "file_test.jpeg", mimeType, CONTENT.getBytes());
         }
 
         MockHttpServletRequestBuilder request = multipart(urlPath)
@@ -680,6 +802,16 @@ public class ResourceVersioningControllerIntegrationTest extends AbstractControl
         return mockMvc.perform(
                 get(path)
                         .header("Authorization", "Bearer " + accessToken)).andDo(print());
+    }
+
+    private ResultActions performDownloadResource(UserDetails user, String resourceId, Integer size) throws Exception {
+        final MockHttpServletRequestBuilder requestBuilder = get(
+                "/plugins/versioning/resources/{resourceId}/{size}", resourceId, size)
+                .sessionAttr("user", user)
+                .header("Authorization", "Bearer " + mockOAuthInterceptor(user));
+
+        return mockMvc.perform(requestBuilder)
+                .andDo(print());
     }
 
 }
