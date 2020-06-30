@@ -14,22 +14,33 @@
 package org.entando.entando.plugins.jacms.web.contentmodel;
 
 import com.agiletec.aps.system.services.role.Permission;
-import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.*;
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentModelDto;
+import java.util.Collections;
+import java.util.Map;
+import javax.validation.Valid;
 import org.entando.entando.aps.system.services.dataobjectmodel.model.IEntityModelDictionary;
 import org.entando.entando.plugins.jacms.aps.system.services.ContentModelService;
+import org.entando.entando.plugins.jacms.web.contentmodel.model.ContentModelReferenceDTO;
+import org.entando.entando.plugins.jacms.web.contentmodel.validator.ContentModelReferencesValidator;
 import org.entando.entando.plugins.jacms.web.contentmodel.validator.ContentModelValidator;
+import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
-import org.entando.entando.web.common.model.*;
-import org.slf4j.*;
+import org.entando.entando.web.common.model.PagedMetadata;
+import org.entando.entando.web.common.model.PagedRestResponse;
+import org.entando.entando.web.common.model.RestListRequest;
+import org.entando.entando.web.common.model.SimpleRestResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.*;
-import org.entando.entando.web.common.annotation.RestAccessControl;
-import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "/plugins/cms/contentmodels")
@@ -39,10 +50,13 @@ public class ContentModelResourceController implements ContentModelResource {
 
     private final ContentModelService contentModelService;
     private final ContentModelValidator contentModelValidator;
+    private final ContentModelReferencesValidator contentModelReferencesValidator;
 
     @Autowired
-    public ContentModelResourceController(ContentModelService contentModelService) {
+    public ContentModelResourceController(ContentModelService contentModelService,
+            ContentModelReferencesValidator contentModelReferencesValidator) {
         this.contentModelService = contentModelService;
+        this.contentModelReferencesValidator = contentModelReferencesValidator;
         this.contentModelValidator = new ContentModelValidator();
     }
 
@@ -110,10 +124,11 @@ public class ContentModelResourceController implements ContentModelResource {
     @Override
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/{modelId}/pagereferences", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-    public ResponseEntity<SimpleRestResponse<List<ContentModelReference>>> getReferences(@PathVariable Long modelId) {
+    public ResponseEntity<PagedRestResponse<ContentModelReferenceDTO>> getReferences(@PathVariable Long modelId,RestListRequest requestList) {
         logger.debug("loading contentModel references for model {}", modelId);
-        List<ContentModelReference> references = contentModelService.getContentModelReferences(modelId);
-        return ResponseEntity.ok(new SimpleRestResponse<>(references));
+        this.contentModelReferencesValidator.validateRestListRequest(requestList, ContentModelReferenceDTO.class);
+        PagedMetadata<ContentModelReferenceDTO> references = contentModelService.getContentModelReferences(modelId,requestList);
+        return ResponseEntity.ok(new PagedRestResponse<>(references));
     }
 
     @Override

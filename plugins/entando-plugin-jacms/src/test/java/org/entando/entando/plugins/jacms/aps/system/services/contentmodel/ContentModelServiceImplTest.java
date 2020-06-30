@@ -1,28 +1,43 @@
 package org.entando.entando.plugins.jacms.aps.system.services.contentmodel;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
+
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.entity.model.SmallEntityType;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
-import com.agiletec.plugins.jacms.aps.system.services.content.model.*;
-import com.agiletec.plugins.jacms.aps.system.services.contentmodel.*;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.SmallContentType;
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModelManager;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.dictionary.ContentModelDictionaryProvider;
-import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.*;
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentModelDto;
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentModelReference;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Properties;
 import org.assertj.core.api.Condition;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.services.dataobjectmodel.model.IEntityModelDictionary;
 import org.entando.entando.plugins.jacms.aps.system.services.ContentModelServiceImpl;
+import org.entando.entando.plugins.jacms.web.contentmodel.model.ContentModelReferenceDTO;
 import org.entando.entando.plugins.jacms.web.contentmodel.validator.ContentModelValidator;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
-import org.entando.entando.web.common.model.*;
-import org.junit.*;
-import org.mockito.*;
+import org.entando.entando.web.common.model.Filter;
+import org.entando.entando.web.common.model.PagedMetadata;
+import org.entando.entando.web.common.model.RestListRequest;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.springframework.validation.ObjectError;
-
-import java.util.*;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
 
 public class ContentModelServiceImplTest {
 
@@ -268,14 +283,18 @@ public class ContentModelServiceImplTest {
 
     @Test
     public void shouldReturnReferences() {
-        assertThat(contentModelService.getContentModelReferences(1L))
-                .isNotNull().hasSize(1);
+        RestListRequest restListRequest =  new RestListRequest();
+        final PagedMetadata<ContentModelReferenceDTO> contentModelReferences = contentModelService
+                .getContentModelReferences(1L, restListRequest);
+        assertThat(contentModelReferences).isNotNull();
+        assertThat(contentModelReferences.getTotalItems()).isEqualTo(1);
     }
 
     @Test(expected = ResourceNotFoundException.class)
     public void shouldFailReturningReferences() {
         try {
-            contentModelService.getContentModelReferences(20L);
+            RestListRequest restListRequest =  new RestListRequest();
+            contentModelService.getContentModelReferences(20L,restListRequest);
         } catch (ResourceNotFoundException ex) {
             assertThat(ex.getErrorCode()).isEqualTo(ContentModelValidator.ERRCODE_CONTENTMODEL_NOT_FOUND);
             throw ex;

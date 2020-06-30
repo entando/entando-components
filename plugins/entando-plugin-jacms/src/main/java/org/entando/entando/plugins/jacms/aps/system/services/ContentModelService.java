@@ -13,19 +13,20 @@
  */
 package org.entando.entando.plugins.jacms.aps.system.services;
 
-import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.*;
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentModelDto;
+import java.util.Optional;
 import org.entando.entando.aps.system.services.dataobjectmodel.model.IEntityModelDictionary;
-import org.entando.entando.web.common.model.*;
-
-import java.util.*;
+import org.entando.entando.plugins.jacms.web.contentmodel.model.ContentModelReferenceDTO;
+import org.entando.entando.web.common.model.PagedMetadata;
+import org.entando.entando.web.common.model.RestListRequest;
 
 public interface ContentModelService {
     
     String BEAN_NAME = "ContentModelService";
     
     ContentModelDto getContentModel(Long modelId);
-    
-    List<ContentModelReference> getContentModelReferences(Long modelId);
+
+    PagedMetadata<ContentModelReferenceDTO> getContentModelReferences(Long modelId, RestListRequest listRequest);
     
     IEntityModelDictionary getContentModelDictionary(String typeCode);
 

@@ -13,16 +13,23 @@
  */
 package org.entando.entando.plugins.jacms.web.contentmodel;
 
-import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.*;
-import io.swagger.annotations.*;
-import org.entando.entando.aps.system.services.dataobjectmodel.model.IEntityModelDictionary;
-import org.entando.entando.web.common.model.*;
-import org.springframework.http.*;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentModelDto;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import java.util.Map;
 import javax.validation.Valid;
-import java.util.*;
+import org.entando.entando.aps.system.services.dataobjectmodel.model.IEntityModelDictionary;
+import org.entando.entando.plugins.jacms.web.contentmodel.model.ContentModelReferenceDTO;
+import org.entando.entando.web.common.model.PagedRestResponse;
+import org.entando.entando.web.common.model.RestListRequest;
+import org.entando.entando.web.common.model.SimpleRestResponse;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Api(tags={ "content-model-controller" })
 @ApiResponses({
@@ -68,9 +75,9 @@ public interface ContentModelResource {
     @ApiResponses({
         @ApiResponse(code = 200, message = "OK")
     })
-    ResponseEntity<SimpleRestResponse<List<ContentModelReference>>> getReferences(@PathVariable Long modelId);
-    
-    @ApiOperation(value = "Returns dictionary containing Velocity instructions for the editor")
+    ResponseEntity<PagedRestResponse<ContentModelReferenceDTO>> getReferences(@PathVariable Long modelId,RestListRequest requestList);
+
+        @ApiOperation(value = "Returns dictionary containing Velocity instructions for the editor")
     @ApiResponses({
         @ApiResponse(code = 200, message = "OK")
     })
