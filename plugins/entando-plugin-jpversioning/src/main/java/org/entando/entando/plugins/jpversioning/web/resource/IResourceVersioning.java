@@ -22,6 +22,7 @@ import org.entando.entando.plugins.jpversioning.web.resource.model.ResourceDTO;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -59,4 +60,11 @@ public interface IResourceVersioning {
     @DeleteMapping("/{resourceId}")
     @RestAccessControl(permission = Permission.CONTENT_EDITOR)
     ResponseEntity<ResourceDTO> deleteTrashedResource(@PathVariable(value = "resourceId") String resourceId);
+
+    @ApiOperation(value = "GET trashed resource", nickname = "deleteTrashedResource", tags = {
+            "resource-versioning-controller"})
+    @GetMapping(value = "/{resourceId}/{size}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @RestAccessControl(permission = Permission.CONTENT_EDITOR)
+    ResponseEntity getTrashedResource(@PathVariable(value = "resourceId") String resourceId,
+            @PathVariable(value = "size") Integer size);
 }

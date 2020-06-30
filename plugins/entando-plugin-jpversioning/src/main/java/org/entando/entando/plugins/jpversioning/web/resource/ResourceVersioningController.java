@@ -14,18 +14,18 @@
 package org.entando.entando.plugins.jpversioning.web.resource;
 
 import com.agiletec.aps.system.services.user.UserDetails;
-import java.util.Map;
 import javax.servlet.http.HttpSession;
 import org.entando.entando.aps.util.HttpSessionHelper;
 import org.entando.entando.plugins.jpversioning.services.resource.ResourcesVersioningService;
 import org.entando.entando.plugins.jpversioning.web.resource.model.ResourceDTO;
+import org.entando.entando.plugins.jpversioning.web.resource.model.ResourceDownloadDTO;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
-import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -66,5 +66,16 @@ public class ResourceVersioningController implements IResourceVersioning {
         logger.debug("REST request - deleting trashed resource: {}", resourceId);
         ResourceDTO result = resourcesVersioningService.deleteTrashedResource(resourceId);
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity getTrashedResource(String resourceId, Integer size) {
+        logger.debug("REST request - get trashed resource id: {} and size: {}", resourceId, size);
+        UserDetails userDetails = HttpSessionHelper.extractCurrentUser(httpSession);
+        ResourceDownloadDTO result = resourcesVersioningService.getTrashedResource(resourceId, size, userDetails);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + result.getFilename());
+        headers.add(HttpHeaders.CONTENT_TYPE, result.getType());
+        return new ResponseEntity(result.getBytes(), headers, HttpStatus.OK);
     }
 }

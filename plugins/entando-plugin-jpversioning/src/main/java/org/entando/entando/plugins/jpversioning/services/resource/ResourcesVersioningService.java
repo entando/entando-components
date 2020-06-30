@@ -30,12 +30,15 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceIns
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.util.IImageDimensionReader;
 import com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.commons.beanutils.BeanComparator;
+import org.apache.commons.io.IOUtils;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.plugins.jpversioning.web.content.validator.VersioningValidatorErrorCodes;
@@ -43,6 +46,7 @@ import org.entando.entando.plugins.jpversioning.web.resource.model.FileResourceD
 import org.entando.entando.plugins.jpversioning.web.resource.model.ImageResourceDTO;
 import org.entando.entando.plugins.jpversioning.web.resource.model.ImageVersionDTO;
 import org.entando.entando.plugins.jpversioning.web.resource.model.ResourceDTO;
+import org.entando.entando.plugins.jpversioning.web.resource.model.ResourceDownloadDTO;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.Filter;
 import org.entando.entando.web.common.model.PagedMetadata;
@@ -144,6 +148,53 @@ public class ResourcesVersioningService {
             throw new RestServerError(String.format("Error while deleting trashed resources with id %s", resourceId),
                     e);
         }
+    }
+
+    public ResourceDownloadDTO getTrashedResource(String resourceId, Integer size, UserDetails user) {
+
+        try {
+            logger.debug("GET trashed resource resourceId: {}, size: {}", resourceId, size);
+
+            ResourceInterface resource = trashedResourceManager.loadTrashedResource(resourceId);
+
+            if (resource == null) {
+                throw new ResourceNotFoundException(
+                        VersioningValidatorErrorCodes.ERRCODE_TRASHED_RESOURCE_DOES_NOT_EXIST.value,
+                        "Trashed resource: ", resourceId);
+            }
+
+            ResourceInstance instance = getResourceInstance(size, resource);
+
+            return new ResourceDownloadDTO(instance.getFileName(), instance.getMimeType(),
+                    getInputStream(size, user, resource));
+
+        } catch (ApsSystemException | IOException e) {
+            logger.error("Error while getting input stream for trashed resources with id {}", resourceId, e);
+            throw new RestServerError(
+                    String.format("Error while getting input stream for trashed resources with id %s", resourceId), e);
+        }
+    }
+
+    private byte[] getInputStream(Integer size, UserDetails user, ResourceInterface resource)
+            throws ApsSystemException, IOException {
+        String mainGroup = resource.getMainGroup();
+        if (authorizationManager.isAuthOnGroup(user, mainGroup)) {
+            InputStream is = trashedResourceManager.getTrashFileStream(resource, getResourceInstance(size, resource));
+            if (is != null) {
+                return IOUtils.toByteArray(is);
+            }
+        }
+        return new byte[0];
+    }
+
+    private ResourceInstance getResourceInstance(Integer size, ResourceInterface resource) {
+        ResourceInstance instance = null;
+        if (resource.isMultiInstance()) {
+            instance = ((AbstractMultiInstanceResource) resource).getInstance(size, null);
+        } else {
+            instance = ((AbstractMonoInstanceResource) resource).getInstance();
+        }
+        return instance;
     }
 
     private List<String> getAllowedGroups(UserDetails user) {
