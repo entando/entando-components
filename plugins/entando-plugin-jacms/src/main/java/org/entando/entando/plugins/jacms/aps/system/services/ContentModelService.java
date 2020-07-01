@@ -19,15 +19,16 @@ import org.entando.entando.aps.system.services.dataobjectmodel.model.IEntityMode
 import org.entando.entando.plugins.jacms.web.contentmodel.model.ContentModelReferenceDTO;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
+import org.entando.entando.web.component.ComponentUsage;
 
 public interface ContentModelService {
-    
+
     String BEAN_NAME = "ContentModelService";
-    
+
     ContentModelDto getContentModel(Long modelId);
 
     PagedMetadata<ContentModelReferenceDTO> getContentModelReferences(Long modelId, RestListRequest listRequest);
-    
+
     IEntityModelDictionary getContentModelDictionary(String typeCode);
 
     ContentModelDto create(ContentModelDto entity);
@@ -39,4 +40,6 @@ public interface ContentModelService {
     Optional<ContentModelDto> findById(Long id);
 
     void delete(Long id);
+
+    ComponentUsage getComponentUsage(Long modelId);
 }

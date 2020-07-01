@@ -40,6 +40,7 @@ import org.entando.entando.plugins.jacms.web.contentmodel.validator.ContentModel
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
+import org.entando.entando.web.component.ComponentUsage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +57,7 @@ public class ContentModelServiceImpl implements ContentModelService {
     private final ContentModelDictionaryProvider dictionaryProvider;
     private final IDtoBuilder<ContentModel, ContentModelDto> dtoBuilder;
     private final ContentTypeService contentTypeService;
+
     @Autowired
     public ContentModelServiceImpl(IContentManager contentManager, IContentModelManager contentModelManager,
             ContentModelDictionaryProvider dictionaryProvider,
@@ -177,6 +179,45 @@ public class ContentModelServiceImpl implements ContentModelService {
             logger.error("Error in delete contentModel {}", modelId, e);
             throw new RestServerError("error in delete contentModel", e);
         }
+    }
+
+    @Override
+    public ComponentUsage getComponentUsage(Long modelId) {
+        final List<ContentModelReference> contentModelReferences = contentModelManager
+                .getContentModelReferences(modelId);
+        final long onlineCount = contentModelReferences.stream()
+                .filter(f -> f.isOnline()).count();
+        final long offlineCount = contentModelReferences.stream()
+                .filter(f -> !f.isOnline()).count();
+        final List<SmallEntityType> defaultContentTemplateUsedList = this.contentManager.getSmallEntityTypes().stream()
+                .filter(
+                        f -> {
+                            final String defaultModel = contentManager.getDefaultModel(f.getCode());
+                            final boolean defaultModelUsed = String.valueOf(modelId)
+                                    .equals(defaultModel);
+                            return defaultModelUsed;
+                        }
+                ).collect(Collectors.toList());
+        final List<SmallEntityType> defaultContentListTemplateUsedList = this.contentManager.getSmallEntityTypes()
+                .stream()
+                .filter(
+                        f -> {
+                            final String listModel = contentManager.getListModel(f.getCode());
+                            final boolean listModelUsed = String.valueOf(modelId)
+                                    .equals(listModel);
+                            return listModelUsed;
+                        }
+                ).collect(Collectors.toList());
+        int countContentDefaultTemplateReferences = defaultContentTemplateUsedList.size();
+        int countContentListDefaultTemplateReferences = defaultContentListTemplateUsedList.size();
+        Integer usage = Math.toIntExact(onlineCount + offlineCount + countContentDefaultTemplateReferences
+                + countContentListDefaultTemplateReferences);
+        ComponentUsage componentUsage = new ComponentUsage();
+        componentUsage.setType("contentTemplate");
+        componentUsage.setCode(String.valueOf(modelId));
+        componentUsage.setStatus("");
+        componentUsage.setUsage(usage);
+        return componentUsage;
     }
 
     @Override

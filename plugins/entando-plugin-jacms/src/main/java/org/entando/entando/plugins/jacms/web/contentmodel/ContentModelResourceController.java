@@ -29,6 +29,7 @@ import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.common.model.SimpleRestResponse;
+import org.entando.entando.web.component.ComponentUsage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,6 +130,15 @@ public class ContentModelResourceController implements ContentModelResource {
         this.contentModelReferencesValidator.validateRestListRequest(requestList, ContentModelReferenceDTO.class);
         PagedMetadata<ContentModelReferenceDTO> references = contentModelService.getContentModelReferences(modelId,requestList);
         return ResponseEntity.ok(new PagedRestResponse<>(references));
+    }
+
+    @Override
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @RequestMapping(value = "/{modelId}/usage", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    public ResponseEntity<SimpleRestResponse<ComponentUsage>> getComponentUsage(@PathVariable Long modelId) {
+        logger.debug("loading contentModel usage for model {}", modelId);
+        final ComponentUsage componentUsage = contentModelService.getComponentUsage(modelId);
+        return ResponseEntity.ok(new SimpleRestResponse<>(componentUsage));
     }
 
     @Override
