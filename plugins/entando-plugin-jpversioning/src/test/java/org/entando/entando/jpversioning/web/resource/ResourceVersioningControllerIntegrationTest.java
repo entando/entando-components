@@ -667,7 +667,7 @@ public class ResourceVersioningControllerIntegrationTest extends AbstractControl
 
         listTrashedResources(user, params)
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.payload.size()", is(1)));
+                .andExpect(jsonPath("$.payload.size()", is(6)));
     }
 
     private void cleanUpImage(UserDetails user) throws Exception {
