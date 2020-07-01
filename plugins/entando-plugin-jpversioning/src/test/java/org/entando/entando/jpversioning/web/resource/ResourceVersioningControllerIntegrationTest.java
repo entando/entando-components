@@ -9,6 +9,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.agiletec.aps.system.services.group.Group;
+import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -638,6 +640,34 @@ public class ResourceVersioningControllerIntegrationTest extends AbstractControl
                 .andExpect(jsonPath("$.errors.size()", is(1)))
                 .andExpect(jsonPath("$.errors[0].code", is("3")))
                 .andExpect(jsonPath("$.errors[0].message", is("a Trashed resource:  with -1 code could not be found")));
+    }
+
+    @Test
+    public void testResourceVersioningPermissionsContentEditor() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.CONTENT_EDITOR)
+                .build();
+
+        String resourceTypeCode = "Image";
+
+        cleanUpImage(user);
+
+        Map<String, String> params = new HashMap<>();
+        params.put("resourceTypeCode", resourceTypeCode);
+
+        listTrashedResources(user, params)
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.errors.size()", is(1)))
+                .andExpect(jsonPath("$.errors[0].code", is("120")))
+                .andExpect(jsonPath("$.errors[0].message", is("jack_bauer is not allowed to /plugins/versioning/resources [GET]")));
+
+        user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.MANAGE_RESOURCES)
+                .build();
+
+        listTrashedResources(user, params)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(1)));
     }
 
     private void cleanUpImage(UserDetails user) throws Exception {
