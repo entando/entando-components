@@ -45,26 +45,26 @@ public interface IResourceVersioning {
     @ApiOperation(value = "LIST trashed resources", nickname = "listTrashedResources", tags = {
             "resource-versioning-controller"})
     @GetMapping("")
-    @RestAccessControl(permission = Permission.CONTENT_EDITOR)
+    @RestAccessControl(permission = Permission.MANAGE_RESOURCES)
     ResponseEntity<PagedRestResponse<ResourceDTO>> listTrashedResources(@RequestParam(value = "resourceTypeCode") String resourceTypeCode,
             RestListRequest requestList);
 
     @ApiOperation(value = "POST resource to recover", nickname = "recoverTrashedResource", tags = {
             "resource-versioning-controller"})
     @PostMapping("/{resourceId}/recover")
-    @RestAccessControl(permission = Permission.CONTENT_EDITOR)
+    @RestAccessControl(permission = Permission.MANAGE_RESOURCES)
     ResponseEntity<ResourceDTO> recoverResource(@PathVariable(value = "resourceId") String resourceId);
 
     @ApiOperation(value = "DELETE trashed resource", nickname = "deleteTrashedResource", tags = {
             "resource-versioning-controller"})
     @DeleteMapping("/{resourceId}")
-    @RestAccessControl(permission = Permission.CONTENT_EDITOR)
+    @RestAccessControl(permission = Permission.MANAGE_RESOURCES)
     ResponseEntity<ResourceDTO> deleteTrashedResource(@PathVariable(value = "resourceId") String resourceId);
 
     @ApiOperation(value = "GET trashed resource", nickname = "deleteTrashedResource", tags = {
             "resource-versioning-controller"})
     @GetMapping(value = "/{resourceId}/{size}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    @RestAccessControl(permission = Permission.CONTENT_EDITOR)
+    @RestAccessControl(permission = Permission.MANAGE_RESOURCES)
     ResponseEntity getTrashedResource(@PathVariable(value = "resourceId") String resourceId,
             @PathVariable(value = "size") Integer size);
 }
