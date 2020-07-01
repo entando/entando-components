@@ -25,6 +25,7 @@ import org.entando.entando.plugins.jacms.web.contentmodel.model.ContentModelRefe
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.common.model.SimpleRestResponse;
+import org.entando.entando.web.component.ComponentUsage;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -77,7 +78,13 @@ public interface ContentModelResource {
     })
     ResponseEntity<PagedRestResponse<ContentModelReferenceDTO>> getReferences(@PathVariable Long modelId,RestListRequest requestList);
 
-        @ApiOperation(value = "Returns dictionary containing Velocity instructions for the editor")
+    @ApiOperation(value = "Returns usages counts for the content tamplate")
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "OK")
+    })
+    ResponseEntity<SimpleRestResponse<ComponentUsage>> getComponentUsage(@PathVariable Long modelId);
+
+    @ApiOperation(value = "Returns dictionary containing Velocity instructions for the editor")
     @ApiResponses({
         @ApiResponse(code = 200, message = "OK")
     })

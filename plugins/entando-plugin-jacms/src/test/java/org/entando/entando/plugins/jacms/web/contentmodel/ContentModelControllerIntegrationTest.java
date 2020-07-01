@@ -1,18 +1,5 @@
 package org.entando.entando.plugins.jacms.web.contentmodel;
 
-import com.agiletec.aps.system.common.FieldSearchFilter;
-import com.agiletec.aps.system.services.user.UserDetails;
-import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
-import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModelManager;
-import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentModelDto;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.entando.entando.web.AbstractControllerIntegrationTest;
-import org.entando.entando.web.utils.OAuth2TestUtils;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.ResultActions;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -23,7 +10,23 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.agiletec.aps.system.common.FieldSearchFilter;
+import com.agiletec.aps.system.services.user.UserDetails;
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModelManager;
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentModelDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.entando.entando.web.AbstractControllerIntegrationTest;
+import org.entando.entando.web.utils.OAuth2TestUtils;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.ResultActions;
+
 public class ContentModelControllerIntegrationTest extends AbstractControllerIntegrationTest {
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private static final String BASE_URI = "/plugins/cms/contentmodels";
 
@@ -507,8 +510,20 @@ public class ContentModelControllerIntegrationTest extends AbstractControllerInt
                 .perform(get(BASE_URI + "/{id}/pagereferences", 2)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));
-
         result.andExpect(status().isOk());
     }
 
+    @Test
+    public void testGetTemplateUsage() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        String accessToken = mockOAuthInterceptor(user);
+
+        ResultActions result = mockMvc
+                .perform(get(BASE_URI + "/{id}/usage", 2)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .header("Authorization", "Bearer " + accessToken));
+        result.andExpect(jsonPath("$.payload.type", is("contentTemplate")));
+        result.andExpect(jsonPath("$.payload.code", is("2")));
+        result.andExpect(jsonPath("$.payload.usage", is(2)));
+    }
 }
