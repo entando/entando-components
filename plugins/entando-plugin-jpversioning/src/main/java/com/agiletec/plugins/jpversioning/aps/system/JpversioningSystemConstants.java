@@ -50,4 +50,6 @@ public interface JpversioningSystemConstants {
 
     public final static String DEFAULT_RESOURCE_TRASH_FOLDER_NAME = "jpversioning/trashedresources";
 
+    public final static String PROTECTED_TRASH_FOLDER = "protected/trashed";
+
 }
