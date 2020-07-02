@@ -1,5 +1,7 @@
 package org.entando.entando.plugins.jacms.web.page;
 
+import com.agiletec.aps.system.services.group.Group;
+import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.util.FileTextReader;
 import com.opensymphony.xwork2.mock.MockResult;
 import java.io.InputStream;
@@ -59,7 +61,9 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
     @Test
     public void testPageConfiguration() throws Exception {
 
-        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
+                .build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
                 .perform(get("/pages/{pageCode}/configuration", "homepage")
@@ -91,7 +95,9 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
             IPage draftPage = this.pageManager.getDraftPage(pageCode);
             assertThat(draftPage, is(not(nullValue())));
 
-            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                    .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
+                    .build();
             String accessToken = mockOAuthInterceptor(user);
 
             ResultActions result = mockMvc
@@ -124,7 +130,9 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
             IPage draftPage = this.pageManager.getDraftPage(pageCode);
             assertThat(draftPage, is(not(nullValue())));
 
-            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                    .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
+                    .build();
             String accessToken = mockOAuthInterceptor(user);
 
             ResultActions result = mockMvc
@@ -170,7 +178,9 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
             IPage draftPage = this.pageManager.getDraftPage(pageCode);
             assertThat(draftPage, is(not(nullValue())));
 
-            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                    .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
+                    .build();
             String accessToken = mockOAuthInterceptor(user);
 
             String payload = "{\n"
@@ -220,7 +230,9 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
             IPage draftPage = this.pageManager.getDraftPage(pageCode);
             assertThat(draftPage, is(not(nullValue())));
 
-            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                    .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
+                    .build();
             String accessToken = mockOAuthInterceptor(user);
 
             String payload = "{\n"
@@ -325,7 +337,9 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
             IPage draftPage = this.pageManager.getDraftPage(pageCode);
             assertThat(draftPage, is(not(nullValue())));
 
-            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                    .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
+                    .build();
             String accessToken = mockOAuthInterceptor(user);
 
             ResultActions result = mockMvc
@@ -351,7 +365,9 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
             IPage draftPage = this.pageManager.getDraftPage(pageCode);
             assertThat(draftPage, is(not(nullValue())));
 
-            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                    .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
+                    .build();
             String accessToken = mockOAuthInterceptor(user);
 
             ResultActions result = mockMvc
@@ -377,7 +393,9 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
             IPage draftPage = this.pageManager.getDraftPage(pageCode);
             assertThat(draftPage, is(not(nullValue())));
 
-            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                    .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
+                    .build();
             String accessToken = mockOAuthInterceptor(user);
 
             ResultActions result = mockMvc
@@ -418,7 +436,9 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
             IPage draftPage = this.pageManager.getDraftPage(pageCode);
             assertThat(draftPage, is(not(nullValue())));
 
-            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                    .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
+                    .build();
             String accessToken = mockOAuthInterceptor(user);
 
             ResultActions result = mockMvc
@@ -466,7 +486,9 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
             IPage draftPage = this.pageManager.getDraftPage(pageCode);
             assertThat(draftPage, is(not(nullValue())));
 
-            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                    .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
+                    .build();
             String accessToken = mockOAuthInterceptor(user);
 
             ResultActions result = mockMvc
@@ -543,7 +565,9 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
             IPage draftPage = this.pageManager.getDraftPage(pageCode);
             assertThat(draftPage, is(not(nullValue())));
 
-            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                    .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
+                    .build();
             String accessToken = mockOAuthInterceptor(user);
 
             ResultActions result = mockMvc
@@ -579,7 +603,9 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
             IPage draftPage = this.pageManager.getDraftPage(pageCode);
             assertThat(draftPage, is(not(nullValue())));
 
-            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                    .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
+                    .build();
             String accessToken = mockOAuthInterceptor(user);
 
             ResultActions result = mockMvc
@@ -612,7 +638,9 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
             IPage draftPage = this.pageManager.getDraftPage(pageCode);
             assertThat(draftPage, is(not(nullValue())));
 
-            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                    .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
+                    .build();
             String accessToken = mockOAuthInterceptor(user);
 
             ResultActions result = mockMvc
@@ -653,7 +681,9 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
             IPage draftPage = this.pageManager.getDraftPage(pageCode);
             assertThat(draftPage, is(not(nullValue())));
 
-            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                    .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
+                    .build();
             String accessToken = mockOAuthInterceptor(user);
 
             ResultActions result = mockMvc
