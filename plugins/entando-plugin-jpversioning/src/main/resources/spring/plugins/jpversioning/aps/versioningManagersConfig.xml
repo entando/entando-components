@@ -45,6 +45,12 @@
         <property name="storageManager" ref="StorageManager" />
     </bean>
 
+    <bean id="versioningProtectedResourceProvider" class="com.agiletec.plugins.jpversioning.aps.servlet.VersioningProtectedResourceProvider" >
+        <property name="trashedResourceManager" ref="jpversioningTrashedResourceManager" />
+        <property name="userManager" ref="UserManager" />
+        <property name="authorizationManager" ref="AuthorizationManager" />
+    </bean>
+
     <context:component-scan base-package="org.entando.entando.plugins.jpversioning"  />
 
 </beans>

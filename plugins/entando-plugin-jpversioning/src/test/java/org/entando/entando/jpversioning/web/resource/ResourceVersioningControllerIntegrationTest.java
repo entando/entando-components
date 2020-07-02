@@ -81,7 +81,8 @@ public class ResourceVersioningControllerIntegrationTest extends AbstractControl
 
         listTrashedResources(user, params)
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.payload.size()", is(1)));
+                .andExpect(jsonPath("$.payload.size()", is(1)))
+                .andExpect(jsonPath("$.payload[0].path", is("protected/trashed/" + resourceId + "/0")));
 
     }
 
@@ -194,11 +195,14 @@ public class ResourceVersioningControllerIntegrationTest extends AbstractControl
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.payload.size()", is(1)));
 
-        createAndDeleteResource(user, resourceTypeCode, type, params);
+        String resourceId = createAndDeleteResource(user, resourceTypeCode, type, params);
 
         listTrashedResources(user, params)
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.payload.size()", is(2)));
+                .andExpect(jsonPath("$.payload.size()", is(2)))
+                .andExpect(jsonPath("$.payload[1].versions[0].path", is("protected/trashed/" + resourceId + "/1")))
+                .andExpect(jsonPath("$.payload[1].versions[1].path", is("protected/trashed/" + resourceId + "/2")))
+                .andExpect(jsonPath("$.payload[1].versions[2].path", is("protected/trashed/" + resourceId + "/3")));
 
     }
 

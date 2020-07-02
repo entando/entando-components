@@ -29,6 +29,7 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ImageResour
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInstance;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.util.IImageDimensionReader;
+import com.agiletec.plugins.jpversioning.aps.system.JpversioningSystemConstants;
 import com.agiletec.plugins.jpversioning.aps.system.services.resource.TrashedResourceManager;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,6 +40,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.commons.beanutils.BeanComparator;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.plugins.jpversioning.web.content.validator.VersioningValidatorErrorCodes;
@@ -242,7 +244,7 @@ public class ResourcesVersioningService {
     }
 
     private FileResourceDTO convertResourceToFileResourceDto(AttachResource resource) {
-        String path = trashedResourceManager.getSubfolder(resource) + resource.getInstance().getFileName();
+        String path = buildTrashedPath(resource.getId());
         return new FileResourceDTO(resource.getId(), resource.getMasterFileName(), resource.getDescription(),
                 resource.getCreationDate(), resource.getLastModified(), resource.getMainGroup(),
                 getCategories(resource), resource.getDefaultInstance().getFileLength(), path,
@@ -261,7 +263,7 @@ public class ResourcesVersioningService {
             }
 
             String dimension = String.format("%dx%d px", dimensions.getDimx(), dimensions.getDimy());
-            String path = trashedResourceManager.getSubfolder(resource) + instance.getFileName();
+            String path = buildTrashedPath(resource.getId(), dimensions.getIdDim());
             String size = instance.getFileLength();
 
             versions.add(new ImageVersionDTO(dimension, path, size));
@@ -270,6 +272,14 @@ public class ResourcesVersioningService {
         return new ImageResourceDTO(resource.getId(), resource.getMasterFileName(), resource.getDescription(),
                 resource.getCreationDate(), resource.getLastModified(), versions, resource.getMainGroup(),
                 getCategories(resource), resource.getOwner(), resource.getFolderPath());
+    }
+
+    private String buildTrashedPath(String id) {
+        return buildTrashedPath(id, 0);
+    }
+
+    private String buildTrashedPath(String id, int idDim) {
+        return StringUtils.join(JpversioningSystemConstants.PROTECTED_TRASH_FOLDER, "/", id, "/", String.valueOf(idDim));
     }
 
     private List<ImageResourceDimension> getImageDimensions() {
