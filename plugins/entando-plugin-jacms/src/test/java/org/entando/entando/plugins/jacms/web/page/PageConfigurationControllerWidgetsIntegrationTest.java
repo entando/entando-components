@@ -1,5 +1,6 @@
 package org.entando.entando.plugins.jacms.web.page;
 
+import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.Page;
@@ -7,6 +8,7 @@ import com.agiletec.aps.system.services.page.PageMetadata;
 import com.agiletec.aps.system.services.page.PageTestUtil;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
+import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsProperties;
 import org.entando.entando.aps.system.services.page.IPageService;
@@ -49,7 +51,9 @@ public class PageConfigurationControllerWidgetsIntegrationTest extends AbstractC
             IPage draftPage = this.pageManager.getDraftPage(pageCode);
             assertThat(draftPage, is(not(nullValue())));
 
-            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                    .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
+                    .build();
             String accessToken = mockOAuthInterceptor(user);
 
             ResultActions result = mockMvc
@@ -192,7 +196,9 @@ public class PageConfigurationControllerWidgetsIntegrationTest extends AbstractC
             IPage draftPage = this.pageManager.getDraftPage(pageCode);
             assertThat(draftPage, is(not(nullValue())));
 
-            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                    .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
+                    .build();
             String accessToken = mockOAuthInterceptor(user);
 
             //checking page draft config
@@ -261,7 +267,9 @@ public class PageConfigurationControllerWidgetsIntegrationTest extends AbstractC
             IPage draftPage = this.pageManager.getDraftPage(pageCode);
             assertThat(draftPage, is(not(nullValue())));
 
-            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                    .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
+                    .build();
             String accessToken = mockOAuthInterceptor(user);
 
             //checking page draft config
