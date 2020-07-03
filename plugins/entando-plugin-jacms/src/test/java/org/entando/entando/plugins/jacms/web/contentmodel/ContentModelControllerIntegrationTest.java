@@ -502,7 +502,6 @@ public class ContentModelControllerIntegrationTest extends AbstractControllerInt
 
     @Test
     public void testGetModelPageReferences() throws Throwable {
-
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -517,7 +516,6 @@ public class ContentModelControllerIntegrationTest extends AbstractControllerInt
     public void testGetTemplateUsage() throws Throwable {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
-
         ResultActions result = mockMvc
                 .perform(get(BASE_URI + "/{id}/usage", 2)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -525,5 +523,18 @@ public class ContentModelControllerIntegrationTest extends AbstractControllerInt
         result.andExpect(jsonPath("$.payload.type", is("contentTemplate")));
         result.andExpect(jsonPath("$.payload.code", is("2")));
         result.andExpect(jsonPath("$.payload.usage", is(2)));
+    }
+
+    @Test
+    public void testGetTemplateUsageCount() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get(BASE_URI + "/{id}/usage/details", 2)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .header("Authorization", "Bearer " + accessToken));
+        result.andExpect(jsonPath("$.payload[0].type", is("page")));
+        result.andExpect(jsonPath("$.payload[0].code", is("homepage")));
+        result.andExpect(jsonPath("$.payload[0].status", is("offline")));
     }
 }

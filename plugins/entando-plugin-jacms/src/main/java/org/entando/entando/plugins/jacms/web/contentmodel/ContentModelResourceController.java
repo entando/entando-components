@@ -22,6 +22,7 @@ import org.entando.entando.aps.system.services.dataobjectmodel.model.IEntityMode
 import org.entando.entando.plugins.jacms.aps.system.services.ContentModelService;
 import org.entando.entando.plugins.jacms.web.contentmodel.model.ContentModelReferenceDTO;
 import org.entando.entando.plugins.jacms.web.contentmodel.validator.ContentModelReferencesValidator;
+import org.entando.entando.plugins.jacms.web.contentmodel.validator.ContentModelUsageDetailsValidator;
 import org.entando.entando.plugins.jacms.web.contentmodel.validator.ContentModelValidator;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
@@ -30,9 +31,11 @@ import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.entando.entando.web.component.ComponentUsage;
+import org.entando.entando.web.component.ComponentUsageEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -52,12 +55,15 @@ public class ContentModelResourceController implements ContentModelResource {
     private final ContentModelService contentModelService;
     private final ContentModelValidator contentModelValidator;
     private final ContentModelReferencesValidator contentModelReferencesValidator;
+    private final ContentModelUsageDetailsValidator contentModelUsageDetailsValidator;
 
     @Autowired
     public ContentModelResourceController(ContentModelService contentModelService,
-            ContentModelReferencesValidator contentModelReferencesValidator) {
+            ContentModelReferencesValidator contentModelReferencesValidator,
+            ContentModelUsageDetailsValidator contentModelUsageDetailsValidator) {
         this.contentModelService = contentModelService;
         this.contentModelReferencesValidator = contentModelReferencesValidator;
+        this.contentModelUsageDetailsValidator = contentModelUsageDetailsValidator;
         this.contentModelValidator = new ContentModelValidator();
     }
 
@@ -139,6 +145,16 @@ public class ContentModelResourceController implements ContentModelResource {
         logger.debug("loading contentModel usage for model {}", modelId);
         final ComponentUsage componentUsage = contentModelService.getComponentUsage(modelId);
         return ResponseEntity.ok(new SimpleRestResponse<>(componentUsage));
+    }
+
+    @Override
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @RequestMapping(value = "/{modelId}/usage/details", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    public ResponseEntity<PagedRestResponse<ComponentUsageEntity>> getComponentUsageDetails(@PathVariable Long modelId, RestListRequest restListRequest) {
+        logger.debug("get contentModel usage details for model {}", modelId);
+        contentModelUsageDetailsValidator.validateRestListRequest(restListRequest, ComponentUsageEntity.class);
+        PagedMetadata<ComponentUsageEntity> result = this.contentModelService.getComponentUsageDetails(modelId, restListRequest);
+        return new ResponseEntity<>(new PagedRestResponse<>(result), HttpStatus.OK);
     }
 
     @Override
