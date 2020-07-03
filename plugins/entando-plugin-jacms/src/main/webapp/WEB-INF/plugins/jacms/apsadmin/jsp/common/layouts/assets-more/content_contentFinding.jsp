@@ -43,6 +43,7 @@
 
         /* DataTables con ColVis e FixeColumns */
         var table = $('#contentListTable').DataTable({
+            dom: 'Ct',
             "bSort": false,
             scrollY: false,
             scrollX: true,
