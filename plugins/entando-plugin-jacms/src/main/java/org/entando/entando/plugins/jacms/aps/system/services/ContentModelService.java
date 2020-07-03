@@ -20,6 +20,7 @@ import org.entando.entando.plugins.jacms.web.contentmodel.model.ContentModelRefe
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.component.ComponentUsage;
+import org.entando.entando.web.component.ComponentUsageEntity;
 
 public interface ContentModelService {
 
@@ -42,4 +43,6 @@ public interface ContentModelService {
     void delete(Long id);
 
     ComponentUsage getComponentUsage(Long modelId);
+
+    PagedMetadata<ComponentUsageEntity> getComponentUsageDetails(Long modelId, RestListRequest restListRequest);
 }
