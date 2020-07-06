@@ -66,7 +66,7 @@ public class ContentSettingsController {
             @ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 401, message = "Unauthorized")})
     @GetMapping("/plugins/cms/contentSettings")
-    @RestAccessControl(permission = Permission.SUPERUSER)
+    @RestAccessControl(permission = Permission.CONTENT_EDITOR)
     public ResponseEntity<SimpleRestResponse<ContentSettingsDto>> getContentSettings() {
         logger.debug("REST request - get content settings");
         return ResponseEntity.ok(new SimpleRestResponse<>(
