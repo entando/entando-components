@@ -51,7 +51,7 @@ public class ContentSettingsControllerIntegrationTest extends AbstractController
     @Test
     public void testGetContentSettings() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
-                .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.SUPERUSER)
+                .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.CONTENT_EDITOR)
                 .build();
 
         performGetContentSettings(user)
