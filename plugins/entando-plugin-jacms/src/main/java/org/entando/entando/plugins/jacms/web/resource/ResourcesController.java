@@ -68,7 +68,7 @@ public class ResourcesController {
             @ApiResponse(code = 201, message = "Created"),
             @ApiResponse(code = 401, message = "Unauthorized")})
     @GetMapping("/plugins/cms/assets")
-    @RestAccessControl(permission = Permission.CONTENT_EDITOR)
+    @RestAccessControl(permission = Permission.MANAGE_RESOURCES)
     public ResponseEntity<PagedRestResponse<AssetDto>> listAssets(@RequestParam(value = "type", required = false) String type,
             RestListRequest requestList) {
         logger.debug("REST request - list image resources");
@@ -84,7 +84,7 @@ public class ResourcesController {
             @ApiResponse(code = 201, message = "Created"),
             @ApiResponse(code = 401, message = "Unauthorized")})
     @GetMapping("/plugins/cms/assets/folder")
-    @RestAccessControl(permission = Permission.CONTENT_EDITOR)
+    @RestAccessControl(permission = Permission.MANAGE_RESOURCES)
     public ResponseEntity<RestResponse<List<AssetDto>, Map<String, Object>>> listAssetsFolder(
             @RequestParam(value = "folderPath", required = false) String folderPath) {
         logger.debug("REST request - list resources folder");
@@ -128,7 +128,7 @@ public class ResourcesController {
             @ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 401, message = "Unauthorized")})
     @PostMapping(value = "/plugins/cms/assets")
-    @RestAccessControl(permission = Permission.CONTENT_EDITOR)
+    @RestAccessControl(permission = Permission.MANAGE_RESOURCES)
     public ResponseEntity<SimpleRestResponse<AssetDto>> createAsset(
             @RequestParam(value = "metadata") String request,
             @RequestParam(value = "file") MultipartFile file) throws JsonProcessingException {
@@ -153,7 +153,7 @@ public class ResourcesController {
             @ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 401, message = "Unauthorized")})
     @PostMapping("/plugins/cms/assets/{resourceId}/clone")
-    @RestAccessControl(permission = Permission.CONTENT_EDITOR)
+    @RestAccessControl(permission = Permission.MANAGE_RESOURCES)
     public ResponseEntity<SimpleRestResponse<AssetDto>> cloneAsset(@PathVariable("resourceId") String resourceId) {
         logger.debug("REST request - clone resource");
         AssetDto result = service.cloneAsset(resourceId);
@@ -165,7 +165,7 @@ public class ResourcesController {
             @ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 401, message = "Unauthorized")})
     @PostMapping(value = "/plugins/cms/assets/{resourceId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @RestAccessControl(permission = Permission.CONTENT_EDITOR)
+    @RestAccessControl(permission = Permission.MANAGE_RESOURCES)
     public ResponseEntity<SimpleRestResponse<AssetDto>> editAsset(@PathVariable("resourceId") String resourceId,
             @RequestParam(value = "metadata") String request,
             @RequestParam(value = "file", required = false) MultipartFile file) throws JsonProcessingException {
@@ -188,7 +188,7 @@ public class ResourcesController {
             @ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 401, message = "Unauthorized")})
     @DeleteMapping("/plugins/cms/assets/{resourceId}")
-    @RestAccessControl(permission = Permission.CONTENT_EDITOR)
+    @RestAccessControl(permission = Permission.MANAGE_RESOURCES)
     public ResponseEntity<SimpleRestResponse<Map>> deleteAsset(@PathVariable("resourceId") String resourceId) {
         logger.debug("REST request - delete resource with id {}", resourceId);
         service.deleteAsset(resourceId);

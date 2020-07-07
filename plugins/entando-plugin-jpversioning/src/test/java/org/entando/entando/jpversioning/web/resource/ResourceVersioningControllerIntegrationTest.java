@@ -648,13 +648,12 @@ public class ResourceVersioningControllerIntegrationTest extends AbstractControl
 
     @Test
     public void testResourceVersioningPermissionsContentEditor() throws Exception {
+
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.CONTENT_EDITOR)
                 .build();
 
         String resourceTypeCode = "Image";
-
-        cleanUpImage(user);
 
         Map<String, String> params = new HashMap<>();
         params.put("resourceTypeCode", resourceTypeCode);
