@@ -79,13 +79,13 @@ public interface ContentModelResource {
     })
     ResponseEntity<PagedRestResponse<ContentModelReferenceDTO>> getReferences(@PathVariable Long modelId,RestListRequest requestList);
 
-    @ApiOperation(value = "Returns usages counts for the content tamplate")
+    @ApiOperation(value = "Returns usages counts for the content template")
     @ApiResponses({
         @ApiResponse(code = 200, message = "OK")
     })
     ResponseEntity<SimpleRestResponse<ComponentUsage>> getComponentUsage(@PathVariable Long modelId);
 
-    @ApiOperation(value = "Returns usage details for the content tamplate")
+    @ApiOperation(value = "Returns usage details for the content template")
     @ApiResponses({
             @ApiResponse(code = 200, message = "OK")
     })
