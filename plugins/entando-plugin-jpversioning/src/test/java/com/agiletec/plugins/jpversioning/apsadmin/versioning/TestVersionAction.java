@@ -21,6 +21,7 @@
  */
 package com.agiletec.plugins.jpversioning.apsadmin.versioning;
 
+import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -30,9 +31,12 @@ import com.agiletec.plugins.jpversioning.util.JpversioningTestHelper;
 
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
-import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
+import com.agiletec.plugins.jacms.apsadmin.content.ContentActionConstants;
+import com.agiletec.plugins.jacms.apsadmin.content.AbstractContentAction;
+import com.agiletec.plugins.jpversioning.aps.system.JpversioningSystemConstants;
 import com.agiletec.plugins.jpversioning.aps.system.services.versioning.ContentVersion;
-import com.agiletec.plugins.jpversioning.apsadmin.versioning.VersionAction;
+import com.agiletec.plugins.jpversioning.aps.system.services.versioning.IVersioningManager;
 import com.opensymphony.xwork2.Action;
 
 /**
@@ -44,12 +48,12 @@ public class TestVersionAction extends ApsAdminPluginBaseTestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		this.init();
-		this._helper.initContentVersions();
+		this.helper.initContentVersions();
     }
 	
 	@Override
 	protected void tearDown() throws Exception {
-		this._helper.cleanContentVersions();
+		this.helper.cleanContentVersions();
 		super.tearDown();
 	}
 	
@@ -80,13 +84,59 @@ public class TestVersionAction extends ApsAdminPluginBaseTestCase {
 	public void testPreview() throws Throwable {
 		String result = this.executePreview("admin", 3);
 		assertEquals(Action.SUCCESS, result);
-		// TODO contenuto in sessione?
 	}
 	
 	public void testEntryRecover() throws Throwable {
 		String result = this.executeEntryRecover("admin", 3);
 		assertEquals(Action.SUCCESS, result);
 	}
+    
+    public void testRecoverAction() throws Throwable {
+        String contentId = null;
+        try {
+            Content contentToVersion = this.contentManager.loadContent("ART187", false);
+            contentToVersion.setId(null);
+            for (int i = 0; i < 15; i++) {
+                contentToVersion.setDescription("Version " + i);
+                this.contentManager.saveContent(contentToVersion);
+                contentId = contentToVersion.getId();
+                if (i % 4 == 0) {
+                    this.contentManager.insertOnLineContent(contentToVersion);
+                }
+            }
+            String lastVersionDescription = contentToVersion.getDescription();
+            List<Long> versions = this.versioningManager.getVersions(contentId);
+            int versionSize = versions.size();
+            assertTrue(versionSize > 13);
+            ContentVersion versionToRestore = this.versioningManager.getVersion(versions.get(7));
+            String versionToRestoreDescr = versionToRestore.getDescr();
+            assertEquals("3.4", versionToRestore.getVersion());
+            Content currentWorkContent = this.contentManager.loadContent(contentId, false);
+            assertEquals("5.2", currentWorkContent.getVersion());
+            assertEquals("5.0", this.contentManager.loadContent(contentId, true).getVersion());
+            String result = this.executeRecover("admin", versions.get(7));
+            assertEquals(Action.SUCCESS, result);
+            String marker = AbstractContentAction.buildContentOnSessionMarker(contentId, "ART", ApsAdminSystemConstants.EDIT);
+            Content contentOnSession = (Content) this.getRequest().getSession().getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + marker);
+            assertNotNull(contentOnSession);
+            assertEquals("5.3", contentOnSession.getVersion());
+            versions = this.versioningManager.getVersions(contentId);
+            assertEquals(versionSize+1, versions.size());
+            ContentVersion lastVersion = this.versioningManager.getVersion(versions.get(0));
+            assertEquals("5.2", lastVersion.getVersion());
+            assertEquals(lastVersionDescription, lastVersion.getDescr());
+            Content currentContent = this.contentManager.loadContent(contentId, false);
+            assertEquals("5.3", currentContent.getVersion());
+            assertEquals(versionToRestoreDescr, currentContent.getDescription());
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            Content lastContent = this.contentManager.loadContent(contentId, false);
+            this.contentManager.removeOnLineContent(lastContent);
+            this.contentManager.deleteContent(contentId);
+            this.helper.cleanContentVersions();
+        }
+    }
 	
 	public String executeHistory(String username, String contentId) throws Throwable {
 		this.setUserOnSession(username);
@@ -137,15 +187,15 @@ public class TestVersionAction extends ApsAdminPluginBaseTestCase {
 	}
 	
 	private void init() {
-		this._contentManager = (IContentManager) this.getService(JacmsSystemConstants.CONTENT_MANAGER);
-		this._resourceManager = (IResourceManager) this.getService(JacmsSystemConstants.RESOURCE_MANAGER);
+		this.contentManager = (IContentManager) this.getService(JacmsSystemConstants.CONTENT_MANAGER);
+        this.versioningManager = (IVersioningManager) this.getService(JpversioningSystemConstants.VERSIONING_MANAGER);
 		DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
-		this._helper = new JpversioningTestHelper(dataSource, this.getApplicationContext());
+		this.helper = new JpversioningTestHelper(dataSource, this.getApplicationContext());
 	}
 	
-	private JpversioningTestHelper _helper;
+	private JpversioningTestHelper helper;
 	
-	private IContentManager _contentManager;
-	private IResourceManager _resourceManager;
+	private IContentManager contentManager;
+    private IVersioningManager versioningManager;
 	
 }

@@ -256,7 +256,8 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("Attach"))
-                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(false))
+                .andExpect(jsonPath("$.payload.indexableOptionSupported").value(true))
                 .andReturn();
     }
 
@@ -271,7 +272,8 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("Boolean"))
-                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(false))
+                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andExpect(jsonPath("$.payload.indexableOptionSupported").value(false))
                 .andReturn();
     }
 
@@ -286,7 +288,8 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("CheckBox"))
-                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(false))
+                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andExpect(jsonPath("$.payload.indexableOptionSupported").value(false))
                 .andReturn();
     }
 
@@ -302,6 +305,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("Composite"))
                 .andExpect(jsonPath("$.payload.searchableOptionSupported").value(false))
+                .andExpect(jsonPath("$.payload.indexableOptionSupported").value(false))
                 .andReturn();
     }
 
@@ -317,6 +321,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("Date"))
                 .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andExpect(jsonPath("$.payload.indexableOptionSupported").value(true))
                 .andReturn();
     }
 
@@ -332,6 +337,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("Enumerator"))
                 .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andExpect(jsonPath("$.payload.indexableOptionSupported").value(true))
                 .andReturn();
     }
 
@@ -347,6 +353,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("EnumeratorMap"))
                 .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andExpect(jsonPath("$.payload.indexableOptionSupported").value(true))
                 .andReturn();
     }
 
@@ -361,7 +368,8 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("Hypertext"))
-                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(false))
+                .andExpect(jsonPath("$.payload.indexableOptionSupported").value(true))
                 .andReturn();
     }
 
@@ -376,7 +384,8 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("Image"))
-                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(false))
+                .andExpect(jsonPath("$.payload.indexableOptionSupported").value(true))
                 .andReturn();
     }
 
@@ -391,7 +400,8 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("Link"))
-                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(false))
+                .andExpect(jsonPath("$.payload.indexableOptionSupported").value(true))
                 .andReturn();
     }
 
@@ -407,6 +417,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("List"))
                 .andExpect(jsonPath("$.payload.searchableOptionSupported").value(false))
+                .andExpect(jsonPath("$.payload.indexableOptionSupported").value(false))
                 .andReturn();
     }
 
@@ -422,6 +433,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("Longtext"))
                 .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andExpect(jsonPath("$.payload.indexableOptionSupported").value(true))
                 .andReturn();
     }
 
@@ -437,6 +449,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("Monolist"))
                 .andExpect(jsonPath("$.payload.searchableOptionSupported").value(false))
+                .andExpect(jsonPath("$.payload.indexableOptionSupported").value(false))
                 .andReturn();
     }
 
@@ -452,6 +465,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("Monotext"))
                 .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andExpect(jsonPath("$.payload.indexableOptionSupported").value(true))
                 .andReturn();
     }
 
@@ -467,6 +481,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("Number"))
                 .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andExpect(jsonPath("$.payload.indexableOptionSupported").value(true))
                 .andReturn();
     }
 
@@ -482,6 +497,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("Text"))
                 .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andExpect(jsonPath("$.payload.indexableOptionSupported").value(true))
                 .andReturn();
     }
 
@@ -496,7 +512,8 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("ThreeState"))
-                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(false))
+                .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andExpect(jsonPath("$.payload.indexableOptionSupported").value(false))
                 .andReturn();
     }
 
@@ -512,6 +529,7 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.payload.code").value("Timestamp"))
                 .andExpect(jsonPath("$.payload.searchableOptionSupported").value(true))
+                .andExpect(jsonPath("$.payload.indexableOptionSupported").value(true))
                 .andReturn();
     }
 
