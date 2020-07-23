@@ -17,6 +17,7 @@ import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.*;
 import io.swagger.annotations.*;
 import org.entando.entando.aps.system.services.dataobjectmodel.model.IEntityModelDictionary;
 import org.entando.entando.web.common.model.*;
+import org.entando.entando.web.component.ComponentUsage;
 import org.springframework.http.*;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -69,6 +70,12 @@ public interface ContentModelResource {
         @ApiResponse(code = 200, message = "OK")
     })
     ResponseEntity<SimpleRestResponse<List<ContentModelReference>>> getReferences(@PathVariable Long modelId);
+
+    @ApiOperation(value = "Returns the usages (pages and widgets) of a content model")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "OK")
+    })
+    ResponseEntity<SimpleRestResponse<ComponentUsage>> getUsage(@PathVariable Long modelId);
     
     @ApiOperation(value = "Returns dictionary containing Velocity instructions for the editor")
     @ApiResponses({

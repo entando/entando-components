@@ -21,6 +21,7 @@ import org.springframework.validation.ObjectError;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
@@ -120,6 +121,13 @@ public class ContentModelServiceImplTest {
         );
 
         assertThat(maybeResult).hasValueSatisfying(hasIdExpected);
+    }
+
+    @Test
+    public void getContentTypeUsageForNonExistingCodeShouldReturnZero() {
+
+        int componentUsage = contentModelService.getContentModelReferences(5000L).size();
+        assertEquals(0, componentUsage);
     }
 
     @Test

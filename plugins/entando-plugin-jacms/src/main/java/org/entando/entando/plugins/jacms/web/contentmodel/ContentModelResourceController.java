@@ -15,13 +15,16 @@ package org.entando.entando.plugins.jacms.web.contentmodel;
 
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.*;
+import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.services.dataobjectmodel.model.IEntityModelDictionary;
 import org.entando.entando.plugins.jacms.aps.system.services.ContentModelService;
 import org.entando.entando.plugins.jacms.web.contentmodel.validator.ContentModelValidator;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.*;
+import org.entando.entando.web.component.ComponentUsage;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +39,8 @@ import org.springframework.http.MediaType;
 public class ContentModelResourceController implements ContentModelResource {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    public static final String COMPONENT_ID = "contentTemplate";
 
     private final ContentModelService contentModelService;
     private final ContentModelValidator contentModelValidator;
@@ -115,6 +120,33 @@ public class ContentModelResourceController implements ContentModelResource {
         List<ContentModelReference> references = contentModelService.getContentModelReferences(modelId);
         return ResponseEntity.ok(new SimpleRestResponse<>(references));
     }
+
+
+    // usage and usage details should be supplied better, the service should implements the relative interface,
+    // currently this is only a way to make consistent entando-component-manager requests
+    @Override
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @RequestMapping(value = "/{modelId}/usage", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    public ResponseEntity<SimpleRestResponse<ComponentUsage>> getUsage(@PathVariable Long modelId) {
+
+        logger.debug("loading contentModel references for model {}", modelId);
+
+        int size;
+        try {
+            size = contentModelService.getContentModelReferences(modelId).size();
+        } catch (ResourceNotFoundException e) {
+            size = 0;
+        }
+
+        ComponentUsage usage = ComponentUsage.builder()
+                .type(COMPONENT_ID)
+                .code(modelId + "")
+                .usage(size)
+                .build();
+
+        return new ResponseEntity<>(new SimpleRestResponse<>(usage), HttpStatus.OK);
+    }
+
 
     @Override
     @RestAccessControl(permission = Permission.SUPERUSER)

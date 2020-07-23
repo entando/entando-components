@@ -20,8 +20,10 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.attribute.Co
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentTypeDto;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentTypeDtoBuilder;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.model.ContentTypeDtoRequest;
+import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
+import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.IComponentUsageService;
 import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.aps.system.services.entity.AbstractEntityTypeService;
@@ -164,7 +166,11 @@ public class ContentTypeService extends AbstractEntityTypeService<Content, Conte
 
     @Override
     public Integer getComponentUsage(String componentCode) {
-        return contentService.countContentsByType(componentCode);
+        try {
+            return contentService.countContentsByType(componentCode);
+        } catch (ResourceNotFoundException e) {
+            return 0;
+        }
     }
 
     @Override
