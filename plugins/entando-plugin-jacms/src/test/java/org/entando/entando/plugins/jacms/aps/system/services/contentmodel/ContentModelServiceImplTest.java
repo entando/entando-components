@@ -1,6 +1,7 @@
 package org.entando.entando.plugins.jacms.aps.system.services.contentmodel;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
@@ -309,6 +310,14 @@ public class ContentModelServiceImplTest {
         IEntityModelDictionary dictionary = contentModelService.getContentModelDictionary("AAA");
         assertThat(dictionary).isNotNull();
     }
+
+    @Test
+    public void getContentModelUsageForNonExistingCodeShouldReturnZero() {
+
+        int componentUsage = contentModelService.getComponentUsage(5000L).getUsage();
+        assertEquals(0, componentUsage);
+    }
+
 
     private void fillMockedContentModelsMap() {
         this.mockedContentModels = new HashMap<>();

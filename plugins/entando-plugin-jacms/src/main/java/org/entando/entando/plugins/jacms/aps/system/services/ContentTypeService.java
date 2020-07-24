@@ -164,7 +164,11 @@ public class ContentTypeService extends AbstractEntityTypeService<Content, Conte
 
     @Override
     public Integer getComponentUsage(String componentCode) {
-        return contentService.countContentsByType(componentCode);
+        try {
+            return contentService.countContentsByType(componentCode);
+        } catch (ResourceNotFoundException e) {
+            return 0;
+        }
     }
 
     @Override
