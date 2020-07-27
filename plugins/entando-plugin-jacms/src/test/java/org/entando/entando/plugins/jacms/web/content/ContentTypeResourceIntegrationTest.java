@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 import org.entando.entando.aps.system.services.entity.model.EntityTypeAttributeFullDto;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
+import org.entando.entando.web.MockMvcHelper;
 import org.entando.entando.web.common.model.RestResponse;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.junit.Assert;
@@ -57,11 +58,14 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
 
     private String accessToken;
 
+    private MockMvcHelper mockMvcHelper;
+
     @Autowired
     private IContentManager contentManager;
 
     @Before
     public void setupTest() {
+        mockMvcHelper = new MockMvcHelper(mockMvc);
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         accessToken = mockOAuthInterceptor(user);
     }
@@ -831,6 +835,21 @@ public class ContentTypeResourceIntegrationTest extends AbstractControllerIntegr
                 .andExpect(jsonPath("$.payload.usage", is(11)))
                 .andReturn();
     }
+
+
+    @Test
+    public void askingForUsageCountForNotExistingCodeShouldReturnZero() throws Throwable {
+
+        String code = "NOT_EXISTING";
+
+        this.mockMvcHelper.setAccessToken(this.accessToken);
+        this.mockMvcHelper.getMockMvc("/plugins/cms/contentTypes/{code}/usage", null, code)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.type", is(ContentTypeResourceController.COMPONENT_ID)))
+                .andExpect(jsonPath("$.payload.code", is(code)))
+                .andExpect(jsonPath("$.payload.usage", is(0)));
+    }
+
 
     private ContentTypeDto createContentType(String typeCode) throws Exception {
         Assert.assertNull(this.contentManager.getEntityPrototype(typeCode));
