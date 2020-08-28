@@ -16,9 +16,7 @@
         <property name="categoryManager" ref="CategoryManager" />
         <property name="configManager" ref="BaseConfigManager"/>
         <property name="cacheWrapper">
-            <bean class="com.agiletec.plugins.jacms.aps.system.services.resource.cache.ResourceManagerCacheWrapper">
-                <property name="springCacheManager" ref="springCacheManager" />
-            </bean>
+            <bean class="com.agiletec.plugins.jacms.aps.system.services.resource.cache.ResourceManagerCacheWrapper"/>
         </property>
         <property name="resourceDAO" >
             <bean class="com.agiletec.plugins.jacms.aps.system.services.resource.ResourceDAO">
@@ -42,9 +40,7 @@
     <bean id="jacmsContentModelManager" class="com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModelManager" 
           parent="abstractService" >
         <property name="cacheWrapper">
-            <bean class="com.agiletec.plugins.jacms.aps.system.services.contentmodel.cache.ContentModelManagerCacheWrapper">
-                <property name="springCacheManager" ref="springCacheManager" />
-            </bean>
+            <bean class="com.agiletec.plugins.jacms.aps.system.services.contentmodel.cache.ContentModelManagerCacheWrapper"/>
         </property>
         <property name="contentModelDAO" >
             <bean class="com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModelDAO">
@@ -101,9 +97,7 @@
           parent="abstractService" depends-on="springCacheManager" >
         <property name="pageManager" ref="PageManager" />
         <property name="cacheWrapper">
-            <bean class="com.agiletec.plugins.jacms.aps.system.services.contentpagemapper.cache.ContentMapperCacheWrapper">
-                <property name="springCacheManager" ref="springCacheManager" />
-            </bean>
+            <bean class="com.agiletec.plugins.jacms.aps.system.services.contentpagemapper.cache.ContentMapperCacheWrapper"/>
         </property>
     </bean>
     

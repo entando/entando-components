@@ -14,9 +14,7 @@
             </bean>
         </property>
         <property name="cacheWrapper">
-            <bean class="com.agiletec.aps.system.services.page.cache.PageManagerCacheWrapper">
-                <property name="springCacheManager" ref="springCacheManager" />
-            </bean>
+            <bean class="com.agiletec.aps.system.services.page.cache.PageManagerCacheWrapper"/>
         </property>
     </bean>
     
@@ -39,9 +37,7 @@
         </property>
         <property name="langManager" ref="LangManager" />
         <property name="cacheWrapper">
-            <bean class="org.entando.entando.plugins.jpseo.aps.system.services.mapping.cache.SeoMappingCacheWrapper">
-                <property name="springCacheManager" ref="springCacheManager" />
-            </bean>
+            <bean class="org.entando.entando.plugins.jpseo.aps.system.services.mapping.cache.SeoMappingCacheWrapper"/>
         </property>
     </bean>
     

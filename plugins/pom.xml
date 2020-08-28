@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.entando.entando.components</groupId>
         <artifactId>entando-components</artifactId>
-        <version>5.3.0-SNAPSHOT</version>
+        <version>5.3.1-SNAPSHOT</version>
     </parent>
     <groupId>org.entando.entando.plugins</groupId>
     <artifactId>entando-plugins-parent</artifactId>
@@ -55,7 +55,7 @@
         <module>entando-plugin-jpblog</module>
         <module>entando-plugin-jprestapi</module>
         <module>entando-plugin-jpkiebpm</module>
-        <module>entando-plugin-jpinfinispan</module>
+        <module>entando-plugin-jpredis</module>
         <module>entando-plugin-jpseo</module>
         <module>entando-plugin-jpoidc</module>
     </modules>
@@ -99,7 +99,7 @@
         <test.database.serv.url>jdbc:derby:${project.build.directory}/test/db/${project.artifactId}testServ;create=true</test.database.serv.url>
 
         <spring.version>5.1.8.RELEASE</spring.version>
-        <struts2.version>2.5.17</struts2.version>
+        <struts2.version>2.5.22</struts2.version>
         <cxf.version>3.1.16</cxf.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -127,13 +127,13 @@
         <dependency>
             <groupId>org.entando.entando</groupId>
             <artifactId>entando-engine</artifactId>
-            <version>5.3.0-SNAPSHOT</version>
+            <version>5.3.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.entando.entando</groupId>
             <artifactId>entando-engine</artifactId>
-            <version>5.3.0-SNAPSHOT</version>
+            <version>5.3.1-SNAPSHOT</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
@@ -141,13 +141,13 @@
         <dependency>
             <groupId>org.entando.entando</groupId>
             <artifactId>entando-admin-console</artifactId>
-            <version>5.3.0-SNAPSHOT</version>
+            <version>5.3.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.entando.entando</groupId>
             <artifactId>entando-admin-console</artifactId>
-            <version>5.3.0-SNAPSHOT</version>
+            <version>5.3.1-SNAPSHOT</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
@@ -155,13 +155,13 @@
         <dependency>
             <groupId>org.entando.entando</groupId>
             <artifactId>entando-portal-ui</artifactId>
-            <version>5.3.0-SNAPSHOT</version>
+            <version>5.3.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.entando.entando</groupId>
             <artifactId>entando-portal-ui</artifactId>
-            <version>5.3.0-SNAPSHOT</version>
+            <version>5.3.1-SNAPSHOT</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
