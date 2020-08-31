@@ -34,9 +34,8 @@ public class ContentModelManagerCacheWrapper extends AbstractGenericCacheWrapper
 	public void initCache(IContentModelDAO contentModelDao) throws ApsSystemException {
 		try {
 			Cache cache = this.getCache();
-			this.releaseCachedObjects(cache);
 			Map<String, ContentModel> modelsMap = this.getModelsMap(contentModelDao);
-			super.insertObjectsOnCache(cache, modelsMap);
+			super.insertAndCleanCache(cache, modelsMap);
 		} catch (Throwable t) {
 			logger.error("Error bootstrapping models map cache", t);
 			throw new ApsSystemException("Error bootstrapping models map cache", t);

@@ -31,6 +31,11 @@ public class ContentMapperCacheWrapper extends AbstractCacheWrapper implements I
 
 	private static final Logger _logger = LoggerFactory.getLogger(ContentMapperCacheWrapper.class);
 
+    @Override
+    public void release() {
+        this.getCache().evict(CONTENT_MAPPER_CACHE_KEY);
+    }
+
 	@Override
 	public void initCache(IPageManager pageManager) throws ApsSystemException {
 		try {
