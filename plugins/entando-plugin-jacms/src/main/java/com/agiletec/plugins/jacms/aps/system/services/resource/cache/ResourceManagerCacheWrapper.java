@@ -25,13 +25,17 @@ public class ResourceManagerCacheWrapper extends AbstractCacheWrapper implements
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
+    public void release() {
+        this.getCache().evict(CACHE_NAME_METADATA_MAPPING);
+    }
+    
+    @Override
     public void initCache() {
         this.initCache(IResourceManager.STATUS_READY);
     }
 
     @Override
     public void initCache(Integer status) {
-        this.getCache().evict(CACHE_NAME_METADATA_MAPPING);
         this.updateStatus(status);
     }
 
