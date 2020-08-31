@@ -41,14 +41,18 @@ import org.springframework.cache.Cache;
 public class SeoMappingCacheWrapper extends AbstractCacheWrapper implements ISeoMappingCacheWrapper {
 
 	private static final Logger _logger = LoggerFactory.getLogger(SeoMappingCacheWrapper.class);
+
+    @Override
+    public void release() {
+        Cache cache = this.getCache();
+        this.releaseCachedObjects(cache, MAPPING_BY_CODE_CACHE_KEY, MAPPING_BY_CODE_CACHE_KEY_PREFIX);
+        this.releaseCachedObjects(cache, MAPPING_BY_PAGE_CACHE_KEY, MAPPING_BY_PAGE_CACHE_KEY_PREFIX);
+        this.releaseCachedObjects(cache, MAPPING_BY_CONTENT_CACHE_KEY, MAPPING_BY_CONTENT_CACHE_KEY_PREFIX);
+    }
     
 	@Override
 	public void initCache(ISeoMappingDAO seoMappingDAO) throws ApsSystemException {
 		try {
-            Cache cache = this.getCache();
-            this.releaseCachedObjects(cache, MAPPING_BY_CODE_CACHE_KEY, MAPPING_BY_CODE_CACHE_KEY_PREFIX);
-            this.releaseCachedObjects(cache, MAPPING_BY_PAGE_CACHE_KEY, MAPPING_BY_PAGE_CACHE_KEY_PREFIX);
-            this.releaseCachedObjects(cache, MAPPING_BY_CONTENT_CACHE_KEY, MAPPING_BY_CONTENT_CACHE_KEY_PREFIX);
             Map<String, FriendlyCodeVO> mapping = seoMappingDAO.loadMapping();
 			Map<String, FriendlyCodeVO> pageFriendlyCodes = new HashMap<>();
 			Map<String, ContentFriendlyCode> contentFriendlyCodes = new HashMap<>();
@@ -68,6 +72,7 @@ public class SeoMappingCacheWrapper extends AbstractCacheWrapper implements ISeo
 					content.addFriendlyCode(currentCode.getLangCode(), currentCode.getFriendlyCode());
 				}
 			}
+            Cache cache = this.getCache();
             this.insertVoObjectsOnCache(cache, mapping, MAPPING_BY_CODE_CACHE_KEY, MAPPING_BY_CODE_CACHE_KEY_PREFIX);
             this.insertVoObjectsOnCache(cache, pageFriendlyCodes, MAPPING_BY_PAGE_CACHE_KEY, MAPPING_BY_PAGE_CACHE_KEY_PREFIX);
 			this.insertVoObjectsOnCache(cache, contentFriendlyCodes, MAPPING_BY_CONTENT_CACHE_KEY, MAPPING_BY_CONTENT_CACHE_KEY_PREFIX);
