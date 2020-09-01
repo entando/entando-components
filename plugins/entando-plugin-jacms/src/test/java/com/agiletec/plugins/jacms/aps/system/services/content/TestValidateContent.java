@@ -22,6 +22,7 @@ import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.MonoListAttribute;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.IGroupManager;
+import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SymbolicLink;
@@ -43,7 +44,7 @@ public class TestValidateContent extends BaseTestCase {
         String insertedDescr = "XXX Prova Validazione XXX";
         try {
             Content content = this.createNewVoid("ART", insertedDescr, Content.STATUS_DRAFT, Group.FREE_GROUP_NAME, "admin");
-            List<FieldError> errors = content.validate(this._groupManager);
+            List<FieldError> errors = content.validate(this._groupManager, this._langManager);
             assertNotNull(errors);
             assertEquals(1, errors.size());
             FieldError error = errors.get(0);
@@ -55,7 +56,7 @@ public class TestValidateContent extends BaseTestCase {
             monolist.addAttribute();
             assertEquals(1, monolist.getAttributes().size());
             
-            errors = content.validate(this._groupManager);
+            errors = content.validate(this._groupManager, this._langManager);
             assertEquals(2, errors.size());
             error = errors.get(0);
             assertEquals("Text:it_Titolo", error.getFieldCode());//Verifica obbligatorietà attributo "Titolo"
@@ -79,7 +80,7 @@ public class TestValidateContent extends BaseTestCase {
             MonoListAttribute linksCorrelati = (MonoListAttribute) content.getAttribute("LinkCorrelati");
             LinkAttribute linkAttribute = (LinkAttribute) linksCorrelati.addAttribute();
             
-            List<FieldError> errors = content.validate(this._groupManager);
+            List<FieldError> errors = content.validate(this._groupManager, this._langManager);
             assertNotNull(errors);
             assertEquals(1, errors.size());
             FieldError error = errors.get(0);
@@ -92,7 +93,7 @@ public class TestValidateContent extends BaseTestCase {
             symbolicLink.setDestinationToContent("EVN103");//Contenuto di coach
             linkAttribute.setSymbolicLink(symbolicLink);
             
-            errors = content.validate(this._groupManager);
+            errors = content.validate(this._groupManager, this._langManager);
             assertNotNull(errors);
             assertEquals(1, errors.size());
             error = errors.get(0);
@@ -110,7 +111,7 @@ public class TestValidateContent extends BaseTestCase {
             ITextAttribute emailAttribute = (ITextAttribute) content.getAttribute("email");
             emailAttribute.setText("wrongEmailAddress", null);
             
-            List<FieldError> errors = content.validate(this._groupManager);
+            List<FieldError> errors = content.validate(this._groupManager, this._langManager);
             assertEquals(1, errors.size());
             FieldError error = errors.get(0);
             assertEquals("Monotext:email", error.getFieldCode());
@@ -130,21 +131,21 @@ public class TestValidateContent extends BaseTestCase {
             ITextAttribute textAttribute = (ITextAttribute) content.getAttribute("Titolo");
             textAttribute.setText(shortTitle, "it");
             
-            List<FieldError> errors = content.validate(this._groupManager);
+            List<FieldError> errors = content.validate(this._groupManager, this._langManager);
             assertEquals(1, errors.size());
             FieldError error = errors.get(0);
             assertEquals("Text:it_Titolo", error.getFieldCode());
             assertEquals(FieldError.INVALID_MIN_LENGTH, error.getErrorCode());
             
             textAttribute.setText(longTitle, "it");
-            errors = content.validate(this._groupManager);
+            errors = content.validate(this._groupManager, this._langManager);
             assertEquals(1, errors.size());
             error = errors.get(0);
             assertEquals("Text:it_Titolo", error.getFieldCode());
             assertEquals(FieldError.INVALID_MAX_LENGTH, error.getErrorCode());
             
             textAttribute.setText(shortTitle, "en");
-            errors = content.validate(this._groupManager);
+            errors = content.validate(this._groupManager, this._langManager);
             assertEquals(2, errors.size());
             error = errors.get(0);
             assertEquals("Text:it_Titolo", error.getFieldCode());
@@ -171,6 +172,7 @@ public class TestValidateContent extends BaseTestCase {
         try {
             this._contentManager = (IContentManager) this.getService(JacmsSystemConstants.CONTENT_MANAGER);
             this._groupManager = (IGroupManager) this.getService(SystemConstants.GROUP_MANAGER);
+            this._langManager = (ILangManager) this.getService(SystemConstants.LANGUAGE_MANAGER);
         } catch (Throwable t) {
             throw new Exception(t);
         }
@@ -178,5 +180,6 @@ public class TestValidateContent extends BaseTestCase {
     
     private IContentManager _contentManager = null;
     private IGroupManager _groupManager = null;
+    private ILangManager _langManager = null;
     
 }

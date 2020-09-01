@@ -16,6 +16,7 @@ package org.entando.entando.plugins.jacms.aps.system.services.content.command;
 import com.agiletec.aps.system.common.entity.model.FieldError;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.group.IGroupManager;
+import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.common.command.constants.ApsCommandErrorCode;
@@ -29,6 +30,10 @@ public class InsertOnlineContentBulkCommand extends BaseContentBulkCommand<Conte
 	public static final String BEAN_NAME = "jacmsInsertOnlineContentBulkCommand";
 	public static final String COMMAND_NAME = "content.online";
 
+	private IGroupManager groupManager;
+
+    private ILangManager langManager;
+    
 	@Override
 	public String getName() {
 		return COMMAND_NAME;
@@ -49,7 +54,7 @@ public class InsertOnlineContentBulkCommand extends BaseContentBulkCommand<Conte
 	protected boolean validateContent(Content content) throws ApsSystemException {
 		boolean valid = this.validateDescription(content) && this.checkContentUtilizers(content);
 		if (valid) {
-			List<FieldError> errors = content.validate(this.getGroupManager());
+			List<FieldError> errors = content.validate(this.getGroupManager(), this.getLangManager());
 			valid = errors == null || errors.isEmpty();
 		}
 		return valid;
@@ -67,12 +72,17 @@ public class InsertOnlineContentBulkCommand extends BaseContentBulkCommand<Conte
 	}
 
 	protected IGroupManager getGroupManager() {
-		return _groupManager;
+		return groupManager;
 	}
 	public void setGroupManager(IGroupManager groupManager) {
-		this._groupManager = groupManager;
+		this.groupManager = groupManager;
 	}
 
-	private IGroupManager _groupManager;
-
+    protected ILangManager getLangManager() {
+        return langManager;
+    }
+    public void setLangManager(ILangManager langManager) {
+        this.langManager = langManager;
+    }
+    
 }

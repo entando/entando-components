@@ -387,7 +387,7 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
             if (null == content.getMainGroup()) {
                 errors.add(new ApiError(IApiErrorCodes.API_VALIDATION_ERROR, "Main group null", Response.Status.CONFLICT));
             }
-            List<FieldError> fieldErrors = content.validate(this.getGroupManager());
+            List<FieldError> fieldErrors = content.validate(this.getGroupManager(), this.getLangManager());
             if (null != fieldErrors) {
                 for (int i = 0; i < fieldErrors.size(); i++) {
                     FieldError fieldError = fieldErrors.get(i);
