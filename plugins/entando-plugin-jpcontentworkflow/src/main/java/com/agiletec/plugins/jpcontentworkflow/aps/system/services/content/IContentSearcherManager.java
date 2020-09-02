@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
+import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jpcontentworkflow.aps.system.services.workflow.model.WorkflowSearchFilter;
 
@@ -33,19 +34,11 @@ import com.agiletec.plugins.jpcontentworkflow.aps.system.services.workflow.model
  */
 public interface IContentSearcherManager {
 	
-	/**
-	 * Carica una lista di identificativi di contenuti in base ai parametri immessi.
-	 * @param workflowFilters L'insieme dei filtri sui contenuti del workflow su cui la ricerca deve essere effettuata.
-	 * @param categories La categorie dei contenuti da cercare.
-	 * @param filters L'insieme dei filtri sugli attibuti, su cui la ricerca deve essere effettuata.
-	 * @param userGroupCodes I codici dei gruppi utenti dell'utente richiedente la lista. 
-	 * Se la collezione è vuota o nulla, gli identificativi di contenuto erogati saranno 
-	 * relativi al gruppo definito "ad accesso libero". Nel caso nella collezione sia presente 
-	 * il codice del gruppo degli amministratori, non sarà applicato alcun filtro sul gruppo.
-	 * @return La lista degli id dei contenuti cercati.
-	 * @throws ApsSystemException in caso di errore nell'accesso al db.
-	 */
+    @Deprecated
 	public List<String> loadContentsId(List<WorkflowSearchFilter> workflowFilters, String[] categories, 
 			EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException;
+    
+    public SearcherDaoPaginatedResult<String> getPaginatedWorkContentsId(List<WorkflowSearchFilter> workflowFilters, String[] categories, 
+            boolean orClauseCategoryFilter, EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException;
 	
 }

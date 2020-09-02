@@ -32,8 +32,7 @@
 </div>
 
 <div id="main" role="main" class="mt-20">
-    <wpsa:entityTypes entityManagerName="jacmsContentManager"
-                      var="contentTypesVar" />
+    <s:set value="%{getContentTypes()}" var="contentTypesVar" />
     <div class="col-xs-12  ">
         <s:url action="search" var="formAction" namespace="do/jacms/Content" />
 
@@ -86,8 +85,8 @@
                                                 <label for="contentType" class="control-label col-sm-2 text-right"><s:text name="label.type" />
                                             </label>
                                             <div class="col-sm-9 input-group input-20px-leftRight">
-                                                <wpsf:select cssClass="form-control" name="contentType" id="contentType" list="contentTypes" listKey="code"
-                                                             listValue="description" headerKey="" headerValue="%{getText('label.all')}" />
+                                                <wpsf:select cssClass="form-control" name="contentType" id="contentType" list="#contentTypesVar" 
+                                                             listKey="code" listValue="description" headerKey="" headerValue="%{getText('label.all')}" />
                                                 <div class="input-group-btn">
                                                     <wpsf:submit cssClass="btn btn-primary" value="%{getText('label.set')}" />
                                                 </div>
@@ -316,13 +315,12 @@
                 </button>
                 <ul class="dropdown-menu" role="menu">
                     <s:iterator var="contentTypeVar" value="#contentTypesVar">
-                        <jacmsapsadmin:contentType typeCode="%{#contentTypeVar.typeCode}"
-                                               property="isAuthToEdit" var="isAuthToEditVar" />
+                        <jacmsapsadmin:contentType typeCode="%{#contentTypeVar.code}" property="isAuthToEdit" var="isAuthToEditVar" />
                         <s:if test="%{#isAuthToEditVar}">
                             <li>
                                 <a href="<s:url action="createNew" namespace="/do/jacms/Content" >
-                                       <s:param name="contentTypeCode" value="%{#contentTypeVar.typeCode}" /></s:url>">
-                                   <s:property  value="%{#contentTypeVar.typeDescr}" />
+                                       <s:param name="contentTypeCode" value="%{#contentTypeVar.code}" /></s:url>">
+                                   <s:property  value="%{#contentTypeVar.description}" />
                                 </a>
                             </li>
                         </s:if>

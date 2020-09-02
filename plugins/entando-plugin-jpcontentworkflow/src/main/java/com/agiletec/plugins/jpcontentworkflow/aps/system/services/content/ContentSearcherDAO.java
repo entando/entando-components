@@ -40,12 +40,42 @@ public class ContentSearcherDAO extends com.agiletec.plugins.jacms.aps.system.se
 		implements IContentSearcherDAO {
 
 	private static final Logger _logger = LoggerFactory.getLogger(ContentSearcherDAO.class);
+
+    @Override
+    public int countContents(List<WorkflowSearchFilter> workflowFilters, 
+            String[] categories, boolean orClauseCategoryFilter, EntitySearchFilter[] filters, Collection<String> userGroupCodes) {
+        Connection conn = null;
+        int count = 0;
+        PreparedStatement stat = null;
+        ResultSet result = null;
+        try {
+            conn = this.getConnection();
+            stat = this.buildStatement(workflowFilters, filters, categories, 
+                    orClauseCategoryFilter, userGroupCodes, true, false, conn);
+            result = stat.executeQuery();
+            if (result.next()) {
+                count = result.getInt(1);
+            }
+        } catch (Throwable t) {
+            _logger.error("Error while loading the count of IDs", t);
+            throw new RuntimeException("Error while loading the count of IDs", t);
+        } finally {
+            closeDaoResources(result, stat, conn);
+        }
+        return count;
+    }
 	
+    @Override
+    public List<String> loadContentsId(List<WorkflowSearchFilter> workflowFilters, 
+            String[] categories, EntitySearchFilter[] filters, Collection<String> userGroupCodes) {
+        return this.loadContentsId(workflowFilters, categories, false, filters, userGroupCodes);
+    }
+    
 	@Override
-	public List<String> loadContentsId(List<WorkflowSearchFilter> workflowFilters, String[] categories,
-			EntitySearchFilter[] filters, Collection<String> userGroupCodes) {
-		List<String> contentsId = new ArrayList<String>();
-		if (workflowFilters.isEmpty() || userGroupCodes == null || userGroupCodes.size()==0) {
+	public List<String> loadContentsId(List<WorkflowSearchFilter> workflowFilters, 
+            String[] categories, boolean orClauseCategoryFilter, EntitySearchFilter[] filters, Collection<String> userGroupCodes) {
+		List<String> contentsId = new ArrayList<>();
+		if (workflowFilters.isEmpty() || userGroupCodes == null || userGroupCodes.isEmpty()) {
 			return contentsId;
 		}
 		Connection conn = null;
@@ -53,7 +83,7 @@ public class ContentSearcherDAO extends com.agiletec.plugins.jacms.aps.system.se
 		ResultSet result = null;
 		try {
 			conn = this.getConnection();
-			stat = this.buildStatement(workflowFilters, filters, categories, userGroupCodes, conn);
+			stat = this.buildStatement(workflowFilters, filters, categories, orClauseCategoryFilter, userGroupCodes, false, false, conn);
 			result = stat.executeQuery();
             while (result.next()) {
                 String id = result.getString(this.getMasterTableIdFieldName());
@@ -70,10 +100,10 @@ public class ContentSearcherDAO extends com.agiletec.plugins.jacms.aps.system.se
 		return contentsId;
 	}
 	
-	private PreparedStatement buildStatement(List<WorkflowSearchFilter> workflowFilters, EntitySearchFilter[] filters, 
-			String[] categories, Collection<String> userGroupCodes, Connection conn) {
+	private PreparedStatement buildStatement(List<WorkflowSearchFilter> workflowFilters, 
+            EntitySearchFilter[] filters, String[] categories, boolean orClauseCategoryFilter, Collection<String> userGroupCodes, boolean isCount, boolean selectAll, Connection conn) {
 		Collection<String> groupsForSelect = this.getGroupsForSelect(userGroupCodes);
-		String query = this.createQueryString(workflowFilters, filters, categories, groupsForSelect);
+		String query = this.createQueryString(workflowFilters, filters, categories, orClauseCategoryFilter, groupsForSelect, isCount, selectAll);
 		PreparedStatement stat = null;
 		try {
 			stat = conn.prepareStatement(query);
@@ -105,9 +135,9 @@ public class ContentSearcherDAO extends com.agiletec.plugins.jacms.aps.system.se
 		return stat;
 	}
 	
-	private String createQueryString(List<WorkflowSearchFilter> workflowFilters, EntitySearchFilter[] filters, String[] categories, 
-			Collection<String> groupsForSelect) {
-		StringBuffer query = this.createBaseQueryBlock(filters, false, false);
+	private String createQueryString(List<WorkflowSearchFilter> workflowFilters, 
+            EntitySearchFilter[] filters, String[] categories, boolean orClauseCategoryFilter, Collection<String> groupsForSelect, boolean isCount, boolean selectAll) {
+        StringBuffer query = this.createBaseQueryBlock(filters, isCount, selectAll);
 		boolean hasAppendWhereClause = this.appendFullAttributeFilterQueryBlocks(filters, query, false);
 		hasAppendWhereClause = this.appendMetadataFieldFilterQueryBlocks(filters, query, hasAppendWhereClause);
 		if (groupsForSelect != null && !groupsForSelect.isEmpty()) {
@@ -117,7 +147,9 @@ public class ContentSearcherDAO extends com.agiletec.plugins.jacms.aps.system.se
 		if (categories != null) {
 			hasAppendWhereClause = this.verifyWhereClauseAppend(query, hasAppendWhereClause);
 			for (int i=0; i<categories.length; i++) {
-				if (i>0) query.append(" AND ");
+				if (i>0) {
+                    query.append((orClauseCategoryFilter) ? " OR " :" AND ");
+                }
 				query.append(" contents.contentid IN (SELECT contentid FROM ")
 					.append(this.getContentRelationsTableName()).append(" WHERE ")
 					.append(this.getContentRelationsTableName()).append(".refcategory = ? ) ");
@@ -139,8 +171,9 @@ public class ContentSearcherDAO extends com.agiletec.plugins.jacms.aps.system.se
 			query.append(" )) ");
 		}
 		query.append(") ");
-		
-		appendOrderQueryBlocks(filters, query, false);
+		if (!isCount) {
+            appendOrderQueryBlocks(filters, query, false);
+        }
 		return query.toString();
 	}
 	

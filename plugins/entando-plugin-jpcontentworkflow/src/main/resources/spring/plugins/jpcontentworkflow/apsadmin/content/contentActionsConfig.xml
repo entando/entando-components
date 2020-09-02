@@ -1,53 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xmlns:context="http://www.springframework.org/schema/context"
-		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 				http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
-	
-	<bean id="jpcontentworkflowContentActionHelper" parent="jacmsContentActionHelper" 
-			class="com.agiletec.plugins.jpcontentworkflow.apsadmin.content.helper.ContentActionHelper" >
-		<property name="workflowManager" ref="jpcontentworkflowWorkflowManager" />
-	</bean>
-	
-	<bean id="jpcontentworkflowContentFinderAction" scope="prototype" 
-			class="com.agiletec.plugins.jpcontentworkflow.apsadmin.content.ContentFinderAction" 
-			parent="abstractBaseAction" >
-		<property name="entityActionHelper" ref="jpcontentworkflowContentActionHelper" />
-		<property name="contentManager" ref="jacmsContentManager"/>
-		<property name="groupManager" ref="GroupManager"/>
-		<property name="categoryManager" ref="CategoryManager"/>
-		<property name="contentSearcherManager" ref="jpcontentworkflowContentSearcherManager"/>
-	</bean>
-	
-	<bean id="jpcontentworkflowIntroNewContentAction" scope="prototype" 
-			class="com.agiletec.plugins.jpcontentworkflow.apsadmin.content.JpCwIntroNewContentAction" parent="jacmsAbstractContentAction">
-		<property name="contentActionHelper" ref="jpcontentworkflowContentActionHelper"/>
-	</bean>
-  	
-	<!--
-	<bean id="jpcontentworkflowIntroNewContentActionAspect" scope="prototype" 
-			class="com.agiletec.plugins.jpcontentworkflow.apsadmin.content.IntroNewContentActionAspect" >
-		<property name="contentManager" ref="jacmsContentManager"/>
-		<property name="contentActionHelper" ref="jpcontentworkflowContentActionHelper"/>
-	</bean>
-	-->
-	
-	<bean id="jpcontentworkflowContentAction" scope="prototype" 
-			class="com.agiletec.plugins.jpcontentworkflow.apsadmin.content.ContentAction" 
-			parent="jacmsAbstractContentAction">
-		<!-- <property name="categoryManager" ref="CategoryManager"/> -->
-		<property name="pageManager" ref="PageManager" />
-		<property name="configManager" ref="BaseConfigManager"/>
-		<property name="resourceIconUtil" ref="jacmsResourceIconUtil" />
+    
+    <bean id="jpcontentworkflowContentActionHelper" parent="jacmsContentActionHelper" 
+              class="com.agiletec.plugins.jpcontentworkflow.apsadmin.content.helper.ContentActionHelper" >
+        <property name="workflowManager" ref="jpcontentworkflowWorkflowManager" />
+    </bean>
+    
+    <bean id="jpcontentworkflowContentFinderAction" scope="prototype" 
+              class="com.agiletec.plugins.jpcontentworkflow.apsadmin.content.ContentFinderAction" 
+              parent="abstractBaseAction" >
+        <property name="entityActionHelper" ref="jpcontentworkflowContentActionHelper" />
+        <property name="contentManager" ref="jacmsContentManager"/>
+        <property name="groupManager" ref="GroupManager"/>
+        <property name="categoryManager" ref="CategoryManager"/>
+        <property name="contentSearcherManager" ref="jpcontentworkflowContentSearcherManager"/>
+    </bean>
+    
+    <bean id="jpcontentworkflowIntroNewContentAction" scope="prototype" 
+              class="com.agiletec.plugins.jpcontentworkflow.apsadmin.content.JpCwIntroNewContentAction" parent="jacmsAbstractContentAction">
+        <property name="contentActionHelper" ref="jpcontentworkflowContentActionHelper"/>
+    </bean>
+    
+    <bean id="jpcontentworkflowContentAction" scope="prototype" 
+              class="com.agiletec.plugins.jpcontentworkflow.apsadmin.content.ContentAction" 
+              parent="jacmsAbstractContentAction">
+        <property name="pageManager" ref="PageManager" />
+        <property name="configManager" ref="BaseConfigManager"/>
+        <property name="resourceIconUtil" ref="jacmsResourceIconUtil" />
         <property name="resourceManager" ref="jacmsResourceManager" />
-		<property name="workflowManager" ref="jpcontentworkflowWorkflowManager" />
-		<property name="contentActionHelper" ref="jpcontentworkflowContentActionHelper"/>
-	</bean>
-	
-	<bean id="jacmsEntryContentActionActionsHookPoint" class="com.agiletec.apsadmin.system.plugin.HookPointElementContainer" >
-		<property name="filePath"><value>/WEB-INF/plugins/jpcontentworkflow/apsadmin/jsp/content/entryContent-actions-jack.jsp</value></property>
-		<property name="hookPointKey"><value>jacms.entryContent.actions</value></property>
-	</bean>
-	
+        <property name="workflowManager" ref="jpcontentworkflowWorkflowManager" />
+        <property name="contentActionHelper" ref="jpcontentworkflowContentActionHelper"/>
+    </bean>
+    
+    <bean id="jpcontentworkEntryContentActionActionsHookPoint" class="com.agiletec.apsadmin.system.plugin.HookPointElementContainer" >
+        <property name="filePath"><value>/WEB-INF/plugins/jpcontentworkflow/apsadmin/jsp/content/entryContent-actions-jack.jsp</value></property>
+        <property name="hookPointKey"><value>jacms.entryContent.actions</value></property>
+        <property name="priority"><value>5</value></property>
+    </bean>
+    
 </beans>
