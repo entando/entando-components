@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
+import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jpcontentworkflow.aps.system.services.workflow.model.WorkflowSearchFilter;
 
@@ -39,29 +40,44 @@ public class ContentSearcherManager extends AbstractService implements IContentS
 
 	private static final Logger _logger = LoggerFactory.getLogger(ContentSearcherManager.class);
 	
+	private IContentSearcherDAO contentSearcherDAO;
+	
 	@Override
 	public void init() throws Exception {
 		_logger.debug("{} ready", this.getClass().getName());
 	}
 	
 	@Override
+    @Deprecated
 	public List<String> loadContentsId(List<WorkflowSearchFilter> workflowFilters, String[] categories, 
 			EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException {
 		try {
-			return this.getContentSearcherDAO().loadContentsId(workflowFilters, categories, filters, userGroupCodes);
+			return this.getContentSearcherDAO().loadContentsId(workflowFilters, categories, false, filters, userGroupCodes);
 		} catch (Throwable t) {
 			_logger.error("Error loading content identifiers filtered for workflow", t);
 			throw new ApsSystemException("Error loading content identifiers filtered for workflow", t);
 		}
 	}
-	
+
+    @Override
+    public SearcherDaoPaginatedResult<String> getPaginatedWorkContentsId(List<WorkflowSearchFilter> workflowFilters, String[] categories, boolean orClauseCategoryFilter, EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException {
+        SearcherDaoPaginatedResult<String> pagedResult = null;
+        try {
+            int count = this.getContentSearcherDAO().countContents(workflowFilters, categories, orClauseCategoryFilter, filters, userGroupCodes);
+            List<String> contentsId = this.getContentSearcherDAO().loadContentsId(workflowFilters, categories, orClauseCategoryFilter, filters, userGroupCodes);
+            pagedResult = new SearcherDaoPaginatedResult<>(count, contentsId);
+        } catch (Throwable t) {
+            _logger.error("Error searching paginated contents id", t);
+            throw new ApsSystemException("Error searching paginated contents id", t);
+        }
+        return pagedResult;
+    }
+    
 	protected IContentSearcherDAO getContentSearcherDAO() {
-		return _contentSearcherDAO;
+		return contentSearcherDAO;
 	}
 	public void setContentSearcherDAO(IContentSearcherDAO contentSearcherDAO) {
-		this._contentSearcherDAO = contentSearcherDAO;
+		this.contentSearcherDAO = contentSearcherDAO;
 	}
-	
-	private IContentSearcherDAO _contentSearcherDAO;
 	
 }

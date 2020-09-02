@@ -22,6 +22,7 @@
 package com.agiletec.plugins.jpcontentworkflow.apsadmin.content;
 
 import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.plugins.jpcontentworkflow.aps.system.JpcontentworkflowSystemConstants;
 import com.agiletec.plugins.jpcontentworkflow.aps.system.services.workflow.ContentWorkflowManager;
@@ -45,7 +46,47 @@ public class TestContentFinderAction extends ApsAdminPluginBaseTestCase {
 		this.init();
 	}
 
-	public void testSearch() throws Throwable {
+	public void testSearch_1() throws Throwable {
+		try {
+			this._helper.setWorkflowConfig();
+			this._helper.setContentStates();
+			Map<String, String> params = new HashMap<>();
+			this.executeSearch("admin", params);
+			ContentFinderAction action = (ContentFinderAction) this.getAction();
+            SearcherDaoPaginatedResult<String> result = action.getPaginatedContentsId(10);
+			assertEquals(25, result.getCount().intValue());
+			assertEquals(10, result.getList().size());
+			this.executeSearch("editorCoach", params);
+			action = (ContentFinderAction) this.getAction();
+            result = action.getPaginatedContentsId(10);
+			List<String> contents = result.getList();
+			assertEquals(2, result.getList().size());
+			String[] contentsId = {"ART102", "ART112"};
+			assertEquals(contentsId.length, contents.size());
+			for (int i = 0; i < contentsId.length; i++) {
+				String contentId = contentsId[i];
+				assertTrue(contents.contains(contentId));
+			}
+			this.executeSearch("supervisorCoach", params);
+			action = (ContentFinderAction) this.getAction();
+			result = action.getPaginatedContentsId(10);
+			assertEquals(4, result.getList().size());
+			contents = result.getList();
+			contentsId = new String[]{"ART102", "ART111", "ART112", "RAH101"};
+			assertEquals(contentsId.length, contents.size());
+			for (int i = 0; i < contentsId.length; i++) {
+				String contentId = contentsId[i];
+				assertTrue(contents.contains(contentId));
+			}
+		} catch (Throwable t) {
+			throw t;
+		} finally {
+			this._helper.resetWorkflowConfig();
+			this._helper.resetContentStates();
+		}
+	}
+
+	public void testSearch_2() throws Throwable {
 		try {
 			this._helper.setWorkflowConfig();
 			this._helper.setContentStates();
@@ -63,7 +104,6 @@ public class TestContentFinderAction extends ApsAdminPluginBaseTestCase {
 				String contentId = contentsId[i];
 				assertTrue(contents.contains(contentId));
 			}
-
 			this.executeSearch("supervisorCoach", params);
 			action = (ContentFinderAction) this.getAction();
 			contents = action.getContents();

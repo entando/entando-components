@@ -28,23 +28,69 @@ import java.util.List;
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.SmallEntityType;
+import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.SelectItem;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
-import com.agiletec.plugins.jacms.aps.system.services.content.model.SmallContentType;
+import com.agiletec.plugins.jacms.apsadmin.content.ContentFinderSearchInfo;
 import com.agiletec.plugins.jpcontentworkflow.aps.system.services.content.IContentSearcherManager;
 import com.agiletec.plugins.jpcontentworkflow.aps.system.services.workflow.model.WorkflowSearchFilter;
 import com.agiletec.plugins.jpcontentworkflow.apsadmin.content.helper.IContentWorkFlowActionHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author E.Santoboni
  */
 public class ContentFinderAction extends com.agiletec.plugins.jacms.apsadmin.content.ContentFinderAction {
+
+    private static final Logger logger = LoggerFactory.getLogger(ContentFinderAction.class);
 	
+    @Override
+    public SearcherDaoPaginatedResult<String> getPaginatedContentsId(Integer limit) {
+        SearcherDaoPaginatedResult<String> result = null;
+        try {
+            if (this.hasCurrentUserPermission(Permission.SUPERUSER)) {
+                return super.getPaginatedContentsId(limit);
+            }
+            ContentFinderSearchInfo searchInfo = this.getContentSearchInfo();
+            UserDetails user = this.getCurrentUser();
+			List<WorkflowSearchFilter> workflowFilters = ((IContentWorkFlowActionHelper) this.getContentActionHelper()).getWorkflowSearchFilters(user);
+			if (workflowFilters.size() > 0) {
+				List<String> allowedGroups = this.getContentGroupCodes();
+				EntitySearchFilter[] filters = this.createFilters();
+				String[] categories = null;
+				Category category = this.getCategoryManager().getCategory(this.getCategoryCode());
+				if (null != category && !category.isRoot()) {
+					categories = new String[]{this.getCategoryCode().trim()};
+                    searchInfo.setCategoryCode(this.getCategoryCode().trim());
+				} else {
+                    searchInfo.setCategoryCode(null);
+                }
+				result = this.getContentSearcherManager().getPaginatedWorkContentsId(workflowFilters, categories, false, filters, allowedGroups);
+			} else {
+				result = new SearcherDaoPaginatedResult();
+                result.setCount(0);
+                result.setList(new ArrayList<>());
+			}
+        } catch (Throwable t) {
+            logger.error("error in getPaginatedWorkContentsId", t);
+            throw new RuntimeException("error in getPaginatedWorkContentsId", t);
+        }
+        return result;
+    }
+
+    private ContentFinderSearchInfo getContentSearchInfo() {
+        ContentFinderSearchInfo searchInfo = (ContentFinderSearchInfo) this.getRequest().getSession()
+                .getAttribute(ContentFinderSearchInfo.SESSION_NAME);
+        return searchInfo;
+    }
+    
 	@Override
+    @Deprecated
 	public List<String> getContents() {
 		List<String> result = null;
 		try {
