@@ -44,6 +44,7 @@ import com.agiletec.aps.system.common.entity.model.FieldError;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.group.IGroupManager;
+import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.plugins.jpwebdynamicform.aps.system.services.message.IMessageManager;
 import com.agiletec.plugins.jpwebdynamicform.aps.system.services.message.model.Answer;
 import com.agiletec.plugins.jpwebdynamicform.aps.system.services.message.model.Message;
@@ -132,9 +133,9 @@ public class ApiMessageInterface {
     }
     
     private List<ApiError> validate(Message userMessage) throws ApsSystemException {
-        List<ApiError> errors = new ArrayList<ApiError>();
+        List<ApiError> errors = new ArrayList<>();
         try {
-            List<FieldError> fieldErrors = userMessage.validate(this.getGroupManager());
+            List<FieldError> fieldErrors = userMessage.validate(this.getGroupManager(), this.getLangManager());
             if (null != fieldErrors) {
                 for (int i = 0; i < fieldErrors.size(); i++) {
                     FieldError fieldError = fieldErrors.get(i);
@@ -176,20 +177,28 @@ public class ApiMessageInterface {
     }
     
 	protected IMessageManager getMessageManager() {
-		return _messageManager;
+		return messageManager;
 	}
 	public void setMessageManager(IMessageManager messageManager) {
-		this._messageManager = messageManager;
+		this.messageManager = messageManager;
 	}
 	
     protected IGroupManager getGroupManager() {
-        return _groupManager;
+        return groupManager;
     }
     public void setGroupManager(IGroupManager groupManager) {
-        this._groupManager = groupManager;
+        this.groupManager = groupManager;
+    }
+
+    protected ILangManager getLangManager() {
+        return langManager;
+    }
+    public void setLangManager(ILangManager langManager) {
+        this.langManager = langManager;
     }
     
-    private IMessageManager _messageManager;
-    private IGroupManager _groupManager;
+    private IMessageManager messageManager;
+    private IGroupManager groupManager;
+    private ILangManager langManager;
     
 }
