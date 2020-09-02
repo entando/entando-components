@@ -57,12 +57,9 @@
     </bean>
 
     <bean id="jacmsEntryContentActionActionsHookPoint" class="com.agiletec.apsadmin.system.plugin.HookPointElementContainer" >
-        <property name="filePath">
-            <value>/WEB-INF/plugins/jacms/apsadmin/jsp/content/entryContent-actions-jack.jsp</value>
-        </property>
-        <property name="hookPointKey">
-            <value>jacms.entryContent.actions</value>
-        </property>
+        <property name="filePath"><value>/WEB-INF/plugins/jacms/apsadmin/jsp/content/entryContent-actions-jack.jsp</value></property>
+        <property name="hookPointKey"><value>jacms.entryContent.actions</value></property>
+        <property name="priority"><value>10</value></property>
     </bean>
 
     <bean id="jacmsContentAdminAction" scope="prototype"

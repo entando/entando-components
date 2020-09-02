@@ -408,7 +408,7 @@
         <div class="col-xs-12 no-padding" id="sticky-toolbar">
             <div class="row toolbar-pf table-view-pf-toolbar border-bottom">
                 <div class="col-xs-12">
-                    <wpsa:hookPoint key="jacms.entryContent.actions" objectName="hookPointElements_jacms_entryContent_actions">
+                    <wpsa:hookPoint key="jacms.entryContent.actions" objectName="hookPointElements_jacms_entryContent_actions" onlyFirst="true">
                         <s:iterator value="#hookPointElements_jacms_entryContent_actions" var="hookPointElement">
                             <wpsa:include value="%{#hookPointElement.filePath}"></wpsa:include>
                         </s:iterator>
