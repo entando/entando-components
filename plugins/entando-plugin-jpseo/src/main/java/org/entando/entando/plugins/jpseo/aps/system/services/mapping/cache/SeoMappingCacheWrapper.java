@@ -94,19 +94,20 @@ public class SeoMappingCacheWrapper extends AbstractCacheWrapper implements ISeo
     
     protected void insertAndCleanVoObjectsOnCache(Cache cache, Map<String, ?> objects, String listKey, String cacheKeyPrefix) {
         List<String> oldCodes = (List<String>) this.get(cache, listKey, List.class);
+        List<String> oldCodesClone = (null != oldCodes) ? new ArrayList<>(oldCodes) : null;
         List<String> codes = new ArrayList<>();
         Iterator<String> iter = objects.keySet().iterator();
         while (iter.hasNext()) {
             String key = iter.next();
             cache.put(cacheKeyPrefix + key, objects.get(key));
-            if (null != oldCodes) {
-                oldCodes.remove(key);
+            if (null != oldCodesClone) {
+                oldCodesClone.remove(key);
             }
             codes.add(key);
         }
         cache.put(listKey, codes);
-        if (null != oldCodes) {
-            for (String code : oldCodes) {
+        if (null != oldCodesClone) {
+            for (String code : oldCodesClone) {
                 cache.evict(cacheKeyPrefix + code);
             }
         }
