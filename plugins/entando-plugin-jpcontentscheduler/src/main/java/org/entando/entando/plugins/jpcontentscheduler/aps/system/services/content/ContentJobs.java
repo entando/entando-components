@@ -48,6 +48,7 @@ import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.ICategoryManager;
+import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.Widget;
@@ -57,7 +58,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModelManager;
 
-public class ContentJobs extends QuartzJobBean implements ApplicationContextAware {
+public class ContentJobs extends QuartzJobBean {
 
 	private static final Logger _logger = LoggerFactory.getLogger(ContentJobs.class);
 
@@ -68,13 +69,6 @@ public class ContentJobs extends QuartzJobBean implements ApplicationContextAwar
 	private ICategoryManager _categoryManager;
 	private IPageManager _pageManager;
 	private IContentModelManager _contentModelManager;
-
-	private ApplicationContext _ctx;
-
-	@Override
-	public void setApplicationContext(ApplicationContext ac) throws BeansException {
-		this._ctx = ac;
-	}
 
 	private ApplicationContext getApplicationContext(JobExecutionContext context) throws Exception {
 		ApplicationContext appCtx = (ApplicationContext) context.getScheduler().getContext()
@@ -87,8 +81,7 @@ public class ContentJobs extends QuartzJobBean implements ApplicationContextAwar
 	}
 
 	private void initBeans(ApplicationContext appCtx) {
-		this.setContentSchedulerManager(
-				(IContentSchedulerManager) appCtx.getBean("jpcontentschedulerContentSchedulerManager"));
+		this.setContentSchedulerManager((IContentSchedulerManager) appCtx.getBean("jpcontentschedulerContentSchedulerManager"));
 		this.setContentModelManager((IContentModelManager) appCtx.getBean("jacmsContentModelManager"));
 		this.setCategoryManager((ICategoryManager) appCtx.getBean("CategoryManager"));
 		this.setPageManager((IPageManager) appCtx.getBean("PageManager"));
@@ -108,15 +101,15 @@ public class ContentJobs extends QuartzJobBean implements ApplicationContextAwar
 
 	public void executeJob(ApplicationContext appCtx) throws JobExecutionException {
 		try {
-			if (this.getContentSchedulerManager().getConfig()
-					.isActive()/* && isCurrentSiteAllowed() */) {
+			if (this.getContentSchedulerManager().getConfig().isActive()) {
 				Date startJobDate = new Date();
 				_logger.info(ContentThreadConstants.START_TIME_LOG + Utils.printTimeStamp(startJobDate));
-				List<ContentState> removedContents = new ArrayList<ContentState>();
-				List<ContentState> publishedContents = new ArrayList<ContentState>();
-				List<ContentState> moveContents = new ArrayList<ContentState>();
+				List<ContentState> removedContents = new ArrayList<>();
+				List<ContentState> publishedContents = new ArrayList<>();
+				List<ContentState> moveContents = new ArrayList<>();
 				try {
-					this.publishContentsJob(publishedContents);
+                    ILangManager langManager = appCtx.getBean(ILangManager.class);
+					this.publishContentsJob(publishedContents, langManager);
 					// System.out.println("CONTENUTI DA PUBLICARE -> " +
 					// publishedContents);
 					this.suspendOrMoveContentsJob(removedContents, moveContents, appCtx);
@@ -142,7 +135,7 @@ public class ContentJobs extends QuartzJobBean implements ApplicationContextAwar
 		}
 	}
 
-	private void publishContentsJob(List<ContentState> publishedContents) throws ApsSystemException {
+	private void publishContentsJob(List<ContentState> publishedContents, ILangManager langManager) throws ApsSystemException {
 		try {
 			// Restituisce gli id dei contenuti che hanno un attributo con nome
 			// key Data_inizio e valore la data corrente
@@ -179,7 +172,7 @@ public class ContentJobs extends QuartzJobBean implements ApplicationContextAwar
 								+ ContentThreadConstants.NOTREADYSTATUS);
 						continue;
 					}
-					boolean validation = this.scanEntity(contentToPublish);
+					boolean validation = this.scanEntity(contentToPublish, langManager);
 					if (!validation) {
 						publishedContents.add(new ContentState(contentToPublish.getId(), contentToPublish.getTypeCode(),
 								contentToPublish.getDescription(), ContentThreadConstants.PUBLISH_ACTION,
@@ -206,13 +199,13 @@ public class ContentJobs extends QuartzJobBean implements ApplicationContextAwar
 		}
 	}
 
-	public boolean scanEntity(Content currentContent) {
+	public boolean scanEntity(Content currentContent, ILangManager langManager) {
 		try {
 			List<AttributeInterface> attributes = currentContent.getAttributeList();
 			for (int i = 0; i < attributes.size(); i++) {
 				AttributeInterface entityAttribute = attributes.get(i);
 				if (entityAttribute.isActive()) {
-					List<AttributeFieldError> errors = entityAttribute.validate(new AttributeTracer());
+					List<AttributeFieldError> errors = entityAttribute.validate(new AttributeTracer(), langManager);
 					if (null != errors && errors.size() > 0) {
 						return false;
 					}

@@ -20,6 +20,11 @@ import com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.model.Ne
 public class NewsletterManagerCacheWrapper extends AbstractCacheWrapper implements INewsletterManagerCacheWrapper {
 
     @Override
+    public void release() {
+        this.getCache().evict(NEWSLETTER_CONFIG_CACHE_NAME);
+    }
+
+    @Override
     protected String getCacheName() {
         return NEWSLETTER_MANAGER_CACHE_NAME;
     }

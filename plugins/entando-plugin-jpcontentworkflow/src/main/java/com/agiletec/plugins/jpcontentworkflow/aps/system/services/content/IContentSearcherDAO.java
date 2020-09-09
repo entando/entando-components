@@ -32,20 +32,11 @@ import com.agiletec.plugins.jpcontentworkflow.aps.system.services.workflow.model
  */
 public interface IContentSearcherDAO {
 	
-	/**
-	 * Carica una lista di identificativi di contenuti in base ai parametri immessi.
-	 * @param workflowFilters L'insieme dei filtri sui contenuti del workflow su cui la ricerca deve essere effettuata.
-	 * @param categories Le categorie dei contenuti da cercare.
-	 * @param filters L'insieme dei filtri sugli attibuti, su cui la ricerca deve essere effettuata.
-	 * @param userGroupCodes I codici dei gruppi utenti dell'utente richiedente la lista. 
-	 * Se la collezione è vuota o nulla, gli identificativi di contenuto erogati saranno 
-	 * relativi al gruppo definito "ad accesso libero". Nel caso nella collezione sia presente 
-	 * il codice del gruppo degli amministratori, non sarà applicato alcun il filtro sul gruppo.
-	 * @param onlyOwner Implica se il filtro sulla ricerca và applicato 
-	 * anche sui gruppi extra dei contenuti e non esclusivamente sul gruppo proprietario.
-	 * @return La lista degli id dei contenuti cercati.
-	 */
-	public List<String> loadContentsId(List<WorkflowSearchFilter> workflowFilters, String[] categories, 
-			EntitySearchFilter[] filters, Collection<String> userGroupCodes);
+    @Deprecated
+	public List<String> loadContentsId(List<WorkflowSearchFilter> workflowFilters, String[] categories, EntitySearchFilter[] filters, Collection<String> userGroupCodes);
+
+    public List<String> loadContentsId(List<WorkflowSearchFilter> workflowFilters, String[] categories, boolean orClauseCategoryFilter, EntitySearchFilter[] filters, Collection<String> userGroupCodes);
+
+    public int countContents(List<WorkflowSearchFilter> workflowFilters, String[] categories, boolean orClauseCategoryFilter, EntitySearchFilter[] filters, Collection<String> userGroupCodes);
 	
 }

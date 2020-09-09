@@ -13,6 +13,7 @@
  */
 package com.agiletec.plugins.jacms.aps.system.services.contentpagemapper;
 
+import com.agiletec.aps.system.common.AbstractCacheWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,6 +43,12 @@ public class ContentPageMapperManager extends AbstractService implements IConten
 		this.getCacheWrapper().initCache(this.getPageManager());
 		_logger.debug("{} ready.", this.getClass().getName());
 	}
+
+    @Override
+    protected void release() {
+        ((AbstractCacheWrapper) this.getCacheWrapper()).release();
+        super.release();
+    }
 
 	/**
 	 * Effettua il caricamento della mappa contenuti pubblicati / pagine

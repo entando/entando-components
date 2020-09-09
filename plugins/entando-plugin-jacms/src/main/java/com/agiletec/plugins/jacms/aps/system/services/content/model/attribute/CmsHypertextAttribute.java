@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.attribute.HypertextAttribute;
+import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
@@ -147,10 +148,10 @@ public class CmsHypertextAttribute extends HypertextAttribute implements IRefere
     }
 
     @Override
-    public List<AttributeFieldError> validate(AttributeTracer tracer) {
-        List<AttributeFieldError> errors = super.validate(tracer);
+    public List<AttributeFieldError> validate(AttributeTracer tracer, ILangManager langManager) {
+        List<AttributeFieldError> errors = super.validate(tracer, langManager);
         try {
-            List<Lang> langs = this.getLangManager().getLangs();
+            List<Lang> langs = langManager.getLangs();
             for (Lang lang : langs) {
                 AttributeTracer textTracer = (AttributeTracer) tracer.clone();
                 textTracer.setLang(lang);

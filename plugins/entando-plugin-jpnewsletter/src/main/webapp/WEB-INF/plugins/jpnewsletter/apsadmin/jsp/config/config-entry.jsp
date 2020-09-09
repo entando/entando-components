@@ -91,13 +91,11 @@
                                     <s:date name="newsletterConfig.startScheduler" format="dd/MM/yyyy"/>
                                 </s:if>
                             </s:set>
-                            <div class="input-group date" data-provide="datepicker">
+                            <div class="input-group datepicker date" >
                                 <wpsf:textfield id="jpnewsletter_day_cal" name="newsletterConfig.startScheduler"
-                                                value="%{#startSchedulerDateValue}" maxlength="254"
-                                                cssClass="form-control" data-date-format="dd/mm/yyyy"/>
-
+                                                value="%{#startSchedulerDateValue}" placeholder="dd/mm/yyyy" maxlength="254" cssClass="form-control"/>
+                                <div class="input-group-addon"></div>
                             </div>
-
                         </div>
                         <div class="col-xs-3">
                             <wpsf:select id="jpnewsletter_hour" name="startSchedulerHour"

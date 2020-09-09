@@ -41,14 +41,18 @@ import org.springframework.cache.Cache;
 public class SeoMappingCacheWrapper extends AbstractCacheWrapper implements ISeoMappingCacheWrapper {
 
 	private static final Logger _logger = LoggerFactory.getLogger(SeoMappingCacheWrapper.class);
+
+    @Override
+    public void release() {
+        Cache cache = this.getCache();
+        this.releaseCachedObjects(cache, MAPPING_BY_CODE_CACHE_KEY, MAPPING_BY_CODE_CACHE_KEY_PREFIX);
+        this.releaseCachedObjects(cache, MAPPING_BY_PAGE_CACHE_KEY, MAPPING_BY_PAGE_CACHE_KEY_PREFIX);
+        this.releaseCachedObjects(cache, MAPPING_BY_CONTENT_CACHE_KEY, MAPPING_BY_CONTENT_CACHE_KEY_PREFIX);
+    }
     
 	@Override
 	public void initCache(ISeoMappingDAO seoMappingDAO) throws ApsSystemException {
 		try {
-            Cache cache = this.getCache();
-            this.releaseCachedObjects(cache, MAPPING_BY_CODE_CACHE_KEY, MAPPING_BY_CODE_CACHE_KEY_PREFIX);
-            this.releaseCachedObjects(cache, MAPPING_BY_PAGE_CACHE_KEY, MAPPING_BY_PAGE_CACHE_KEY_PREFIX);
-            this.releaseCachedObjects(cache, MAPPING_BY_CONTENT_CACHE_KEY, MAPPING_BY_CONTENT_CACHE_KEY_PREFIX);
             Map<String, FriendlyCodeVO> mapping = seoMappingDAO.loadMapping();
 			Map<String, FriendlyCodeVO> pageFriendlyCodes = new HashMap<>();
 			Map<String, ContentFriendlyCode> contentFriendlyCodes = new HashMap<>();
@@ -68,9 +72,10 @@ public class SeoMappingCacheWrapper extends AbstractCacheWrapper implements ISeo
 					content.addFriendlyCode(currentCode.getLangCode(), currentCode.getFriendlyCode());
 				}
 			}
-            this.insertVoObjectsOnCache(cache, mapping, MAPPING_BY_CODE_CACHE_KEY, MAPPING_BY_CODE_CACHE_KEY_PREFIX);
-            this.insertVoObjectsOnCache(cache, pageFriendlyCodes, MAPPING_BY_PAGE_CACHE_KEY, MAPPING_BY_PAGE_CACHE_KEY_PREFIX);
-			this.insertVoObjectsOnCache(cache, contentFriendlyCodes, MAPPING_BY_CONTENT_CACHE_KEY, MAPPING_BY_CONTENT_CACHE_KEY_PREFIX);
+            Cache cache = this.getCache();
+            this.insertAndCleanVoObjectsOnCache(cache, mapping, MAPPING_BY_CODE_CACHE_KEY, MAPPING_BY_CODE_CACHE_KEY_PREFIX);
+            this.insertAndCleanVoObjectsOnCache(cache, pageFriendlyCodes, MAPPING_BY_PAGE_CACHE_KEY, MAPPING_BY_PAGE_CACHE_KEY_PREFIX);
+			this.insertAndCleanVoObjectsOnCache(cache, contentFriendlyCodes, MAPPING_BY_CONTENT_CACHE_KEY, MAPPING_BY_CONTENT_CACHE_KEY_PREFIX);
 		} catch (Throwable t) {
 			_logger.error("Error loading seo mapper", t);
 			throw new ApsSystemException("Error loading seo mapper", t);
@@ -87,17 +92,26 @@ public class SeoMappingCacheWrapper extends AbstractCacheWrapper implements ISeo
 		}
 	}
     
-    protected void insertVoObjectsOnCache(Cache cache, 
-            Map<String, ?> objects, String listKey, String prefixKey) {
-		List<String> codes = new ArrayList<>();
-		Iterator<String> iter = objects.keySet().iterator();
-		while (iter.hasNext()) {
-			String key = iter.next();
-			cache.put(prefixKey + key, objects.get(key));
-			codes.add(key);
-		}
-		cache.put(listKey, codes);
-	}
+    protected void insertAndCleanVoObjectsOnCache(Cache cache, Map<String, ?> objects, String listKey, String cacheKeyPrefix) {
+        List<String> oldCodes = (List<String>) this.get(cache, listKey, List.class);
+        List<String> oldCodesClone = (null != oldCodes) ? new ArrayList<>(oldCodes) : null;
+        List<String> codes = new ArrayList<>();
+        Iterator<String> iter = objects.keySet().iterator();
+        while (iter.hasNext()) {
+            String key = iter.next();
+            cache.put(cacheKeyPrefix + key, objects.get(key));
+            if (null != oldCodesClone) {
+                oldCodesClone.remove(key);
+            }
+            codes.add(key);
+        }
+        cache.put(listKey, codes);
+        if (null != oldCodesClone) {
+            for (String code : oldCodesClone) {
+                cache.evict(cacheKeyPrefix + code);
+            }
+        }
+    }
     
 	@Override
 	public FriendlyCodeVO getMappingByFriendlyCode(String friendlyCode) {
