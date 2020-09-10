@@ -4,7 +4,7 @@
     <parent>
         <artifactId>entando-bundles-parent</artifactId>
         <groupId>org.entando.entando.bundles</groupId>
-        <version>5.3.1-SNAPSHOT</version>
+        <version>5.3.1-ApacheCxfLess</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>entando-misc-inspinia</artifactId>

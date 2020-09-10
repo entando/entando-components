@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.entando.entando.bundles</groupId>
         <artifactId>entando-bundles-parent</artifactId>
-        <version>5.3.1-SNAPSHOT</version>
+        <version>5.3.1-ApacheCxfLess</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>entando-misc-jquery-ui</artifactId>
@@ -60,7 +60,7 @@
         <dependency>
             <groupId>org.entando.entando.bundles.misc</groupId>
             <artifactId>entando-misc-jquery</artifactId>
-            <version>5.3.1-SNAPSHOT</version>
+            <version>5.3.1-ApacheCxfLess</version>
             <type>war</type>
         </dependency>
     </dependencies>
