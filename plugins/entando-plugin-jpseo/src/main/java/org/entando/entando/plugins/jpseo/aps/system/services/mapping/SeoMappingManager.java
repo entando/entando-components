@@ -107,8 +107,15 @@ public class SeoMappingManager extends AbstractService implements ISeoMappingMan
         }
         Content content = event.getContent();
         try {
-            this.getSeoMappingDAO().deleteMappingForContent(content.getId());
-            if (event.getOperationCode() != PublicContentChangedEvent.REMOVE_OPERATION_CODE) {
+            if (event.getOperationCode() == PublicContentChangedEvent.REMOVE_OPERATION_CODE) {
+                this.getSeoMappingDAO().deleteMappingForContent(content.getId());
+            } else {
+                FieldSearchFilter filter = new FieldSearchFilter("contentid", content.getId(), false);
+                List<String> codes = this.searchFriendlyCode(new FieldSearchFilter[]{filter});
+                if (!codes.isEmpty()) {
+                    logger.info("Content {} with friendly codes {}", content.getId(), codes);
+                    return;
+                }
                 AttributeInterface attribute = content.getAttributeByRole(JpseoSystemConstants.ATTRIBUTE_ROLE_FRIENDLY_CODE);
                 if (null == attribute || !(attribute instanceof ITextAttribute)) {
                     attribute = content.getAttributeByRole(JacmsSystemConstants.ATTRIBUTE_ROLE_TITLE);
@@ -126,7 +133,7 @@ public class SeoMappingManager extends AbstractService implements ISeoMappingMan
             logger.error("Error updating mapping from public content changed", t);
         }
     }
-	
+    
 	private ContentFriendlyCode prepareContentFriendlyCode(String contentId, ITextAttribute attribute) throws ApsSystemException {
 		ContentFriendlyCode contentFriendlyCode = new ContentFriendlyCode();
 		contentFriendlyCode.setContentId(contentId);

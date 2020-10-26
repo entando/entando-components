@@ -19,17 +19,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.entando.entando.plugins.jpseo.aps.system.services.content;
+package org.entando.entando.plugins.jpseo.aps.system.services.mapping;
 
 import com.agiletec.aps.BaseTestCase;
+import com.agiletec.aps.system.common.entity.model.attribute.TextAttribute;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import org.entando.entando.plugins.jpseo.aps.system.JpseoSystemConstants;
-import org.entando.entando.plugins.jpseo.aps.system.services.mapping.ISeoMappingManager;
 
-public class ContentMappingIntegrationTest extends BaseTestCase {
+public class SeoMappingManagerIntegrationTest extends BaseTestCase {
     
     private IContentManager contentManager;
     private ISeoMappingManager seoMappingManager;
@@ -40,7 +40,7 @@ public class ContentMappingIntegrationTest extends BaseTestCase {
         this.init();
     }
     
-    public void testCreateFriendlyCode() throws Exception {
+    public void testCreateFriendlyCode_1() throws Exception {
         String contentId1 = null;
         Content content1 = null;
         String contentId2 = null;
@@ -106,6 +106,53 @@ public class ContentMappingIntegrationTest extends BaseTestCase {
             if (null != contentId3) {
                 this.contentManager.removeOnLineContent(content3);
                 this.contentManager.deleteContent(content3);
+            }
+        }
+    }
+    
+    public void testCreateFriendlyCode_2() throws Exception {
+        String contentId1 = null;
+        Content content = null;
+        try {
+            content = this.contentManager.loadContent("EVN25", true);
+            content.setId(null);
+            content.setMainGroup(Group.FREE_GROUP_NAME);
+            
+            this.contentManager.insertOnLineContent(content);
+            synchronized (this) {
+                this.wait(500);
+            }
+            super.waitNotifyingThread();
+            contentId1 = content.getId();
+            String friendlyCode_1 = this.seoMappingManager.getContentReference(contentId1, null);
+            assertEquals("teatro_delle_meraviglie", friendlyCode_1);
+            
+            TextAttribute titleAttribute = (TextAttribute) content.getAttributeByRole(JacmsSystemConstants.ATTRIBUTE_ROLE_TITLE);
+            assertNotNull(titleAttribute);
+            assertEquals("TEATRO DELLE MERAVIGLIE", titleAttribute.getTextForLang("it"));
+            titleAttribute.setText("Le meraviglie del teatro", "it");
+            this.contentManager.insertOnLineContent(content);
+            synchronized (this) {
+                this.wait(500);
+            }
+            super.waitNotifyingThread();
+            
+            String friendlyCode_2 = this.seoMappingManager.getContentReference(contentId1, null);
+            assertEquals(friendlyCode_1, friendlyCode_2);
+            
+            this.contentManager.removeOnLineContent(content);
+            synchronized (this) {
+                this.wait(500);
+            }
+            super.waitNotifyingThread();
+            String friendlyCode_3 = this.seoMappingManager.getContentReference(contentId1, null);
+            assertNull(friendlyCode_3);
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            if (null != contentId1) {
+                this.contentManager.removeOnLineContent(content);
+                this.contentManager.deleteContent(content);
             }
         }
     }
