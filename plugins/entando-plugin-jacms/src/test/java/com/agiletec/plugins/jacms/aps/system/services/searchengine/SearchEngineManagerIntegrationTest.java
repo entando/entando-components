@@ -452,9 +452,9 @@ public class SearchEngineManagerIntegrationTest extends BaseTestCase {
             for (int j = 0; j < langs.length; j++) {
                 String lang = langs[j];
                 filteryByRole.setLangCode(lang);
-                List<String> contentsId_2 = sem.searchEntityId(filters1, null, allowedGroup);
+                List<String> contentsId_lang = sem.searchEntityId(filters1, null, allowedGroup);
                 for (int i = 0; i < expectedContentsId_1.length; i++) {
-                    Assert.assertEquals(expectedContentsId_1[i], contentsId_2.get(contentsId_2.size() - i - 1));
+                    Assert.assertEquals(expectedContentsId_1[i], contentsId_lang.get(i));
                 }
             }
             
