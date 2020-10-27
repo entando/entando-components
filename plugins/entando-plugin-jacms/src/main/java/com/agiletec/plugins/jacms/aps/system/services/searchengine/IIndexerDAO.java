@@ -23,49 +23,54 @@ import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 
 /**
  * Data Access Object dedita alla indicizzazione di documenti.
+ *
  * @author W.Ambu
  */
 public interface IIndexerDAO {
-	
-	/**
-	 * Inizializzazione dell'indicizzatore.
-	 * @param dir La cartella locale contenitore dei dati persistenti.
-	 * @throws ApsSystemException In caso di errori.
-	 */
-	public void init(File dir) throws ApsSystemException;
-	
-	/**
-	 * Aggiunge un contenuto nel db del motore di ricerca.
+
+    /**
+     * Inizializzazione dell'indicizzatore.
+     *
+     * @param dir La cartella locale contenitore dei dati persistenti.
+     * @throws ApsSystemException In caso di errori.
+     */
+    public void init(File dir) throws ApsSystemException;
+
+    /**
+     * Aggiunge un contenuto nel db del motore di ricerca.
+     *
      * @param entity Il contenuto da aggiungere.
-	 * @throws ApsSystemException In caso di errori.
-	 */
-	public void add(IApsEntity entity) throws ApsSystemException;
-	
-	/**
+     * @throws ApsSystemException In caso di errori.
+     */
+    public void add(IApsEntity entity) throws ApsSystemException;
+
+    /**
      * Cancella un documento indicizzato.
+     *
      * @param name Il nome del campo Field da utilizzare per recupero del documento.
      * @param value La chiave mediante il quale è stato indicizzato il documento.
      * @throws ApsSystemException In caso di errori.
      */
     public void delete(String name, String value) throws ApsSystemException;
-    
+
     public void close();
-	
-	public void setLangManager(ILangManager langManager);
-    
+
+    public void setLangManager(ILangManager langManager);
+
     public void setTreeNodeManager(ITreeNodeManager treeNodeManager);
-    
-	public static final String FIELD_PREFIX = "entity:"; 
+
+    public static final String FIELD_PREFIX = "entity:";
     public static final String CONTENT_ID_FIELD_NAME = FIELD_PREFIX + "id";
     public static final String CONTENT_TYPE_FIELD_NAME = FIELD_PREFIX + "type";
     public static final String CONTENT_GROUP_FIELD_NAME = FIELD_PREFIX + "group";
     public static final String CONTENT_CATEGORY_FIELD_NAME = FIELD_PREFIX + "category";
-	public static final String CONTENT_CATEGORY_SEPARATOR = "/";
-    
+    public static final String CONTENT_CATEGORY_SEPARATOR = "/";
+    public static final String SORTERED_FIELD_SUFFIX = "_sort";
+
     public static final String CONTENT_DESCRIPTION_FIELD_NAME = FIELD_PREFIX + IContentManager.CONTENT_DESCR_FILTER_KEY;
     public static final String CONTENT_LAST_MODIFY_FIELD_NAME = FIELD_PREFIX + IContentManager.CONTENT_MODIFY_DATE_FILTER_KEY;
     public static final String CONTENT_CREATION_FIELD_NAME = FIELD_PREFIX + IContentManager.CONTENT_CREATION_DATE_FILTER_KEY;
     public static final String CONTENT_TYPE_CODE_FIELD_NAME = FIELD_PREFIX + IContentManager.ENTITY_TYPE_CODE_FILTER_KEY;
     public static final String CONTENT_MAIN_GROUP_FIELD_NAME = FIELD_PREFIX + IContentManager.CONTENT_MAIN_GROUP_FILTER_KEY;
-	
+
 }
