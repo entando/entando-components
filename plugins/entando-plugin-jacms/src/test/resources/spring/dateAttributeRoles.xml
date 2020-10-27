@@ -1,0 +1,7 @@
+<roles>
+    <role>
+        <name>jacmstest:date</name>
+        <description>The Attribute that contains the main date of the content (for test)</description>
+        <allowedTypes>Date</allowedTypes>
+    </role>
+</roles>
