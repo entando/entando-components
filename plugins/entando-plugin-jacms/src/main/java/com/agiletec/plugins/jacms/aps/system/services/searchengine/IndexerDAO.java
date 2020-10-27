@@ -13,18 +13,6 @@
  */
 package com.agiletec.plugins.jacms.aps.system.services.searchengine;
 
-import static com.agiletec.plugins.jacms.aps.system.services.searchengine.IIndexerDAO.CONTENT_CATEGORY_FIELD_NAME;
-import static com.agiletec.plugins.jacms.aps.system.services.searchengine.IIndexerDAO.CONTENT_CATEGORY_SEPARATOR;
-import static com.agiletec.plugins.jacms.aps.system.services.searchengine.IIndexerDAO.CONTENT_CREATION_FIELD_NAME;
-import static com.agiletec.plugins.jacms.aps.system.services.searchengine.IIndexerDAO.CONTENT_DESCRIPTION_FIELD_NAME;
-import static com.agiletec.plugins.jacms.aps.system.services.searchengine.IIndexerDAO.CONTENT_GROUP_FIELD_NAME;
-import static com.agiletec.plugins.jacms.aps.system.services.searchengine.IIndexerDAO.CONTENT_ID_FIELD_NAME;
-import static com.agiletec.plugins.jacms.aps.system.services.searchengine.IIndexerDAO.CONTENT_LAST_MODIFY_FIELD_NAME;
-import static com.agiletec.plugins.jacms.aps.system.services.searchengine.IIndexerDAO.CONTENT_MAIN_GROUP_FIELD_NAME;
-import static com.agiletec.plugins.jacms.aps.system.services.searchengine.IIndexerDAO.CONTENT_TYPE_CODE_FIELD_NAME;
-import static com.agiletec.plugins.jacms.aps.system.services.searchengine.IIndexerDAO.CONTENT_TYPE_FIELD_NAME;
-import static com.agiletec.plugins.jacms.aps.system.services.searchengine.IIndexerDAO.SORTERED_FIELD_SUFFIX;
-
 import com.agiletec.aps.system.common.entity.model.*;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.DateAttribute;
