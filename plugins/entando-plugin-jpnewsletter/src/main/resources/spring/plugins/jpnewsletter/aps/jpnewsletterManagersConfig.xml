@@ -54,7 +54,6 @@
         </property>
         <property name="cacheWrapper">
             <bean class="com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.cache.NewsletterManagerCacheWrapper">
-                <property name="springCacheManager" ref="springCacheManager" />
             </bean>
         </property>
     </bean>
