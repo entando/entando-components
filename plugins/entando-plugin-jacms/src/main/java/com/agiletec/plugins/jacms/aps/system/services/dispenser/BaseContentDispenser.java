@@ -211,7 +211,7 @@ public class BaseContentDispenser extends AbstractService implements IContentDis
             }
             if (!codes.isEmpty()) {
                 Collections.sort(codes);
-                key.append("_AUTHS:").append(codes.stream().collect(Collectors.joining("-")));
+                key.append("_AUTHS_").append(codes.stream().collect(Collectors.joining("-")));
             }
         }
         return key.toString();
