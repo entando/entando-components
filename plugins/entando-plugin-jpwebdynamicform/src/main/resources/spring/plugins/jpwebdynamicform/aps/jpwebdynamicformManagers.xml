@@ -68,7 +68,18 @@
         <property name="mailManager" ref="jpmailMailManager" />
         <property name="entityRenderer" ref="jpwebdynamicformBaseMessageRenderer" />
     </bean>
-
+    
+    <bean name="jpwebdynamicformMessageManagerCache" class="java.util.concurrent.ConcurrentHashMap"/>
+    
+    <bean id="jpwebdynamicformExternalCachesContainer" class="org.entando.entando.aps.system.services.cache.ExternalCachesContainer">
+        <property name="caches">
+            <set>
+                <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean"
+                      p:name="Entando_jpwebdynamicformMessageManager" p:store-ref="jpwebdynamicformMessageManagerCache" />
+            </set>
+        </property>
+    </bean>
+    
     <bean id="jpwebdynamicformBaseMessageRenderer" class="com.agiletec.plugins.jpwebdynamicform.aps.system.services.message.renderer.BaseMessageRenderer"
               parent="BaseEntityRenderer" />
 	
