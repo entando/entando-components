@@ -723,7 +723,7 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
     private void processField(KieProcessFormField field, String langCode) throws ApsSystemException {
         String bpmLabel = KieApiUtil.getFieldProperty(field, "label");
         String fieldName = KieApiUtil.getI18nLabelProperty(field);
-        if (org.apache.commons.lang.StringUtils.isNotBlank(bpmLabel)) {
+        if (StringUtils.isNotBlank(bpmLabel)) {
             if (null == this.getI18nManager().getLabel(fieldName, langCode)) {
                 this.saveEntandoLabel(fieldName, bpmLabel);
             }
@@ -741,7 +741,7 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
 
     private void processForm(KieProcessFormField field, String langCode) throws ApsSystemException {
         String formLabel = KieApiUtil.getI18nFormLabelProperty(field);
-        if (org.apache.commons.lang.StringUtils.isNotBlank(formLabel)) {
+        if (StringUtils.isNotBlank(formLabel)) {
             String formValue = formValue = KieApiUtil.getI18nFormLabelValue(field);
             if (null == this.getI18nManager().getLabel(formLabel, langCode)) {
                 this.saveEntandoLabel(formLabel, formValue);
@@ -751,7 +751,7 @@ public class BpmTypeTaskFormAction extends AbstractApsEntityAction implements Be
 
     private void processTitle(String containerId, String langCode) throws ApsSystemException {
         String titleLabel = KieApiUtil.getI18nTitleLabelProperty(containerId);
-        if (org.apache.commons.lang.StringUtils.isNotBlank(titleLabel)) {
+        if (StringUtils.isNotBlank(titleLabel)) {
             String titleValue = KieApiUtil.getI18nTitleLabelValue(containerId);
             if (null == this.getI18nManager().getLabel(titleLabel, langCode)) {
                 this.saveEntandoLabel(titleLabel, titleValue);

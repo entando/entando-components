@@ -342,7 +342,7 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction implements Bpm
 
     private void processField(KieProcessFormField field, String langCode) throws ApsSystemException {
         String bpmLabel = KieApiUtil.getFieldProperty(field, "label");
-        if (org.apache.commons.lang.StringUtils.isNotBlank(bpmLabel)) {
+        if (StringUtils.isNotBlank(bpmLabel)) {
             String fieldName = KieApiUtil.getI18nLabelProperty(field);
             if (null == this.getI18nManager().getLabel(fieldName, langCode)) {
                 this.saveEntandoLabel(fieldName, bpmLabel);
@@ -352,7 +352,7 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction implements Bpm
 
     private void processForm(KieProcessFormField field, String langCode) throws ApsSystemException {
         String formLabel = KieApiUtil.getI18nFormLabelProperty(field);
-        if (org.apache.commons.lang.StringUtils.isNotBlank(formLabel)) {
+        if (StringUtils.isNotBlank(formLabel)) {
             String formValue = KieApiUtil.getI18nFormLabelValue(field);
             if (null == this.getI18nManager().getLabel(formLabel, langCode)) {
                 this.saveEntandoLabel(formLabel, formValue);
@@ -362,7 +362,7 @@ public class BpmFormWidgetAction extends SimpleWidgetConfigAction implements Bpm
 
     private void processTitle(String containerId, String langCode) throws ApsSystemException {
         String titleLabel = KieApiUtil.getI18nTitleLabelProperty(containerId);
-        if (org.apache.commons.lang.StringUtils.isNotBlank(titleLabel)) {
+        if (StringUtils.isNotBlank(titleLabel)) {
             String titleValue = KieApiUtil.getI18nTitleLabelValue(containerId);
             if (null == this.getI18nManager().getLabel(titleLabel, langCode)) {
                 this.saveEntandoLabel(titleLabel, titleValue);

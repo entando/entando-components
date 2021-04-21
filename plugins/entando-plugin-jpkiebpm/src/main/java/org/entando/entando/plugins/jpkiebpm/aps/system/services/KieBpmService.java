@@ -44,7 +44,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.StringTokenizer;
-import java.util.logging.Level;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.IDtoBuilder;
@@ -68,8 +67,8 @@ import org.entando.entando.plugins.jpkiebpm.web.model.DatatableWidgetConfigReque
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.*;
 import java.util.logging.Level;
+import org.apache.commons.lang3.StringUtils;
 
 
 public class KieBpmService implements IKieBpmService {
@@ -530,7 +529,7 @@ public class KieBpmService implements IKieBpmService {
 
     private void processField(KieProcessFormField field, String langCode) throws ApsSystemException {
         String bpmLabel = KieApiUtil.getFieldProperty(field, "label");
-        if (org.apache.commons.lang.StringUtils.isNotBlank(bpmLabel)) {
+        if (StringUtils.isNotBlank(bpmLabel)) {
             String fieldName = KieApiUtil.getI18nLabelProperty(field);
             if (null == this.getI18nManager().getLabel(fieldName, langCode)) {
                 this.saveEntandoLabel(fieldName, bpmLabel);
@@ -540,7 +539,7 @@ public class KieBpmService implements IKieBpmService {
 
     private void processForm(KieProcessFormField field, String langCode) throws ApsSystemException {
         String formLabel = KieApiUtil.getI18nFormLabelProperty(field);
-        if (org.apache.commons.lang.StringUtils.isNotBlank(formLabel)) {
+        if (StringUtils.isNotBlank(formLabel)) {
             String formValue = KieApiUtil.getI18nFormLabelValue(field);
             if (null == this.getI18nManager().getLabel(formLabel, langCode)) {
                 this.saveEntandoLabel(formLabel, formValue);
@@ -550,7 +549,7 @@ public class KieBpmService implements IKieBpmService {
 
     private void processTitle(String containerId, String langCode) throws ApsSystemException {
         String titleLabel = KieApiUtil.getI18nTitleLabelProperty(containerId);
-        if (org.apache.commons.lang.StringUtils.isNotBlank(titleLabel)) {
+        if (StringUtils.isNotBlank(titleLabel)) {
             String titleValue = KieApiUtil.getI18nTitleLabelValue(containerId);
             if (null == this.getI18nManager().getLabel(titleLabel, langCode)) {
                 this.saveEntandoLabel(titleLabel, titleValue);

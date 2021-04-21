@@ -24,6 +24,7 @@
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.helper;
 
 import java.util.Iterator;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -42,8 +43,7 @@ public class JsonHelper {
      */
     public static Object findKey(final JSONObject json, final String key) {
         String[] keys;
-
-        if (org.apache.commons.lang.StringUtils.isBlank(key)
+        if (StringUtils.isBlank(key)
                 || null == json) {
             return null;
         }
@@ -96,7 +96,7 @@ public class JsonHelper {
         String[] keys;
         boolean res = false;
 
-        if (org.apache.commons.lang.StringUtils.isBlank(key)
+        if (StringUtils.isBlank(key)
                 || null == json) {
             return false;
         }
