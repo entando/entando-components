@@ -17,6 +17,7 @@ import io.lettuce.core.support.caching.CacheFrontend;
 import java.util.concurrent.Callable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.Cache.ValueWrapper;
 import org.springframework.data.redis.cache.RedisCache;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheWriter;
@@ -62,6 +63,10 @@ public class LettuceCache extends RedisCache {
     public synchronized <T> T get(Object key, Callable<T> valueLoader) {
         logger.warn("Calling remote cache for key {}", key);
         return super.get(key, valueLoader);
+    }
+    
+    protected void setCacheFrontend(CacheFrontend<String, Object> frontendCache) {
+        this.frontendCache = frontendCache;
     }
     
 }
