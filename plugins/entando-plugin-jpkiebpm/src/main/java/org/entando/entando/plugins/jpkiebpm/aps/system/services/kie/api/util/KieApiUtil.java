@@ -1,7 +1,7 @@
 package org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.api.util;
 
 import com.agiletec.aps.system.services.i18n.II18nManager;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KIEAuthenticationCredentials;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieClient;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.KieFormOverride;

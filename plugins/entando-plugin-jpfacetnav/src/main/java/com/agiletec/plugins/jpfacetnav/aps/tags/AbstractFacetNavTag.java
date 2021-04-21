@@ -40,7 +40,7 @@ import com.agiletec.plugins.jpfacetnav.aps.system.services.content.widget.IFacet
 import com.agiletec.plugins.jpfacetnav.aps.tags.util.FacetBreadCrumbs;
 
 import com.agiletec.aps.system.services.page.Widget;
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

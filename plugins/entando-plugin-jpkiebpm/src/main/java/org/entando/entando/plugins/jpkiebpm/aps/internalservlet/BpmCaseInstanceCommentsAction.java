@@ -27,7 +27,7 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import static com.agiletec.apsadmin.system.BaseAction.FAILURE;
 import static com.opensymphony.xwork2.Action.SUCCESS;
 import java.util.List;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import static org.entando.entando.plugins.jpkiebpm.aps.internalservlet.BpmCaseInstanceActionBase.ERROR_EMPTY_CASES;
 import static org.entando.entando.plugins.jpkiebpm.aps.internalservlet.BpmCaseInstanceActionBase.ERROR_NULL_CONFIG;
 import org.entando.entando.plugins.jpkiebpm.aps.system.services.kie.model.KieBpmConfig;

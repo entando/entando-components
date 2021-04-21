@@ -48,7 +48,7 @@ import com.agiletec.apsadmin.system.entity.AbstractApsEntityAction;
 import java.io.StringWriter;
 import java.math.BigDecimal;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.entando.entando.aps.system.services.dataobject.IDataObjectManager;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;

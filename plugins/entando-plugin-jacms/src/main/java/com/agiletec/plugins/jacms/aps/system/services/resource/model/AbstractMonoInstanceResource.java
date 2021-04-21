@@ -16,7 +16,7 @@ package com.agiletec.plugins.jacms.aps.system.services.resource.model;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jacms.aps.system.services.resource.parse.ResourceDOM;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.*;
 
 import java.io.InputStream;

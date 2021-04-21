@@ -39,7 +39,7 @@ import java.util.regex.Pattern;
 
 import java.security.NoSuchAlgorithmException;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.entity.IEntityManager;
