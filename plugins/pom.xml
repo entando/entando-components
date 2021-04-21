@@ -44,7 +44,6 @@
         <!--
         <module>entando-plugin-jpehcache</module>-->
         <!--
-                <module>entando-plugin-jpsolrclient</module>
                 <module>entando-plugin-jpweatherforecast</module>
         <module>entando-plugin-jpfileattribute</module>-->
         <module>entando-plugin-jpcollaboration</module>
@@ -54,7 +53,6 @@
         -->
         <module>entando-plugin-jpblog</module>
         <module>entando-plugin-jprestapi</module>
-        <module>entando-plugin-jpkiebpm</module>
         <module>entando-plugin-jpredis</module>
         <module>entando-plugin-jpseo</module>
         <module>entando-plugin-jpoidc</module>

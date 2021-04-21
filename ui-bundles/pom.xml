@@ -31,7 +31,6 @@
         <module>misc/entando-misc-bootstrap</module>
         <module>misc/entando-misc-inspinia</module>
         <module>themes/entando-page-inspinia</module>
-        <module>themes/entando-page-inspinia_BPM</module>
         <module>widgets/entando-widget-language_choose_inspinia</module>
         <module>widgets/entando-widget-navigation_bar_inspinia</module>
         <module>widgets/entando-widget-login_form_inspinia</module>
