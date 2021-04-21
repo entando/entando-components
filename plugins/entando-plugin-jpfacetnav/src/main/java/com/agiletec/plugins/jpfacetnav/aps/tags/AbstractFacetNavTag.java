@@ -40,8 +40,8 @@ import com.agiletec.plugins.jpfacetnav.aps.system.services.content.widget.IFacet
 import com.agiletec.plugins.jpfacetnav.aps.tags.util.FacetBreadCrumbs;
 
 import com.agiletec.aps.system.services.page.Widget;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,7 +68,7 @@ public abstract class AbstractFacetNavTag extends TagSupport {
             int index = 1;
             while (null != request.getParameter(facetNodesParamName + "_" + index)) {
                 String paramName = facetNodesParamName + "_" + index;
-                String value = StringEscapeUtils.unescapeHtml(request.getParameter(paramName));
+                String value = StringEscapeUtils.unescapeHtml4(request.getParameter(paramName));
                 this.addFacet(requiredFacets, value);
                 index++;
             }
@@ -80,14 +80,14 @@ public abstract class AbstractFacetNavTag extends TagSupport {
                     for (int i = 0; i < values.length; i++) {
                         String value = values[i];
                         if (!StringUtils.isBlank(value)) {
-                            this.addFacet(requiredFacets, StringEscapeUtils.unescapeHtml(value));
+                            this.addFacet(requiredFacets, StringEscapeUtils.unescapeHtml4(value));
                         }
                     }
                 }
             }
             String selectedNode = request.getParameter("selectedNode");
             if (!StringUtils.isBlank(selectedNode)) {
-                selectedNode = StringEscapeUtils.unescapeHtml(selectedNode);
+                selectedNode = StringEscapeUtils.unescapeHtml4(selectedNode);
                 this.addFacet(requiredFacets, selectedNode);
             }
             this.removeSelections(requiredFacets);

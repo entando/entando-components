@@ -39,8 +39,6 @@ import java.util.regex.Pattern;
 
 import java.security.NoSuchAlgorithmException;
 
-import org.apache.commons.lang3.StringEscapeUtils;
-
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
@@ -79,6 +77,7 @@ import com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.model.Su
 import com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.parse.NewsletterConfigDOM;
 import com.agiletec.plugins.jpnewsletter.aps.system.services.newsletter.util.ShaEncoder;
 import java.util.Calendar;
+import org.apache.commons.text.StringEscapeUtils;
 
 import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
@@ -463,7 +462,7 @@ public class NewsletterManager extends AbstractService
 		String footer = html ? config.getHtmlFooter() : config.getTextFooter();
 		String mailBody = header.concat(mailContentBody).concat(footer);
 		if (!html) {
-			return StringEscapeUtils.unescapeHtml(mailBody);
+			return StringEscapeUtils.unescapeHtml4(mailBody);
 		}
 		return mailBody;
 	}
@@ -558,7 +557,7 @@ public class NewsletterManager extends AbstractService
 		String mailContentBody = this.getContentRenderer().render(content, modelId, defaultLang, null);
 		mailContentBody = this.getLinkResolver().resolveLinks(mailContentBody, null);
 		if (!isHtml) {
-			return StringEscapeUtils.unescapeHtml(mailContentBody);
+			return StringEscapeUtils.unescapeHtml4(mailContentBody);
 		}
 		return mailContentBody;
 	}
