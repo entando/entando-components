@@ -22,7 +22,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <commons.httpcore>4.5.13</commons.httpcore>
+        <commons.httpcore>4.4.14</commons.httpcore>
         <commons.httpclient>4.5.13</commons.httpclient>
         <commons.io>2.7</commons.io>
         <eclipse.moxy>2.7.4</eclipse.moxy>
@@ -73,7 +73,7 @@
             <version>${commons.httpclient}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.commons</groupId>
+            <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>${commons.io}</version>
         </dependency>
