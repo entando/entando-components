@@ -1,7 +1,7 @@
 <%@ taglib prefix="wp" uri="/aps-core" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<wp:headInfo type="JS" info="entando-misc-jquery/jquery-3.4.1.min.js" />
+<wp:headInfo type="JS" info="entando-misc-jquery/jquery-3.5.0.min.js" />
 <wp:headInfo type="JS" info="entando-misc-bootstrap/bootstrap.min.js" />
 
 <wp:currentPage param="code" var="currentPageCode" />

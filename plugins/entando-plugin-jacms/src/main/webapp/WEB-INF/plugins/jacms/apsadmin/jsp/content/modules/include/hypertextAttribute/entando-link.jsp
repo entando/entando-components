@@ -28,7 +28,7 @@
 		<![endif]-->
 
 		<!--JS inclusions-->
-                <script src="<wp:resourceURL />administration/js/jquery-3.4.1.min.js"></script>
+                <script src="<wp:resourceURL />administration/js/jquery-3.5.0.min.js"></script>
 		<script src="<wp:resourceURL />administration/js/jquery-migrate-3.0.1.min.js"></script>
 		<script src="<wp:resourceURL />administration/patternfly/js/patternfly.js"></script>
 		<script src="<wp:resourceURL />administration/js/pages/settingsPage.js"></script>
