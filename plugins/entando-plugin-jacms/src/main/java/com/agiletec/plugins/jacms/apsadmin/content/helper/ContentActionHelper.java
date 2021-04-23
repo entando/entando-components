@@ -20,7 +20,7 @@ import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
 import org.entando.entando.plugins.jacms.aps.system.services.content.helper.IContentHelper;

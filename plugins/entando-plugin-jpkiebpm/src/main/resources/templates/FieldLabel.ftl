@@ -1,1 +1,0 @@
-<#include "/FieldRequired.ftl"><#if field.label??>${field.label}<#else>$i18n.getLabel("JPKIE_${field.name}")</#if>

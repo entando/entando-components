@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component>
     <code>entando-page-light</code>
-    <description>Page: Light layout for BPM</description>
+    <description>Page: Light layout</description>
     <artifact>
         <artifactId>${project.artifactId}</artifactId>
         <groupId>${project.groupId}</groupId>

@@ -24,7 +24,7 @@ package com.agiletec.plugins.jpcrowdsourcing.aps.tags;
 import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

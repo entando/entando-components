@@ -41,7 +41,7 @@ import ognl.NoSuchPropertyException;
 import ognl.Ognl;
 import ognl.OgnlContext;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 import org.entando.entando.plugins.jpwebform.aps.system.services.JpwebformSystemConstants;

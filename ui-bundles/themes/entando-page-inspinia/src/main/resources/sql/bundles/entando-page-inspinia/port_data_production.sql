@@ -1,4 +1,4 @@
-INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ('entando-page-inspinia', 'Inspinia - BPM layout', '<frames>
+INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ('entando-page-inspinia', 'Inspinia - layout', '<frames>
     <frame pos="0">
         <descr>Sidebar 1</descr>
         <sketch x1="0" y1="0" x2="1" y2="0" />

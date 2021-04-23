@@ -34,7 +34,7 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInt
 
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

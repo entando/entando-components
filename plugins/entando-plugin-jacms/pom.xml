@@ -44,7 +44,7 @@
         </plugins>
     </build>
     <properties>
-        <tika-version>1.21</tika-version>
+        <tika-version>1.26</tika-version>
     </properties>
     <dependencies>
         <dependency>
@@ -93,6 +93,14 @@
                     <groupId>org.gagravarr</groupId>
                     <artifactId>vorbis-java-tika</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.gagravarr</groupId>
+                    <artifactId>vorbis-java-tika</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.sis.storage</groupId><!-- removed for security reason - if necessary reintegrate -->
+                    <artifactId>sis-netcdf</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <!-- fixes for tike-parser vulnerabilities -->
@@ -101,10 +109,12 @@
             <artifactId>c3p0</artifactId>
             <version>0.9.5.4</version>
         </dependency>
+        <!--
+        Removed for security reason - reactive if necessary
         <dependency>
             <groupId>org.gagravarr</groupId>
             <artifactId>vorbis-java-tika</artifactId>
-            <version>0.8</version>
+            <version></version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.tika</groupId>
@@ -112,7 +122,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
+        -->
 
         <!-- Remove sentiment analysis parser dependency to solve vulnerabilities issues associated with dependencies | TODO: if necessary reintegrate and remove libraries
         <dependency>

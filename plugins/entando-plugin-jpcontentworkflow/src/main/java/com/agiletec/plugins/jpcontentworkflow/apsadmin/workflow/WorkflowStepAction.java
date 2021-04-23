@@ -32,7 +32,7 @@ import com.agiletec.aps.system.services.role.Role;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SmallContentType;
 import com.agiletec.plugins.jpcontentworkflow.aps.system.services.workflow.model.Step;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author E.Santoboni

@@ -21,7 +21,7 @@
  */
 package com.agiletec.plugins.jpblog.aps.system.common.entity.model.attribute;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 import org.slf4j.Logger;
