@@ -1,4 +1,4 @@
-INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ('entando-page-light', 'Light - BPM layout', '<frames>
+INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ('entando-page-light', 'Light - layout', '<frames>
     <frame pos="0">
         <descr>Top bar 1</descr>
         <sketch x1="0" y1="0" x2="2" y2="0" />
