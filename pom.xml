@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.entando.entando.components</groupId>
     <artifactId>entando-components</artifactId>
-    <version>5.3.2-SNAPSHOT</version>
+    <version>5.3.2</version>
     <packaging>pom</packaging>
     <name>Entando: Components</name>
     <description>Components for Entando</description>
@@ -26,7 +26,7 @@
         <connection>scm:git:git@github.com:entando/entando-components.git</connection>
         <developerConnection>scm:git:git@github.com:entando/entando-components.git</developerConnection>
         <url>https://github.com/entando/entando-components</url>
-        <tag>v5.3.2-SNAPSHOT</tag>
+        <tag>v5.3.2</tag>
     </scm>
     <organization>
         <name>Entando Inc.</name>
@@ -148,7 +148,7 @@
                         <plugin>
                             <groupId>org.owasp</groupId>
                             <artifactId>dependency-check-maven</artifactId>
-                            <version>5.0.0</version>
+                            <version>6.1.5</version>
                             <executions>
                                 <execution>
                                     <goals>
@@ -208,7 +208,7 @@
                     <plugin>
                         <groupId>org.owasp</groupId>
                         <artifactId>dependency-check-maven</artifactId>
-                        <version>6.0.2</version>
+                        <version>6.1.5</version>
                         <executions>
                             <execution>
                                 <goals>
