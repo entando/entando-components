@@ -37,10 +37,10 @@
 			<s:set var="linkDestination" value="%{getText('note.contentLinkTo') + ': ' + #attribute.symbolicLink.contentDest + ' - ' + #linkedContent.descr + ', ' + getText('note.contentOnPageLinkTo') + ': ' + #linkedPage.titles[currentLang.code]}" />
 		</s:elseif>
 		<%-- link icon --%>
-			<a href="<s:property value="#attribute.symbolicLink.contentDest" />" class="<s:property value="#statusIconVar" />" title="<s:property value="#linkDestination" />"><span class="sr-only"><s:property value="#linkDestination" /></span></a>
+			<a href="<s:property value="#attribute.symbolicLink.contentDest" />" class="<s:property value="#statusIconVar" />" title="<s:property value="#linkDestination" escapeHtml="true" />"><span class="sr-only"><s:property value="#linkDestination" escapeHtml="true" /></span></a>
 		<%-- text of the link --%>
 			<s:if test="%{#attribute.getTextForLang(#lang.code)==null}">
-				<span class="text-muted">&#32;<s:property value="#attribute.getText()" /></span>
+				<span class="text-muted">&#32;<s:property value="#attribute.getText()" escapeHtml="true" /></span>
 			</s:if>
 			<s:else>
 				&#32;<s:include value="/WEB-INF/apsadmin/jsp/entity/view/textAttribute.jsp" />

@@ -32,6 +32,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SmallContentType;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.cache.IContentModelManagerCacheWrapper;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.event.ContentModelChangedEvent;
+import org.entando.entando.ent.util.LabelSanitizer;
 import org.entando.entando.plugins.jacms.aps.system.services.content.widget.RowContentListHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,6 +103,7 @@ public class ContentModelManager extends AbstractService implements IContentMode
      */
     @Override
     public void addContentModel(ContentModel model) throws ApsSystemException {
+        model.setDescription(LabelSanitizer.stripMarkup(model.getDescription()));
         try {
             this.getContentModelDAO().addContentModel(model);
             this.getCacheWrapper().addContentModel(model);
@@ -138,6 +140,7 @@ public class ContentModelManager extends AbstractService implements IContentMode
      */
     @Override
     public void updateContentModel(ContentModel model) throws ApsSystemException {
+        model.setDescription(LabelSanitizer.stripMarkup(model.getDescription()));
         try {
             this.getContentModelDAO().updateContentModel(model);
             this.getCacheWrapper().updateContentModel(model);
