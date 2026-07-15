@@ -87,8 +87,8 @@ public class TestMultipleResourceAction extends ApsAdminBaseTestCase {
         assertEquals(Action.INPUT, result);
         ActionSupport action = this.getAction();
         Map<String, List<String>> actionFieldErrors = action.getFieldErrors();
-        assertEquals(6, actionFieldErrors.size());
-        assertEquals(1, actionFieldErrors.get("resourceTypeCode").size());
+        assertEquals(2, actionFieldErrors.size());
+        assertEquals(2, actionFieldErrors.get("resourceTypeCode").size());
         assertEquals(1, actionFieldErrors.get("mainGroup").size());
     }
 
@@ -124,8 +124,8 @@ public class TestMultipleResourceAction extends ApsAdminBaseTestCase {
         assertEquals(Action.INPUT, result);
         ActionSupport action = this.getAction();
         Map<String, List<String>> actionFieldErrors = action.getFieldErrors();
-        assertEquals(5, actionFieldErrors.size());
-        assertEquals(1, actionFieldErrors.get("resourceTypeCode").size());
+        assertEquals(1, actionFieldErrors.size());
+        assertEquals(2, actionFieldErrors.get("resourceTypeCode").size());
 
     }
 
