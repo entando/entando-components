@@ -9,7 +9,7 @@
         <img
             class="img-thumbnail"
             src="<s:property value="#defaultResource.getImagePath('1')"/>"
-            alt="<s:property value="#defaultResource.descr"/>" />
+            alt="<s:property value="#defaultResource.descr" escapeHtml="true"/>" />
         <span class="sr-only">
             <abbr
                 title="<s:text name="label.img.text.long" />">
@@ -27,7 +27,7 @@
     </s:if>
     <s:else>
         <s:if test="#currentResource != null">
-            <img class="img-thumbnail" src="<s:property value="#currentResource.getImagePath('1')"/>" alt="<s:property value="#currentResource.descr"/>" />
+            <img class="img-thumbnail" src="<s:property value="#currentResource.getImagePath('1')"/>" alt="<s:property value="#currentResource.descr" escapeHtml="true"/>" />
             <span class="sr-only">
                 <abbr title="<s:text name="label.img.text.long" />"> <s:text name="label.img.text.short" /></abbr>:&#32;
             </span>
@@ -36,7 +36,7 @@
             <img
                 class="img-thumbnail"
                 src="<s:property value="#defaultResource.getImagePath('1')"/>"
-                alt="<s:property value="#defaultResource.descr"/>" />
+                alt="<s:property value="#defaultResource.descr" escapeHtml="true"/>" />
             <span class="sr-only">
                 <abbr
                     title="<s:text name="label.img.text.long" />">
