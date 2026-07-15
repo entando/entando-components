@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
+import org.entando.entando.ent.util.LabelSanitizer;
 import org.entando.entando.plugins.jacms.aps.system.services.content.helper.IContentHelper;
 import org.entando.entando.plugins.jacms.aps.util.CmsPageUtil;
 import org.slf4j.Logger;
@@ -134,7 +135,8 @@ public class ContentActionHelper extends EntityActionHelper implements IContentA
                 String[] args = {String.valueOf(maxLength)};
                 action.addFieldError(DESCR, action.getText("error.content.descr.wrongMaxLength", args));
             }
-            if (!descr.matches("([^\"])+")) {
+            if (!descr.matches("[^\"<>]+")) {
+                content.setDescription(LabelSanitizer.stripMarkup(content.getDescription()));
                 action.addFieldError(DESCR, action.getText("error.content.descr.wrongCharacters"));
             }
         }

@@ -27,6 +27,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.event.PublicConten
 import com.agiletec.plugins.jacms.aps.system.services.content.model.*;
 import com.agiletec.plugins.jacms.aps.system.services.resource.ResourceUtilizer;
 import org.entando.entando.aps.system.services.cache.*;
+import org.entando.entando.ent.util.LabelSanitizer;
 import org.slf4j.*;
 import org.springframework.cache.annotation.*;
 
@@ -256,6 +257,7 @@ public class ContentManager extends ApsEntityManager
 
     private void addUpdateContent(Content content, boolean updateDate) throws ApsSystemException {
         try {
+            content.setDescription(LabelSanitizer.stripMarkup(content.getDescription()));
             content.setLastModified(new Date());
             if (updateDate) {
                 content.incrementVersion(false);
