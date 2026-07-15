@@ -328,7 +328,7 @@
                                                                         </s:if>
                                                                         <s:else>
                                                                             <div class="text-muted">
-                                                                                <s:property value="#attribute.getText()" />
+                                                                                <s:property value="#attribute.getText()" escapeHtml="true" />
                                                                             </div>
                                                                         </s:else>
                                                                     </s:else>
