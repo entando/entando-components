@@ -48,6 +48,11 @@ public class MultipleResourceAction extends ResourceAction {
     public void validate() {
         logger.debug("MultipleResourceAction validate");
         savedId.clear();
+        if (!this.getResourceManager().getResourceTypeCodes().contains(this.getResourceTypeCode())) {
+            logger.warn("Rejected unknown resourceTypeCode value");
+            this.addFieldError("resourceTypeCode", this.getText("error.resource.file.genericError"));
+            return;
+        }
         if (ApsAdminSystemConstants.EDIT == this.getStrutsAction()) {
             this.fetchFileDescriptions();
             addFieldErrors(validateFileDescriptions());
