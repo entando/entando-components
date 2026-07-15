@@ -59,6 +59,11 @@ public abstract class AbstractResourceAction extends AbstractTreeAction {
 		return _resourceTypeCode;
 	}
 	public void setResourceTypeCode(String resourceTypeCode) {
+		if (null != resourceTypeCode && null != this.getResourceManager()
+				&& !this.getResourceManager().getResourceTypeCodes().contains(resourceTypeCode)) {
+			this._resourceTypeCode = null;
+			return;
+		}
 		this._resourceTypeCode = resourceTypeCode;
 	}
 	

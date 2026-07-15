@@ -14,6 +14,7 @@
 package com.agiletec.plugins.jacms.apsadmin.resource;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -28,9 +29,11 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
+
 import java.io.File;
 import java.nio.file.Files;
 import java.util.HashMap;
+
 import org.entando.entando.aps.system.services.searchengine.SearchEngineFilter;
 
 /**
@@ -39,7 +42,7 @@ import org.entando.entando.aps.system.services.searchengine.SearchEngineFilter;
 public class TestMultipleResourceAction extends ApsAdminBaseTestCase {
 
     private IResourceManager resourceManager = null;
-    
+
 
     @Override
     protected void setUp() throws Exception {
@@ -92,8 +95,8 @@ public class TestMultipleResourceAction extends ApsAdminBaseTestCase {
         assertEquals(Action.INPUT, result);
         ActionSupport action = this.getAction();
         Map<String, List<String>> actionFieldErrors = action.getFieldErrors();
-        assertEquals(6, actionFieldErrors.size());
-        assertEquals(1, actionFieldErrors.get("resourceTypeCode").size());
+        assertEquals(2, actionFieldErrors.size());
+        assertEquals(2, actionFieldErrors.get("resourceTypeCode").size());
         assertEquals(1, actionFieldErrors.get("mainGroup").size());
     }
 
@@ -110,9 +113,9 @@ public class TestMultipleResourceAction extends ApsAdminBaseTestCase {
         Map<String, List<String>> actionFieldErrors = action.getFieldErrors();
         assertEquals(Action.INPUT, result);
         assertEquals(3, actionFieldErrors.size());
-        assertEquals(1, actionFieldErrors.get("fileUploadId_0").size());	        
+        assertEquals(1, actionFieldErrors.get("fileUploadId_0").size());
         assertEquals(1, actionFieldErrors.get("fileUploadName_0").size());
-        assertEquals(1, actionFieldErrors.get("fileUploadContentType_0").size());        
+        assertEquals(1, actionFieldErrors.get("fileUploadContentType_0").size());
     }
 
     public void testSaveNewResource_2() throws Throwable {
@@ -129,8 +132,8 @@ public class TestMultipleResourceAction extends ApsAdminBaseTestCase {
         assertEquals(Action.INPUT, result);
         ActionSupport action = this.getAction();
         Map<String, List<String>> actionFieldErrors = action.getFieldErrors();
-        assertEquals(5, actionFieldErrors.size());
-        assertEquals(1, actionFieldErrors.get("resourceTypeCode").size());
+        assertEquals(1, actionFieldErrors.size());
+        assertEquals(2, actionFieldErrors.get("resourceTypeCode").size());
 
     }
 
@@ -151,7 +154,7 @@ public class TestMultipleResourceAction extends ApsAdminBaseTestCase {
             // uploads, since this parameter is now always present! This makes 
             // sure that the edit, and so the patch, works as expected
             this.addParameter("fileUploadId_0", "trigger error");
-            
+
             String result = this.executeAction();
             assertEquals(Action.SUCCESS, result);
             ResourceInterface modifiedResource = this.resourceManager.loadResource(resourceId);
@@ -300,5 +303,5 @@ public class TestMultipleResourceAction extends ApsAdminBaseTestCase {
     }
 
     private IResourceManager _resourceManager = null;
-    
+
 }
