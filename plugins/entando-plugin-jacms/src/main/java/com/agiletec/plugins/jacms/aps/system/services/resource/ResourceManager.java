@@ -57,6 +57,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import org.apache.commons.lang3.StringUtils;
+import org.entando.entando.ent.util.LabelSanitizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
@@ -238,6 +239,7 @@ public class ResourceManager extends AbstractService implements IResourceManager
      */
     @Override
     public void addResource(ResourceInterface resource) throws ApsSystemException {
+        resource.setDescription(LabelSanitizer.stripMarkup(resource.getDescription()));
         try {
             this.generateAndSetResourceId(resource, resource.getId());
             this.getResourceDAO().addResource(resource);
@@ -261,7 +263,7 @@ public class ResourceManager extends AbstractService implements IResourceManager
         ResourceInterface oldResource = this.loadResource(bean.getResourceId());
         try {
             if (null == bean.getInputStream()) {
-                oldResource.setDescription(bean.getDescr());
+                oldResource.setDescription(LabelSanitizer.stripMarkup(bean.getDescr()));
                 oldResource.setCategories(bean.getCategories());
                 oldResource.setMetadata(bean.getMetadata());
                 this.getResourceDAO().updateResource(oldResource);
@@ -289,6 +291,7 @@ public class ResourceManager extends AbstractService implements IResourceManager
      */
     @Override
     public void updateResource(ResourceInterface resource) throws ApsSystemException {
+        resource.setDescription(LabelSanitizer.stripMarkup(resource.getDescription()));
         try {
             this.getResourceDAO().updateResource(resource);
             this.notifyResourceChanging(resource);
@@ -300,7 +303,7 @@ public class ResourceManager extends AbstractService implements IResourceManager
 
     protected ResourceInterface createResource(ResourceDataBean bean) throws ApsSystemException {
         ResourceInterface resource = this.createResourceType(bean.getResourceType());
-        resource.setDescription(bean.getDescr());
+        resource.setDescription(LabelSanitizer.stripMarkup(bean.getDescr()));
         resource.setMainGroup(bean.getMainGroup());
         resource.setCategories(bean.getCategories());
         resource.setMasterFileName(bean.getFileName());
